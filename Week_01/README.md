@@ -2,7 +2,7 @@
 
 #### Array
 
-##### 移动零
+##### [移动零](https://leetcode-cn.com/problems/move-zeroes/)
 
 - 循环3次，第一次记录0的数目和非0值，第二次再加入0的值，第三次交换数组 O(n) - O(n)
 
@@ -11,6 +11,7 @@
   	let zeroCount = 0,
   		ret = [],
   		len = nums.length
+    //first fill non-zero
   	for (let i = 0; i < len; i++) {
   		if (nums[i] === 0) {
   			zeroCount++
@@ -18,11 +19,11 @@
   			ret.push(nums[i])
   		}
   	}
-  
+    //fill zero at backward
   	while (zeroCount--) {
   		ret.push(0)
   	}
-  
+    //exchange
   	for (let i = 0; i < len; i++) {
   		nums[i] = ret[i]
   	}
@@ -47,20 +48,18 @@
   ```javascript
   var moveZeroes = function (nums) {
   	let lastFoundZeroIndex = 0
-  	for (let i = 0, len = nums.length; i < len; i++) {
+  	for (let i = 0; i < nums.length; i++) {
   		if (nums[i] !== 0) {
   			nums[lastFoundZeroIndex++] = nums[i]
   		}
   	}
-  	while (lastFoundZeroIndex--) {
-  		nums.push(0)
+  	for (let i = lastFoundZeroIndex; i < nums.length; i++) {
+  		nums[i] = 0
   	}
   }
   ```
 
-  
-
-- 循环一次，快慢指针，数组解构swap，lastFoundZeroIndex交换一次加一下 O(n)- O(1)
+- 循环一次，快慢指针，数组解构快速交换0与非0  O(n)- O(1)
 
   ```javascript
   var moveZeroes = function (nums) {
@@ -77,7 +76,7 @@
   }
   ```
 
-##### 装最多水的容器
+##### [装最多水的容器](https://leetcode-cn.com/problems/container-with-most-water/)
 
 - brute force O(n^2) - O(1) 
 
@@ -108,102 +107,148 @@
   }
   ```
 
-##### ==两数之和==
+##### ==[两数之和](https://leetcode-cn.com/problems/two-sum/)==
 
-- brute force O(n^2) - O(1)
+```javascript
+//brute force O(n^2) - O(1)
+var twoSum = function (nums, target) {
+	if (!Array.isArray(nums) || nums.length < 2) {
+		throw new TypeError(`invalid parameter, nums=${nums}`)
+	}
+	if (
+		typeof target !== 'number' ||
+		Number.isNaN(target) ||
+		!Number.isFinite(target)
+	) {
+		throw new TypeError(`invalid parameter, target=${target}`)
+	}
+	for (let i = 0, len = nums.length; i < len - 1; i++) {
+		for (let j = i + 1; j < len; j++) {
+			if (nums[i] + nums[j] === target) {
+				return [i, j]
+			}
+		}
+	}
+}
 
-  ```javascript
-  var twoSum = function (nums, target) {
-  	let len = nums.length
-  	for (let i = 0; i < len - 1; i++) {
-  		for (let j = i + 1; j < len; j++) {
-  			if (nums[i] + nums[j] === target) {
-  				return [i, j]
-  			}
-  		}
-  	}
-  }
-  ```
+//两次哈希 O(n) - O(n)
+var twoSum = function (nums, target) {
+	if (!Array.isArray(nums) || nums.length < 2) {
+		throw new TypeError(`invalid parameter, nums=${nums}`)
+	}
+	if (
+		typeof target !== 'number' ||
+		Number.isNaN(target) ||
+		!Number.isFinite(target)
+	) {
+		throw new TypeError(`invalid parameter, target=${target}`)
+	}
+	let map = new Map(),
+		len = nums.length
+	for (let i = 0; i < len; i++) {
+		for (let j = i + 1; j < len; j++) {
+			map.set(target - nums[i], i)
+		}
+	}
+	for (let j = 0; j < len; j++) {
+    //can not be itself
+		if (map.has(nums[j]) && map.get(nums[j]) !== j) {
+			return [j, map.get(nums[j])]
+		}
+	}
+}
+//obj
+var twoSum = function (nums, target) {
+	if (!Array.isArray(nums) || nums.length < 2) {
+		throw new TypeError(`invalid parameter, nums=${nums}`)
+	}
+	if (
+		typeof target !== 'number' ||
+		Number.isNaN(target) ||
+		!Number.isFinite(target)
+	) {
+		throw new TypeError(`invalid parameter, target=${target}`)
+	}
+	let obj = {},
+		len = nums.length
+	for (let i = 0; i < len; i++) {
+		//[2, 7] 9, store 7,the other loop to search 7
+		obj[target - nums[i]] = i
+	}
+	for (let j = 0; j < len; j++) {
+		if (obj[nums[j]] !== undefined) {
+			//exclude same item
+			if (obj[nums[j]] !== j) {
+				return [j, obj[nums[j]]]
+			}
+		}
+	}
+}
 
-- 两次哈希 O(n) - O(n)
+//一次哈希 optimal,先放再回头找，不需要后续判重
+//map
+var twoSum = function (nums, target) {
+	if (!Array.isArray(nums) || nums.length < 2) {
+		throw new TypeError(`invalid parameter, nums=${nums}`)
+	}
+	if (
+		typeof target !== 'number' ||
+		Number.isNaN(target) ||
+		!Number.isFinite(target)
+	) {
+		throw new TypeError(`invalid parameter, target=${target}`)
+	}
+	let map = new Map()
+	for (let i = 0, len = nums.length; i < len; i++) {
+		let temp = target - nums[i]
+		if (map.has(temp)) {
+			return [map.get(temp), i]
+		}
+		map.set(nums[i], i)
+	}
+}
 
-  ```javascript
-  //map
-  var twoSum = function (nums, target) {
-  	let len = nums.length,
-  		map = new Map()
-  	for (let i = 0; i < len; i++) {
-  		map.set(nums[i], i)
-  	}
-  	for (let i = 0; i < len; i++) {
-  		let temp = target - nums[i]
-  		//can not be itself
-  		if (map.has(temp) && map.get(temp) !== i) {
-  			return [i, map.get(temp)]
-  		}
-  	}
-  }
-  //obj
-  var twoSum = function (nums, target) {
-  	let res = {}
-  	for (let i = 0; i < nums.length; i++) {
-  		res[target - nums[i]] = nums[i]
-  	}
-  	for (let j = 0; j < nums.length; j++) {
-  		if (res[nums[j]] !== undefined) {
-  			let idx = nums.indexOf(res[nums[j]])
-  			if (idx !== j) {
-  				return [j, idx]
-  			}
-  		}
-  	}
-  }
-  ```
+//obj
+var twoSum = function (nums, target) {
+	if (!Array.isArray(nums) || nums.length < 2) {
+		throw new TypeError(`invalid parameter, nums=${nums}`)
+	}
+	if (
+		typeof target !== 'number' ||
+		Number.isNaN(target) ||
+		!Number.isFinite(target)
+	) {
+		throw new TypeError(`invalid parameter, target=${target}`)
+	}
+	let obj = {}
+	for (let i = 0, len = nums.length; i < len; i++) {
+		if (obj[nums[i]] !== undefined) {
+			return [i, obj[nums[i]]]
+		}
+    //add first, then check if invalid value exists
+		obj[target - nums[i]] = i
+	}
+}
+```
 
-- 一次哈希 O(n) - O(n)
-
-  ```javascript
-  //map
-  var twoSum = function (nums, target) {
-  	let map = new Map()
-  	for (let i = 0, len = nums.length; i < len; i++) {
-  		let temp = target - nums[i]
-  		if (map.has(temp)) {
-  			return [map.get(temp), i]
-  		}
-      //set first, then check if value 
-  		map.set(nums[i], i)
-  	}
-  }
-  
-  //obj
-  var twoSum = function (nums, target) {
-  	let res = {}
-  	for (let i = 0; i < nums.length; i++) {
-  		let matched = res[nums[i]]
-  		if (matched !== undefined) {
-  			return [i, nums.indexOf(matched)]
-  		}
-  		res[target - nums[i]] = nums[i]
-  	}
-  }
-  ```
-
-##### ==三数之和==
+##### ==[三数之和](https://leetcode-cn.com/problems/3sum/)==
 
 - brute force O(n^3) O(1)
 
   ```javascript
   var threeSum = function (nums) {
-  	let res = {},
-  		ret = []
-  	for (let i = 0; i < nums.length - 2; i++) {
-  		for (let j = i + 1; j < nums.length - 1; j++) {
-  			for (let k = j + 1; k < nums.length; k++) {
+    if (nums.length < 2) return []
+  	let len = nums.length,
+  		ret = [],
+  		map = {}
+  	for (let i = 0; i < len - 2; i++) {
+  		for (let j = i + 1; j < len - 1; j++) {
+  			for (let k = j + 1; k < len; k++) {
   				if (nums[i] + nums[j] + nums[k] === 0) {
   					let key = [nums[i], nums[j], nums[k]].sort()
-  					if (!res[key]) {
-  						res[key] = true
+            //point is not repeat
+  					if (map[key] === undefined) {
+  						map[key] = true
   						ret.push([nums[i], nums[j], nums[k]])
   					}
   				}
@@ -214,18 +259,15 @@
   }
   ```
 
-- Hash O(n^2) O(n)
+- Hash O(n^2) O(n) ==未实现==
 
-  ```javascript
-  
-  ```
-
-- 加逼（大部分情况已排序） 
+- 夹逼（大部分情况需已排序） O(n^2) O(1) 
 
   ```javascript
   var threeSum = function (nums) {
-    if (nums.length < 3) return []
+    if (nums.length < 2) return []
   	let ret = []
+    //hole here 
   	nums.sort((a, b) => a - b)
   	//至少留k那一位和2个pointer
   	for (let k = 0; k < nums.length - 2; k++) {
@@ -258,11 +300,10 @@
   	}
   	return ret
   }
-  ```
-
+```
   
 
-##### 爬楼梯
+##### [爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
 
 - 类斐波那契数 O(n) - O(1)
 
@@ -297,11 +338,74 @@
   }
   ```
 
+##### 合并两个有序数组
+
+```javascript
+//双指针 / 从前往后 O(n+m) - O(m)
+var merge = function (nums1, m, nums2, n) {
+	let nums1_copy = [...nums1.slice(0, m)],
+    // Two get pointers for nums1_copy and nums2.
+		p1 = 0,
+		p2 = 0,
+    // Set pointer for nums1
+		p = 0
+	while (p1 < m && p2 < n) {
+		nums1[p++] = nums1_copy[p1] < nums2[p2] ? nums1_copy[p1++] : nums2[p2++]
+	}
+
+	while (p1 < m) {
+		nums1[p++] = nums1_copy[p1++]
+	}
+	while (p2 < n) {
+		nums1[p++] = nums2[p2++]
+	}
+}
+
+//双指针 / 从前往后 O(n+m) - O(1)
+```
+
+##### 删除排序数组重复项
+
+```javascript
+//two pointer
+var removeDuplicates = function (nums) {
+	if (nums.length === 0) return 0
+	let i = 0
+	for (let j = 1; j < nums.length; j++) {
+		if (nums[i] !== nums[j]) {
+			nums[++i] = nums[j]
+		}
+	}
+	return i + 1
+}
+```
+
+##### 旋转数组
+
+```javascript
+//brute force O(n*k) O(1)
+var rotate = function (nums, k) {
+	let previous, temp
+	for (let i = 0; i < k; i++) {
+		previous = nums[nums.length - 1]
+		for (let j = 0; j < nums.length; j++) {
+			temp = nums[j]
+			nums[j] = previous
+			previous = temp
+		}
+	}
+}
+
+//额外数组
+//环状替换
+//反转
+```
+
 #### 栈
 
-##### 有效括号
+##### ==[有效括号](https://leetcode-cn.com/problems/valid-parentheses/)==
 
-- brute force
+- brute force 一直替换
 
   ```javascript
   var isValid = function (s) {
@@ -360,7 +464,7 @@
   }
   ```
 
-##### 最小栈
+##### [最小栈](https://leetcode-cn.com/problems/min-stack/)
 
 - 使用辅助栈
 
@@ -373,6 +477,7 @@
   //sync push
   MinStack.prototype.push = function (x) {
   	this.stack.push(x)
+    //peek always min item
     this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
   }
   
@@ -391,76 +496,9 @@
   }
   ```
 
-##### 柱状图中最大的矩形
+##### [柱状图中最大的矩形](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) blacklog
 
-- ==brute force (not pass!!!) O(n^3) - O(1)==
-
-  ```javascript
-  var largestRectangleArea = function (heights) {
-  	let maxArea = 0,
-  		len = heights.length
-  	for (let i = 0; i < len; i++) {
-  		for (let j = i; j < len; j++) {
-  			let minHeight = Number.MAX_SAFE_INTEGER
-  			for (let k = i; k <= j; k++) {
-  				minHeight = Math.min(minHeight, heights[k])
-  				maxArea = Math.max(maxArea, minHeight * (j - i + 1))
-  			}
-  		}
-  	}
-  	return maxArea
-  }
-  ```
-
-- optimal brute force O(n^2) - O(1)
-
-  ```javascript
-  var largestRectangleArea = function (heights) {
-  	let maxArea = 0,
-  		len = heights.length
-  	for (let i = 0; i < len; i++) {
-  		let minHeight = Number.MAX_SAFE_INTEGER
-      //枚举j也就是枚举minHeight 
-  		for (let j = i; j < len; j++) {
-  			minHeight = Math.min(minHeight, heights[j])
-  			maxArea = Math.max(maxArea, minHeight * (j - i + 1))
-  		}
-  	}
-  	return maxArea
-  }
-  ```
-
-- ==栈(not pass!!!) O(n) - O(n)==
-
-  ```javascript
-  var largestRectangleArea = function (heights) {
-  	let maxArea = 0,
-  		len = heights.length,
-  		stack = [-1],
-  		lastItemIdx = stack.length - 1
-  	for (let i = 0; i < len; i++) {
-  		while (
-  			stack[lastItemIdx] !== -1 &&
-  			heights[stack[lastItemIdx]] >= heights[i]
-  		) {
-  			maxArea = Math.max(
-  				maxArea,
-  				heights[stack.pop()] * (i - stack[lastItemIdx] - 1)
-  			)
-  			stack.push(i)
-  		}
-  	}
-  	while (stack[lastItemIdx] !== -1) {
-  		maxArea = Math.max(
-  			maxArea,
-  			heights[stack.pop()] * (len - stack[lastItemIdx] - 1)
-  		)
-  	}
-  	return maxArea
-  }
-  ```
-
-##### 滑动窗口最大值
+##### [滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 - brute force O(n * k) - O(n - k +1)
 
@@ -469,6 +507,7 @@
   	let slideWindow = [],
   		ret = [],
   		len = nums.length
+    //loop max window value
   	for (let i = 0; i < len - k + 1; i++) {
   		for (let j = 0; j < k; j++) {
   			slideWindow.push(nums[i + j])
@@ -480,7 +519,7 @@
   }
   ```
 
-- deque O(n) - O(n)
+- deque O(n) - O(n) blacklog
 
   ```javascript
   var maxSlidingWindow = function (nums, k) {
@@ -506,11 +545,12 @@
   	}
   	return ret
   }
+  
+  //DP O(n) - O(n) 未实现
   ```
 
-- ==DP O(n) - O(n) 未实现==
 
-#### 链表
+#### 链表 blacklog
 
 ##### 反转链表
 
@@ -672,28 +712,32 @@ var reverseKGroup = function(head, k) {
 };
 ```
 
-
+##### 合并两个有序链表
 
 
 
 #### 作业
 
-##### Design Circular Deque
+##### Design Circular Deque blacklog
 
-##### Trapping Rain Water
+##### [Trapping Rain Water](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript
 //brute force O(n^2) O(1) 
+
 var trap = function (height) {
 	let ret = 0,
 		len = height.length
   //the last item can not store water
 	for (let i = 0; i < len - 1; i++) {
+    //two pointer
 		let leftMax = 0,
 			rightMax = 0
+    //Search the left part for max bar size
 		for (let j = i; j >= 0; j--) {
 			leftMax = Math.max(leftMax, height[j])
 		}
+    //Search the right part for max bar size
 		for (let j = i; j < len; j++) {
 			rightMax = Math.max(rightMax, height[j])
 		}
@@ -727,46 +771,6 @@ var trap = function (height) {
 //two pointer O(n) O(1) 
 ```
 
-##### 删除排序数组重复项
-
-```javascript
-var removeDuplicates = function (nums) {
-	if (nums.length === 0) return 0
-	let i = 0
-	for (let j = 1; j < nums.length; j++) {
-		if (nums[i] !== nums[j]) {
-			nums[++i] = nums[j]
-		}
-	}
-	return i + 1
-}
-```
-
-##### 旋转数组
-
-```javascript
-//brute force O(n*k) O(1)
-var rotate = function (nums, k) {
-	let previous, temp
-	for (let i = 0; i < k; i++) {
-		previous = nums[nums.length - 1]
-		for (let j = 0; j < nums.length; j++) {
-			temp = nums[j]
-			nums[j] = previous
-			previous = temp
-		}
-	}
-}
-
-//额外数组
-//环状替换
-//反转
-```
-
-##### 合并两个有序链表
-
-##### 合并两个有序数组
-
 ##### 加一
 
 ```javascript
@@ -782,10 +786,3 @@ var plusOne = function (digits) {
 	return digits
 }
 ```
-
-
-
-
-
-
-
