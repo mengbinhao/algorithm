@@ -5,9 +5,8 @@
 ##### 有效的字母异位词
 
 ```javascript
-//直接sort O(nlogn) n为字符串长度 - O(1)
+//直接sort O(nlogN) n为字符串长度 - O(1)
 var isAnagram = function (s, t) {
-	if (typeof s !== 'string' || typeof t !== 'string') return false
 	if (s.length !== t.length) return false
 	if (s.split('').sort().join('') === t.split('').sort().join('')) return true
 	return false
@@ -16,7 +15,6 @@ var isAnagram = function (s, t) {
 //hash 统计每个字符出现的频次,枚s增加，枚t减小，最后检查全部hash值是否为0
 //O(n) - O(1)
 var isAnagram = function (s, t) {
-	if (typeof s !== 'string' || typeof t !== 'string') return false
 	if (s.length !== t.length) return false
 	let map = {}
 	for (let c of s) {
@@ -30,7 +28,6 @@ var isAnagram = function (s, t) {
 
 //hash optimal
 var isAnagram = function (s, t) {
-	if (typeof s !== 'string' || typeof t !== 'string') return false
 	if (s.length !== t.length) return false
 	let map = {}
 	for (let c of s) {
@@ -52,9 +49,9 @@ var isAnagram = function (s, t) {
 ##### 字母异位词分组
 
 ```javascript
-//sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) O(NK)
+//sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
 var groupAnagrams = function (strs) {
-	if (!Array.isArray(strs) || strs.length === 0) {
+	if (strs.length === 0) {
 		throw new TypeError('invalid parameter')
 	}
 	let map = {}
@@ -66,6 +63,30 @@ var groupAnagrams = function (strs) {
 		map[key].push(item)
 	}
 	return Object.values(map)
+}
+
+//使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
+var groupAnagrams = function (strs) {
+  if (strs.length === 0) return [[]]
+  let count = Array(26),
+    map = {}
+  for (let str of strs) {
+    //re-count each character
+    count.fill(0)
+    for (let i = 0; i < str.split('').length; i++) {
+      count[str.charCodeAt(i) - 97]++
+    }
+    //build unique key
+    let temp = ''
+    for (let i = 0; i < 26; i++) {
+      temp += `#${count[i]}`
+    }
+    if (!map[temp]) {
+      map[temp] = []
+    }
+    map[temp].push(str)
+  }
+  return Object.values(map)
 }
 ```
 
@@ -91,25 +112,23 @@ var preorderTraversal = function (root) {
 }
 
 //loop. use stack
-var preorderTraversal = function (root) {
-	let ret = [],
-		stack = []
-  if (root !== null) {
-    stack.push(root)
-  }
-	while (stack.length > 0) {
-		let node = stack.pop()
-		ret.push(node.val)
+var preorderTraversal = function(root) {
+    let ret = [], stack = [];
+    root && stack.push(root)
+    while (stack.length > 0) {
+        let node = stack.pop()
+        ret.push(node.val)
 
-		if (node.right !== null) {
-			stack.push(node.right)
-		}
-		if (node.left !== null) {
-			stack.push(node.left)
-		}
-	}
-	return ret
-}
+        if (node.right) {
+            stack.push(node.right)
+        }
+
+        if (node.left) {
+            stack.push(node.left)
+        }
+    }
+    return ret
+};
 ```
 
 ##### 二叉树中序遍历
