@@ -176,11 +176,9 @@ var twoSum = function (nums, target) {
 		obj[target - nums[i]] = i
 	}
 	for (let j = 0; j < len; j++) {
-		if (obj[nums[j]] !== undefined) {
-			//exclude same item
-			if (obj[nums[j]] !== j) {
-				return [j, obj[nums[j]]]
-			}
+    //exclude same item
+		if (obj[nums[j]] !== undefined && obj[nums[j]] !== j) {
+			return [j, obj[nums[j]]]
 		}
 	}
 }
@@ -300,6 +298,7 @@ var twoSum = function (nums, target) {
   	}
   	return ret
   }
+  ```
 ```
   
 
@@ -322,7 +321,7 @@ var twoSum = function (nums, target) {
   	}
   	return third
   }
-  ```
+```
 
 - DP O(n) - O(n)
 

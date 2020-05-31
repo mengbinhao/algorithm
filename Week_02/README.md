@@ -160,7 +160,9 @@ var preorder = function (root) {
 	let preorderNode = (node) => {
 		if (node) {
 			ret.push(node.val)
-			node.children.forEach((child) => preorderNode(child))
+      if (node.children && node.children.length > 0) {
+        node.children.forEach((child) => preorderNode(child))
+      }
 		}
 	}
 	preorderNode(root)
