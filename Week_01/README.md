@@ -2,7 +2,7 @@
 
 #### Array
 
-##### [移动零](https://leetcode-cn.com/problems/move-zeroes/)
+##### [283移动零](https://leetcode-cn.com/problems/move-zeroes/)
 
 - 循环3次，第一次记录0的数目和非0值，第二次再加入0的值，第三次交换数组 O(n) - O(n)
 
@@ -76,7 +76,7 @@
   }
   ```
 
-##### [装最多水的容器](https://leetcode-cn.com/problems/container-with-most-water/)
+##### [11装最多水的容器](https://leetcode-cn.com/problems/container-with-most-water/)
 
 - brute force O(n^2) - O(1) 
 
@@ -107,7 +107,7 @@
   }
   ```
 
-##### ==[两数之和](https://leetcode-cn.com/problems/two-sum/)==
+##### ==[1两数之和](https://leetcode-cn.com/problems/two-sum/)==
 
 ```javascript
 //brute force O(n^2) - O(1)
@@ -229,7 +229,7 @@ var twoSum = function (nums, target) {
 }
 ```
 
-##### ==[三数之和](https://leetcode-cn.com/problems/3sum/)==
+##### ==[11三数之和](https://leetcode-cn.com/problems/3sum/)==
 
 - brute force O(n^3) O(1)
 
@@ -337,7 +337,7 @@ var twoSum = function (nums, target) {
   }
   ```
 
-##### 合并两个有序数组
+##### [88合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
 //双指针 / 从前往后 O(n+m) - O(m)
@@ -363,7 +363,7 @@ var merge = function (nums1, m, nums2, n) {
 //双指针 / 从前往后 O(n+m) - O(1)
 ```
 
-##### 删除排序数组重复项
+##### [26删除排序数组重复项](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
 //two pointer
@@ -379,7 +379,7 @@ var removeDuplicates = function (nums) {
 }
 ```
 
-##### 旋转数组
+##### [189旋转数组](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript
 //brute force O(n*k) O(1)
@@ -402,7 +402,7 @@ var rotate = function (nums, k) {
 
 #### 栈
 
-##### ==[有效括号](https://leetcode-cn.com/problems/valid-parentheses/)==
+##### ==[20有效括号](https://leetcode-cn.com/problems/valid-parentheses/)==
 
 - brute force 一直替换
 
@@ -463,7 +463,7 @@ var rotate = function (nums, k) {
   }
   ```
 
-##### [最小栈](https://leetcode-cn.com/problems/min-stack/)
+##### [155最小栈](https://leetcode-cn.com/problems/min-stack/)
 
 - 使用辅助栈
 
@@ -495,9 +495,9 @@ var rotate = function (nums, k) {
   }
   ```
 
-##### [柱状图中最大的矩形](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) blacklog
+##### [84柱状图中最大的矩形](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) ==blacklog==
 
-##### [滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
+##### [239滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 - brute force O(n * k) - O(n - k +1)
 
@@ -549,7 +549,7 @@ var rotate = function (nums, k) {
   ```
 
 
-#### 链表 blacklog
+#### 链表 ==blacklog==
 
 ##### 反转链表
 
@@ -717,9 +717,7 @@ var reverseKGroup = function(head, k) {
 
 #### 作业
 
-##### Design Circular Deque blacklog
-
-##### [Trapping Rain Water](https://leetcode-cn.com/problems/trapping-rain-water/)
+##### [42Trapping Rain Water](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript
 //brute force O(n^2) O(1) 
@@ -770,7 +768,7 @@ var trap = function (height) {
 //two pointer O(n) O(1) 
 ```
 
-##### 加一
+##### [66加一](https://leetcode-cn.com/problems/plus-one/)
 
 ```javascript
 var plusOne = function (digits) {

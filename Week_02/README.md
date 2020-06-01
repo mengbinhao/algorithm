@@ -2,7 +2,7 @@
 
 #### hash table、映射、集合
 
-##### 有效的字母异位词
+##### [242有效的字母异位词](https://leetcode-cn.com/problems/valid-anagram/)
 
 ```javascript
 //直接sort O(nlogN) n为字符串长度 - O(1)
@@ -46,7 +46,7 @@ var isAnagram = function (s, t) {
 }
 ```
 
-##### 字母异位词分组
+##### [49字母异位词分组](https://leetcode-cn.com/problems/group-anagrams/)
 
 ```javascript
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
@@ -94,7 +94,7 @@ var groupAnagrams = function (strs) {
 
 #### tree、binary tree、binary search tree
 
-##### 二叉树前序遍历
+##### [144二叉树前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
 ``` javascript
 //recursion
@@ -131,7 +131,7 @@ var preorderTraversal = function(root) {
 };
 ```
 
-##### 二叉树中序遍历
+##### [94二叉树中序遍历](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```javascript
 //recursion
@@ -170,7 +170,7 @@ var inorderTraversal = function (root) {
 }
 ```
 
-##### N叉树的前序遍历
+##### [589N叉树的前序遍历](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
 
 ```javascript
 //recursion
@@ -204,7 +204,7 @@ var preorder = function (root) {
 }
 ```
 
-##### N叉树的后序遍历
+##### [590N叉树的后序遍历](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
 
 ```javascript
 //recursion
@@ -241,7 +241,7 @@ var postorder = function (root) {
 }
 ```
 
-##### N叉树的层序遍历
+##### [429N叉树的层序遍历](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
 ```javascript
 //使用queue
@@ -266,7 +266,7 @@ var levelOrder = function (root) {
 }
 ```
 
-##### 前K个高频元素
+##### [347前K个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
 
 ```javascript
 //do not meet the requirement
