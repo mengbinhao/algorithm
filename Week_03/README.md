@@ -154,5 +154,53 @@ var invertTree = function (root) {
 }
 ```
 
+##### [50Pow(x, n)](https://leetcode-cn.com/problems/powx-n/)
 
+```javascript
+//brute force
+var myPow = function (x, n) {
+	if (n < 0) return 1 / myPow(x, -n)
+	if (n === 0) return 1
+	if (n === 1) return x
+
+	let res = 1
+	for (let i = 0; i <= n - 1; i++) {
+		res *= x
+	}
+	return res
+}
+
+//分治
+var myPow = function (x, n) {
+	if (n < 0) return 1 / myPow(x, -n)
+	if (n === 0) return 1
+	if (n === 1) return x
+
+	let res = 1
+	while (n > 1) {
+		if (n % 2 === 1) {
+			res *= x
+			n--
+		}
+		x *= x
+		n /= 2
+	}
+	return res * x
+}
+
+//recursion
+var myPow = function (x, n) {
+	if (n < 0) return 1 / myPow(x, -n)
+	if (n === 0) return 1
+	if (n === 1) return x
+
+	return n % 2 === 1 ? x * myPow(x, n - 1) : myPow(x * x, n / 2)
+}
+```
+
+##### [78子集](https://leetcode-cn.com/problems/subsets/)
+
+```javascript
+
+```
 
