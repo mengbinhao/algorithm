@@ -33,14 +33,19 @@
 - 循环一次，splice去掉先，然后push个0,splice改变了数组的长度，这里有坑，所以必须从后面循环 O(n^2) - O(1)
 
   ```javascript
-  var moveZeroes = function (nums) {
-  	for (let i = 0, len = nums.length; i--; ) {
-  		if (nums[i] === 0) {
-  			nums.splice(nums[i])
-  			nums.push(0)
-  		}
-  	}
-  }
+  var moveZeroes = function(nums) {
+      if (!nums || nums.length === 0) return num
+  
+      let res = []
+  
+      for (let i = nums.length; i--;) {
+          if (nums[i] === 0) {
+              nums.splice(i, 1)
+              nums.push(0)
+          }
+      }
+      return nums
+  };
   ```
 
 - 循环一整次和一次0个数的循环，一次把非0换到前面，二次循环把0填进去 O(n) - O(1)
