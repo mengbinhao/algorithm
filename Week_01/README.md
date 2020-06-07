@@ -2,7 +2,7 @@
 
 #### Array
 
-##### [283移动零](https://leetcode-cn.com/problems/move-zeroes/)
+##### [283移动零E](https://leetcode-cn.com/problems/move-zeroes/)
 
 - 循环3次，第一次记录0的数目和非0值，第二次再加入0的值，第三次交换数组 O(n) - O(n)
 
@@ -81,7 +81,7 @@
   }
   ```
 
-##### [11装最多水的容器](https://leetcode-cn.com/problems/container-with-most-water/)
+##### [11装最多水的容器M](https://leetcode-cn.com/problems/container-with-most-water/)
 
 - brute force O(n^2) - O(1) 
 
@@ -112,7 +112,7 @@
   }
   ```
 
-##### ==[1两数之和](https://leetcode-cn.com/problems/two-sum/)==
+##### ==[1两数之和E](https://leetcode-cn.com/problems/two-sum/)==
 
 ```javascript
 //brute force O(n^2) - O(1)
@@ -234,7 +234,7 @@ var twoSum = function (nums, target) {
 }
 ```
 
-##### ==[11三数之和](https://leetcode-cn.com/problems/3sum/)==
+##### ==[15三数之和M](https://leetcode-cn.com/problems/3sum/)==
 
 - brute force O(n^3) O(1)
 
@@ -342,7 +342,7 @@ var twoSum = function (nums, target) {
   }
   ```
 
-##### [88合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
+##### [88合并两个有序数组E](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
 //双指针 / 从前往后 O(n+m) - O(m)
@@ -368,7 +368,7 @@ var merge = function (nums1, m, nums2, n) {
 //双指针 / 从前往后 O(n+m) - O(1)
 ```
 
-##### [26删除排序数组重复项](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
+##### [26删除排序数组重复项E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
 //two pointer
@@ -384,7 +384,7 @@ var removeDuplicates = function (nums) {
 }
 ```
 
-##### [189旋转数组](https://leetcode-cn.com/problems/rotate-array/)
+##### [189旋转数组E](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript
 //brute force O(n*k) O(1)
@@ -407,7 +407,7 @@ var rotate = function (nums, k) {
 
 #### 栈
 
-##### ==[20有效括号](https://leetcode-cn.com/problems/valid-parentheses/)==
+##### ==[20有效括号E](https://leetcode-cn.com/problems/valid-parentheses/)==
 
 - brute force 一直替换
 
@@ -468,7 +468,7 @@ var rotate = function (nums, k) {
   }
   ```
 
-##### [155最小栈](https://leetcode-cn.com/problems/min-stack/)
+##### [155最小栈E](https://leetcode-cn.com/problems/min-stack/)
 
 - 使用辅助栈
 
@@ -500,9 +500,9 @@ var rotate = function (nums, k) {
   }
   ```
 
-##### [84柱状图中最大的矩形](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) ==blacklog==
+##### [84柱状图中最大的矩形H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) ==blacklog==
 
-##### [239滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
+##### [239滑动窗口最大值H](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 - brute force O(n * k) - O(n - k +1)
 
@@ -556,7 +556,7 @@ var rotate = function (nums, k) {
 
 #### 链表 ==blacklog==
 
-##### 反转链表
+##### [206反转链表E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 - 迭代 O(n) - O(1)
 
@@ -592,7 +592,7 @@ var rotate = function (nums, k) {
   }
   ```
 
-##### 交换链表  ==help==
+##### [24两两交换链表E](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)  ==help==
 
 ```javascript
 //不明白
@@ -617,7 +617,7 @@ var swapPairs = function (head) {
 }
 ```
 
-#####  环形链表
+#####  [141环形链表E](https://leetcode-cn.com/problems/linked-list-cycle/)
 
 - Hash O(n) - O(n)
 
@@ -656,7 +656,7 @@ var swapPairs = function (head) {
   }
   ```
 
-##### 环形链表2
+##### [142环形链表2E](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 
 - Hash O(n) - O(n)
 
@@ -676,7 +676,7 @@ var swapPairs = function (head) {
 
 - fast and slow pointer O(n) - O(1)
 
-##### K个一组翻转链表 ==backlog==
+##### [25K个一组翻转链表E](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==backlog==
 
 ```javascript
 const myReverse = (head, tail) => {
@@ -716,13 +716,13 @@ var reverseKGroup = function(head, k) {
 };
 ```
 
-##### 合并两个有序链表
+##### [21合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 
 
 #### 作业
 
-##### [42Trapping Rain Water](https://leetcode-cn.com/problems/trapping-rain-water/)
+##### [42Trapping Rain WaterH](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript
 //brute force O(n^2) O(1) 
@@ -773,7 +773,7 @@ var trap = function (height) {
 //two pointer O(n) O(1) 
 ```
 
-##### [66加一](https://leetcode-cn.com/problems/plus-one/)
+##### [66加一E](https://leetcode-cn.com/problems/plus-one/)
 
 ```javascript
 var plusOne = function (digits) {
