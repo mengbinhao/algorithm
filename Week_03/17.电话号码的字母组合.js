@@ -1,13 +1,4 @@
 /*
- * @Author: your name
- * @Date: 2020-06-07 12:19:48
- * @LastEditTime: 2020-06-07 12:42:07
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /algorithm009-class02/Users/jack/.leetcode/17.电话号码的字母组合.js
- */
-
-/*
  * @lc app=leetcode.cn id=17 lang=javascript
  *
  * [17] 电话号码的字母组合

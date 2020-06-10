@@ -1,13 +1,4 @@
 /*
- * @Author: your name
- * @Date: 2020-06-01 14:38:49
- * @LastEditTime: 2020-06-01 14:40:29
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /algorithm009-class02/Users/jack/.leetcode/226.翻转二叉树.js
- */
-
-/*
  * @lc app=leetcode.cn id=226 lang=javascript
  *
  * [226] 翻转二叉树
@@ -26,15 +17,14 @@
  * @return {TreeNode}
  */
 var invertTree = function (root) {
-	if (root == null) {
-		return null
-	}
+	if (!root) return null
 
-	let right = invertTree(root.right)
 	let left = invertTree(root.left)
+	let right = invertTree(root.right)
 
-	root.left = right
 	root.right = left
+	root.left = right
+
 	return root
 }
 // @lc code=end

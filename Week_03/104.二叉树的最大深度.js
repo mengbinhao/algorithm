@@ -1,13 +1,4 @@
 /*
- * @Author: your name
- * @Date: 2020-06-01 15:08:33
- * @LastEditTime: 2020-06-01 17:23:59
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /algorithm009-class02/Users/jack/.leetcode/104.二叉树的最大深度.js
- */
-
-/*
  * @lc app=leetcode.cn id=104 lang=javascript
  *
  * [104] 二叉树的最大深度
@@ -26,12 +17,12 @@
  * @return {number}
  */
 var maxDepth = function (root) {
-	if (root == null) {
+	if (!root) {
 		return 0
 	} else {
-		let leftHeight = maxDepth(root.left)
-		let rightHeight = maxDepth(root.right)
-		return Math.max(leftHeight, rightHeight) + 1
+		let maxLeftDepth = maxDepth(root.left)
+		let maxRightDepth = maxDepth(root.right)
+		return Math.max(maxLeftDepth, maxRightDepth) + 1
 	}
 }
 // @lc code=end

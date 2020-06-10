@@ -19,13 +19,11 @@
  * @return {number[][]}
  */
 var permute = function (nums) {
-	if (!Array.isArray(nums) || nums.length === 0) {
-		return []
-	}
+	if (nums.length === 0) return []
 
 	let ret = [],
-		path = [],
-		used = Array.from({ length: nums.length }, (item) => false)
+		path = []
+	used = Array.from({ length: nums.length }, (item) => false)
 
 	let dfs = (nums, depth, path, used, ret) => {
 		if (depth === nums.length) {
@@ -35,7 +33,6 @@ var permute = function (nums) {
 
 		for (let i = 0; i < nums.length; i++) {
 			if (used[i]) continue
-
 			path.push(nums[i])
 			used[i] = true
 			dfs(nums, depth + 1, path, used, ret)

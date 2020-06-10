@@ -1,4 +1,13 @@
 /*
+ * @Author: your name
+ * @Date: 2020-06-02 11:11:43
+ * @LastEditTime: 2020-06-10 13:37:09
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \algorithm009-class02\Week_03\22.括号生成.js
+ */
+
+/*
  * @lc app=leetcode.cn id=22 lang=javascript
  *
  * [22] 括号生成
@@ -11,22 +20,23 @@
  */
 var generateParenthesis = function (n) {
 	let ret = []
-	let recursionParenthesis = (left, right, s) => {
-		if (left === 0 && right === 0) {
+
+	let backTracking = (left, right, n, ret, s) => {
+		if (left === n && right === n) {
 			ret.push(s)
 			return
 		}
 
-		if (left) {
-			recursionParenthesis(left - 1, right, s + '(')
+		if (left < n) {
+			backTracking(left + 1, right, n, ret, s + '(')
 		}
 
-		if (right > left) {
-			recursionParenthesis(left, right - 1, s + ')')
+		if (left > right) {
+			backTracking(left, right + 1, n, ret, s + ')')
 		}
 	}
 
-	recursionParenthesis(n, n, '')
+	backTracking(0, 0, n, ret, '')
 	return ret
 }
 // @lc code=end
