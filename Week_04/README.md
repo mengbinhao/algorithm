@@ -1,5 +1,54 @@
 学习笔记
 
+##### [515在每个树行中找最大值M](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
+
+```javascript
+//dfs
+var largestValues = function (root) {
+	let ret = []
+
+	let dfs = (node, ret, level) => {
+		if (!node) return
+		//if it is new level, just add val
+		if (ret[level] === undefined) {
+			ret[level] = node.val
+		} else {
+			ret[level] = Math.max(ret[level], node.val)
+		}
+		dfs(node.left, ret, level + 1)
+		dfs(node.right, ret, level + 1)
+	}
+
+	dfs(root, ret, 0)
+	return ret
+}
+
+//bfs
+var largestValues = function (root) {
+	let ret = []
+	if (!root) return ret
+	let queue = [root]
+
+	while (queue.length > 0) {
+		let len = queue.length,
+			max = -Infinity
+         //loop each level
+		for (let i = 0; i < len; i++) {
+			let temp = queue.shift()
+			if (temp.left !== null) {
+				queue.push(temp.left)
+			}
+			if (temp.right !== null) {
+				queue.push(temp.right)
+			}
+			max = Math.max(max, temp.val)
+		}
+		ret.push(max)
+	}
+	return ret
+}
+```
+
 ##### [69 X的平方根E](https://leetcode-cn.com/problems/sqrtx/)
 
 ```javascript
