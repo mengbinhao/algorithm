@@ -4,7 +4,7 @@
 
 ##### [283移动零E](https://leetcode-cn.com/problems/move-zeroes/)
 
-- 循环3次，第一次记录0的数目和非0值，第二次再加入0的值，第三次交换数组 O(n) - O(n)
+- 循环3次，额外使用一个数组空间，第一次记录0的个数和填入非0值，第二次再加入0的值，第三次交换到原数组 O(n) - O(n)
 
   ```javascript
   var moveZeroes = function (nums) {
@@ -13,10 +13,8 @@
   		len = nums.length
     //first fill non-zero
   	for (let i = 0; i < len; i++) {
-  		if (nums[i] === 0) {
-  			zeroCount++
-  		} else {
-  			ret.push(nums[i])
+  		if (nums[i] !== 0) {
+  			ret[zeroCount++] = nums[i]
   		}
   	}
     //fill zero at backward
@@ -29,7 +27,7 @@
   	}
   }
   ```
-
+  
 - 循环一次，splice去掉先，然后push个0,splice改变了数组的长度，这里有坑，所以必须从后面循环 O(n^2) - O(1)
 
   ```javascript
@@ -48,23 +46,26 @@
   };
   ```
 
-- 循环一整次和一次0个数的循环，一次把非0换到前面，二次循环把0填进去 O(n) - O(1)
+- 循环一整次把非0换到前面，第二次循环把0填到后面 O(n) - O(1)
 
   ```javascript
   var moveZeroes = function (nums) {
   	let lastFoundZeroIndex = 0
   	for (let i = 0; i < nums.length; i++) {
+          //move non-zero to front
   		if (nums[i] !== 0) {
   			nums[lastFoundZeroIndex++] = nums[i]
   		}
   	}
+      //update behind item to zero
   	for (let i = lastFoundZeroIndex; i < nums.length; i++) {
   		nums[i] = 0
   	}
+      return nums
   }
   ```
 
-- 循环一次，快慢指针，数组解构快速交换0与非0  O(n)- O(1)
+- 循环一次，快慢指针，慢指针当前第一个0的位置，数组解构快速交换0与非0  O(n)- O(1)
 
   ```javascript
   var moveZeroes = function (nums) {
@@ -97,16 +98,20 @@
   }
   ```
 
-- two pointer夹逼 O(n) - O(1) 
+- two pointer **夹逼** O(n) - O(1) 
 
   ```javascript
   var maxArea = function (height) {
-  	let maxArea = 0,
-  		l = 0,
-  		r = height.length - 1
-  	while (l < r) {
-  		maxArea = Math.max(maxArea, Math.min(height[l], height[r]) * (r - l))
-  		height[l] < height[r] ? l++ : r--
+  	let left = 0,
+  		right = height.length - 1,
+  		maxArea = 0
+  
+  	while (left < right) {
+  		maxArea = Math.max(
+  			maxArea,
+  			Math.min(height[left], height[right]) * (right - left)
+  		)
+  		height[left] < height[right] ? left++ : right--
   	}
   	return maxArea
   }
@@ -236,7 +241,7 @@ var twoSum = function (nums, target) {
 
 ##### ==[15三数之和M](https://leetcode-cn.com/problems/3sum/)==
 
-- brute force O(n^3) O(1)
+- brute force O(n^3) O(1)  //Time limit exceeded
 
   ```javascript
   var threeSum = function (nums) {
@@ -262,7 +267,40 @@ var twoSum = function (nums, target) {
   }
   ```
 
-- Hash O(n^2) O(n) ==未实现==
+- Hash O(n^2) O(n)  DO NOT PASS
+
+    ```javascript
+    var threeSum = function (nums) {
+    	let ret = [],
+    		map = {},
+    		hash = {}
+    	for (let i = 0; i < nums.length - 1; i++) {
+    		for (let j = i + 1; j < nums.length; j++) {
+                //key has duplicated
+    			map[0 - nums[i] - nums[j]] = [i, j]
+    		}
+    	}
+    
+    	Object.keys(map).forEach((key) => {
+    		for (let i = 0; i < nums.length; i++) {
+    			if (+key === nums[i]) {
+    				let temp = [nums[i], nums[map[key][0]], nums[map[key][1]]].sort()
+    				if (
+    					hash[temp] === undefined &&
+    					i !== map[key][0] &&
+    					i !== map[key][1]
+    				) {
+    					hash[temp] = true
+    					ret.push([nums[i], nums[map[key][0]], nums[map[key][1]]])
+    				}
+    			}
+    		}
+    	})
+    	return ret
+    }
+    ```
+
+    
 
 - 夹逼（大部分情况需已排序） O(n^2) O(1) 
 
@@ -270,7 +308,7 @@ var twoSum = function (nums, target) {
   var threeSum = function (nums) {
     if (nums.length < 2) return []
   	let ret = []
-    //hole here 
+    //hole here, need sort first
   	nums.sort((a, b) => a - b)
   	//至少留k那一位和2个pointer
   	for (let k = 0; k < nums.length - 2; k++) {
@@ -304,6 +342,7 @@ var twoSum = function (nums, target) {
   	return ret
   }
   ```
+  
 ```
   
 
@@ -371,7 +410,7 @@ var merge = function (nums1, m, nums2, n) {
 ##### [26删除排序数组重复项E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
-//two pointer
+//slow / fast two pointer 
 var removeDuplicates = function (nums) {
 	if (nums.length === 0) return 0
 	let i = 0
@@ -400,14 +439,38 @@ var rotate = function (nums, k) {
 	}
 }
 
-//额外数组
+//额外数组 O(n) O(n)
+var rotate = (nums, k) => {
+	let a = new Array(nums.length)
+	for (let i = 0; i < nums.length; i++) {
+		a[(i + k) % nums.length] = nums[i]
+	}
+	for (let i = 0; i < nums.length; i++) {
+		nums[i] = a[i]
+	}
+}
 //环状替换
-//反转
+//反转 O(n) O(1)
+var rotate = (nums, k) => {
+	var reverse = (nums, start, end) => {
+		while (start < end) {
+			let temp = nums[start]
+			nums[start] = nums[end]
+			nums[end] = temp
+			start++
+			end--
+		}
+	}
+	k %= nums.length
+	reverse(nums, 0, nums.length - 1)
+	reverse(nums, 0, k - 1)
+	reverse(nums, k, nums.length - 1)
+}
 ```
 
-#### 栈
+#### 栈(典型的空间换时间)
 
-##### ==[20有效括号E](https://leetcode-cn.com/problems/valid-parentheses/)==
+##### [20有效括号E](https://leetcode-cn.com/problems/valid-parentheses/)
 
 - brute force 一直替换
 
@@ -500,9 +563,9 @@ var rotate = function (nums, k) {
   }
   ```
 
-##### [84柱状图中最大的矩形H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) ==blacklog==
+##### [84柱状图中最大的矩形H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)   ==backlog==
 
-##### [239滑动窗口最大值H](https://leetcode-cn.com/problems/sliding-window-maximum/)
+##### [239滑动窗口最大值H ](https://leetcode-cn.com/problems/sliding-window-maximum/) ==backlog==
 
 - brute force O(n * k) - O(n - k +1)
 
@@ -523,7 +586,7 @@ var rotate = function (nums, k) {
   }
   ```
 
-- deque O(n) - O(n) blacklog
+- deque O(n) - O(n)
 
   ```javascript
   var maxSlidingWindow = function (nums, k) {
@@ -550,7 +613,7 @@ var rotate = function (nums, k) {
   	return ret
   }
   
-  //DP O(n) - O(n) 未实现
+  //DP O(n) - O(n)
   ```
 
 
