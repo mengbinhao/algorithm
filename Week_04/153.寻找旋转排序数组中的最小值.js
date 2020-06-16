@@ -16,6 +16,7 @@ var findMin = function (nums) {
 	let left = 0,
 		right = nums.length - 1,
 		mid
+	//an sorted array
 	if (nums[right] > nums[left]) return nums[0]
 	while (left <= right) {
 		mid = Math.floor(left + (right - left) / 2)
