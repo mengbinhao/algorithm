@@ -617,7 +617,7 @@ var rotate = (nums, k) => {
   ```
 
 
-#### 链表 ==blacklog==
+#### 链表 ==不熟==
 
 ##### [206反转链表E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
@@ -638,14 +638,18 @@ var rotate = (nums, k) => {
   		//update current
   		current = next
   	}
-  	//return null if head == null
+  	//返回新的头引用
   	return previous
   }
   ```
 
-- 递归 O(n) - O(1) ==help==
+- 递归 O(n) - O(1)
 
   ```javascript
+  //reverseList(head.next) 此时最后一层结束递归的条件是head.next == null , head 等于 5 ， 那么它的上一层就是 reverseList(4.next) ， head 等于4 ， 因此后面
+  //head.next.next = head  相当于 4的后面的后面指向4 ， 那就是 4<-5
+  //然后 head.next = null , 即 null <- 4 <-5 。 
+  //最顶层通过递归条件 head == null 整体结束
   var reverseList = function (head) {
   	if (head == null || head.next == null) return head
   	let p = reverseList(head.next)
@@ -655,10 +659,27 @@ var rotate = (nums, k) => {
   }
   ```
 
-##### [24两两交换链表E](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)  ==help==
+##### [24两两交换链表E](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
 ```javascript
-//不明白
+//recursion
+var swapPairs = function (head) {
+	//终止条件：当前没有节点或者只有一个节点，肯定就不需要交换了
+	if (!head || !head.next) return head
+
+	//需要交换的两个节点是 head 和 head.next
+	let firstNode = head,
+		secondNode = head.next
+	//firstNode 连接后面交换完成的子链表
+	firstNode.next = swapPairs(secondNode.next)
+	//secondNode 连接 firstNode
+	secondNode.next = firstNode
+
+	//secondNode 变成了头结点
+	return secondNode
+}
+
+//iteration
 var swapPairs = function (head) {
 	const dummy = new ListNode(0)
 	dummy.next = head
@@ -687,6 +708,7 @@ var swapPairs = function (head) {
   ```javascript
   var hasCycle = function (head) {
   	let set = new Set()
+  
   	while (head) {
   		if (set.has(head)) {
   			return true
@@ -695,6 +717,7 @@ var swapPairs = function (head) {
   		}
   		head = head.next
   	}
+  
   	return false
   }
   ```
@@ -709,6 +732,7 @@ var swapPairs = function (head) {
   	let slow = head,
   		fast = head.next
   	while (slow != fast) {
+          //走到头
   		if (fast == null || fast.next == null) {
   			return false
   		}
@@ -733,55 +757,54 @@ var swapPairs = function (head) {
   		set.add(node)
   		node = node.next
   	}
-  	return node
+  	return null
   }
   ```
 
 - fast and slow pointer O(n) - O(1)
 
-##### [25K个一组翻转链表E](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==backlog==
+[21合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 ```javascript
-const myReverse = (head, tail) => {
-    let prev = tail.next;
-    let p = head;
-    while (prev !== tail) {
-        const nex = p.next;
-        p.next = prev;
-        prev = p;
-        p = nex;
-    }
-    return [tail, head];
-}
-var reverseKGroup = function(head, k) {
-    const hair = new ListNode(0);
-    hair.next = head;
-    let pre = hair;
+//iteration
+var mergeTwoLists = function(l1, l2) {
+    const prehead = new ListNode(-1);
 
-    while (head) {
-        let tail = pre;
-        // 查看剩余部分长度是否大于等于 k
-        for (let i = 0; i < k; ++i) {
-            tail = tail.next;
-            if (!tail) {
-                return hair.next;
-            }
+    let prev = prehead;
+    while (l1 != null && l2 != null) {
+        if (l1.val <= l2.val) {
+            prev.next = l1;
+            l1 = l1.next;
+        } else {
+            prev.next = l2;
+            l2 = l2.next;
         }
-        const nex = tail.next;
-        [head, tail] = myReverse(head, tail);
-        // 把子链表重新接回原链表
-        pre.next = head;
-        tail.next = nex;
-        pre = tail;
-        head = tail.next;
+        prev = prev.next;
     }
-    return hair.next;
+
+    // 合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
+    prev.next = l1 === null ? l2 : l1;
+
+    return prehead.next;
 };
+
+//recursion
+var mergeTwoLists = function (l1, l2) {
+	if (l1 === null) {
+		return l2
+	} else if (l2 === null) {
+		return l1
+	} else if (l1.val < l2.val) {
+		l1.next = mergeTwoLists(l1.next, l2)
+		return l1
+	} else {
+		l2.next = mergeTwoLists(l1, l2.next)
+		return l2
+	}
+}
 ```
 
-##### [21合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
-
-
+##### [25K个一组翻转链表H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==backlog==
 
 #### 作业
 
@@ -812,26 +835,6 @@ var trap = function (height) {
 }
 
 //DP O(n) O(n) 
-var trap = function (height) {
-	let ret = 0,
-		len = height.length,
-		leftMax = [],
-		rightMax = []
-
-	leftMax[0] = height[0]
-	for (let i = 1; i < len; i++) {
-		leftMax[i] = Math.max(height[i], leftMax[i - 1])
-	}
-	rightMax[len - 1] = height[len - 1]
-	for (let i = len - 2; i >= 0; i--) {
-		rightMax[i] = Math.max(height[i], rightMax[i + 1])
-	}
-	for (let i = 1; i < len - 1; i++) {
-		ret += Math.min(leftMax[i], rightMax[i]) - height[i]
-	}
-	return ret
-}
-
 //stack O(n) O(n) 
 //two pointer O(n) O(1) 
 ```
@@ -841,8 +844,10 @@ var trap = function (height) {
 ```javascript
 var plusOne = function (digits) {
 	const len = digits.length
+    //从后往前+
 	for (let i = len - 1; i >= 0; i--) {
 		digits[i]++
+        //变回个位数
 		digits[i] %= 10
 		if (digits[i] != 0) return digits
 	}

@@ -16,32 +16,33 @@ var isAnagram = function (s, t) {
 //O(n) - O(1)
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
-	let map = {}
+	let hash = {}
 	for (let c of s) {
-		map[c] ? map[c]++ : (map[c] = 1)
+		hash[c] ? hash[c]++ : (hash[c] = 1)
 	}
 	for (let c of t) {
-		map[c] ? map[c]-- : (map[c] = -1)
+		hash[c] ? hash[c]-- : (hash[c] = -1)
 	}
-	return Object.keys(map).every((key) => map[key] === 0)
+	return Object.keys(hash).every((key) => hash[key] === 0)
 }
 
 //hash optimal
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
-	let map = {}
+
+	let hash = {}
 	for (let c of s) {
-		map[c] ? map[c]++ : (map[c] = 1)
+		hash[c] ? hash[c]++ : (hash[c] = 1)
 	}
+
 	for (let c of t) {
-		//when t has one character more than s, return false
-		if (map[c]) {
-			map[c]--
-			//means t exists one character that s doesn't have
+		if (hash[c]) {
+			hash[c]--
 		} else {
 			return false
 		}
 	}
+
 	return true
 }
 ```
@@ -51,18 +52,18 @@ var isAnagram = function (s, t) {
 ```javascript
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
 var groupAnagrams = function (strs) {
-	if (strs.length === 0) {
-		throw new TypeError('invalid parameter')
-	}
-	let map = {}
-	for (let item of strs) {
-		let key = item.split('').sort().join('')
-		if (!map[key]) {
-			map[key] = []
+	let hash = {}
+
+	for (let str of strs) {
+		let key = str.split('').sort().join('')
+
+		if (!hash[key]) {
+			hash[key] = []
 		}
-		map[key].push(item)
+		hash[key].push(str)
 	}
-	return Object.values(map)
+
+	return Object.values(hash)
 }
 
 //使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
@@ -169,6 +170,47 @@ var inorderTraversal = function (root) {
 	return res
 }
 ```
+
+##### [145二叉树后序遍历H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+
+```javascript
+//recursion
+var postorderTraversal = function (root) {
+	let result = []
+	var postorderTraversalNode = (node) => {
+		if (node) {
+			postorderTraversalNode(node.left)
+			postorderTraversalNode(node.right)
+			result.push(node.val)
+		}
+	}
+	postorderTraversalNode(root)
+	return result
+}
+
+//iteration
+const postorderTraversal = (root) => {
+	const ret = []
+	const stack = []
+
+	root && stack.push(root)
+	while (stack.length > 0) {
+		const node = stack.pop()
+		// 根左右=>右左根
+		ret.unshift(node.val)
+
+		if (node.left !== null) {
+			stack.push(node.left)
+		}
+		if (node.right !== null) {
+			stack.push(node.right)
+		}
+	}
+	return ret
+}
+```
+
+
 
 ##### [589N叉树的前序遍历E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
 
