@@ -139,14 +139,10 @@ var preorderTraversal = function(root) {
 var inorderTraversal = function (root) {
 	let ret = []
 	let inorderTraversalNode = (node) => {
-		if (node !== null) {
-			if (node.left !== null) {
-				inorderTraversalNode(node.left)
-			}
+		if (node) {
+			inorderTraversalNode(node.left)
 			ret.push(node.val)
-			if (node.right !== null) {
-				inorderTraversalNode(node.right)
-			}
+			inorderTraversalNode(node.right)
 		}
 	}
 	inorderTraversalNode(root)
@@ -286,6 +282,26 @@ var postorder = function (root) {
 ##### [429N叉树的层序遍历M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
 ```javascript
+//recursion
+var levelOrder = function (root) {
+	var nums = []
+
+	let search = (nums, node, k) => {
+		if (node == null) {
+			return
+		}
+		if (nums[k] == undefined) {
+			nums[k] = []
+		}
+		nums[k].push(node.val)
+		for (var i = 0; i < node.children.length; i++) {
+			search(nums, node.children[i], k + 1)
+		}
+	}
+	search(nums, root, 0)
+	return nums
+}
+
 //使用queue
 var levelOrder = function (root) {
 	if (!root) return []
@@ -313,7 +329,6 @@ var levelOrder = function (root) {
 ```javascript
 //do not meet the requirement
 //do not meet the requirement
-//do not meet the requirement
 var topKFrequent = function (nums, k) {
 	let map = {}
 	//统计每个item次数到hash table
@@ -335,6 +350,21 @@ var topKFrequent = function (nums, k) {
 		}
 	})
 	return ret
+}
+
+//same as above do not meet the requirement
+var topKFrequent = function (nums, k) {
+	let map = new Map(),
+		arr = [...new Set(nums)]
+
+	nums.forEach((num) => {
+		if (map.has(num)) {
+			map.set(num, map.get(num) + 1)
+		} else {
+			map.set(num, 1)
+		}
+	})
+	return arr.sort((a, b) => map.get(b) - map.get(a)).slice(0, k)
 }
 ```
 

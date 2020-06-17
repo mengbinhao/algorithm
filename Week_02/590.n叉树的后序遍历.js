@@ -1,13 +1,13 @@
 /*
- * @lc app=leetcode.cn id=589 lang=javascript
+ * @lc app=leetcode.cn id=590 lang=javascript
  *
- * [589] N叉树的前序遍历
+ * [590] N叉树的后序遍历
  */
 
 // @lc code=start
 /**
  * // Definition for a Node.
- * function Node(val, children) {
+ * function Node(val,children) {
  *    this.val = val;
  *    this.children = children;
  * };
@@ -17,17 +17,16 @@
  * @param {Node} root
  * @return {number[]}
  */
-var preorder = function (root) {
+var postorder = function (root) {
 	let ret = []
 	let traversal = (node) => {
 		if (node) {
-			ret.push(node.val)
-
 			if (node.children && node.children.length) {
 				node.children.forEach((child) => {
 					traversal(child)
 				})
 			}
+			ret.push(node.val)
 		}
 	}
 

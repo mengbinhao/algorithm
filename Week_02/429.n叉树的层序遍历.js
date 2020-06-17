@@ -18,21 +18,21 @@
  * @return {number[][]}
  */
 var levelOrder = function (root) {
-	if (!root) return []
-	let queue = [root]
-	let ret = []
-	while (queue.length) {
-		let level = [],
-			len = queue.length
-		for (let i = 0; i < len; i++) {
-			let current = queue.shift()
-			level.push(current.val)
-			if (current.children && current.children.length) {
-				queue.push(...current.children)
-			}
+	var nums = []
+
+	let search = (nums, node, k) => {
+		if (node == null) {
+			return
 		}
-		ret.push(level)
+		if (nums[k] == undefined) {
+			nums[k] = []
+		}
+		nums[k].push(node.val)
+		for (var i = 0; i < node.children.length; i++) {
+			search(nums, node.children[i], k + 1)
+		}
 	}
-	return ret
+	search(nums, root, 0)
+	return nums
 }
 // @lc code=end
