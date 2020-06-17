@@ -17,14 +17,11 @@
  * @return {TreeNode}
  */
 var invertTree = function (root) {
-	if (!root) return null
-
-	let left = invertTree(root.left)
-	let right = invertTree(root.right)
-
-	root.right = left
-	root.left = right
-
-	return root
+	if (!root) {
+		return null
+	} else {
+		;[root.left, root.right] = [invertTree(root.right), invertTree(root.left)]
+		return root
+	}
 }
 // @lc code=end
