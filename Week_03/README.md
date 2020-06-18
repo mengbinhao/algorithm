@@ -119,18 +119,12 @@ var maxDepth = function (root) {
 ```javascript
 var minDepth = function (root) {
 	if (!root) return 0
-	if (!root.left && !root.right) return 1
+	let minLeftDepth = minDepth(root.left)
+	let minRightDepth = minDepth(root.right)
 
-	let tempMinDepth = Number.MAX_SAFE_INTEGER
-	if (root.left) {
-		tempMinDepth = Math.min(minDepth(root.left), tempMinDepth)
-	}
-
-	if (root.right) {
-		tempMinDepth = Math.min(minDepth(root.right), tempMinDepth)
-	}
-
-	return tempMinDepth + 1
+	return minLeftDepth === 0 || minRightDepth === 0
+		? minLeftDepth + minRightDepth + 1
+		: Math.min(minLeftDepth, minRightDepth) + 1
 }
 ```
 
@@ -139,13 +133,7 @@ var minDepth = function (root) {
 ```javascript
 var invertTree = function (root) {
 	if (!root) return null
-
-	let left = invertTree(root.left)
-	let right = invertTree(root.right)
-
-    //reverse current level node
-	root.right = left
-	root.left = right
+	;[root.left, root.right] = [invertTree(root.right), invertTree(root.left)]
 
 	return root
 }
@@ -155,43 +143,48 @@ var invertTree = function (root) {
 
 ```javascript
 //brute force
+//tme limit exceeded
 var myPow = function (x, n) {
-	if (n < 0) return 1 / myPow(x, -n)
 	if (n === 0) return 1
 	if (n === 1) return x
-
-	let res = 1
-	for (let i = 0; i <= n - 1; i++) {
-		res *= x
-	}
-	return res
-}
-
-//divide-and-conquer分治
-var myPow = function (x, n) {
 	if (n < 0) return 1 / myPow(x, -n)
-	if (n === 0) return 1
-	if (n === 1) return x
+	let ret = 1
 
-	let res = 1
-	while (n > 1) {
-		if (n % 2 === 1) {
-			res *= x
-			n--
-		}
-		x *= x
-		n /= 2
+	for (let i = 1; i <= n; i++) {
+		ret *= x
 	}
-	return res * x
+
+	return ret
 }
 
 //recursion
 var myPow = function (x, n) {
-	if (n < 0) return 1 / myPow(x, -n)
 	if (n === 0) return 1
 	if (n === 1) return x
-
+	if (n < 0) return 1 / myPow(x, -n)
+	//even的时候转换成子问题
 	return n % 2 === 1 ? x * myPow(x, n - 1) : myPow(x * x, n / 2)
+}
+
+//divide-and-conquer分治
+var myPow = function (x, n) {
+	if (n === 0) return 1
+	if (n === 1) return x
+	if (n < 0) return 1 / myPow(x, -n)
+
+	let ret = 1
+
+	while (n > 1) {
+		if (n % 2 === 1) {
+			ret *= x
+			n--
+		}
+
+		x *= x
+		n /= 2
+	}
+
+	return ret * x
 }
 ```
 
@@ -232,41 +225,20 @@ var subsets = function (nums) {
 ```javascript
 //hash and sort
 var majorityElement = function (nums) {
-	let map = {},
-		ret = []
+	let hash = {}
 
 	for (let num of nums) {
-		map[num] ? map[num]++ : (map[num] = 1)
+		hash[num] ? hash[num]++ : (hash[num] = 1)
 	}
 
-  //also can define a param, loop map to re-assign max-value
-	Object.keys(map).forEach((key) => {
-		ret.push({ key, val: map[key] })
+	let arr = []
+	Object.keys(hash).forEach((key) => {
+		arr.push({ key, val: hash[key] })
 	})
 
-	ret.sort((a, b) => b.val - a.val)
+	arr.sort((a, b) => b.val - a.val)
 
-	return ret[0].key
-}
-
-//hash
-var majorityElement = function (nums) {
-	let map = {}
-
-	for (let c of nums) {
-		map[c] ? map[c]++ : (map[c] = 1)
-	}
-
-	let maxVal = 0,
-		ret
-	Object.keys(map).forEach((key) => {
-		if (map[key] > maxVal) {
-			maxVal = map[key]
-			ret = key
-		}
-	})
-
-	return ret
+	return arr[0].key
 }
 
 // sort the array and the middle is the majority
@@ -275,23 +247,42 @@ var majorityElement = function(nums) {
     return nums[Math.floor(nums.length/2)];
 }; 
 
-//O(n) time O(1) space fastest solution
+//hash but better
+var majorityElement = function (nums) {
+	let hash = {}
+
+	for (let num of nums) {
+		hash[num] ? hash[num]++ : (hash[num] = 1)
+	}
+
+	let max = 0,
+		ret
+
+	Object.keys(hash).forEach((key) => {
+		if (hash[key] > max) {
+			max = hash[key]
+			ret = +key
+		}
+	})
+
+	return ret
+}
+
 //O(n) time O(1) space fastest solution
 var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
-
 	for (let i = 1; i < nums.length; i++) {
-        //have to judge sequence
 		if (count === 0) {
 			count++
 			ret = nums[i]
-		} else if (ret === nums[i]) {
+		} else if (nums[i] === ret) {
 			count++
 		} else {
 			count--
 		}
 	}
+
 	return ret
 }
 ```
@@ -314,7 +305,7 @@ var letterCombinations = function(digits) {
         [9, 'wxyz']
     ])
 
-    let search = (s, digits, level, ret, map) => {
+    let traversal = (s, digits, level, ret, map) => {
         if (level === digits.length) {
             ret.push(s)
             return
@@ -322,11 +313,11 @@ var letterCombinations = function(digits) {
         let letters = map.get(+digits.charAt(level))
 
         for (let l of letters) {
-            search(s + l, digits, level + 1, ret, map)
+            traversal(s + l, digits, level + 1, ret, map)
         }
     }
 
-    search('', digits, 0, ret, map)
+    traversal('', digits, 0, ret, map)
 
     return ret
 };
@@ -363,7 +354,7 @@ var letterCombinations = function (digits) {
 }
 ```
 
-##### [51N皇后H](https://leetcode-cn.com/problems/n-queens/) backlog
+##### [51N皇后H](https://leetcode-cn.com/problems/n-queens/) ==backlog==
 
 ##### [46全排列M](https://leetcode-cn.com/problems/permutations/)
 

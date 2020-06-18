@@ -61,22 +61,48 @@ var mySqrt = function (x) {
 		mid
 
 	while (left <= right) {
-         //防止溢出(right - left) / 2
-		mid = Math.floor(left + (right - left) / 2)
+		mid = Number.parseInt(left + (right - left) / 2)
 
 		if (mid * mid === x) {
 			return mid
-            
-		} else if (mid * mid < x) {
-			left = mid + 1
-		} else {
+		} else if (mid * mid > x) {
 			right = mid - 1
+		} else {
+			left = mid + 1
 		}
 	}
 
 	return right
 }
 ```
+
+##### [367有效的完全平方数E](https://leetcode-cn.com/problems/valid-perfect-square/)
+
+```javascript
+var isPerfectSquare = function (num) {
+	if (num < 2) return true
+	let left = 2,
+		right = num,
+		mid
+
+	while (left <= right) {
+		mid = Number.parseInt(left + (right - left) / 2)
+		if (mid * mid === num) {
+			return true
+		}
+
+		if (mid * mid < num) {
+			left = mid + 1
+		} else {
+			right = mid - 1
+		}
+	}
+
+	return false
+}
+```
+
+
 
 ##### [153寻找旋转数组中的最小值M](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
@@ -127,7 +153,7 @@ var search = function (nums, target) {
 		mid
 
 	while (left <= right) {
-		mid = Math.floor(left + (right - left) / 2)
+		mid = Number.parseInt(left + (right - left) /2)
 		if (nums[mid] === target) {
 			return mid
 		}
@@ -200,32 +226,6 @@ var search = function (nums, target) {
 }
 ```
 
-##### [367有效的完全平方数E](https://leetcode-cn.com/problems/valid-perfect-square/)
-
-```javascript
-var isPerfectSquare = function (num) {
-	if (num < 2) return true
-	let left = 2,
-		right = num,
-		mid
-
-	while (left <= right) {
-		mid = Number.parseInt(left + (right - left) / 2)
-		if (mid * mid === num) {
-			return true
-		}
-
-		if (mid * mid < num) {
-			left = mid + 1
-		} else {
-			right = mid - 1
-		}
-	}
-
-	return false
-}
-```
-
 ##### [200岛屿数量M](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```javascript
@@ -238,7 +238,7 @@ var numIslands = function(grid) {
     let dfs = (grid, rows, cols, row, col) => {
         if (row < 0 || col < 0 || row > rows -1 || col > cols - 1 || grid[row][col] === '0') return
 
-        grid[row][col] = '0'
+        grid[row][col] = '0' //mark as 0
 
         dfs(grid, rows, cols, row - 1, col)
         dfs(grid, rows, cols, row + 1, col)

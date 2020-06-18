@@ -18,17 +18,11 @@
  */
 var minDepth = function (root) {
 	if (!root) return 0
-	if (!root.left && !root.right) return 1
+	let minLeftDepth = minDepth(root.left)
+	let minRightDepth = minDepth(root.right)
 
-	let minDepth = Number.MAX_SAFE_INTEGER
-	if (root.left) {
-		minDepth = Math.min(minDepth(root.left), minDepth)
-	}
-
-	if (root.right) {
-		minDepth = Math.min(minDepth(root.right), minDepth)
-	}
-
-	return minDepth + 1
+	return minLeftDepth === 0 || minRightDepth === 0
+		? minLeftDepth + minRightDepth + 1
+		: Math.min(minLeftDepth, minRightDepth) + 1
 }
 // @lc code=end
