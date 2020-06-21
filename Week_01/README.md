@@ -590,22 +590,26 @@ var rotate = (nums, k) => {
 
   ```javascript
   var maxSlidingWindow = function (nums, k) {
-  	let deque = [],
+  	let deque = [], //递减deque,放的是index,第一个第一大的index,依此类推
   		ret = [],
   		len = nums.length
   	for (let i = 0; i < len; i++) {
   		//remove invalid items, like i = 4, k = 3, remove i - k + 1
-  		while (deque[0] < i - k + 1) {
+  		// 1 头部出队，清理超范围
+  		if (deque[0] < i - k + 1) {
   			deque.shift()
   		}
   		//双端队列是一个递减队列
+  		// 2 移除尾部小于当前值的元素
   		while (nums[deque[deque.length - 1]] < nums[i]) {
   			deque.pop()
   		}
   
+  		// 3 插入对尾
   		deque.push(i)
   
   		//双端队列是一个递减队列
+  		// 4 放入当前窗口最大值
   		if (i >= k - 1) {
   			ret.push(nums[deque[0]])
   		}
@@ -616,8 +620,50 @@ var rotate = (nums, k) => {
   //DP O(n) - O(n)
   ```
 
-
 #### 链表 ==不熟==
+
+##### [21合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+
+```javascript
+//iterartion
+var mergeTwoLists = function(l1, l2) {
+    const prehead = new ListNode(-1);
+
+    let prev = prehead;
+    while (l1 != null && l2 != null) {
+        if (l1.val <= l2.val) {
+            prev.next = l1;
+            l1 = l1.next;
+        } else {
+            prev.next = l2;
+            l2 = l2.next;
+        }
+        prev = prev.next;
+    }
+
+    // 合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
+    prev.next = l1 === null ? l2 : l1;
+
+    return prehead.next;
+};
+
+//recursion
+var mergeTwoLists = function(l1, l2) {
+  if (l1 === null) return l2
+  if (l2 === null) return l1
+  if (l1.val < l2.val) {
+    l1.next = mergeTwoLists(l1.next, l2)
+    return l1
+  } else {
+    l2.next = mergeTwoLists(l1, l2.next)
+    return l2
+  }
+};
+
+
+```
+
+
 
 ##### [206反转链表E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
@@ -647,7 +693,7 @@ var rotate = (nums, k) => {
 
   ```javascript
   //reverseList(head.next) 此时最后一层结束递归的条件是head.next == null , head 等于 5 ， 那么它的上一层就是 reverseList(4.next) ， head 等于4 ， 因此后面
-  //head.next.next = head  相当于 4的后面的后面指向4 ， 那就是 4<-5
+  //head.next.next = head  相当于4的后面的后面指向4 ， 那就是 4<-5
   //然后 head.next = null , 即 null <- 4 <-5 。 
   //最顶层通过递归条件 head == null 整体结束
   var reverseList = function (head) {
@@ -835,6 +881,25 @@ var trap = function (height) {
 }
 
 //DP O(n) O(n) 
+var trap = function (height) {
+	let ret = 0,
+		len = height.length,
+		leftMax = [],
+		rightMax = []
+
+	leftMax[0] = height[0]
+	for (let i = 1; i < len; i++) {
+		leftMax[i] = Math.max(height[i], leftMax[i - 1])
+	}
+	rightMax[len - 1] = height[len - 1]
+	for (let i = len - 2; i >= 0; i--) {
+		rightMax[i] = Math.max(height[i], rightMax[i + 1])
+	}
+	for (let i = 1; i < len - 1; i++) {
+		ret += Math.min(leftMax[i], rightMax[i]) - height[i]
+	}
+	return ret
+}
 //stack O(n) O(n) 
 //two pointer O(n) O(1) 
 ```
