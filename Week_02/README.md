@@ -5,7 +5,7 @@
 ##### [242有效的字母异位词E](https://leetcode-cn.com/problems/valid-anagram/)
 
 ```javascript
-//直接sort O(nlogN) n为字符串长度 - O(1)
+//直接sort O(NlogN) n为字符串长度 - O(1)
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
 	if (s.split('').sort().join('') === t.split('').sort().join('')) return true
@@ -202,6 +202,36 @@ const postorderTraversal = (root) => {
 			stack.push(node.right)
 		}
 	}
+	return ret
+}
+```
+
+##### [102二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+
+```javascript
+//BFS
+var levelOrder = function (root) {
+	if (!root) return []
+	let queue = [root],
+		ret = []
+
+	while (queue.length > 0) {
+		let size = queue.length,
+			level = []
+
+		for (let i = 0; i < size; i++) {
+			let node = queue.shift()
+			level.push(node.val)
+			if (node.left) {
+				queue.push(node.left)
+			}
+			if (node.right) {
+				queue.push(node.right)
+			}
+		}
+		ret.push(level)
+	}
+
 	return ret
 }
 ```
