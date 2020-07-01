@@ -211,17 +211,18 @@ const postorderTraversal = (root) => {
 ```javascript
 //BFS
 var levelOrder = function (root) {
-	if (!root) return []
-	let queue = [root],
-		ret = []
+    let ret = []
+	if (!root) return ret
+	let queue = [root]
 
 	while (queue.length > 0) {
-		let size = queue.length,
-			level = []
+        //每层size和每层的构造数组
+		let currentSize = queue.length,
+			currentlevel = []
 
-		for (let i = 0; i < size; i++) {
+		for (let i = 0; i < currentSize; i++) {
 			let node = queue.shift()
-			level.push(node.val)
+			currentlevel.push(node.val)
 			if (node.left) {
 				queue.push(node.left)
 			}
@@ -229,9 +230,33 @@ var levelOrder = function (root) {
 				queue.push(node.right)
 			}
 		}
-		ret.push(level)
+		ret.push(currentlevel)
 	}
 
+	return ret
+}
+
+
+//DFS
+var levelOrder = function (root) {
+	let ret = []
+	if (!root) return ret
+	let dfs = (level, node, ret) => {
+		if (ret.length < level) {
+			ret.push([])
+		}
+
+		ret[level - 1].push(node.val)
+		if (node.left) {
+			dfs(level + 1, node.left, ret)
+		}
+
+		if (node.right) {
+			dfs(level + 1, node.right, ret)
+		}
+	}
+
+	dfs(1, root, ret)
 	return ret
 }
 ```

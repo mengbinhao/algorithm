@@ -18,6 +18,7 @@ var findCircleNum = function (M) {
 	let dfs = (i, M, len, visited) => {
 		for (let j = 0; j < len; j++) {
 			if (M[i][j] === 1 && visited[j] === 0) {
+				//存在朋友圈即标注
 				visited[j] = 1
 				dfs(j, M, len, visited)
 			}
@@ -34,8 +35,3 @@ var findCircleNum = function (M) {
 	return ret
 }
 // @lc code=end
-findCircleNum([
-	[1, 1, 0],
-	[1, 1, 1],
-	[0, 1, 1],
-])
