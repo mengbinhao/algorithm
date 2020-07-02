@@ -343,38 +343,37 @@ var twoSum = function (nums, target) {
   }
   ```
   
-```
-  
-
-##### [爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+##### [70爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
 
 - 类斐波那契数 O(n) - O(1)
 
-  ```javascript
-  var climbStairs = function (n) {
-  	if (n <= 2) {
-  		return n
-  	}
-  	let first = 1,
-  		second = 2,
-  		third = 3
-  	for (let i = 3; i <= n; i++) {
-  		third = first + second
-  		first = second
-  		second = third
-  	}
-  	return third
-  }
-```
+    ```javascript
+    var climbStairs = function (n) {
+    	if (n <= 2) return n
+    
+    	let first = 1,
+    		second = 2,
+    		third = 3
+    
+    	for (let i = 3; i <= n; i++) {
+    		third = first + second
+    		first = second
+    		second = third
+    	}
+    
+    	return third
+    }
+    ```
 
 - DP O(n) - O(n)
 
   ```javascript
   var climbStairs = function (n) {
-  	let dp = Array(n + 1)
+  	const dp = new Array(n + 1)
+  	dp[0] = 1
   	dp[1] = 1
-  	dp[2] = 2
-  	for (let i = 3; i <= n; i++) {
+  
+  	for (let i = 2; i <= n; i++) {
   		dp[i] = dp[i - 1] + dp[i - 2]
   	}
   	return dp[n]

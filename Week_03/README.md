@@ -50,10 +50,12 @@ var generateParenthesis = function (n) {
 			return
 		}
 
+        //剪枝
 		if (left < n) {
 			backTracking(left + 1, right, n, ret, s + '(')
 		}
 
+        //剪枝
 		if (left > right) {
 			backTracking(left, right + 1, n, ret, s + ')')
 		}
@@ -63,6 +65,7 @@ var generateParenthesis = function (n) {
 	return ret
 }
 
+//倒推
 var generateParenthesis = function (n) {
 	let ret = []
 	let recursionParenthesis = (left, right, s) => {
@@ -354,7 +357,53 @@ var letterCombinations = function (digits) {
 }
 ```
 
-##### [51N皇后H](https://leetcode-cn.com/problems/n-queens/) ==backlog==
+##### [51N皇后H](https://leetcode-cn.com/problems/n-queens/) 
+
+```javascript
+var solveNQueens = function (n) {
+	let ret = []
+	if (n < 1) return ret
+	let cols = new Set(), //垂直线攻击位置
+		pies = new Set(), //左对角线攻击位置
+		nas = new Set() //右对角线攻击位置
+	dfs(n, 0, [], ret, cols, pies, nas)
+
+	return generateBoard(ret)
+
+	function dfs(n, row, curState, ret, cols, pies, nas) {
+		if (row >= n) {
+			ret.push([...curState])
+		}
+		for (let col = 0; col < n; col++) {
+			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
+
+			cols.add(col)
+			pies.add(row + col)
+			nas.add(row - col)
+			curState.push(col)
+
+			//drill down
+			dfs(n, row + 1, curState, ret, cols, pies, nas)
+
+			//reverse
+			curState.pop()
+			cols.delete(col)
+			pies.delete(row + col)
+			nas.delete(row - col)
+		}
+	}
+
+	function generateBoard(ret) {
+		return ret.map((solution) => {
+			return solution.map((idx) => {
+				return Array.from({ length: n }, (_, index) => {
+					return idx === index ? 'Q' : '.'
+				}).join('')
+			})
+		})
+	}
+}
+```
 
 ##### [46全排列M](https://leetcode-cn.com/problems/permutations/)
 
