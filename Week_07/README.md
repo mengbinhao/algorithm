@@ -279,3 +279,35 @@ var solve = function (board) {
 }
 ```
 
+##### [36有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)
+
+```javascript
+var isValidSudoku = function (board) {
+	let rows = {}, //记录每行对应的key
+		columns = {}, //记录每列对应的key
+		boxes = {} //记录每个小数独对应的key
+
+	for (let i = 0; i < 9; i++) {
+		for (let j = 0; j < 9; j++) {
+			let num = board[i][j]
+			if (num !== '.') {
+				//子数独序号
+				let boxIndex = Number.parseInt(i / 3) * 3 + Number.parseInt(j / 3)
+				if (
+					rows[i + '-' + num] ||
+					columns[j + '-' + num] ||
+					boxes[boxIndex + '-' + num]
+				)
+					return false
+
+				rows[i + '-' + num] = true
+				columns[j + '-' + num] = true
+				boxes[boxIndex + '-' + num] = true
+			}
+		}
+	}
+
+	return true
+}
+```
+
