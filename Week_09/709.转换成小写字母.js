@@ -10,8 +10,8 @@
  * @return {string}
  */
 var toLowerCase = function (str) {
-	return str.replace(/[A-Z]/g, (item) =>
-		String.fromCharCode(item.charCodeAt() + 32)
-	)
+	return str.replace(/[A-Z]/g, (item) => {
+		return String.fromCharCode(item.charCodeAt() + 32)
+	})
 }
 // @lc code=end

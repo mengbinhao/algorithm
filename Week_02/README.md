@@ -5,7 +5,7 @@
 ##### [242有效的字母异位词E](https://leetcode-cn.com/problems/valid-anagram/)
 
 ```javascript
-//直接sort O(NlogN) n为字符串长度 - O(1)
+//使用系统内置函数sort O(NlogN) n为字符串长度 - O(1)
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
 	if (s.split('').sort().join('') === t.split('').sort().join('')) return true
