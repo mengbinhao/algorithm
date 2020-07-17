@@ -625,84 +625,81 @@ var rotate = (nums, k) => {
 
 ```javascript
 //iterartion
-var mergeTwoLists = function(l1, l2) {
-    const prehead = new ListNode(-1);
+var mergeTwoLists = function (l1, l2) {
+	const preHead = new ListNode(-1)
+	let prev = preHead
 
-    let prev = prehead;
-    while (l1 != null && l2 != null) {
-        if (l1.val <= l2.val) {
-            prev.next = l1;
-            l1 = l1.next;
-        } else {
-            prev.next = l2;
-            l2 = l2.next;
-        }
-        prev = prev.next;
-    }
-
-    // 合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
-    prev.next = l1 === null ? l2 : l1;
-
-    return prehead.next;
-};
+	while (l1 !== null && l2 !== null) {
+		if (l1.val < l2.val) {
+			prev.next = l1
+			l1 = l1.next
+		} else {
+			prev.next = l2
+			l2 = l2.next
+		}
+		prev = prev.next
+	}
+	// 合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
+	prev.next = l1 === null ? l2 : l1
+	//返回合并后的头结点
+	return preHead.next
+}
 
 //recursion
-var mergeTwoLists = function(l1, l2) {
-  if (l1 === null) return l2
-  if (l2 === null) return l1
-  if (l1.val < l2.val) {
-    l1.next = mergeTwoLists(l1.next, l2)
-    return l1
-  } else {
-    l2.next = mergeTwoLists(l1, l2.next)
-    return l2
-  }
-};
+var mergeTwoLists = function (l1, l2) {
+	if (l1 === null) return l2
+	if (l2 === null) return l1
 
-
+	if (l1.val < l2.val) {
+		l1.next = mergeTwoLists(l1.next, l2)
+		return l1
+	} else {
+		l2.next = mergeTwoLists(l1, l2.next)
+		return l2
+	}
+}
 ```
 
 
 
 ##### [206反转链表E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
-- 迭代 O(n) - O(1)
+```javascript
+//iteration O(n) - O(1)
+var reverseList = function (head) {
+	let previous = null,
+		current = head,
+		next
+	while (current) {
+		//store next
+		next = current.next
+		//reverse
+		current.next = previous
+		//previous move forword
+		previous = current
+		//current move forword
+		current = next
+	}
+	//返回新的头引用
+	return previous
+}
 
-  ```javascript
-  var reverseList = function (head) {
-  	let previous = null,
-  		current = head,
-  		next
-  	while (current) {
-  		//store next
-  		next = current.next
-  		//reverse
-  		current.next = previous
-  		//update previous
-  		previous = current
-  		//update current
-  		current = next
-  	}
-  	//返回新的头引用
-  	return previous
-  }
-  ```
-
-- 递归 O(n) - O(1)
-
-  ```javascript
-  //reverseList(head.next) 此时最后一层结束递归的条件是head.next == null , head 等于 5 ， 那么它的上一层就是 reverseList(4.next) ， head 等于4 ， 因此后面
-  //head.next.next = head  相当于4的后面的后面指向4 ， 那就是 4<-5
-  //然后 head.next = null , 即 null <- 4 <-5 。 
-  //最顶层通过递归条件 head == null 整体结束
-  var reverseList = function (head) {
-  	if (head == null || head.next == null) return head
-  	let p = reverseList(head.next)
-  	head.next.next = head
-  	head.next = null
-  	return p
-  }
-  ```
+//这个解法很烧脑
+//这个解法很烧脑
+//个解法很烧脑
+//recurssion O(n) - O(1) 
+//reverseList(head.next) 此时最后一层结束递归的条件是head.next == null , head 等于 5 ， 那么它的上一层就是 reverseList(4.next) ， head 等于4 ， 因此后面
+//head.next.next = head  相当于4的后面的后面指向4 ， 那就是 4<-5
+//然后 head.next = null , 即 null <- 4 <-5 。 
+//最顶层通过递归条件 head == null 整体结束
+var reverseList = function (head) {
+	if (head == null || head.next == null) return head
+	let p = reverseList(head.next)
+	head.next.next = head
+	head.next = null
+	return p
+}
+```
 
 ##### [24两两交换链表E](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
@@ -748,65 +745,88 @@ var swapPairs = function (head) {
 
 #####  [141环形链表E](https://leetcode-cn.com/problems/linked-list-cycle/)
 
-- Hash O(n) - O(n)
+```javascript
+//fast and slow pointer O(n) - O(1)
+var hasCycle = function (head) {
+    //at least three ListNode can form ring
+	if (!head || !head.next) return false
+	let fast = head.next,
+		slow = head
 
-  ```javascript
-  var hasCycle = function (head) {
-  	let set = new Set()
-  
-  	while (head) {
-  		if (set.has(head)) {
-  			return true
-  		} else {
-  			set.add(head)
-  		}
-  		head = head.next
-  	}
-  
-  	return false
-  }
-  ```
+	while (fast !== slow) {
+         //fast goto end
+		if (!fast || !fast.next) return false
+		fast = fast.next.next
+		slow = slow.next
+	}
 
-- fast and slow pointer O(n) - O(1)
+	return true
+}
 
-  ```javascript
-  var hasCycle = function (head) {
-  	if (head == null || head.next == null) {
-  		return false
-  	}
-  	let slow = head,
-  		fast = head.next
-  	while (slow != fast) {
-          //走到头
-  		if (fast == null || fast.next == null) {
-  			return false
-  		}
-  		slow = slow.next
-  		fast = fast.next.next
-  	}
-  	return true
-  }
-  ```
+//标记法
+var hasCycle = function(head) {
+   while (head) {
+       if (head.flag) {
+            return true
+       }
+       else {
+           head.flag = true
+           head = head.next
+       }
+   }
+
+   return false
+};
+
+//Hash O(n) - O(n)
+var hasCycle = function (head) {
+	let set = new Set()
+
+	while (head) {
+		if (set.has(head)) {
+			return true
+		} else {
+			set.add(head)
+		}
+		head = head.next
+	}
+
+	return false
+}
+```
 
 ##### [142环形链表2E](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 
-- Hash O(n) - O(n)
+```javascript
+//标记法 O(n) - O(1)
+var detectCycle = function (head) {
+	while (head) {
+		if (head.flag) {
+			return head
+		} else {
+			head.flag = true
+			head = head.next
+		}
+	}
+	return null
+}
 
-  ```javascript
-  var detectCycle = function (head) {
-  	let set = new Set(),
-  		node = head
-  
-  	while (node) {
-  		if (set.has(node)) return node
-  		set.add(node)
-  		node = node.next
-  	}
-  	return null
-  }
-  ```
+//Hash O(n) - O(n)
+var detectCycle = function (head) {
+	let set = new Set()
 
-- fast and slow pointer O(n) - O(1)
+	while (head) {
+		if (set.has(head)) {
+			return head
+		} else {
+			set.add(head)
+		}
+		head = head.next
+	}
+
+	return null
+}
+```
 
 [21合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
