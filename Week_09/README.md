@@ -1,4 +1,4 @@
-学习笔记
+学习笔记(需要好好补习DP)
 
 ##### [14.最长公共前缀E](https://leetcode-cn.com/problems/longest-common-prefix/)
 
