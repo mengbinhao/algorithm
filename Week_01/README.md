@@ -4,47 +4,9 @@
 
 ##### [283移动零E](https://leetcode-cn.com/problems/move-zeroes/)
 
-- 循环3次，额外使用一个数组空间，第一次记录0的个数和填入非0值，第二次再加入0的值，第三次交换到原数组 O(n) - O(n)
+- 循环3次，额外使用一个数组空间，第一次记录0的位置和填入非0值，第二次额外数组再加入0的个数，第三次交换到原数组 O(n) - O(n)
 
-  ```javascript
-  var moveZeroes = function (nums) {
-  	let zeroCount = 0,
-  		ret = [],
-  		len = nums.length
-    //first fill non-zero
-  	for (let i = 0; i < len; i++) {
-  		if (nums[i] !== 0) {
-  			ret[zeroCount++] = nums[i]
-  		}
-  	}
-    //fill zero at backward
-  	while (zeroCount--) {
-  		ret.push(0)
-  	}
-    //exchange
-  	for (let i = 0; i < len; i++) {
-  		nums[i] = ret[i]
-  	}
-  }
-  ```
-  
-- 循环一次，splice去掉先，然后push个0,splice改变了数组的长度，这里有坑，所以必须从后面循环 O(n^2) - O(1)
-
-  ```javascript
-  var moveZeroes = function(nums) {
-      if (!nums || nums.length === 0) return num
-  
-      let res = []
-  
-      for (let i = nums.length; i--;) {
-          if (nums[i] === 0) {
-              nums.splice(i, 1)
-              nums.push(0)
-          }
-      }
-      return nums
-  };
-  ```
+- 循环一次，splice去掉0值，然后最后push个0,splice改变了数组的长度，这里有坑，所以必须从后面循环 O(n^2) - O(1)
 
 - 循环一整次把非0换到前面，第二次循环把0填到后面 O(n) - O(1)
 
@@ -216,27 +178,18 @@ var twoSum = function (nums, target) {
 	}
 }
 
-//obj
+//obj  不需要判重，先检查没有再加
 var twoSum = function (nums, target) {
-	if (!Array.isArray(nums) || nums.length < 2) {
-		throw new TypeError(`invalid parameter, nums=${nums}`)
-	}
-	if (
-		typeof target !== 'number' ||
-		Number.isNaN(target) ||
-		!Number.isFinite(target)
-	) {
-		throw new TypeError(`invalid parameter, target=${target}`)
-	}
-	let obj = {}
+	let hash = {}
+
 	for (let i = 0, len = nums.length; i < len; i++) {
-		if (obj[nums[i]] !== undefined) {
-			return [i, obj[nums[i]]]
+		let idx = hash[nums[i]]
+		if (idx !== undefined) {
+			return [idx, i]
 		}
-    //add first, then check if invalid value exists
-		obj[target - nums[i]] = i
+		hash[target - nums[i]] = i
 	}
-}
+}}
 ```
 
 ##### ==[15三数之和M](https://leetcode-cn.com/problems/3sum/)==
@@ -267,40 +220,7 @@ var twoSum = function (nums, target) {
   }
   ```
 
-- Hash O(n^2) O(n)  DO NOT PASS
-
-    ```javascript
-    var threeSum = function (nums) {
-    	let ret = [],
-    		map = {},
-    		hash = {}
-    	for (let i = 0; i < nums.length - 1; i++) {
-    		for (let j = i + 1; j < nums.length; j++) {
-                //key has duplicated
-    			map[0 - nums[i] - nums[j]] = [i, j]
-    		}
-    	}
-    
-    	Object.keys(map).forEach((key) => {
-    		for (let i = 0; i < nums.length; i++) {
-    			if (+key === nums[i]) {
-    				let temp = [nums[i], nums[map[key][0]], nums[map[key][1]]].sort()
-    				if (
-    					hash[temp] === undefined &&
-    					i !== map[key][0] &&
-    					i !== map[key][1]
-    				) {
-    					hash[temp] = true
-    					ret.push([nums[i], nums[map[key][0]], nums[map[key][1]]])
-    				}
-    			}
-    		}
-    	})
-    	return ret
-    }
-    ```
-
-    
+- Hash O(n^2) O(n)
 
 - 夹逼（大部分情况需已排序） O(n^2) O(1) 
 
@@ -308,7 +228,7 @@ var twoSum = function (nums, target) {
   var threeSum = function (nums) {
     if (nums.length < 2) return []
   	let ret = []
-    //hole here, need sort first
+      //hole here, need sort first
   	nums.sort((a, b) => a - b)
   	//至少留k那一位和2个pointer
   	for (let k = 0; k < nums.length - 2; k++) {
@@ -530,6 +450,35 @@ var rotate = (nums, k) => {
   }
   ```
 
+##### [394字符串解码M](https://leetcode-cn.com/problems/decode-string/)
+
+```javascript
+var decodeString = function (s) {
+	let numStack = [],
+		strStack = [],
+		multiple = 0,
+		ret = ''
+
+	for (let c of s) {
+		if (!isNaN(c)) {
+			multiple = multiple * 10 + Number(c)
+		} else if (c === '[') {
+             //前面的字母和倍数都压入栈，并释放临时变量
+			numStack.push(multiple)
+			multiple = 0
+			strStack.push(ret)
+			ret = ''
+		} else if (c === ']') {
+            //合并两个栈顶
+			ret = strStack.pop() + ret.repeat(numStack.pop())
+		} else {
+			ret += c
+		}
+	}
+	return ret
+}
+```
+
 ##### [155最小栈E](https://leetcode-cn.com/problems/min-stack/)
 
 - 使用辅助栈
@@ -619,32 +568,11 @@ var rotate = (nums, k) => {
   //DP O(n) - O(n)
   ```
 
-#### 链表 ==不熟==
+#### 链表
 
 ##### [21合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 ```javascript
-//iterartion
-var mergeTwoLists = function (l1, l2) {
-	const preHead = new ListNode(-1)
-	let prev = preHead
-
-	while (l1 !== null && l2 !== null) {
-		if (l1.val < l2.val) {
-			prev.next = l1
-			l1 = l1.next
-		} else {
-			prev.next = l2
-			l2 = l2.next
-		}
-		prev = prev.next
-	}
-	// 合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
-	prev.next = l1 === null ? l2 : l1
-	//返回合并后的头结点
-	return preHead.next
-}
-
 //recursion
 var mergeTwoLists = function (l1, l2) {
 	if (l1 === null) return l2
@@ -658,35 +586,56 @@ var mergeTwoLists = function (l1, l2) {
 		return l2
 	}
 }
+
+//iterartion
+var mergeTwoLists = function (l1, l2) {
+	const dummy = new ListNode(-1)
+	let prev = preHead
+
+	while (l1 !== null && l2 !== null) {
+		if (l1.val < l2.val) {
+			prev.next = l1
+			l1 = l1.next
+		} else {
+			prev.next = l2
+			l2 = l2.next
+		}
+        //move prev
+		prev = prev.next
+	}
+	//添加剩余的l1或l2
+	prev.next = l1 === null ? l2 : l1
+	//返回合并后的头结点
+	return dummy.next
+}
 ```
-
-
 
 ##### [206反转链表E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 ```javascript
 //iteration O(n) - O(1)
 var reverseList = function (head) {
-	let previous = null,
-		current = head,
+	let prev = null,
+		cur = head,
 		next
-	while (current) {
-		//store next
-		next = current.next
-		//reverse
-		current.next = previous
-		//previous move forword
-		previous = current
-		//current move forword
-		current = next
+
+	while (cur) {
+		//store previous next
+		next = cur.next
+		//adjust ..3->2->1->null
+		cur.next = prev
+		//move prev forward
+		prev = cur
+		//move cur forward
+		cur = next
 	}
-	//返回新的头引用
-	return previous
+	//return head
+	return prev
 }
 
 //这个解法很烧脑
 //这个解法很烧脑
-//个解法很烧脑
+//这个解法很烧脑
 //recurssion O(n) - O(1) 
 //reverseList(head.next) 此时最后一层结束递归的条件是head.next == null , head 等于 5 ， 那么它的上一层就是 reverseList(4.next) ， head 等于4 ， 因此后面
 //head.next.next = head  相当于4的后面的后面指向4 ， 那就是 4<-5
@@ -701,42 +650,41 @@ var reverseList = function (head) {
 }
 ```
 
-##### [24两两交换链表E](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
+##### [24两两交换链表M](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
 ```javascript
-//recursion
+//recursion  O(N) - O(N)
 var swapPairs = function (head) {
-	//终止条件：当前没有节点或者只有一个节点，肯定就不需要交换了
+	//当前没有节点或者只有一个节点，不需要交换
 	if (!head || !head.next) return head
 
-	//需要交换的两个节点是 head 和 head.next
+	//需要交换的两个节点是head和head.next
 	let firstNode = head,
 		secondNode = head.next
-	//firstNode 连接后面交换完成的子链表
+	//firstNode连接后面交换完成的子链表
 	firstNode.next = swapPairs(secondNode.next)
-	//secondNode 连接 firstNode
+	//secondNode连接firstNode
 	secondNode.next = firstNode
 
-	//secondNode 变成了头结点
+	//secondNode变成了头结点
 	return secondNode
 }
 
-//iteration
+//iteration, three pointer  O(N) - O(1)
 var swapPairs = function (head) {
 	const dummy = new ListNode(0)
 	dummy.next = head
 	let current = dummy
 	while (current.next != null && current.next.next != null) {
-		// 初始化双指针
 		const first = current.next
 		const second = current.next.next
 
-		// 更新双指针和 current 指针
+		//更新双指针
 		first.next = second.next
 		second.next = first
 		current.next = second
 
-		// 更新指针
+		//current指针
 		current = current.next.next
 	}
 	return dummy.next
@@ -746,9 +694,22 @@ var swapPairs = function (head) {
 #####  [141环形链表E](https://leetcode-cn.com/problems/linked-list-cycle/)
 
 ```javascript
+//标记法 O(n) - O(1)
+var hasCycle = function(head) {
+   while (head) {
+       if (head.flag) {
+            return true
+       } else {
+           head.flag = true
+           head = head.next
+       }
+   }
+   return false
+}
+
 //fast and slow pointer O(n) - O(1)
 var hasCycle = function (head) {
-    //at least three ListNode can form ring
+    //at least three ListNode can form a ring
 	if (!head || !head.next) return false
 	let fast = head.next,
 		slow = head
@@ -762,21 +723,6 @@ var hasCycle = function (head) {
 
 	return true
 }
-
-//标记法
-var hasCycle = function(head) {
-   while (head) {
-       if (head.flag) {
-            return true
-       }
-       else {
-           head.flag = true
-           head = head.next
-       }
-   }
-
-   return false
-};
 
 //Hash O(n) - O(n)
 var hasCycle = function (head) {
@@ -792,39 +738,6 @@ var hasCycle = function (head) {
 	}
 
 	return false
-}
-```
-
-##### [142环形链表2E](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
-
-```javascript
-//标记法 O(n) - O(1)
-var detectCycle = function (head) {
-	while (head) {
-		if (head.flag) {
-			return head
-		} else {
-			head.flag = true
-			head = head.next
-		}
-	}
-	return null
-}
-
-//Hash O(n) - O(n)
-var detectCycle = function (head) {
-	let set = new Set()
-
-	while (head) {
-		if (set.has(head)) {
-			return head
-		} else {
-			set.add(head)
-		}
-		head = head.next
-	}
-
-	return null
 }
 ```
 
@@ -869,7 +782,87 @@ var mergeTwoLists = function (l1, l2) {
 }
 ```
 
-##### [25K个一组翻转链表H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==backlog==
+
+##### [19删除链表的倒数第N个节点M](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+
+```javascript
+//two pointers O(n) - O(1)
+var removeNthFromEnd = function (head, n) {
+	let dummy = new ListNode(0)
+	;(dummy.next = head), (first = dummy), (second = dummy)
+
+    //first pointer move to n + 1, so that the gap between first and second is n
+	for (let i = 1; i <= n + 1; i++) {
+		first = first.next
+	}
+	//Move first to the end, maintaining the gap
+	while (first !== null) {
+		first = first.next
+		second = second.next
+	}
+
+	second.next = second.next.next
+
+	return dummy.next
+}
+```
+
+##### [876链表的中间节点E](https://leetcode-cn.com/problems/middle-of-the-linked-list/)
+
+```javascript
+//two pointers
+var middleNode = function (head) {
+	let slow = head,
+		fast = head
+
+	while (fast && fast.next) {
+		slow = slow.next
+		fast = fast.next.next
+	}
+	return slow
+}
+```
+
+##### [25K个一组翻转链表H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==不熟==
+
+```javascript
+const myReverse = (head, tail) => {
+	let prev = tail.next,
+		p = head
+	while (prev !== tail) {
+		const nex = p.next
+		p.next = prev
+		prev = p
+		p = nex
+	}
+	return [tail, head]
+}
+
+var reverseKGroup = function (head, k) {
+	const hair = new ListNode(0)
+	hair.next = head
+	let pre = hair
+
+	while (head) {
+		let tail = pre
+		//剩余部分长度小于k则不需要反转
+		for (let i = 0; i < k; ++i) {
+			tail = tail.next
+			if (!tail) {
+				return hair.next
+			}
+		}
+		const nex = tail.next
+		;[head, tail] = myReverse(head, tail)
+		// 把子链表重新接回原链表
+		pre.next = head
+		tail.next = nex
+		pre = tail
+		head = tail.next
+	}
+	return hair.next
+}
+```
 
 #### 作业
 
