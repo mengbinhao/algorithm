@@ -141,16 +141,16 @@ var twoSum = function (nums, target) {
 	) {
 		throw new TypeError(`invalid parameter, target=${target}`)
 	}
-	let obj = {},
+	let hash = {},
 		len = nums.length
 	for (let i = 0; i < len; i++) {
 		//[2, 7] 9, store 7,the other loop to search 7
-		obj[target - nums[i]] = i
+		hash[target - nums[i]] = i
 	}
 	for (let j = 0; j < len; j++) {
     //exclude same item
-		if (obj[nums[j]] !== undefined && obj[nums[j]] !== j) {
-			return [j, obj[nums[j]]]
+		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) {
+			return [j, hash[nums[j]]]
 		}
 	}
 }
@@ -178,7 +178,7 @@ var twoSum = function (nums, target) {
 	}
 }
 
-//obj  不需要判重，先检查没有再加
+//obj  不需要判重，先检查若没有再加
 var twoSum = function (nums, target) {
 	let hash = {}
 
@@ -570,6 +570,36 @@ var decodeString = function (s) {
 
 #### 链表
 
+##### [2两数相加M](https://leetcode-cn.com/problems/add-two-numbers/)
+
+```javascript
+//three point + dummyNode
+var addTwoNumbers = function (l1, l2) {
+	let dummyNode = new ListNode(0),
+		p1 = l1,
+		p2 = l2,
+		cur = dummyNode,
+		carry = 0
+	while (p1 !== null || p2 !== null) {
+		const x = p1 !== null ? p1.val : 0
+		const y = p2 !== null ? p2.val : 0
+		const sum = x + y + carry
+		carry = Math.floor(sum / 10)
+		cur.next = new ListNode(sum % 10)
+		cur = cur.next
+		if (p1 !== null) p1 = p1.next
+		if (p2 !== null) p2 = p2.next
+	}
+
+	//最后的进位
+	if (carry === 1) {
+		cur.next = new ListNode(carry)
+	}
+
+	return dummyNode.next
+}
+```
+
 ##### [21合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 ```javascript
@@ -613,7 +643,7 @@ var mergeTwoLists = function (l1, l2) {
 ##### [206反转链表E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 ```javascript
-//iteration O(n) - O(1)
+//three point iteration O(n) - O(1)
 var reverseList = function (head) {
 	let prev = null,
 		cur = head,
@@ -629,7 +659,7 @@ var reverseList = function (head) {
 		//move cur forward
 		cur = next
 	}
-	//return head
+	//return new head
 	return prev
 }
 
@@ -786,12 +816,12 @@ var mergeTwoLists = function (l1, l2) {
 ##### [19删除链表的倒数第N个节点M](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
 
 ```javascript
-//two pointers O(n) - O(1)
+//two pointers + dummyNode O(n) - O(1)
 var removeNthFromEnd = function (head, n) {
 	let dummy = new ListNode(0)
 	;(dummy.next = head), (first = dummy), (second = dummy)
 
-    //first pointer move to n + 1, so that the gap between first and second is n
+    // Advances first pointer so that the gap between first and second is n nodes apart
 	for (let i = 1; i <= n + 1; i++) {
 		first = first.next
 	}
@@ -800,9 +830,7 @@ var removeNthFromEnd = function (head, n) {
 		first = first.next
 		second = second.next
 	}
-
 	second.next = second.next.next
-
 	return dummy.next
 }
 ```
@@ -820,6 +848,35 @@ var middleNode = function (head) {
 		fast = fast.next.next
 	}
 	return slow
+}
+```
+
+##### [61旋转链表M](https://leetcode-cn.com/problems/rotate-list/)
+
+```javascript
+var rotateRight = function (head, k) {
+    // 避免掉 空和只有一个元素的情况
+	if (head === null || head.next === null) return head
+	let length = 1,
+		cur = head
+	while (cur.next) {
+		cur = cur.next
+		length++
+	}
+	cur.next = head //form ring
+    // 因为当k大于长度时, 又是一个轮回, 所以对长度取余
+	let num = k % length,
+		index = 1,
+		node = head
+    //find new tail
+	while (index < length - num) {
+		node = node.next
+		index++
+	}
+    //new head
+	let vnode = node.next
+	node.next = null //break ring
+	return vnode
 }
 ```
 
