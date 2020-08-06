@@ -522,7 +522,7 @@ var decodeString = function (s) {
   	let slideWindow = [],
   		ret = [],
   		len = nums.length
-    //loop max window value
+     //loop max window value = len - k + 1
   	for (let i = 0; i < len - k + 1; i++) {
   		for (let j = 0; j < k; j++) {
   			slideWindow.push(nums[i + j])
@@ -538,34 +538,30 @@ var decodeString = function (s) {
 
   ```javascript
   var maxSlidingWindow = function (nums, k) {
-  	let deque = [], //递减deque,放的是index,第一个第一大的index,依此类推
-  		ret = [],
-  		len = nums.length
-  	for (let i = 0; i < len; i++) {
+  	let deque = [], //放的下标,递减队列,第一个第一大的index,依此类推
+  		ret = []
+  	//头尾尾头
+  	for (let i = 0, len = nums.length; i < len; i++) {
   		//remove invalid items, like i = 4, k = 3, remove i - k + 1
-  		// 1 头部出队，清理超范围
+  		//队列满了移出去一个
   		if (deque[0] < i - k + 1) {
   			deque.shift()
   		}
-  		//双端队列是一个递减队列
-  		// 2 移除尾部小于当前值的元素
+  
+  		//双端队列放的前K大,第一个是第一大
   		while (nums[deque[deque.length - 1]] < nums[i]) {
   			deque.pop()
   		}
   
-  		// 3 插入对尾
   		deque.push(i)
   
-  		//双端队列是一个递减队列
-  		// 4 放入当前窗口最大值
+  		//开始存ret
   		if (i >= k - 1) {
   			ret.push(nums[deque[0]])
   		}
   	}
   	return ret
   }
-  
-  //DP O(n) - O(n)
   ```
 
 #### 链表
@@ -648,7 +644,6 @@ var reverseList = function (head) {
 	let prev = null,
 		cur = head,
 		next
-
 	while (cur) {
 		//store previous next
 		next = cur.next
@@ -688,36 +683,35 @@ var swapPairs = function (head) {
 	//当前没有节点或者只有一个节点，不需要交换
 	if (!head || !head.next) return head
 
-	//需要交换的两个节点是head和head.next
-	let firstNode = head,
-		secondNode = head.next
+	let first = head,
+		second = head.next
 	//firstNode连接后面交换完成的子链表
-	firstNode.next = swapPairs(secondNode.next)
+	first.next = swapPairs(second.next)
 	//secondNode连接firstNode
-	secondNode.next = firstNode
+	second.next = first
 
-	//secondNode变成了头结点
-	return secondNode
+	//递归后的每个second
+	return second
 }
 
 //iteration, three pointer  O(N) - O(1)
 var swapPairs = function (head) {
-	const dummy = new ListNode(0)
-	dummy.next = head
-	let current = dummy
-	while (current.next != null && current.next.next != null) {
-		const first = current.next
-		const second = current.next.next
+	let dummyNode = new ListNode(0)
+	;(dummyNode.next = head), (cur = dummyNode)
 
-		//更新双指针
+    //够2个了才交换
+	while (cur.next !== null && cur.next.next !== null) {
+		const first = cur.next
+		const second = first.next
+
 		first.next = second.next
 		second.next = first
-		current.next = second
-
-		//current指针
-		current = current.next.next
+		cur.next = second
+		//update cur
+		cur = cur.next.next
 	}
-	return dummy.next
+	//new head
+	return dummyNode.next
 }
 ```
 
@@ -738,20 +732,14 @@ var hasCycle = function(head) {
 }
 
 //fast and slow pointer O(n) - O(1)
-var hasCycle = function (head) {
-    //at least three ListNode can form a ring
-	if (!head || !head.next) return false
-	let fast = head.next,
-		slow = head
-
-	while (fast !== slow) {
-         //fast goto end
-		if (!fast || !fast.next) return false
-		fast = fast.next.next
-		slow = slow.next
-	}
-
-	return true
+var hasCycle = function(head) {
+   let fast = slow = head
+   while (fast && slow && fast.next) {
+       fast = fast.next.next
+       slow = slow.next
+       if (fast === slow) return true
+   }
+   return false
 }
 
 //Hash O(n) - O(n)
@@ -766,7 +754,6 @@ var hasCycle = function (head) {
 		}
 		head = head.next
 	}
-
 	return false
 }
 ```
@@ -886,6 +873,7 @@ var rotateRight = function (head, k) {
 const myReverse = (head, tail) => {
 	let prev = tail.next,
 		p = head
+    //翻转结束条件
 	while (prev !== tail) {
 		const nex = p.next
 		p.next = prev
