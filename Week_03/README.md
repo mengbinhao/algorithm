@@ -156,7 +156,6 @@ var myPow = function (x, n) {
 	for (let i = 1; i <= n; i++) {
 		ret *= x
 	}
-
 	return ret
 }
 
@@ -169,24 +168,23 @@ var myPow = function (x, n) {
 	return n % 2 === 1 ? x * myPow(x, n - 1) : myPow(x * x, n / 2)
 }
 
-//divide-and-conquer分治
+//divide-and-conquer
 var myPow = function (x, n) {
 	if (n === 0) return 1
 	if (n === 1) return x
 	if (n < 0) return 1 / myPow(x, -n)
 
 	let ret = 1
-
 	while (n > 1) {
 		if (n % 2 === 1) {
+            //补上当前遍历的x
 			ret *= x
 			n--
 		}
-
 		x *= x
 		n /= 2
 	}
-
+    //返回总数
 	return ret * x
 }
 ```
@@ -226,7 +224,29 @@ var subsets = function (nums) {
 ##### [169多数元素E](https://leetcode-cn.com/problems/majority-element/)
 
 ```javascript
+//brute force O(n^2)
+var majorityElement = function (nums) {
+	let len = nums.length
+	for (let i = 0; i < len; i++) {
+		let count = 0
+		for (let j = 0; j < len; j++) {
+			if (nums[i] === nums[j]) {
+				if (++count > Math.floor(len / 2)) return nums[i]
+			}
+		}
+	}
+}
+
+// O(NlogN)
+// sort array then the middle is majority
+// due to must be hava an answer 
+var majorityElement = function(nums) {
+    nums.sort((a,b) => a - b);
+    return nums[Math.floor(nums.length/2)];
+}; 
+
 //hash and sort
+//O(NlogN) + O(n)
 var majorityElement = function (nums) {
 	let hash = {}
 
@@ -244,13 +264,8 @@ var majorityElement = function (nums) {
 	return arr[0].key
 }
 
-// sort the array and the middle is the majority
-var majorityElement = function(nums) {
-    nums.sort((a,b) => a - b);
-    return nums[Math.floor(nums.length/2)];
-}; 
-
 //hash but better
+//O(n)
 var majorityElement = function (nums) {
 	let hash = {}
 
@@ -258,24 +273,25 @@ var majorityElement = function (nums) {
 		hash[num] ? hash[num]++ : (hash[num] = 1)
 	}
 
-	let max = 0,
+	let max = -Infinity,
 		ret
 
 	Object.keys(hash).forEach((key) => {
-		if (hash[key] > max) {
-			max = hash[key]
+        let count = hash[key]
+		if (count > max) {
+			max = count
 			ret = +key
 		}
 	})
-
 	return ret
 }
 
-//O(n) time O(1) space fastest solution
+//O(n) - O(1) best
 var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
+        //note sequence!!!
 		if (count === 0) {
 			count++
 			ret = nums[i]
@@ -285,7 +301,6 @@ var majorityElement = function (nums) {
 			count--
 		}
 	}
-
 	return ret
 }
 ```

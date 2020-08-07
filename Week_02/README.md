@@ -23,7 +23,7 @@ var isAnagram = function (s, t) {
 	for (let c of t) {
 		hash[c] ? hash[c]-- : (hash[c] = -1)
 	}
-	return Object.keys(hash).every((key) => hash[key] === 0)
+	return Object.values(hash).every((val) => val === 0)
 }
 
 //hash optimal
@@ -42,8 +42,22 @@ var isAnagram = function (s, t) {
 			return false
 		}
 	}
-
 	return true
+}
+
+//use array
+var isAnagram = function (s, t) {
+	if (s.length !== t.length) return false
+
+	let arr = Array.from({ length: 26 }, () => 0)
+
+	for (let i = 0, sLen = s.length; i < sLen; i++) {
+		arr[s.charCodeAt(i) - 97]++
+	}
+	for (let j = 0, tLen = t.length; j < tLen; j++) {
+		arr[t.charCodeAt(j) - 97]--
+	}
+	return arr.every((val) => val === 0)
 }
 ```
 
@@ -420,6 +434,64 @@ var topKFrequent = function (nums, k) {
 		}
 	})
 	return arr.sort((a, b) => map.get(b) - map.get(a)).slice(0, k)
+}
+```
+
+##### [98验证二叉搜索树M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+
+```javascript
+var isValidBST = function (root) {
+	let isValid = (node, lower, upper) => {
+		if (!node) return true
+		if (node.val <= lower || node.val >= upper) return false
+		return (
+			isValid(node.left, lower, node.val) &&
+			isValid(node.right, node.val, upper)
+		)
+	}
+
+	return isValid(root, -Infinity, Infinity)
+}
+
+//In-order
+var isValidBST = function (root) {
+  let queue = []
+  let dfs = (node) => {
+ 	if (!node) return
+ 	node.left && dfs(node.left)
+ 	queue.push(node.val)
+ 	node.right && dfs(node.right)
+  }
+  dfs(root)
+  for (let i = 0; i < queue.length; i++) {
+ 	if (queue[i] >= queue[i + 1]) {
+ 		return false
+ 	}
+  }
+  return true
+}
+```
+
+##### [236二叉树的最近公共祖先M](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+```javascript
+var lowestCommonAncestor = function (root, p, q) {
+	if (root === null || root === p || root === q) return root
+	let left = lowestCommonAncestor(root.left, p, q)
+	let right = lowestCommonAncestor(root.right, p, q)
+	return left === null ? right : right === null ? left : root
+}
+```
+
+##### [235二叉搜索树的公共祖先E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+
+```javascript
+var lowestCommonAncestor = function (root, p, q) {
+	while (root) {
+		if (root.val > p.val && root.val > q.val) root = root.left
+		else if (root.val < p.val && root.val < q.val) root = root.right
+		else return root
+	}
 }
 ```
 

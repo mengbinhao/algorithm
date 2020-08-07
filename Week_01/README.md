@@ -198,9 +198,9 @@ var twoSum = function (nums, target) {
 
   ```javascript
   var threeSum = function (nums) {
-    if (nums.length < 2) return []
+      let ret = []
+    if (nums == null || nums.length < 3) return ret
   	let len = nums.length,
-  		ret = [],
   		map = {}
   	for (let i = 0; i < len - 2; i++) {
   		for (let j = i + 1; j < len - 1; j++) {
@@ -222,12 +222,41 @@ var twoSum = function (nums, target) {
 
 - Hash O(n^2) O(n)
 
+    ```javascript
+    var threeSum = function (nums) {
+    	let arr = []
+    	if (nums == null || nums.length < 3) return arr
+    	nums.sort((a, b) => a - b)
+    	for (var i = 0; i < nums.length - 2; i++) {
+    		const hashMap = new Map()
+    		if (nums[i] > 0) break
+    		// 去重处理
+    		if (i > 0 && nums[i] == nums[i - 1]) continue
+    		for (var j = i + 1; j < nums.length; j++) {
+    			const dif = -(nums[i] + nums[j])
+    			// 去重处理
+    			// 因为hashMap是首次记录第二次才会push到数组，所以需要判断只有三次重复才能continue
+    			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2])
+    				continue
+    			if (hashMap.has(dif)) {
+    				arr.push([nums[i], nums[hashMap.get(dif)], nums[j]])
+    				hashMap.delete(dif)
+    			}
+    			hashMap.set(nums[j], j)
+    		}
+    	}
+    	return arr
+    }
+    ```
+
+    
+
 - 夹逼（大部分情况需已排序） O(n^2) O(1) 
 
   ```javascript
   var threeSum = function (nums) {
-    if (nums.length < 2) return []
-  	let ret = []
+      let ret = []
+    	if (nums == null || nums.length < 3) return ret
       //hole here, need sort first
   	nums.sort((a, b) => a - b)
   	//至少留k那一位和2个pointer
