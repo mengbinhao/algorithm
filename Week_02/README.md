@@ -225,52 +225,40 @@ const postorderTraversal = (root) => {
 ```javascript
 //BFS
 var levelOrder = function (root) {
-    let ret = []
-	if (!root) return ret
-	let queue = [root]
+	if (root === null) return []
+
+	let queue = [root],
+		ret = []
 
 	while (queue.length > 0) {
-        //每层size和每层的构造数组
-		let currentSize = queue.length,
-			currentlevel = []
+		let len = queue.length,
+			currentLevel = []
 
-		for (let i = 0; i < currentSize; i++) {
+		for (let i = 0; i < len; i++) {
 			let node = queue.shift()
-			currentlevel.push(node.val)
-			if (node.left) {
-				queue.push(node.left)
-			}
-			if (node.right) {
-				queue.push(node.right)
-			}
+			currentLevel.push(node.val)
+			if (node.left) queue.push(node.left)
+			if (node.right) queue.push(node.right)
 		}
-		ret.push(currentlevel)
+		ret.push(currentLevel)
 	}
-
 	return ret
 }
 
-
 //DFS
 var levelOrder = function (root) {
+	if (root === null) return []
+
 	let ret = []
-	if (!root) return ret
-	let dfs = (level, node, ret) => {
-		if (ret.length < level) {
-			ret.push([])
-		}
 
-		ret[level - 1].push(node.val)
-		if (node.left) {
-			dfs(level + 1, node.left, ret)
-		}
-
-		if (node.right) {
-			dfs(level + 1, node.right, ret)
-		}
+	let dfs = (node, level) => {
+		if (node === null) return
+		if (ret.length < level + 1) ret.push([])
+		ret[level].push(node.val)
+		dfs(node.left, level + 1)
+		dfs(node.right, level + 1)
 	}
-
-	dfs(1, root, ret)
+	dfs(root, 0)
 	return ret
 }
 ```
@@ -351,7 +339,7 @@ var postorder = function (root) {
 ##### [429N叉树的层序遍历M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
 ```javascript
-//recursion
+//DFS
 var levelOrder = function (root) {
 	var nums = []
 
@@ -371,7 +359,7 @@ var levelOrder = function (root) {
 	return nums
 }
 
-//使用queue
+//BFS
 var levelOrder = function (root) {
 	if (!root) return []
 	let queue = [root]
@@ -494,5 +482,31 @@ var lowestCommonAncestor = function (root, p, q) {
 	}
 }
 ```
+
+##### [104二叉树的最大深度E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+
+```javascript
+var maxDepth = function (root) {
+	return root == null
+		? 0
+		: Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
+}
+```
+
+##### [111二叉树的最小深度E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+
+```javascript
+var minDepth = function (root) {
+	if (!root) return 0
+	let minLeftDepth = minDepth(root.left)
+	let minRightDepth = minDepth(root.right)
+
+	return minLeftDepth === 0 || minRightDepth === 0
+		? minLeftDepth + minRightDepth + 1
+		: Math.min(minLeftDepth, minRightDepth) + 1
+}
+```
+
+
 
 #### heap、binary heap
