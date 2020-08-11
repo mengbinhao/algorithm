@@ -387,6 +387,7 @@ var solveNQueens = function (n) {
 
 	function dfs(n, row, curState, ret, cols, pies, nas) {
 		if (row >= n) {
+             //复制curState
 			ret.push([...curState])
 		}
 		for (let col = 0; col < n; col++) {
@@ -417,6 +418,71 @@ var solveNQueens = function (n) {
 			})
 		})
 	}
+}
+```
+
+##### [52N皇后2H](https://leetcode-cn.com/problems/n-queens-ii/)
+
+```javascript
+var totalNQueens = function (n) {
+	if (n < 1) return []
+	let ret = 0,
+		cols = new Set(),
+		pies = new Set(),
+		nas = new Set()
+	let dfs = (row) => {
+		if (row >= n) {
+			ret++
+			return
+		}
+
+		for (let col = 0; col < n; col++) {
+			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
+
+			cols.add(col)
+			pies.add(row + col)
+			nas.add(row - col)
+
+			dfs(row + 1)
+
+			cols.delete(col)
+			pies.delete(row + col)
+			nas.delete(row - col)
+		}
+	}
+	dfs(0)
+	return ret
+}
+
+
+//final bit version
+var totalNQueens = function (n) {
+	if (n < 1) return []
+	let ret = 0
+
+	let dfs = (n, row, col, pie, na) => {
+		if (row >= n) {
+			ret++
+			return
+		}
+
+		//得到当前row所有可以放Queue空位
+         //n位可放置的二进制数
+		let bits = ~(col | pie | na) & ((1 << n) - 1)
+
+		//直到没位置可放
+		while (bits) {
+			//取到最低位的1的二进制数
+			let p = bits & -bits
+			//drill down next row
+			dfs(n, row + 1, col | p, (pie | p) << 1, (na | p) >> 1)
+			//打掉二进制数最后一位的1
+			bits &= bits - 1
+		}
+	}
+
+	dfs(n, 0, 0, 0, 0)
+	return ret
 }
 ```
 
