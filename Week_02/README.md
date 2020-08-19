@@ -105,45 +105,41 @@ var groupAnagrams = function (strs) {
 }
 ```
 
-
-
 #### tree、binary tree、binary search tree
 
 ##### [144二叉树前序遍历M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
 ``` javascript
-//recursion
+//recursion, don't need to judge if node is null
 var preorderTraversal = function (root) {
 	let ret = []
-	let preorderTraversalNode = (node) => {
-		if (node !== null) {
-			ret.push(node.val)
-			preorderTraversalNode(node.left)
-			preorderTraversalNode(node.right)
-		}
+	let traversal = (node) => {
+	    if (!node) return
+        ret.push(node.val)
+        traversal(node.left)
+        traversal(node.right)
 	}
-	preorderTraversalNode(root)
+	traversal(root)
 	return ret
 }
 
-//loop. use stack
+//iteration. use stack, need to judge if node is null
 var preorderTraversal = function(root) {
     let ret = [], stack = [];
     root && stack.push(root)
     while (stack.length > 0) {
         let node = stack.pop()
         ret.push(node.val)
-
+	    //right first
         if (node.right) {
             stack.push(node.right)
         }
-
         if (node.left) {
             stack.push(node.left)
         }
     }
     return ret
-};
+}
 ```
 
 ##### [94二叉树中序遍历M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
@@ -152,30 +148,31 @@ var preorderTraversal = function(root) {
 //recursion
 var inorderTraversal = function (root) {
 	let ret = []
-	let inorderTraversalNode = (node) => {
-		if (node) {
-			inorderTraversalNode(node.left)
-			ret.push(node.val)
-			inorderTraversalNode(node.right)
-		}
+	let traversal = (node) => {
+	    if (!node) return
+        traversal(node.left)
+        ret.push(node.val)
+        traversal(node.right)
 	}
-	inorderTraversalNode(root)
+	traversal(root)
 	return ret
 }
-//loop
+//iteration
 var inorderTraversal = function (root) {
 	const stack = []
 	const res = []
 
 	while (root || stack.length) {
+        // 一直放入左儿子
 		if (root) {
-			stack.push(root)
-			root = root.left
+            stack.push(root)
+            root = root.left
+         //访问当前元素，把右儿子压入栈
 		} else {
-			root = stack.pop()
-			res.push(root.val)
-			root = root.right
-		}
+            root = stack.pop()
+		   res.push(root.val)
+		   root = root.right
+        }
 	}
 	return res
 }
@@ -187,14 +184,13 @@ var inorderTraversal = function (root) {
 //recursion
 var postorderTraversal = function (root) {
 	let result = []
-	var postorderTraversalNode = (node) => {
-		if (node) {
-			postorderTraversalNode(node.left)
-			postorderTraversalNode(node.right)
-			result.push(node.val)
-		}
+	var traversal = (node) => {
+	    if (!node) return
+        traversal(node.left)
+        traversal(node.right)
+        result.push(node.val)
 	}
-	postorderTraversalNode(root)
+	traversal(root)
 	return result
 }
 
@@ -220,10 +216,10 @@ const postorderTraversal = (root) => {
 }
 ```
 
-##### [102二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+##### [102二叉树的层序遍历M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
 ```javascript
-//BFS
+//BFS iteration
 var levelOrder = function (root) {
 	if (root === null) return []
 
@@ -253,7 +249,7 @@ var levelOrder = function (root) {
 
 	let dfs = (node, level) => {
 		if (node === null) return
-		if (ret.length < level + 1) ret.push([])
+		if (ret[level] == undefined) ret[level] = []
 		ret[level].push(node.val)
 		dfs(node.left, level + 1)
 		dfs(node.right, level + 1)
@@ -282,7 +278,7 @@ var preorder = function (root) {
 	preorderNode(root)
 	return ret
 }
-//loop
+//iteration
 var preorder = function (root) {
 	let ret = [],
 		stack = []
@@ -318,7 +314,7 @@ var postorder = function (root) {
 	postorderNode(root)
 	return ret
 }
-//loop
+//iteration
 var postorder = function (root) {
 	let ret = [],
 		stack = []
@@ -344,12 +340,8 @@ var levelOrder = function (root) {
 	var nums = []
 
 	let search = (nums, node, k) => {
-		if (node == null) {
-			return
-		}
-		if (nums[k] == undefined) {
-			nums[k] = []
-		}
+		if (node == null) return
+		if (nums[k] == undefined) nums[k] = []
 		nums[k].push(node.val)
 		for (var i = 0; i < node.children.length; i++) {
 			search(nums, node.children[i], k + 1)
@@ -367,7 +359,6 @@ var levelOrder = function (root) {
 	while (queue.length) {
 		let level = [],
 			len = queue.length
-    //依次加上层的val,然后按顺序添加子Node
 		for (let i = 0; i < len; i++) {
 			let current = queue.shift()
 			level.push(current.val)
