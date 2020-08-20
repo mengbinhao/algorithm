@@ -7,8 +7,8 @@
 ```javascript
 let bubbleSort = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
-	let len = arr.length
-	if (len <= 1) return arr
+	const len = arr.length
+	if (len < 2) return arr
 
 	for (let i = 0; i < len - 1; i++) {
 		//后面换好的不需要再继续比较
@@ -55,8 +55,8 @@ let bubbleSort = (arr) => {
 ```javascript
 let insertSort = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
-	let len = arr.length
-	if (len <= 1) return arr
+	const len = arr.length
+	if (len < 2) return arr
 
     //一开始第一个数是有序区
 	for (let i = 1; i < len; i++) {
@@ -87,6 +87,7 @@ let selectSort = (arr) => {
 	let len = arr.length
 	if (len <= 1) return arr
 
+    //双循环不重复
 	for (let i = 0; i < len - 1; i++) {
 		//存放当前循环中最小值得index,默认为循环初识值
 		let minIdx = i
@@ -95,8 +96,8 @@ let selectSort = (arr) => {
 				minIdx = j
 			}
 		}
-		//将最小值与当前循环的第一个值互换位置
-		//需要交换
+		//minIdx有更新的话，将最小值放到有序序列的最后
+        //去掉这一行不稳定
 		if (minIdx !== i) {
 			;[arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]
 		}
@@ -140,24 +141,38 @@ const merge(left, right) => {
 > 原理：如果要排序数组中下标从 p 到 r 之间的一组数据，我们选择 p 到 r 之间的任意一个数据作为 pivot（分区点）。我们遍历 p 到 r 之间的数据，将小于 pivot 的放到左边，将大于 pivot 的放到右边，将 pivot 放到中间。经过这一步骤之后，数组 p 到 r 之间的数据就被分成了三个部分，前面 p 到 q-1 之间都是小于 pivot 的，中间是 pivot，后面的 q+1 到 r 之间是大于 pivot 的，根据分治、递归的处理思想，我们可以用递归排序下标从 p 到 q-1 之间的数据和下标从 q+1 到 r 之间的数据，直到区间缩小为 1，就说明所有的数据都有序了
 
 ```javascript
-let quickSort = (nums, left, right) => {
-  if (nums.length <= 1) return nums
-  if (left < right) {
-    index = partition(nums, left, right)
-    quickSort(nums, left, index-1)
-    quickSort(nums, index+1, right)
-  }
-}
-      
-const partition = (nums, left, right) => {
-  let pivot = left, index = left + 1
-  for (let i = index; i <= right; i++) {
-    if (nums[i] < nums[pivot]) {
-      [nums[i], nums[index]] = [nums[index], nums[i]]
-      index++
-    }
-  }
-  [nums[pivot], nums[index-1]] = [nums[index-1], nums[pivot]]
-  return index -1
+let quickSort = (arr) => {
+	if (!arr || !Array.isArray(arr)) return
+	if (arr.length < 2) return arr
+
+	return quickSorted(arr, 0, arr.length - 1)
+
+	function quickSorted(arr, left, right) {
+		if (left < right) {
+			let index = partition(arr, left, right)
+			quickSorted(arr, left, index - 1)
+			quickSorted(arr, index + 1, right)
+		}
+
+		return arr
+
+		function partition(arr, left, right) {
+			let pivot = right,
+				index = left
+			//loop除pivot外其他数据
+			for (let i = index; i < right; i++) {
+				if (arr[i] < arr[pivot]) {
+					//不稳定
+					//大的放后小的放前
+					;[arr[i], arr[index]] = [arr[index], arr[i]]
+					index++
+				}
+			}
+			//pivot放左右序列中间
+			//不稳定
+			;[arr[pivot], arr[index]] = [arr[index], arr[pivot]]
+			return index
+		}
+	}
 }
 ```
