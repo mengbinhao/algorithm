@@ -172,7 +172,7 @@ let quickSort = (arr) => {
 	}
 
 	function partition(arr, left, right) {
-		//最右边pivot
+		//最右边设为pivot
 		let pivot = right,
 			index = left
 

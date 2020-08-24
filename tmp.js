@@ -22,15 +22,14 @@ let insert = (arr) => {
 	if (len < 2) return arr
 
 	for (let i = 1; i < len; i++) {
-		let tmp = arr[i]
+		let cur = arr[i]
 		j = i - 1
-		while (j >= 0 && arr[j] > tmp) {
+		while (j >= 0 && arr[j] > cur) {
 			arr[j + 1] = arr[j]
 			j--
 		}
-		arr[j + 1] = tmp
+		arr[j + 1] = cur
 	}
-
 	return arr
 }
 
@@ -47,7 +46,6 @@ let selectSort = (arr) => {
 		//不稳定
 		;[arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]
 	}
-
 	return arr
 }
 
@@ -57,24 +55,27 @@ let mergeSort = (arr) => {
 	if (len < 2) return arr
 
 	//一分为二
-	let mid = Math.floor(arr.length / 2),
+	let mid = Math.floor(len / 2),
 		left = arr.slice(0, mid),
 		right = arr.slice(mid)
 
 	//分治
 	return merge(mergeSort(left), mergeSort(right))
 
-	//使用额外空间存储中间结果
 	function merge(left, right) {
+		//使用额外空间存储中间结果
 		let ret = [],
 			lLen = left.length,
 			rLen = right.length,
 			p = (q = k = 0)
+
 		while (p < lLen && q < rLen) {
 			ret[k++] = left[p] < right[q] ? left[p++] : right[q++]
 		}
+
 		while (p < lLen) ret[k++] = left[p++]
 		while (q < rLen) ret[k++] = right[q++]
+
 		return ret
 	}
 }
@@ -99,19 +100,20 @@ let quickSort = (arr) => {
 	}
 
 	function partition(arr, left, right) {
-		//最右边pivot
+		//最右边设为pivot
 		let pivot = right,
 			index = left
 
 		for (let i = index; i < right; i++) {
-			//若小于pivot，不稳定，大的放后小的放前
 			if (arr[i] < arr[pivot]) {
+				//若小于pivot，不稳定，大的放后小的放前
 				;[arr[i], arr[index]] = [arr[index], arr[i]]
 				index++
 			}
 		}
 		//pivot放左右拍好序列中间，不稳定
-		;[arr[pivot], arr[index]] = [arr[index], arr[pivot]]
+		;[arr[index], arr[pivot]] = [arr[pivot], arr[index]]
+
 		return index
 	}
 }
