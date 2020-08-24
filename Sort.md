@@ -26,7 +26,7 @@ let bubbleSort = (arr) => {
 let bubbleSort = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	let len = arr.length
-	if (len <= 1) return arr
+	if (len < 2) return arr
 
 	for (let i = 0; i < len - 1; i++) {
 		let hasChanged = false
@@ -64,7 +64,7 @@ let insertSort = (arr) => {
 			//依次跟前面有序区进行比较
 			j = i - 1
 		while (j >= 0 && arr[j] > cur) {
-			//依次往后挪
+			//依次往后挪,有序区是一直有序的
 			arr[j + 1] = arr[j]
 			j--
 		}
@@ -89,8 +89,9 @@ let selectSort = (arr) => {
 
     //双循环不重复
 	for (let i = 0; i < len - 1; i++) {
-		//存放当前循环中最小值得index,默认为循环初识值
+		//存放当前循环中最小index,默认循环初识值
 		let minIdx = i
+        //update minIdx
 		for (let j = i + 1; j < len; j++) {
 			if (arr[j] < arr[minIdx]) {
 				minIdx = j
@@ -114,22 +115,32 @@ let selectSort = (arr) => {
 > 原理：先把数组从中间分成前后两部分，然后对前后两部分分别排序，再将排好序的两部分合并在一起，这样整个数组就都有序了。归并排序使用的就是分治思想
 
 ```javascript
-let mergeSort = (nums) => {
-  if (nums.length <= 1) return nums
-  let mid = Math.floor(nums.length/2), 
-      left = nums.slice(0, mid), 
-      right = nums.slice(mid)
-  return merge(mergeSort(left), mergeSort(right))
-}
+let mergeSort = (arr) => {
+	if (!arr || !Array.isArray(arr)) return
+	let len = arr.length
+	if (len < 2) return arr
 
-const merge(left, right) => {
-  let result = []
-  while(left.length && right.length) {
-    result.push(left[0] <= right[0] ? left.shift() : right.shift()
-  }
-  while(left.length) result.push(left.shift())
-  while(right.length) result.push(right.shift())
-  return result
+	//一分为二
+	let mid = Math.floor(arr.length / 2),
+		left = arr.slice(0, mid),
+		right = arr.slice(mid)
+
+	//分治
+	return merge(mergeSort(left), mergeSort(right))
+
+	//使用额外空间存储中间结果
+	function merge(left, right) {
+		let ret = [],
+			lLen = left.length,
+			rLen = right.length,
+			p = (q = k = 0)
+		while (p < lLen && q < rLen) {
+			ret[k++] = left[p] < right[q] ? left[p++] : right[q++]
+		}
+		while (p < lLen) ret[k++] = left[p++]
+		while (q < rLen) ret[k++] = right[q++]
+		return ret
+	}
 }
 ```
 5. quick
@@ -143,36 +154,38 @@ const merge(left, right) => {
 ```javascript
 let quickSort = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
-	if (arr.length < 2) return arr
+	let len = arr.length
+	if (len < 2) return arr
 
-	return quickSorted(arr, 0, arr.length - 1)
+	return quickSorted(arr, 0, len - 1)
 
 	function quickSorted(arr, left, right) {
+		//递归排序左和右
 		if (left < right) {
-			let index = partition(arr, left, right)
-			quickSorted(arr, left, index - 1)
-			quickSorted(arr, index + 1, right)
+			//取得中轴坐标
+			let pos = partition(arr, left, right)
+			quickSorted(arr, 0, pos - 1)
+			quickSorted(arr, pos + 1, right)
 		}
 
 		return arr
+	}
 
-		function partition(arr, left, right) {
-			let pivot = right,
-				index = left
-			//loop除pivot外其他数据
-			for (let i = index; i < right; i++) {
-				if (arr[i] < arr[pivot]) {
-					//不稳定
-					//大的放后小的放前
-					;[arr[i], arr[index]] = [arr[index], arr[i]]
-					index++
-				}
+	function partition(arr, left, right) {
+		//最右边pivot
+		let pivot = right,
+			index = left
+
+		for (let i = index; i < right; i++) {
+			//若小于pivot，不稳定，大的放后小的放前
+			if (arr[i] < arr[pivot]) {
+				;[arr[i], arr[index]] = [arr[index], arr[i]]
+				index++
 			}
-			//pivot放左右序列中间
-			//不稳定
-			;[arr[pivot], arr[index]] = [arr[index], arr[pivot]]
-			return index
 		}
+		//pivot放左右拍好序列中间，不稳定
+		;[arr[pivot], arr[index]] = [arr[index], arr[pivot]]
+		return index
 	}
 }
 ```
