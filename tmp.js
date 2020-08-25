@@ -117,14 +117,63 @@ let quickSort = (arr) => {
 		return index
 	}
 }
+
+let len // 因为声明的多个函数都需要数据长度，所以把len设置成为全局变量
+
+function buildMaxHeap(arr) {
+	// 建立大顶堆
+	len = arr.length
+	for (let i = Math.floor(len / 2); i >= 0; i--) {
+		heapify(arr, i)
+	}
+}
+
+function heapify(arr, i) {
+	// 堆调整
+	let left = 2 * i + 1,
+		right = 2 * i + 2,
+		largest = i
+
+	if (left < len && arr[left] > arr[largest]) {
+		largest = left
+	}
+
+	if (right < len && arr[right] > arr[largest]) {
+		largest = right
+	}
+
+	if (largest != i) {
+		swap(arr, i, largest)
+		heapify(arr, largest)
+	}
+}
+
+function swap(arr, i, j) {
+	let temp = arr[i]
+	arr[i] = arr[j]
+	arr[j] = temp
+}
+
+function heapSort(arr) {
+	buildMaxHeap(arr)
+
+	for (let i = arr.length - 1; i > 0; i--) {
+		swap(arr, 0, i)
+		len--
+		heapify(arr, 0)
+	}
+	return arr
+}
 let arr1 = [5, 7, 6, 3, 4, 1, 2]
 let arr2 = [5, 7, 6, 3, 4, 1, 2]
 let arr3 = [5, 7, 6, 3, 4, 1, 2]
 let arr4 = [5, 7, 6, 3, 4, 1, 2]
 let arr5 = [5, 7, 6, 3, 4, 1, 2]
+let arr6 = [5, 7, 6, 3, 4, 1, 2]
 
-console.log(bubbleSort(arr1))
-console.log(insert(arr2))
-console.log(selectSort(arr3))
-console.log(mergeSort(arr4))
-console.log(quickSort(arr5))
+//console.log(bubbleSort(arr1))
+//console.log(insert(arr2))
+//console.log(selectSort(arr3))
+//console.log(mergeSort(arr4))
+//console.log(quickSort(arr5))
+console.log(heapSort(arr6))
