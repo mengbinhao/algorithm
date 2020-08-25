@@ -118,18 +118,21 @@ let quickSort = (arr) => {
 	}
 }
 
-let len // 因为声明的多个函数都需要数据长度，所以把len设置成为全局变量
+//因为声明的多个函数都需要数据长度，所以把len设置成为全局变量
+let len
 
 function buildMaxHeap(arr) {
-	// 建立大顶堆
 	len = arr.length
-	for (let i = Math.floor(len / 2); i >= 0; i--) {
+	//对下标从2n​开始到1的数据进行堆化，下标是2n​+1到n的节点是叶子节点，我们不需要堆化
+	//实际上，对于完全二叉树来说，下标从2n​+1到n的节点都是叶子节点
+	for (let i = Math.floor(arr.length / 2); i >= 0; i--) {
 		heapify(arr, i)
 	}
 }
 
 function heapify(arr, i) {
 	// 堆调整
+	// 左右节点下标
 	let left = 2 * i + 1,
 		right = 2 * i + 2,
 		largest = i
