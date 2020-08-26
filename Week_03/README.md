@@ -245,27 +245,7 @@ var majorityElement = function(nums) {
     return nums[Math.floor(nums.length/2)];
 }; 
 
-//hash and sort
-//O(NlogN) + O(n)
-var majorityElement = function (nums) {
-	let hash = {}
-
-	for (let num of nums) {
-		hash[num] ? hash[num]++ : (hash[num] = 1)
-	}
-
-	let arr = []
-	Object.keys(hash).forEach((key) => {
-		arr.push({ key, val: hash[key] })
-	})
-
-	arr.sort((a, b) => b.val - a.val)
-
-	return arr[0].key
-}
-
-//hash but better
-//O(n)
+//hash O(n)
 var majorityElement = function (nums) {
 	let hash = {}
 
@@ -291,7 +271,7 @@ var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
-        //note sequence!!!
+         //note sequence!!!
 		if (count === 0) {
 			count++
 			ret = nums[i]

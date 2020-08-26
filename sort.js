@@ -118,55 +118,54 @@ let quickSort = (arr) => {
 	}
 }
 
-//因为声明的多个函数都需要数据长度，所以把len设置成为全局变量
-let len
-
-function buildMaxHeap(arr) {
-	len = arr.length
-	//对下标从2n​开始到1的数据进行堆化，下标是2n​+1到n的节点是叶子节点，我们不需要堆化
-	//实际上，对于完全二叉树来说，下标从2n​+1到n的节点都是叶子节点
-	for (let i = Math.floor(arr.length / 2); i >= 0; i--) {
-		heapify(arr, i)
-	}
-}
-
-function heapify(arr, i) {
-	// 堆调整
-	// 左右节点下标
-	let left = 2 * i + 1,
-		right = 2 * i + 2,
-		largest = i
-
-	if (left < len && arr[left] > arr[largest]) {
-		largest = left
-	}
-
-	if (right < len && arr[right] > arr[largest]) {
-		largest = right
-	}
-
-	if (largest != i) {
-		swap(arr, i, largest)
-		heapify(arr, largest)
-	}
-}
-
-function swap(arr, i, j) {
-	let temp = arr[i]
-	arr[i] = arr[j]
-	arr[j] = temp
-}
-
-function heapSort(arr) {
+let heapSort = (arr) => {
+	let len = arr.length
 	buildMaxHeap(arr)
 
+	//sort
 	for (let i = arr.length - 1; i > 0; i--) {
 		swap(arr, 0, i)
 		len--
 		heapify(arr, 0)
 	}
 	return arr
+
+	function buildMaxHeap(arr) {
+		len = arr.length
+		//对下标从2n​开始到1的数据进行堆化，下标是2n​+1到n的节点是叶子节点，我们不需要堆化
+		//对于完全二叉树来说，下标从2n​+1到n的节点都是叶子节点
+		for (let i = Math.floor(arr.length / 2); i >= 0; i--) {
+			heapify(arr, i)
+		}
+	}
+	//堆化
+	function heapify(arr, i) {
+		// 下标0开始对应的左右节点下标
+		let left = 2 * i + 1,
+			right = 2 * i + 2,
+			largest = i
+
+		if (left < len && arr[left] > arr[largest]) {
+			largest = left
+		}
+
+		if (right < len && arr[right] > arr[largest]) {
+			largest = right
+		}
+
+		if (largest != i) {
+			swap(arr, i, largest)
+			heapify(arr, largest)
+		}
+	}
+
+	function swap(arr, i, j) {
+		let temp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = temp
+	}
 }
+
 let arr1 = [5, 7, 6, 3, 4, 1, 2]
 let arr2 = [5, 7, 6, 3, 4, 1, 2]
 let arr3 = [5, 7, 6, 3, 4, 1, 2]

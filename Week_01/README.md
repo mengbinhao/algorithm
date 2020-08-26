@@ -198,16 +198,17 @@ var twoSum = function (nums, target) {
 
   ```javascript
   var threeSum = function (nums) {
-      let ret = []
-    if (nums == null || nums.length < 3) return ret
+  	let ret = []
+  	if (nums == null || nums.length < 3) return ret
   	let len = nums.length,
   		map = {}
   	for (let i = 0; i < len - 2; i++) {
   		for (let j = i + 1; j < len - 1; j++) {
   			for (let k = j + 1; k < len; k++) {
   				if (nums[i] + nums[j] + nums[k] === 0) {
+                        //duplicate-removal
   					let key = [nums[i], nums[j], nums[k]].sort()
-            //point is not repeat
+  					//point is not repeat
   					if (map[key] === undefined) {
   						map[key] = true
   						ret.push([nums[i], nums[j], nums[k]])
@@ -228,20 +229,23 @@ var twoSum = function (nums, target) {
     	if (nums == null || nums.length < 3) return arr
     	nums.sort((a, b) => a - b)
     	for (var i = 0; i < nums.length - 2; i++) {
-    		const hashMap = new Map()
     		if (nums[i] > 0) break
-    		// 去重处理
     		if (i > 0 && nums[i] == nums[i - 1]) continue
+             const hashMap = new Map()
     		for (var j = i + 1; j < nums.length; j++) {
-    			const dif = -(nums[i] + nums[j])
-    			// 去重处理
-    			// 因为hashMap是首次记录第二次才会push到数组，所以需要判断只有三次重复才能continue
-    			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2])
+    			const val = -(nums[i] + nums[j])
+    			// hashMap是首次记录第二次才会push到数组
+    			// 前三个数肯定不重，所以j > i + 2
+    			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2]) {
     				continue
-    			if (hashMap.has(dif)) {
-    				arr.push([nums[i], nums[hashMap.get(dif)], nums[j]])
-    				hashMap.delete(dif)
     			}
+    			//第二次push
+    			if (hashMap.has(val)) {
+    				arr.push([nums[i], nums[hashMap.get(val)], nums[j]])
+    				//防止重复[-2, 0, 0, 2, 2]
+    				hashMap.delete(val)
+    			}
+    			//第一次直接加
     			hashMap.set(nums[j], j)
     		}
     	}
@@ -249,15 +253,13 @@ var twoSum = function (nums, target) {
     }
     ```
 
-    
-
 - 夹逼（大部分情况需已排序） O(n^2) O(1) 
 
   ```javascript
   var threeSum = function (nums) {
-      let ret = []
-    	if (nums == null || nums.length < 3) return ret
-      //hole here, need sort first
+  	let ret = []
+  	if (nums == null || nums.length < 3) return ret
+  	//here is a hole, need sort first
   	nums.sort((a, b) => a - b)
   	//至少留k那一位和2个pointer
   	for (let k = 0; k < nums.length - 2; k++) {
@@ -272,14 +274,10 @@ var twoSum = function (nums, target) {
   			if (sum === 0) {
   				ret.push([nums[k], nums[left], nums[right]])
   				//skip duplicated nums[left]
-  				while (nums[left] === nums[left + 1]) {
-  					left++
-  				}
+  				while (nums[left] === nums[left + 1]) left++
   				left++
   				//skip duplicated nums[right]
-  				while (nums[right] === nums[right - 1]) {
-  					right--
-  				}
+  				while (nums[right] === nums[right - 1]) right--
   				right--
   			} else if (sum > 0) {
   				right--
@@ -353,6 +351,15 @@ var merge = function (nums1, m, nums2, n) {
 }
 
 //双指针 / 从前往后 O(n+m) - O(1)
+var merge = (nums1, m, nums2, n) => {
+	let p = m - 1,
+		q = n - 1,
+		k = m + n - 1
+	//nums2没完复制就是
+	while (q >= 0) {
+		nums1[k--] = nums1[p] > nums2[q] ? nums1[p--] : nums2[q--]
+	}
+}
 ```
 
 ##### [26删除排序数组重复项E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
@@ -763,7 +770,7 @@ var hasCycle = function(head) {
 //fast and slow pointer O(n) - O(1)
 var hasCycle = function(head) {
    let fast = slow = head
-   while (fast && slow && fast.next) {
+   while (fast && fast.next) {
        fast = fast.next.next
        slow = slow.next
        if (fast === slow) return true

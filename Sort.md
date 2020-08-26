@@ -163,9 +163,9 @@ let quickSort = (arr) => {
 		//递归排序左和右
 		if (left < right) {
 			//取得中轴坐标
-			let pos = partition(arr, left, right)
-			quickSorted(arr, 0, pos - 1)
-			quickSorted(arr, pos + 1, right)
+			let idx = partition(arr, left, right)
+			quickSorted(arr, 0, idx - 1)
+			quickSorted(arr, idx + 1, right)
 		}
 
 		return arr
