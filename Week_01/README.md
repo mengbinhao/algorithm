@@ -431,7 +431,7 @@ var rotate = (nums, k) => {
 
   ```javascript
   var isValid = function (s) {
-  	let reg = /\(\)|\[\]|\{\}/g
+  	const reg = /\(\)|\[\]|\{\}/g
   	while (s.includes('()') || s.includes('[]') || s.includes('{}')) {
   		s = s.replace(reg, '')
   	}
@@ -462,29 +462,6 @@ var rotate = (nums, k) => {
   }
   ```
 
-- use stack method ans switch O(n) - O(n) but faster than above
-
-  ```javascript
-  var isValid = function (s) {
-  	let stack = []
-  	for (let c of s) {
-  		switch (c) {
-  			case '(':
-  				stack.push(')')
-  				break
-  			case '[':
-  				stack.push(']')
-  				break
-  			case '{':
-  				stack.push('}')
-  				break
-  			default:
-  				if (c !== stack.pop()) return false
-  		}
-  	}
-  	return stack.length === 0
-  }
-  ```
 
 ##### [394字符串解码M](https://leetcode-cn.com/problems/decode-string/)
 
@@ -652,7 +629,7 @@ var mergeTwoLists = function (l1, l2) {
 //iterartion
 var mergeTwoLists = function (l1, l2) {
 	const dummy = new ListNode(-1)
-	let prev = preHead
+	let prev = dummy
 
 	while (l1 !== null && l2 !== null) {
 		if (l1.val < l2.val) {
