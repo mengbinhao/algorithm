@@ -233,12 +233,12 @@ var search = function (nums, target) {
 var numIslands = function(grid) {
     if (!grid || !grid.length) return 0
 
-    let rows = grid.length, cols = grid[0].length,ret = 0
+    let rows = grid.length, cols = grid[0].length, ret = 0
 
     let dfs = (grid, rows, cols, row, col) => {
         if (row < 0 || col < 0 || row > rows -1 || col > cols - 1 || grid[row][col] === '0') return
 
-        grid[row][col] = '0' //mark as 0
+        grid[row][col] = '0' //marked as 0
 
         dfs(grid, rows, cols, row - 1, col)
         dfs(grid, rows, cols, row + 1, col)
@@ -271,6 +271,8 @@ var numIslands = function (grid) {
 				islands++
 				grid[i][j] = 0
 				let queue = []
+                 //二维转一维
+                 //queue.add(i * n + j);
 				queue.push([i, j])
 				while (queue.length > 0) {
 					let cur = queue.shift()

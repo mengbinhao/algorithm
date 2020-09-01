@@ -85,24 +85,57 @@ var uniquePaths = function (m, n) {
 
 ```javascript
 //DP
-var minPathSum = function(grid) {
-    var n = grid.length;
-    var m = grid[0].length;
-    var dp = Array.from(new Array(n),() => new Array(m));
-    for(var i = 0;i < n;i++){
-        for(var j = 0;j < m;j++){
-            if( i != 0 && j!= 0){
-                dp[i][j] = Math.min(dp[i-1][j],dp[i][j-1])+grid[i][j];
-            }else if(i == 0 && j!=0){
-                dp[i][j] = dp[i][j-1]+grid[i][j];
-            }else if(i != 0 && j==0){
-                dp[i][j] = dp[i-1][j]+grid[i][j];
-            }else if(i == 0 && j==0){
-                dp[i][j] = grid[i][j];
-            }
-        }
-    }
-    return dp[n-1][m-1];
+var minPathSum = function (grid) {
+	if (!grid) return 0
+	let rows = grid.length,
+		cols = grid[0].length
+	if (rows === 0 || cols === 0) return 0
+	//dp[i][j]表示从(i,j)点走到(m-1, n-1)点的最小路径和
+	let dp = Array.from({ length: rows }, () => new Array(cols).fill(Infinity))
+
+	dp[0][0] = grid[0][0]
+
+	//first col
+	for (let i = 1; i < rows; i++) {
+		dp[i][0] = dp[i - 1][0] + grid[i][0]
+	}
+	//first row
+	for (let j = 1; j < cols; j++) {
+		dp[0][j] = dp[0][j - 1] + grid[0][j]
+	}
+
+	for (let i = 1; i < rows; i++) {
+		for (let j = 1; j < cols; j++) {
+			dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
+		}
+	}
+
+	return dp[rows - 1][cols - 1]
+}
+
+
+//DP optimal
+var minPathSum = function (grid) {
+	if (!grid) return 0
+	let rows = grid.length,
+		cols = grid[0].length
+	if (rows === 0 || cols === 0) return 0
+
+	//滚动数组
+	let dp = new Array(cols).fill(Infinity)
+
+	//initial
+	dp[0] = grid[0][0]
+
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (i === 0 && j === 0) continue
+			else if (i === 0) dp[j] = dp[j - 1] + grid[i][j]
+			else if (j === 0) dp[j] = dp[j] + grid[i][j]
+			else dp[j] = Math.min(dp[j], dp[j - 1]) + grid[i][j]
+		}
+	}
+	return dp[cols - 1]
 }
 ```
 

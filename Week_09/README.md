@@ -158,14 +158,14 @@ var reverseWords = function (s) {
 	return s.trim().replace(/ {2,}/g, ' ').split(' ').reverse().join(' ')
 }
 
-//使用queue
+//使用deque
 var reverseWords = function (s) {
 	let left = 0
 	let right = s.length - 1
 	let queue = []
 	let word = ''
     //去首空格
-	while (s.charAt(left) === ' ') left++
+	while (s[left] === ' ') left++
     //去首空格
 	while (s.charAt(right) === ' ') right--
 	while (left <= right) {

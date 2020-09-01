@@ -106,6 +106,7 @@ var isValidBST = function (root) {
 ##### [104二叉树的最大深度E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```javascript
+//dfs
 var maxDepth = function (root) {
 	if (!root) {
 		return 0
@@ -114,6 +115,32 @@ var maxDepth = function (root) {
 		let maxRightDepth = maxDepth(root.right)
 		return Math.max(maxLeftDepth, maxRightDepth) + 1
 	}
+}
+
+//bfs
+var maxDepth = function (root) {
+	if (root == null) {
+		return 0
+	}
+	let queue = [root],
+		ret = 0
+	while (queue.length > 0) {
+		let size = queue.length
+		//添加当前层的所有子节点
+		while (size > 0) {
+			let node = queue.shift()
+			if (node.left != null) {
+				queue.push(node.left)
+			}
+			if (node.right != null) {
+				queue.push(node.right)
+			}
+			size--
+		}
+        //一层添加完深度+1
+		ret++
+	}
+	return ret
 }
 ```
 
@@ -134,10 +161,23 @@ var minDepth = function (root) {
 ##### [226翻转二叉树E](https://leetcode-cn.com/problems/invert-binary-tree/)
 
 ```javascript
+//recursion 自底向上
 var invertTree = function (root) {
 	if (!root) return null
 	;[root.left, root.right] = [invertTree(root.right), invertTree(root.left)]
+	return root
+}
 
+//iteration 自顶向下
+var invertTree = function (root) {
+	if (root == null) return null
+	let queue = [root]
+	while (queue.length > 0) {
+		let cur = queue.shift()
+		;[cur.left, cur.right] = [cur.right, cur.left]
+		if (cur.left !== null) queue.push(cur.left)
+		if (cur.right !== null) queue.push(cur.right)
+	}
 	return root
 }
 ```

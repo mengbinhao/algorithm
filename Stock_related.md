@@ -1,3 +1,38 @@
+#### [121买股票的最佳时机E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+
+```javascript
+//brute force O(n^2) - O(1)
+var maxProfit = function(prices) {
+  let len = prices.length
+  if (len < 2) return 0
+
+  let ret = 0
+  //loop every day, find the ret
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = i + 1; j < len; j++) {
+      let profit = prices[j] - prices[i]
+      if (profit > ret) ret = profit
+    }
+  }
+  return ret
+}
+
+//loop once
+var maxProfit = function(prices) {
+  let len = prices.length
+  if (len < 2) return 0
+
+  let ret = 0, minPrices = Infinity
+  for (let i = 0; i < len; i++) {
+    if (prices[i] < minPrices) minPrices = prices[i]
+    else if (prices[i] - minPrices > ret) ret = prices[i] - minPrices
+  }
+  return ret
+}
+```
+
+
+
 #### [122买卖股票的最佳时机2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```javascript
@@ -8,7 +43,7 @@ var maxProfit = function (prices) {
 	for (let i = 1; i < prices.length; i++) {
 		if (prices[i] > prices[i - 1]) {
 			maxProfit += prices[i] - prices[i - 1]
-		}
+		}E
 	}
 	return maxProfit
 }

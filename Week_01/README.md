@@ -526,7 +526,7 @@ var decodeString = function (s) {
 
 ##### [84柱状图中最大的矩形H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)   ==backlog==
 
-##### [239滑动窗口最大值H ](https://leetcode-cn.com/problems/sliding-window-maximum/) ==backlog==
+##### [239滑动窗口最大值H ](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 - brute force O(n * k) - O(n - k +1)
 
@@ -535,7 +535,7 @@ var decodeString = function (s) {
   	let slideWindow = [],
   		ret = [],
   		len = nums.length
-     //loop max window value = len - k + 1
+      //loop max window value = len - k + 1
   	for (let i = 0; i < len - k + 1; i++) {
   		for (let j = 0; j < k; j++) {
   			slideWindow.push(nums[i + j])
@@ -555,20 +555,18 @@ var decodeString = function (s) {
   		ret = []
   	//头尾尾头
   	for (let i = 0, len = nums.length; i < len; i++) {
-  		//remove invalid items, like i = 4, k = 3, remove i - k + 1
   		//队列满了移出去一个
   		if (deque[0] < i - k + 1) {
   			deque.shift()
   		}
   
-  		//双端队列放的前K大,第一个是第一大
+  		//维护递减队列,第一个第一大的index,依此类推
   		while (nums[deque[deque.length - 1]] < nums[i]) {
   			deque.pop()
   		}
   
   		deque.push(i)
   
-  		//开始存ret
   		if (i >= k - 1) {
   			ret.push(nums[deque[0]])
   		}
