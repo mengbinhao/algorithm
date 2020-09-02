@@ -1,4 +1,4 @@
-#### [121买股票的最佳时机E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+#### [121. 买股票的最佳时机E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```javascript
 //brute force O(n^2) - O(1)
@@ -33,7 +33,7 @@ var maxProfit = function(prices) {
 
 
 
-#### [122买卖股票的最佳时机2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+#### [122. 买卖股票的最佳时机2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```javascript
 //Greedy

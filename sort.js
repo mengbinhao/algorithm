@@ -44,6 +44,7 @@ let selectSort = (arr) => {
 			if (arr[j] < arr[minIdx]) minIdx = j
 		}
 		//不稳定
+		// if (i !== minIdx)
 		;[arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]
 	}
 	return arr
