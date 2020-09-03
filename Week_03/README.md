@@ -397,7 +397,7 @@ var letterCombinations = function (digits) {
 ```javascript
 var solveNQueens = function (n) {
 	let ret = []
-	if (n < 1) return ret
+	if (n === 0) return ret
 	let cols = new Set(), //垂直线攻击位置
 		pies = new Set(), //左对角线攻击位置
 		nas = new Set() //右对角线攻击位置
