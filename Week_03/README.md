@@ -396,48 +396,51 @@ var letterCombinations = function (digits) {
 
 ```javascript
 var solveNQueens = function (n) {
-	let ret = []
-	if (n === 0) return ret
-	let cols = new Set(), //垂直线攻击位置
-		pies = new Set(), //左对角线攻击位置
-		nas = new Set() //右对角线攻击位置
-	dfs(n, 0, [], ret, cols, pies, nas)
+  if (n < 1) return []
+	let solutions = [],
+    	cols = new Set(), //垂直线攻击位置
+	    pies = new Set(), //左对角线攻击位置
+	    nas = new Set() //右对角线攻击位置
 
-	return generateBoard(ret)
+  let dfs = (row, curState) => {
+    if (row >= n) {
+      //复制curState
+      solutions.push([...curState])
+      return
+    }
 
-	function dfs(n, row, curState, ret, cols, pies, nas) {
-		if (row >= n) {
-             //复制curState
-			ret.push([...curState])
-		}
-		for (let col = 0; col < n; col++) {
-			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
+    for (let col = 0; col < n; col++) {
+      if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
 
-			cols.add(col)
-			pies.add(row + col)
-			nas.add(row - col)
-			curState.push(col)
+      cols.add(col)
+      pies.add(row + col)
+      nas.add(row - col)
+      curState.push(col)
 
-			//drill down
-			dfs(n, row + 1, curState, ret, cols, pies, nas)
+      //drill down
+      dfs(row + 1, curState)
 
-			//reverse
-			curState.pop()
-			cols.delete(col)
-			pies.delete(row + col)
-			nas.delete(row - col)
-		}
-	}
+      //reverse
+      cols.delete(col)
+      pies.delete(row + col)
+      nas.delete(row - col)
+      curState.pop()
+    }
+    
+  }
+  
+  dfs(0, [])
+  return generatorBoard(solutions)
 
-	function generateBoard(ret) {
-		return ret.map((solution) => {
-			return solution.map((idx) => {
-				return Array.from({ length: n }, (_, index) => {
-					return idx === index ? 'Q' : '.'
-				}).join('')
-			})
-		})
-	}
+  function generatorBoard(solutions) {
+    return solutions.map(solution => {
+      return solution.map(position => {
+        return Array.from({length:n}, (_, idx) => {
+          return position === idx ? 'Q' : '.'
+        }).join('')
+      })
+    })
+  }
 }
 ```
 
@@ -494,10 +497,11 @@ var totalNQueens = function (n) {
 		while (bits) {
 			//取到最低位的1的二进制数
 			let p = bits & -bits
+             //打掉二进制数最后一位的1，及放上皇后
+			bits &= bits - 1
 			//drill down next row
 			dfs(n, row + 1, col | p, (pie | p) << 1, (na | p) >> 1)
-			//打掉二进制数最后一位的1
-			bits &= bits - 1
+			//no need reverse
 		}
 	}
 
