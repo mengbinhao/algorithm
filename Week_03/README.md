@@ -515,33 +515,28 @@ var totalNQueens = function (n) {
 ```javascript
 //回溯 dfs
 var permute = function (nums) {
-	if (nums.length === 0) return []
+	const len = nums.length, ans = []
+  if (len === 0) return ans
+  const visited = Array.from({length: len}, () => false)
 
-	let ret = [],
-		path = []
-	used = Array.from({ length: nums.length }, (item) => false)
+  let dfs = (nums, depth, path) => {
+    if (depth === nums.length) {
+      ans.push([...path])
+      return
+    }
 
-	let dfs = (nums, depth, path, used, ret) => {
-		if (depth === nums.length) {
-			ret.push([...path])
-			return
-		}
+    for (let i = 0; i < len; i++) {
+      if (visited[i]) continue
+      visited[i] = true
+      dfs(nums, depth + 1, [...path, nums[i]])
 
-		for (let i = 0; i < nums.length; i++) {
-			if (used[i]) continue
-			path.push(nums[i])
-			used[i] = true
-			dfs(nums, depth + 1, path, used, ret)
+      //reverse
+      visited[i] = false
+    }
+  }
 
-			//reverse
-			path.pop(nums[i])
-			used[i] = false
-		}
-	}
-
-	dfs(nums, 0, path, used, ret)
-
-	return ret
+  dfs(nums, 0, [])
+	return ans
 }
 ```
 

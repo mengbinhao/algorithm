@@ -1,28 +1,64 @@
 ### [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
 ```javascript
-var longestPalindrome = function (s) {
-	function isValidPalindrome(str, l, r) {
-		while (l < r) {
-			if (str[l] !== str[r]) {
-				return false
-			}
-			l++
-			r--
-		}
-		return true
-	}
+//brute force + reverse()     
+//O(N^3) - O(1)
+var longestPalindrome = function(s) {
+  if (!s) return ''
+  const len = s.length
+  if (len < 2) return s
 
-	let len = s.length,
-		length
+  let maxLen = 1, begin = 0
+
+  const isPalindrome = (s, l, r) => {
+    while (l < r) {
+      if (s[l] !== s[r]) return false
+      l++
+      r--
+    }
+    return true
+  }
+
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = i + 1; j < len; j++) {
+      if (j - i + 1 > maxLen && isPalindrome(s, i, j)) {
+        maxLen = j - i + 1
+        begin = i
+      }
+    }
+  }
+
+  return s.substring(begin, begin + maxLen)
+}
+
+//DP  O(n^2) - O(n^2)
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
 	if (len < 2) return s
 
-	let maxLen = 1,
-		begin = 0
+    //dp[i..j] 表示从i到j的子串是否是回文
+	const dp = Array.from({ length: len }, () => new Array(len).fill(0))
 
-	for (let i = 0; i < len - 1; i++) {
-		for (let j = i + 1; j < len; j++) {
-			if (j - i + 1 > maxLen && isValidPalindrome(s, i, j)) {
+	let begin = 0,
+		maxLen = 1
+
+	// for (let i = 0; i < len; i++) {
+	//   dp[i][j] = true
+	// }
+
+	for (let j = 1; j < len; j++) {
+		for (let i = 0; i < j; i++) {
+			if (s[i] !== s[j]) {
+				dp[i][j] = false
+			} else {
+				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论了
+				if (j - i < 3) dp[i][j] = true
+				else dp[i][j] = dp[i + 1][j - 1]
+			}
+
+             //每次update result
+			if (dp[i][j] && j - i + 1 > maxLen) {
 				maxLen = j - i + 1
 				begin = i
 			}
@@ -30,6 +66,39 @@ var longestPalindrome = function (s) {
 	}
 
 	return s.substring(begin, begin + maxLen)
+}
+
+//中心扩展法 O(n^2) - O(1)
+var longestPalindrome = function(s) {
+  if (!s) return ''
+  const len = s.length
+  if (len < 2) return s
+
+  const centerSpread = (s, l, r) => {
+    while (l >= 0 && r < s.length && s[l] === s[r]) {
+      l--
+      r++
+    }
+    return r - l - 1
+  }
+
+  let begin = 0, end = 0
+
+  for (let i = 0; i < len; i++) {
+    //需要包括长度为奇偶两种情况
+    //从i开始扩散
+    let len1 = centerSpread(s, i, i)
+    //从i、j中间开始扩散
+    let len2 = centerSpread(s, i, i + 1)
+    let len = Math.max(len1, len2)
+    //计算回文长度
+    if (len > end - begin) {
+      begin = i - Math.floor((len - 1) / 2)
+      end = i + Math.floor(len / 2)
+    }
+  }
+
+  return s.substring(begin, end + 1)
 }
 ```
 
@@ -70,23 +139,25 @@ var myAtoi = function (str) {
 ### [125. 验证回文串](https://leetcode-cn.com/problems/valid-palindrome/)
 
 ```javascript
-var isPalindrome = function (s) {
-	if (typeof s !== 'string') return false
+//O(∣s∣) - O(∣s∣)
+//loop once, filter letter and digit, compare if target str === reverse target string
 
-	s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
 
-	let left = 0
-	right = s.length - 1
+//O(∣s∣)，其中 |s| 是字符串s的长度 - O(1)
+var isPalindrome = function(s) {
+    if (typeof s !== 'string') return false
 
-	while (left < right) {
-		if (s[left] !== s[right]) {
-			return false
-		}
-		left++
-		right--
-	}
+    s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
+    
+    let l = 0, r = s.length - 1
+	//two pointer， 向中间夹逼
+    while (l < r) {
+      if (s[l] !== s[r]) return false
+      l++
+      r--
+    }
 
-	return true
+    return true
 }
 ```
 
