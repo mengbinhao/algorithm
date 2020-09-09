@@ -38,11 +38,12 @@ var longestPalindrome = function (s) {
 	if (len < 2) return s
 
     //dp[i..j] 表示从i到j的子串是否是回文
-	const dp = Array.from({ length: len }, () => new Array(len).fill(0))
+	const dp = Array.from({ length: len }, () => new Array(len))
 
 	let begin = 0,
 		maxLen = 1
 
+ 	//i、j相等的情况
 	// for (let i = 0; i < len; i++) {
 	//   dp[i][j] = true
 	// }
@@ -68,37 +69,29 @@ var longestPalindrome = function (s) {
 	return s.substring(begin, begin + maxLen)
 }
 
-//中心扩展法 O(n^2) - O(1)
-var longestPalindrome = function(s) {
-  if (!s) return ''
-  const len = s.length
-  if (len < 2) return s
+//中心扩展法 O(n^2) - O(1) 更易于理解的一种code
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
 
-  const centerSpread = (s, l, r) => {
-    while (l >= 0 && r < s.length && s[l] === s[r]) {
-      l--
-      r++
-    }
-    return r - l - 1
-  }
+	let ret = ''
 
-  let begin = 0, end = 0
-
-  for (let i = 0; i < len; i++) {
-    //需要包括长度为奇偶两种情况
-    //从i开始扩散
-    let len1 = centerSpread(s, i, i)
-    //从i、j中间开始扩散
-    let len2 = centerSpread(s, i, i + 1)
-    let len = Math.max(len1, len2)
-    //计算回文长度
-    if (len > end - begin) {
-      begin = i - Math.floor((len - 1) / 2)
-      end = i + Math.floor(len / 2)
-    }
-  }
-
-  return s.substring(begin, end + 1)
+    //共2 * len - 1个中心(0,0)、(0,1)、(1,1)、(1,2)...
+	for (let i = 0; i < len * 2 - 1; i++) {
+        // left和right指针和中心点的关系
+        //left有一个很明显的2倍关系的存在
+        //right，可能和left指向同一个（偶数时），也可能往后移动一个（奇数）
+		let left = Math.floor(i / 2)
+		let right = left + (i % 2)
+		while (left >= 0 && right < len && s[left] == s[right]) {
+			let tmp = s.substring(left, right + 1)
+			if (tmp.length > ret.length) ret = tmp
+			left--
+			right++
+		}
+	}
+	return ret
 }
 ```
 
@@ -112,18 +105,20 @@ var myAtoi = function (str) {
 		flag = 1,
 		max = Math.pow(2, 31) - 1,
 		min = -Math.pow(2, 31)
-	if (len === 0) return ret
+    //handle blank space
 	while (str[i] === ' ' && i < len) i++
+    //hanle sign bit
 	if (str[i] === '+' || str[i] === '-') {
 		flag = str[i] === '+' ? 1 : -1
 		i++
 	}
+    
 	while (i < len && isDigit(str[i])) {
 		let val = +str[i]
 		ret = ret * 10 + val
 		i++
 	}
-
+	//check range
 	if (ret > max || ret < min) {
 		return flag > 0 ? max : min
 	}
@@ -464,13 +459,15 @@ var checkInclusion = function (s1, s2) {
 ### [647. 回文子串](https://leetcode-cn.com/problems/palindromic-substrings/)
 
 ```javascript
-//brute force
+//DP
 var countSubstrings = function (s) {
 	let len = s.length,
 		ret = 0
 
-	let dp = Array.from({ length: len }, () => new Array(len).fill(false))
+    //dp[i][j] 表示字符串s在[i,j]区间的子串是否是一个回文串
+	let dp = Array.from({ length: len }, () => new Array(len))
 
+    //填写表格上半部分
 	for (let j = 0; j < len; j++) {
 		for (let i = 0; i <= j; i++) {
 			if (i === j) {
@@ -478,11 +475,11 @@ var countSubstrings = function (s) {
 				dp[i][j] = true
 				ret++
 			} else if (j - i === 1 && s[i] === s[j]) {
-				// 两个相同的字符
+				//两个相同的字符
 				dp[i][j] = true
 				ret++
 			} else if (j - i > 1 && s[i] === s[j] && dp[i + 1][j - 1]) {
-				// 多于两个字符
+				//多于两个字符
 				dp[i][j] = true
 				ret++
 			}
@@ -491,7 +488,7 @@ var countSubstrings = function (s) {
 	return ret
 }
 
-//two point
+//中心扩展法
 var countSubstrings = function (s) {
  	const n = s.length
  	let ans = 0
