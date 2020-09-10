@@ -79,7 +79,7 @@ var longestPalindrome = function (s) {
 
     //共2 * len - 1个中心(0,0)、(0,1)、(1,1)、(1,2)...
 	for (let i = 0; i < len * 2 - 1; i++) {
-        // left和right指针和中心点的关系
+        //left和right指针和中心点的关系
         //left有一个很明显的2倍关系的存在
         //right，可能和left指向同一个（偶数时），也可能往后移动一个（奇数）
 		let left = Math.floor(i / 2)
@@ -164,7 +164,7 @@ var reverseWords = function (s) {
 	return s.trim().replace(/ {2,}/g, ' ').split(' ').reverse().join(' ')
 }
 
-//使用deque
+//使用deque_1
 var reverseWords = function (s) {
 	let left = 0
 	let right = s.length - 1
@@ -185,6 +185,8 @@ var reverseWords = function (s) {
 	queue.unshift(word)
 	return queue.join(' ')
 }
+
+//使用deque_2
 ```
 
 ### [344. 反转字符串E](https://leetcode-cn.com/problems/reverse-string/)
