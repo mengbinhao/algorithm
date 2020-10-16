@@ -1,4 +1,5 @@
-1. bubble
+### 1 bubble
+
 > 最好时间复杂度O(n),最坏时间复杂度O(n^2),平均时间复杂度也是O(n^2)
 >
 > 不需要额外的空间，空间复杂度是 O(1)。排序过程中，当元素相同时不交换，稳定排序算法
@@ -44,7 +45,7 @@ let bubbleSort = (arr) => {
 }
 ```
 
-2. insert
+### 2 insert
 
 > 最好时间复杂度O(n),最坏时间复杂度O(n^2),平均时间复杂度也是O(n^2)
 >
@@ -73,7 +74,7 @@ let insertSort = (arr) => {
 }
 ```
 
-3. select
+### 3 select
 
 > 最好时间复杂度O(n),最坏时间复杂度O(n^2),平均时间复杂度也是O(n^2)
 >
@@ -106,7 +107,7 @@ let selectSort = (arr) => {
 }
 ```
 
-4. merge
+### 4 merge
 
 > 最好、最坏、平均时间复杂度都是 O(nlogn)
 >
@@ -143,7 +144,7 @@ let mergeSort = (arr) => {
 	}
 }
 ```
-5. quick
+### 5 quick
 
 > 最好O(nlogn)、最坏O(n^2)、平均时间复杂度都是O(nlogn)
 >
@@ -183,7 +184,7 @@ let quickSort = (arr) => {
 				index++
 			}
 		}
-		//pivot放左右拍好序列中间，不稳定
+		//pivot放左右排好序列中间，不稳定
 		;[arr[pivot], arr[index]] = [arr[index], arr[pivot]]
 		return index
 	}
