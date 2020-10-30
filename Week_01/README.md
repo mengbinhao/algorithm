@@ -573,7 +573,7 @@ var trap = function (height) {
 	return ret
 }
 
-//DP O(n) O(n) 
+//备忘录优化 O(n) O(n) 
 var trap = function (height) {
 	let ret = 0,
 		len = height.length,
@@ -593,8 +593,28 @@ var trap = function (height) {
 	}
 	return ret
 }
-//stack O(n) O(n) 
+
 //two pointer O(n) O(1) 
+var trap = function(height) {
+  if (height.length === 0) return 0
+  let len = height.length, left = 0, right = len - 1, ret = 0
+
+  let l_max = height[0], r_max = height[len - 1]
+
+  while (left < right) {
+    l_max = Math.max(l_max, height[left])
+    r_max = Math.max(r_max, height[right])
+
+    if (l_max < r_max) {
+      ret += l_max - height[left]
+      left++
+    } else {
+      ret += r_max - height[right]
+      right--
+    }
+  }
+  return ret
+}
 ```
 
 ##### [66加一E](https://leetcode-cn.com/problems/plus-one/)
