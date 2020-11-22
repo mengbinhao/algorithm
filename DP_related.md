@@ -1,3 +1,20 @@
+- DP使用场景
+  - 求‘最’优解问题（最大值和最小值）
+    - 乘积最大子数组
+    - 最长回文子串
+    - 最长上升子序列
+  - 求可行性（True 或 False）
+    - 凑零兑换问题
+    - 字符串交错组成问题
+  - 求方案总数
+    - 硬币组合问题
+    - 路径规划问题
+  - 数据结构不可排序（Unsortable）
+    - 最小的 k 个数 不能DP
+  - 算法不可使用交换（Non-swappable）
+    - 8皇后 不能DP
+    - 全排列 不能DP
+
 #### [121. 买股票的最佳时机E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```javascript

@@ -1,27 +1,11 @@
-1. bubble
+### 1 bubble
+
 > 最好时间复杂度O(n),最坏时间复杂度O(n^2),平均时间复杂度也是O(n^2)
 >
 > 不需要额外的空间，空间复杂度是 O(1)。排序过程中，当元素相同时不交换，稳定排序算法
 >
 > 原理：冒泡排序只会操作相邻的两个数据。每次冒泡操作都会对相邻的两个元素进行比较，看是否满足大小关系要求。如果不满足就让它俩互换。一次冒泡会让至少一个元素移动到它应该在的位置，重复 n 次，就完成了 n 个数据的排序工作。
 ```javascript
-let bubbleSort = (arr) => {
-	if (!arr || !Array.isArray(arr)) return
-	const len = arr.length
-	if (len < 2) return arr
-
-	for (let i = 0; i < len - 1; i++) {
-		//后面换好的不需要再继续比较
-		for (let j = 0; j < len - i - 1; j++) {
-			if (arr[j] > arr[j + 1]) {
-				;[arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
-			}
-		}
-	}
-	return arr
-}
-
-
 //optimal
 let bubbleSort = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
@@ -37,14 +21,14 @@ let bubbleSort = (arr) => {
 				hasChanged = true
 			}
 		}
-		//当前轮冒泡没有交换及退出
+		//当前轮无冒泡则退出
 		if (!hasChanged) break
 	}
 	return arr
 }
 ```
 
-2. insert
+### 2 insert
 
 > 最好时间复杂度O(n),最坏时间复杂度O(n^2),平均时间复杂度也是O(n^2)
 >
@@ -73,7 +57,7 @@ let insertSort = (arr) => {
 }
 ```
 
-3. select
+### 3 select
 
 > 最好时间复杂度O(n),最坏时间复杂度O(n^2),平均时间复杂度也是O(n^2)
 >
@@ -106,7 +90,7 @@ let selectSort = (arr) => {
 }
 ```
 
-4. merge
+### 4 merge
 
 > 最好、最坏、平均时间复杂度都是 O(nlogn)
 >
@@ -143,11 +127,11 @@ let mergeSort = (arr) => {
 	}
 }
 ```
-5. quick
+### 5 quick
 
 > 最好O(nlogn)、最坏O(n^2)、平均时间复杂度都是O(nlogn)
 >
-> 空间复杂度O(1)，所以空间复杂度为 O(n),不稳定的排序算法
+> 空间复杂度为 O(n), 不稳定的排序算法
 >
 > 原理：如果要排序数组中下标从 p 到 r 之间的一组数据，我们选择 p 到 r 之间的任意一个数据作为 pivot（分区点）。我们遍历 p 到 r 之间的数据，将小于 pivot 的放到左边，将大于 pivot 的放到右边，将 pivot 放到中间。经过这一步骤之后，数组 p 到 r 之间的数据就被分成了三个部分，前面 p 到 q-1 之间都是小于 pivot 的，中间是 pivot，后面的 q+1 到 r 之间是大于 pivot 的，根据分治、递归的处理思想，我们可以用递归排序下标从 p 到 q-1 之间的数据和下标从 q+1 到 r 之间的数据，直到区间缩小为 1，就说明所有的数据都有序了
 
@@ -183,9 +167,61 @@ let quickSort = (arr) => {
 				index++
 			}
 		}
-		//pivot放左右拍好序列中间，不稳定
+		//pivot放左右排好序列中间，不稳定
 		;[arr[pivot], arr[index]] = [arr[index], arr[pivot]]
 		return index
 	}
 }
 ```
+
+### 6 heap
+
+> 最好O(nlogn)、最坏O(nlogn)、平均时间复杂度都是O(nlogn)
+>
+> 空间复杂度为 O(1), 稳定的排序算法
+>
+> 1. 将初始待排序关键字序列(R1,R2….Rn)构建成大顶堆，此堆为初始的无序区；
+>
+> 2. 将堆顶元素R[1]与最后一个元素R[n]交换，此时得到新的无序区(R1,R2,……Rn-1)和新的有序区(Rn),且满足R[1,2…n-1]<=R[n]；
+>
+> 3. 由于交换后新的堆顶R[1]可能违反堆的性质，因此需要对当前无序区(R1,R2,……Rn-1)调整为新堆，然后再次将R[1]与无序区最后一个元素交换，得到新的无序区(R1,R2….Rn-2)和新的有序区(Rn-1,Rn)。不断重复此过程直到有序区的元素个数为n-1，则整个排序过程完成。
+
+```javascript
+const heapSort = (arr) => {
+    if (!arr || !Array.isArray(arr)) return
+	let len = arr.length
+    if (len < 2) return arr
+	function buildMaxHeap(arr) {
+		//从第一个非叶子节点开始创建
+		for (let i = Math.floor(len / 2) - 1; i >= 0; i--) {
+			heapify(arr, i)
+		}
+	}
+	function heapify(arr, i) {
+		let left = 2 * i + 1,
+			right = 2 * i + 2,
+			largest = i
+		if (left < len && arr[left] > arr[largest]) largest = left
+		if (right < len && arr[right] > arr[largest]) largest = right
+
+		if (largest != i) {
+			;[arr[i], arr[largest]] = [arr[largest], arr[i]]
+			//调整后继续看调整后的那个节点的子树是否满足
+			heapify(arr, largest)
+		}
+	}
+
+	buildMaxHeap(arr)
+
+	for (let i = len - 1; i > 0; i--) {
+		//每次第一个节点跟当前长度最后一个节点置换
+		;[arr[0], arr[i]] = [arr[i], arr[0]]
+		len--
+		//从顶点开始堆化
+		heapify(arr, 0)
+	}
+    
+	return arr
+}
+```
+
