@@ -7,9 +7,7 @@
 ```javascript
 //使用系统内置函数sort O(NlogN) n为字符串长度 - O(1)
 var isAnagram = function (s, t) {
-	if (s.length !== t.length) return false
-	if (s.split('').sort().join('') === t.split('').sort().join('')) return true
-	return false
+	return s.length === t.length && [...s].sort().join('') === [...t].sort().join('')
 }
 
 //hash 统计每个字符出现的频次,枚s增加，枚t减小，最后检查全部hash值是否为0
@@ -45,20 +43,25 @@ var isAnagram = function (s, t) {
 	return true
 }
 
-//use array
-var isAnagram = function (s, t) {
-	if (s.length !== t.length) return false
+//use array store each letter
+var isAnagram = function(s, t) {
+  if (s.length !== t.length) return false
 
-	let arr = Array.from({ length: 26 }, () => 0)
+  const letterArr = Array.from({length: 26}, () => 0), len = s.length
 
-	for (let i = 0, sLen = s.length; i < sLen; i++) {
-		arr[s.charCodeAt(i) - 97]++
-	}
-	for (let j = 0, tLen = t.length; j < tLen; j++) {
-		arr[t.charCodeAt(j) - 97]--
-	}
-	return arr.every((val) => val === 0)
-}
+  for (let i = 0; i < len; i++) {
+    letterArr[s.codePointAt(i) - 'a'.codePointAt(0)]++
+  }
+
+  for (let i = 0; i < len; i++) {
+    letterArr[t.codePointAt(i) - 'a'.codePointAt(0)]--
+    if (letterArr[t.codePointAt(i) - 'a'.codePointAt(0)] < 0) {
+      return false
+    }
+  }
+
+  return true
+};
 ```
 
 ##### [49字母异位词分组M](https://leetcode-cn.com/problems/group-anagrams/)
@@ -66,6 +69,7 @@ var isAnagram = function (s, t) {
 ```javascript
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
 var groupAnagrams = function (strs) {
+  if (strs.length === 0) return [[]]
 	let hash = {}
 
 	for (let str of strs) {
