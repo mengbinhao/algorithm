@@ -531,4 +531,3 @@ var countSubstrings = function (s) {
  	}
  }
 ```
-
