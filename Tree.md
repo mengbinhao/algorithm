@@ -9,6 +9,7 @@ var recoverTree = function (root) {
 	const [first, second] = findTwoSwapped(nums)
 	recover(root, 2, first, second)
 
+	//inorder
 	function inorder(node, nums) {
 		if (node == null) return
 		inorder(node.left, nums)
@@ -31,6 +32,7 @@ var recoverTree = function (root) {
 		return [x, y]
 	}
 
+	//preorder
 	function recover(root, count, x, y) {
 		if (root !== null) {
 			if (root.val === x || root.val === y) {
@@ -176,6 +178,49 @@ var buildTree = function (preorder, inorder) {
 }
 ```
 
+##### [111.二叉树的最小深度 E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+
+```javascript {.line-numbers}
+//DFS
+var minDepth = function (root) {
+	if (root === null) return 0
+	const minLeftDepth = minDepth(root.left)
+	const minRightDepth = minDepth(root.right)
+
+	return minLeftDepth === 0 || minRightDepth === 0
+		? minLeftDepth + minRightDepth + 1
+		: Math.min(minLeftDepth, minRightDepth) + 1
+}
+
+//BFS
+var minDepth = function (root) {
+	if (root === null) return 0
+	const queue = [root]
+	let depth = 1
+
+	while (queue.length > 0) {
+		const size = queue.length
+
+		for (let i = 0; i < size; i++) {
+			const curNode = queue.shift()
+			if (curNode.left === null && curNode.right === null) {
+				return depth
+			}
+
+			if (curNode.left) {
+				queue.push(curNode.left)
+			}
+
+			if (curNode.right) {
+				queue.push(curNode.right)
+			}
+		}
+		depth++
+	}
+	return depth
+}
+```
+
 ### [124.二叉树中的最大路径和](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 
 ```javascript {.line-numbers}
@@ -196,5 +241,34 @@ var maxPathSum = function (root) {
 	}
 	dfs(root)
 	return retMax
+}
+```
+
+### [222.完全二叉树的节点个数](https://leetcode-cn.com/problems/count-complete-tree-nodes/)
+
+```javascript {.line-numbers}
+//
+var countNodes = function (root) {
+	if (root === null) return 0
+	const left = countLevel(root.left)
+	const right = countLevel(root.right)
+
+	//如果满二叉树的层数为h，则总节点数为：2^h - 1
+	//左子树一定是满二叉树，因为节点已经填充到右子树了，左子树必定已经填满了。所以左子树的节点总数我们可以直接得到，是 2^left - 1，加上当前这个 root 节点，则正好是 2^left。再对右子树进行递归统计
+	if (left === right) {
+		return countNodes(root.right) + (1 << left)
+		//说明此时最后一层不满，但倒数第二层已经满了，可以直接得到右子树的节点个数。同理，右子树节点加上root节点，总数为 2^right。再对左子树进行递归查找
+	} else {
+		return countNodes(root.left) + (1 << right)
+	}
+
+	function countLevel(node) {
+		let level = 0
+		while (node) {
+			level++
+			node = node.left
+		}
+		return level
+	}
 }
 ```

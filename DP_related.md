@@ -102,7 +102,7 @@ var coinChange = function (coins, amount) {
 		for (let i = 0; i < coins.length; i++) {
 			let ret = dfs(coins, remain - coins[i])
 			//加1是为了加上得到res结果的那个步骤中兑换的那一个硬币
-			//第一次返回跟当前的min=Infinity需要比较得出有意义的值
+			//下层返回需要小于当前的min才更新min
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
 		return (cache[remain] = min === Infinity ? -1 : min)

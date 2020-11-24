@@ -1,6 +1,6 @@
 学习笔记
 
-##### [22括号生成M](https://leetcode-cn.com/problems/generate-parentheses/)
+##### [22 括号生成 M](https://leetcode-cn.com/problems/generate-parentheses/)
 
 ```javascript
 //brute forve O(2^3n * n) - O(n)
@@ -50,12 +50,12 @@ var generateParenthesis = function (n) {
 			return
 		}
 
-        //剪枝
+		//剪枝
 		if (left < n) {
 			backTracking(left + 1, right, n, ret, s + '(')
 		}
 
-        //剪枝
+		//剪枝
 		if (left > right) {
 			backTracking(left, right + 1, n, ret, s + ')')
 		}
@@ -88,7 +88,7 @@ var generateParenthesis = function (n) {
 }
 ```
 
-##### [98验证二叉树搜索M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+##### [98 验证二叉树搜索 M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript
 var isValidBST = function (root) {
@@ -103,7 +103,7 @@ var isValidBST = function (root) {
 }
 ```
 
-##### [104二叉树的最大深度E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+##### [104 二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```javascript
 //dfs
@@ -137,14 +137,14 @@ var maxDepth = function (root) {
 			}
 			size--
 		}
-        //一层添加完深度+1
+		//一层添加完深度+1
 		ret++
 	}
 	return ret
 }
 ```
 
-##### [111二叉树的最小深度E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+##### [111 二叉树的最小深度 E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
 ```javascript
 var minDepth = function (root) {
@@ -158,7 +158,7 @@ var minDepth = function (root) {
 }
 ```
 
-##### [226翻转二叉树E](https://leetcode-cn.com/problems/invert-binary-tree/)
+##### [226 翻转二叉树 E](https://leetcode-cn.com/problems/invert-binary-tree/)
 
 ```javascript
 //recursion 自底向上
@@ -217,19 +217,19 @@ var myPow = function (x, n) {
 	let ret = 1
 	while (n > 1) {
 		if (n % 2 === 1) {
-            //补上当前遍历的x
+			//补上当前遍历的x
 			ret *= x
 			n--
 		}
 		x *= x
 		n /= 2
 	}
-    //返回总数
+	//返回总数
 	return ret * x
 }
 ```
 
-##### [78子集M](https://leetcode-cn.com/problems/subsets/)
+##### [78 子集 M](https://leetcode-cn.com/problems/subsets/)
 
 ```javascript
 //recursion
@@ -237,7 +237,7 @@ var subsets = function (nums) {
 	let res = [[]]
 
 	for (let i = 0; i < nums.length; i++) {
-		res.forEach(item => {
+		res.forEach((item) => {
 			res.push([...item, nums[i]])
 		})
 	}
@@ -261,7 +261,7 @@ var subsets = function (nums) {
 }
 ```
 
-##### [169多数元素E](https://leetcode-cn.com/problems/majority-element/)
+##### [169 多数元素 E](https://leetcode-cn.com/problems/majority-element/)
 
 ```javascript
 //brute force O(n^2)
@@ -279,11 +279,11 @@ var majorityElement = function (nums) {
 
 // O(NlogN)
 // sort array then the middle is majority
-// due to must be hava an answer 
-var majorityElement = function(nums) {
-    nums.sort((a,b) => a - b);
-    return nums[Math.floor(nums.length/2)];
-}; 
+// due to must be hava an answer
+var majorityElement = function (nums) {
+	nums.sort((a, b) => a - b)
+	return nums[Math.floor(nums.length / 2)]
+}
 
 //hash O(n)
 var majorityElement = function (nums) {
@@ -297,7 +297,7 @@ var majorityElement = function (nums) {
 		ret
 
 	Object.keys(hash).forEach((key) => {
-        let count = hash[key]
+		let count = hash[key]
 		if (count > max) {
 			max = count
 			ret = +key
@@ -311,7 +311,7 @@ var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
-         //note sequence!!!
+		//note sequence!!!
 		if (count === 0) {
 			count++
 			ret = nums[i]
@@ -325,40 +325,40 @@ var majorityElement = function (nums) {
 }
 ```
 
-##### [17电话号码的字母组合M](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+##### [17 电话号码的字母组合 M](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
 ```javascript
 //recursion
-var letterCombinations = function(digits) {
-    if (!digits) return []
-    let ret = [],
-        map = new Map([
-        [2, 'abc'],
-        [3, 'def'],
-        [4, 'ghi'],
-        [5, 'jkl'],
-        [6, 'mno'],
-        [7, 'pqrs'],
-        [8, 'tuv'],
-        [9, 'wxyz']
-    ])
+var letterCombinations = function (digits) {
+	if (!digits) return []
+	let ret = [],
+		map = new Map([
+			[2, 'abc'],
+			[3, 'def'],
+			[4, 'ghi'],
+			[5, 'jkl'],
+			[6, 'mno'],
+			[7, 'pqrs'],
+			[8, 'tuv'],
+			[9, 'wxyz'],
+		])
 
-    let traversal = (s, digits, level, ret, map) => {
-        if (level === digits.length) {
-            ret.push(s)
-            return
-        }
-        let letters = map.get(+digits.charAt(level))
+	let traversal = (s, digits, level, ret, map) => {
+		if (level === digits.length) {
+			ret.push(s)
+			return
+		}
+		let letters = map.get(+digits.charAt(level))
 
-        for (let l of letters) {
-            traversal(s + l, digits, level + 1, ret, map)
-        }
-    }
+		for (let l of letters) {
+			traversal(s + l, digits, level + 1, ret, map)
+		}
+	}
 
-    traversal('', digits, 0, ret, map)
+	traversal('', digits, 0, ret, map)
 
-    return ret
-};
+	return ret
+}
 
 //more simple
 var letterCombinations = function (digits) {
@@ -392,59 +392,58 @@ var letterCombinations = function (digits) {
 }
 ```
 
-##### [51N皇后H](https://leetcode-cn.com/problems/n-queens/) 
+##### [51N 皇后 H](https://leetcode-cn.com/problems/n-queens/)
 
 ```javascript
 var solveNQueens = function (n) {
-  if (n < 1) return []
+	if (n < 1) return []
 	let solutions = [],
-    	cols = new Set(), //垂直线攻击位置
-	    pies = new Set(), //左对角线攻击位置
-	    nas = new Set() //右对角线攻击位置
+		cols = new Set(), //垂直线攻击位置
+		pies = new Set(), //左对角线攻击位置
+		nas = new Set() //右对角线攻击位置
 
-  let dfs = (row, curState) => {
-    if (row >= n) {
-      //复制curState
-      solutions.push([...curState])
-      return
-    }
+	let dfs = (row, curState) => {
+		if (row >= n) {
+			//复制curState
+			solutions.push([...curState])
+			return
+		}
 
-    for (let col = 0; col < n; col++) {
-      if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
+		for (let col = 0; col < n; col++) {
+			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
 
-      cols.add(col)
-      pies.add(row + col)
-      nas.add(row - col)
-      curState.push(col)
+			cols.add(col)
+			pies.add(row + col)
+			nas.add(row - col)
+			curState.push(col)
 
-      //drill down
-      dfs(row + 1, curState)
+			//drill down
+			dfs(row + 1, curState)
 
-      //reverse
-      cols.delete(col)
-      pies.delete(row + col)
-      nas.delete(row - col)
-      curState.pop()
-    }
-    
-  }
-  
-  dfs(0, [])
-  return generatorBoard(solutions)
+			//reverse
+			cols.delete(col)
+			pies.delete(row + col)
+			nas.delete(row - col)
+			curState.pop()
+		}
+	}
 
-  function generatorBoard(solutions) {
-    return solutions.map(solution => {
-      return solution.map(position => {
-        return Array.from({length:n}, (_, idx) => {
-          return position === idx ? 'Q' : '.'
-        }).join('')
-      })
-    })
-  }
+	dfs(0, [])
+	return generatorBoard(solutions)
+
+	function generatorBoard(solutions) {
+		return solutions.map((solution) => {
+			return solution.map((position) => {
+				return Array.from({ length: n }, (_, idx) => {
+					return position === idx ? 'Q' : '.'
+				}).join('')
+			})
+		})
+	}
 }
 ```
 
-##### [52N皇后2H](https://leetcode-cn.com/problems/n-queens-ii/)
+##### [52N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)
 
 ```javascript
 var totalNQueens = function (n) {
@@ -477,7 +476,6 @@ var totalNQueens = function (n) {
 	return ret
 }
 
-
 //final bit version
 var totalNQueens = function (n) {
 	if (n < 1) return []
@@ -490,14 +488,14 @@ var totalNQueens = function (n) {
 		}
 
 		//得到当前row所有可以放Queue空位
-         //n位可放置的二进制数
+		//n位可放置的二进制数
 		let bits = ~(col | pie | na) & ((1 << n) - 1)
 
 		//直到没位置可放
 		while (bits) {
 			//取到最低位的1的二进制数
 			let p = bits & -bits
-             //打掉二进制数最后一位的1，及放上皇后
+			//打掉二进制数最后一位的1，及放上皇后
 			bits &= bits - 1
 			//drill down next row
 			dfs(n, row + 1, col | p, (pie | p) << 1, (na | p) >> 1)
@@ -510,37 +508,39 @@ var totalNQueens = function (n) {
 }
 ```
 
-##### [46全排列M](https://leetcode-cn.com/problems/permutations/)
+##### [46 全排列 M](https://leetcode-cn.com/problems/permutations/)
 
 ```javascript
 //回溯 dfs
 var permute = function (nums) {
-	const len = nums.length, ans = []
-  if (len === 0) return ans
-  const visited = Array.from({length: len}, () => false)
+	const len = nums.length,
+		ans = []
+	if (len === 0) return ans
+	//space for time
+	const visited = Array.from({ length: len }, () => false)
 
-  let dfs = (nums, depth, path) => {
-    if (depth === nums.length) {
-      ans.push([...path])
-      return
-    }
+	let dfs = (nums, depth, path) => {
+		if (depth === nums.length) {
+			ans.push([...path])
+			return
+		}
 
-    for (let i = 0; i < len; i++) {
-      if (visited[i]) continue
-      visited[i] = true
-      dfs(nums, depth + 1, [...path, nums[i]])
+		for (let i = 0; i < len; i++) {
+			if (visited[i]) continue
+			visited[i] = true
+			dfs(nums, depth + 1, [...path, nums[i]])
 
-      //reverse
-      visited[i] = false
-    }
-  }
+			//reverse
+			visited[i] = false
+		}
+	}
 
-  dfs(nums, 0, [])
+	dfs(nums, 0, [])
 	return ans
 }
 ```
 
-##### [47全排列2M](https://leetcode-cn.com/problems/permutations-ii/)
+##### [47 全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)
 
 ```javascript
 var permuteUnique = function (nums) {
@@ -551,7 +551,7 @@ var permuteUnique = function (nums) {
 	let ret = []
 	path = []
 	used = Array.from({ length: nums.length }, (item) => false)
-	// 排序（升序或者降序都可以），排序是剪枝的前提
+	// 排序(升序或者降序都可以)，排序是剪枝的前提
 	nums.sort()
 
 	let dfs = (nums, depth, path, used, ret) => {
@@ -563,7 +563,7 @@ var permuteUnique = function (nums) {
 		for (let i = 0; i < nums.length; i++) {
 			if (used[i]) continue
 			// 剪枝条件：i > 0 是为了保证 nums[i - 1] 有意义
-             // 写 !used[i - 1] 是因为 nums[i - 1] 在深度优先遍历的过程中刚刚被撤销选择
+			// 写 !used[i - 1] 是因为 nums[i - 1] 在深度优先遍历的过程中刚刚被撤销选择
 			if (i > 0 && nums[i] === nums[i - 1] && !used[i - 1]) continue
 
 			path.push(nums[i])
