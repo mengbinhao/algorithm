@@ -129,6 +129,39 @@ var recoverTree = function (root) {
 }
 ```
 
+### [101.对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/submissions/)
+
+```javascript {.line-numbers}
+var isSymmetric = function (root) {
+	return helper(root, root)
+
+	function helper(n1, n2) {
+		if (n1 === null && n2 === null) return true
+		if (n1 === null || n2 === null) return false
+		return (
+			n1.val === n2.val &&
+			helper(n1.left, n2.right) &&
+			helper(n1.right, n2.left)
+		)
+	}
+}
+
+var isSymmetric = function (root) {
+	let queue = [root, root]
+	while (queue.length) {
+		const n1 = queue.shift()
+		const n2 = queue.shift()
+		if (n1 === null && n2 === null) continue
+		if (n1 === null || n2 === null) return false
+		if (n1.val !== n2.val) return false
+		queue.push(n1.left, n2.right)
+		queue.push(n2.left, n1.right)
+	}
+
+	return true
+}
+```
+
 ### [105.从前序与中序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
 ```javascript {.line-numbers}
@@ -247,7 +280,6 @@ var maxPathSum = function (root) {
 ### [222.完全二叉树的节点个数](https://leetcode-cn.com/problems/count-complete-tree-nodes/)
 
 ```javascript {.line-numbers}
-//
 var countNodes = function (root) {
 	if (root === null) return 0
 	const left = countLevel(root.left)
@@ -270,5 +302,63 @@ var countNodes = function (root) {
 		}
 		return level
 	}
+}
+```
+
+### [226.翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
+
+```javascript {.line-numbers}
+var invertTree = function (root) {
+	if (!root) return null
+	const left = invertTree(root.left)
+	const right = invertTree(root.right)
+	root.left = right
+	root.right = left
+	return root
+}
+
+var invertTree = function (root) {
+	if (!root) return root
+	const queue = [root]
+
+	while (queue.length) {
+		const cur = queue.shift()
+		;[cur.left, cur.right] = [cur.right, cur.left]
+
+		if (cur.left) queue.push(cur.left)
+		if (cur.right) queue.push(cur.right)
+	}
+	return root
+}
+```
+
+### [652.寻找重复的子树](https://leetcode-cn.com/problems/find-duplicate-subtrees/)
+
+```javascript {.line-numbers}
+var findDuplicateSubtrees = function (root) {
+	const map = new Map(),
+		ret = []
+
+	const traversal = (node) => {
+		if (!node) return '#'
+
+		const left = traversal(node.left)
+		const right = traversal(node.right)
+
+		const subTree = `${left},${right},${node.val}`
+		if (map.has(subTree)) {
+			if (map.get(subTree) === 1) {
+				ret.push(node)
+			}
+			map.set(subTree, map.get(subTree) + 1)
+		} else {
+			map.set(subTree, 1)
+		}
+
+		return subTree
+	}
+
+	traversal(root)
+	return ret
 }
 ```

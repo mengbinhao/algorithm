@@ -3,6 +3,8 @@
     - 乘积最大子数组
     - 最长回文子串
     - 最长上升子序列
+    - 打家劫舍 3 道
+    - 股票 6 道
   - 求可行性（True 或 False）
     - 零钱兑换问题
     - 字符串交错组成问题
@@ -178,7 +180,6 @@ var maxProfit = function (prices) {
 		if (prices[i] > prices[i - 1]) {
 			maxProfit += prices[i] - prices[i - 1]
 		}
-		E
 	}
 	return maxProfit
 }

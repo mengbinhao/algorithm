@@ -2,32 +2,32 @@
 
 #### Array
 
-##### [283移动零E](https://leetcode-cn.com/problems/move-zeroes/)
+##### [283 移动零 E](https://leetcode-cn.com/problems/move-zeroes/)
 
-- 循环3次，额外使用一个数组空间，第一次记录0的位置和填入非0值，第二次额外数组再加入0的个数，第三次交换到原数组 O(n) - O(n)
+- 循环 3 次，额外使用一个数组空间，第一次记录 0 的位置和填入非 0 值，第二次额外数组再加入 0 的个数，第三次交换到原数组 O(n) - O(n)
 
-- 循环一次，splice去掉0值，然后最后push个0,splice改变了数组的长度，这里有坑，所以必须从后面循环 O(n^2) - O(1)
+- 循环一次，splice 去掉 0 值，然后最后 push 个 0,splice 改变了数组的长度，这里有坑，所以必须从后面循环 O(n^2) - O(1)
 
-- 循环一整次把非0换到前面，第二次循环把0填到后面 O(n) - O(1)
+- 循环一整次把非 0 换到前面，第二次循环把 0 填到后面 O(n) - O(1)
 
   ```javascript
   var moveZeroes = function (nums) {
   	let lastFoundZeroIndex = 0
   	for (let i = 0; i < nums.length; i++) {
-          //move non-zero to front
+  		//move non-zero to front
   		if (nums[i] !== 0) {
   			nums[lastFoundZeroIndex++] = nums[i]
   		}
   	}
-      //update behind item to zero
+  	//update behind item to zero
   	for (let i = lastFoundZeroIndex; i < nums.length; i++) {
   		nums[i] = 0
   	}
-      return nums
+  	return nums
   }
   ```
 
-- 循环一次，快慢指针，慢指针当前第一个0的位置，数组解构快速交换0与非0  O(n)- O(1)
+- 循环一次，快慢指针，慢指针当前第一个 0 的位置，数组解构快速交换 0 与非 0 O(n)- O(1)
 
   ```javascript
   var moveZeroes = function (nums) {
@@ -44,9 +44,9 @@
   }
   ```
 
-##### [11装最多水的容器M](https://leetcode-cn.com/problems/container-with-most-water/)
+##### [11 装最多水的容器 M](https://leetcode-cn.com/problems/container-with-most-water/)
 
-- brute force O(n^2) - O(1) 
+- brute force O(n^2) - O(1)
 
   ```javascript
   var maxArea = function (height) {
@@ -60,14 +60,14 @@
   }
   ```
 
-- two pointer **夹逼** O(n) - O(1) 
+- two pointer **夹逼** O(n) - O(1)
 
   ```javascript
   var maxArea = function (height) {
   	let left = 0,
   		right = height.length - 1,
   		maxArea = 0
-  
+
   	while (left < right) {
   		maxArea = Math.max(
   			maxArea,
@@ -79,7 +79,7 @@
   }
   ```
 
-##### ==[1两数之和E](https://leetcode-cn.com/problems/two-sum/)==
+##### ==[1 两数之和 E](https://leetcode-cn.com/problems/two-sum/)==
 
 ```javascript
 //brute force O(n^2) - O(1)
@@ -192,9 +192,9 @@ var twoSum = function (nums, target) {
 }}
 ```
 
-##### ==[15三数之和M](https://leetcode-cn.com/problems/3sum/)==
+##### ==[15 三数之和 M](https://leetcode-cn.com/problems/3sum/)==
 
-- brute force O(n^3) O(1)  //Time limit exceeded
+- brute force O(n^3) O(1) //Time limit exceeded
 
   ```javascript
   var threeSum = function (nums) {
@@ -206,7 +206,7 @@ var twoSum = function (nums, target) {
   		for (let j = i + 1; j < len - 1; j++) {
   			for (let k = j + 1; k < len; k++) {
   				if (nums[i] + nums[j] + nums[k] === 0) {
-                        //duplicate-removal
+  					//duplicate-removal
   					let key = [nums[i], nums[j], nums[k]].sort()
   					//point is not repeat
   					if (map[key] === undefined) {
@@ -223,37 +223,37 @@ var twoSum = function (nums, target) {
 
 - Hash O(n^2) O(n)
 
-    ```javascript
-    var threeSum = function (nums) {
-    	let arr = []
-    	if (nums == null || nums.length < 3) return arr
-    	nums.sort((a, b) => a - b)
-    	for (var i = 0; i < nums.length - 2; i++) {
-    		if (nums[i] > 0) break
-    		if (i > 0 && nums[i] == nums[i - 1]) continue
-             const hashMap = new Map()
-    		for (var j = i + 1; j < nums.length; j++) {
-    			const val = -(nums[i] + nums[j])
-    			// hashMap是首次记录第二次才会push到数组
-    			// 前三个数肯定不重，所以j > i + 2
-    			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2]) {
-    				continue
-    			}
-    			//第二次push
-    			if (hashMap.has(val)) {
-    				arr.push([nums[i], nums[hashMap.get(val)], nums[j]])
-    				//防止重复[-2, 0, 0, 2, 2]
-    				hashMap.delete(val)
-    			}
-    			//第一次直接加
-    			hashMap.set(nums[j], j)
-    		}
-    	}
-    	return arr
-    }
-    ```
+  ```javascript
+  var threeSum = function (nums) {
+  	let arr = []
+  	if (nums == null || nums.length < 3) return arr
+  	nums.sort((a, b) => a - b)
+  	for (var i = 0; i < nums.length - 2; i++) {
+  		if (nums[i] > 0) break
+  		if (i > 0 && nums[i] == nums[i - 1]) continue
+  		const hashMap = new Map()
+  		for (var j = i + 1; j < nums.length; j++) {
+  			const val = -(nums[i] + nums[j])
+  			// hashMap是首次记录第二次才会push到数组
+  			// 前三个数肯定不重，所以j > i + 2
+  			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2]) {
+  				continue
+  			}
+  			//第二次push
+  			if (hashMap.has(val)) {
+  				arr.push([nums[i], nums[hashMap.get(val)], nums[j]])
+  				//防止重复[-2, 0, 0, 2, 2]
+  				hashMap.delete(val)
+  			}
+  			//第一次直接加
+  			hashMap.set(nums[j], j)
+  		}
+  	}
+  	return arr
+  }
+  ```
 
-- 夹逼（大部分情况需已排序） O(n^2) O(1) 
+- 夹逼（大部分情况需已排序） O(n^2) O(1)
 
   ```javascript
   var threeSum = function (nums) {
@@ -289,28 +289,28 @@ var twoSum = function (nums, target) {
   	return ret
   }
   ```
-  
-##### [70爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+
+##### [70 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
 
 - 类斐波那契数 O(n) - O(1)
 
-    ```javascript
-    var climbStairs = function (n) {
-    	if (n <= 2) return n
-    
-    	let first = 1,
-    		second = 2,
-    		third = 3
-    
-    	for (let i = 3; i <= n; i++) {
-    		third = first + second
-    		first = second
-    		second = third
-    	}
-    
-    	return third
-    }
-    ```
+  ```javascript
+  var climbStairs = function (n) {
+  	if (n <= 2) return n
+
+  	let first = 1,
+  		second = 2,
+  		third = 3
+
+  	for (let i = 3; i <= n; i++) {
+  		third = first + second
+  		first = second
+  		second = third
+  	}
+
+  	return third
+  }
+  ```
 
 - DP O(n) - O(n)
 
@@ -319,7 +319,7 @@ var twoSum = function (nums, target) {
   	const dp = new Array(n + 1)
   	dp[0] = 1
   	dp[1] = 1
-  
+
   	for (let i = 2; i <= n; i++) {
   		dp[i] = dp[i - 1] + dp[i - 2]
   	}
@@ -327,16 +327,16 @@ var twoSum = function (nums, target) {
   }
   ```
 
-##### [88合并两个有序数组E](https://leetcode-cn.com/problems/merge-sorted-array/)
+##### [88 合并两个有序数组 E](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
 //双指针 / 从前往后 O(n+m) - O(m)
 var merge = function (nums1, m, nums2, n) {
 	let nums1_copy = [...nums1.slice(0, m)],
-    // Two get pointers for nums1_copy and nums2.
+		// Two get pointers for nums1_copy and nums2.
 		p1 = 0,
 		p2 = 0,
-    // Set pointer for nums1
+		// Set pointer for nums1
 		p = 0
 	while (p1 < m && p2 < n) {
 		nums1[p++] = nums1_copy[p1] < nums2[p2] ? nums1_copy[p1++] : nums2[p2++]
@@ -362,10 +362,10 @@ var merge = (nums1, m, nums2, n) => {
 }
 ```
 
-##### [26删除排序数组重复项E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
+##### [26 删除排序数组重复项 E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
-//slow / fast two pointer 
+//slow / fast two pointer
 var removeDuplicates = function (nums) {
 	if (nums.length === 0) return 0
 	let i = 0
@@ -378,7 +378,7 @@ var removeDuplicates = function (nums) {
 }
 ```
 
-##### [189旋转数组E](https://leetcode-cn.com/problems/rotate-array/)
+##### [189 旋转数组 E](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript
 //brute force O(n*k) O(1)
@@ -425,7 +425,7 @@ var rotate = (nums, k) => {
 
 #### 栈(典型的空间换时间)
 
-##### [20有效括号E](https://leetcode-cn.com/problems/valid-parentheses/)
+##### [20 有效括号 E](https://leetcode-cn.com/problems/valid-parentheses/)
 
 - brute force 一直替换
 
@@ -462,50 +462,50 @@ var rotate = (nums, k) => {
   }
   ```
 
-##### [155最小栈E](https://leetcode-cn.com/problems/min-stack/)
+##### [155 最小栈 E](https://leetcode-cn.com/problems/min-stack/)
 
 - 使用辅助栈
 
   ```javascript
   var MinStack = function () {
-    //minStack add a initial value
+  	//minStack add a initial value
   	;(this.stack = []), (this.minStack = [Infinity])
   }
-  
+
   //sync push
   MinStack.prototype.push = function (x) {
   	this.stack.push(x)
-    //peek always min item
-    this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
+  	//peek always min item
+  	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
   }
-  
+
   //sync pop
   MinStack.prototype.pop = function () {
   	this.stack.pop()
   	this.minStack.pop()
   }
-  
+
   MinStack.prototype.top = function () {
   	return this.stack[this.stack.length - 1]
   }
-  
+
   MinStack.prototype.getMin = function () {
   	return this.minStack[this.minStack.length - 1]
   }
   ```
 
-##### [84柱状图中最大的矩形H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)   ==backlog==
+##### [84 柱状图中最大的矩形 H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) ==backlog==
 
-##### [239滑动窗口最大值H ](https://leetcode-cn.com/problems/sliding-window-maximum/)
+##### [239 滑动窗口最大值 H ](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
-- brute force O(n * k) - O(n - k +1)
+- brute force O(n \* k) - O(n - k +1)
 
   ```javascript
   var maxSlidingWindow = function (nums, k) {
   	let slideWindow = [],
   		ret = [],
   		len = nums.length
-      //loop max window value = len - k + 1
+  	//loop max window value = len - k + 1
   	for (let i = 0; i < len - k + 1; i++) {
   		for (let j = 0; j < k; j++) {
   			slideWindow.push(nums[i + j])
@@ -529,14 +529,14 @@ var rotate = (nums, k) => {
   		if (deque[0] < i - k + 1) {
   			deque.shift()
   		}
-  
+
   		//维护递减队列,第一个第一大的index,依此类推
   		while (nums[deque[deque.length - 1]] < nums[i]) {
   			deque.pop()
   		}
-  
+
   		deque.push(i)
-  
+
   		if (i >= k - 1) {
   			ret.push(nums[deque[0]])
   		}
@@ -550,21 +550,21 @@ var rotate = (nums, k) => {
 ##### [42Trapping Rain WaterH](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript
-//brute force O(n^2) O(1) 
+//brute force O(n^2) O(1)
 
 var trap = function (height) {
 	let ret = 0,
 		len = height.length
-  //the last item can not store water
+	//the last item can not store water
 	for (let i = 0; i < len - 1; i++) {
-    //two pointer
+		//two pointer
 		let leftMax = 0,
 			rightMax = 0
-    //Search the left part for max bar size
+		//Search the left part for max bar size
 		for (let j = i; j >= 0; j--) {
 			leftMax = Math.max(leftMax, height[j])
 		}
-    //Search the right part for max bar size
+		//Search the right part for max bar size
 		for (let j = i; j < len; j++) {
 			rightMax = Math.max(rightMax, height[j])
 		}
@@ -573,7 +573,7 @@ var trap = function (height) {
 	return ret
 }
 
-//备忘录优化 O(n) O(n) 
+//备忘录优化 O(n) O(n)
 var trap = function (height) {
 	let ret = 0,
 		len = height.length,
@@ -594,38 +594,42 @@ var trap = function (height) {
 	return ret
 }
 
-//two pointer O(n) O(1) 
-var trap = function(height) {
-  if (height.length === 0) return 0
-  let len = height.length, left = 0, right = len - 1, ret = 0
+//two pointer O(n) O(1)
+var trap = function (height) {
+	if (height.length === 0) return 0
+	let len = height.length,
+		left = 0,
+		right = len - 1,
+		ret = 0
 
-  let l_max = height[0], r_max = height[len - 1]
+	let l_max = height[0],
+		r_max = height[len - 1]
 
-  while (left < right) {
-    l_max = Math.max(l_max, height[left])
-    r_max = Math.max(r_max, height[right])
+	while (left < right) {
+		l_max = Math.max(l_max, height[left])
+		r_max = Math.max(r_max, height[right])
 
-    if (l_max < r_max) {
-      ret += l_max - height[left]
-      left++
-    } else {
-      ret += r_max - height[right]
-      right--
-    }
-  }
-  return ret
+		if (l_max < r_max) {
+			ret += l_max - height[left]
+			left++
+		} else {
+			ret += r_max - height[right]
+			right--
+		}
+	}
+	return ret
 }
 ```
 
-##### [66加一E](https://leetcode-cn.com/problems/plus-one/)
+##### [66 加一 E](https://leetcode-cn.com/problems/plus-one/)
 
 ```javascript
 var plusOne = function (digits) {
 	const len = digits.length
-    //从后往前+
+	//从后往前+
 	for (let i = len - 1; i >= 0; i--) {
 		digits[i]++
-        //变回个位数
+		//变回个位数
 		digits[i] %= 10
 		if (digits[i] != 0) return digits
 	}
