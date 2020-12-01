@@ -115,12 +115,16 @@ var minWindow = function (s, t) {
 
   ```javascript
   var maxSlidingWindow = function (nums, k) {
-  	let deque = [], //放的下标,递减队列,第一个第一大的index,依此类推
+  	//放的下标,递减队列,第一个第一大的index,依此类推
+  	let deque = [],
   		ret = []
   	//头尾尾头
   	for (let i = 0, len = nums.length; i < len; i++) {
   		//队列满了移出去一个
-  		if (deque[0] < i - k + 1) {
+  		//当窗口大小形成时，L 和 R 一起向右移，每次移动时，
+  		//判断队首的值的数组下标是否在 [L,R] 中，
+  		//如果不在则需要弹出队首的值
+  		if (deque[0] <= i - k) {
   			deque.shift()
   		}
 
@@ -131,6 +135,7 @@ var minWindow = function (s, t) {
 
   		deque.push(i)
 
+  		//开始检查结果
   		if (i >= k - 1) {
   			ret.push(nums[deque[0]])
   		}

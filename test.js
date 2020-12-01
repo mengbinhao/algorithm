@@ -1,23 +1,13 @@
-var deleteNode = function (root, key) {
-	if (root == null) return null
-	if (root.val == key) {
-		// 这两个 if 把情况 1 和 2 都正确处理了
-		if (root.left == null) return root.right
-		if (root.right == null) return root.left
-		// 处理情况 3
-		const minNode = getMin(root.right)
-		root.val = minNode.val
-		root.right = deleteNode(root.right, minNode.val)
-	} else if (root.val > key) {
-		root.left = deleteNode(root.left, key)
-	} else if (root.val < key) {
-		root.right = deleteNode(root.right, key)
+var findDisappearedNumbers = function (nums) {
+	const n = nums.length
+	let res = 0
+	// 新补的索引
+	res += n - 0
+	// 剩下索引和元素的差加起来
+	for (let i = 0; i < n; i++) {
+		res += i - nums[i]
 	}
-	return root
-
-	function getMin(node) {
-		// BST 最左边的就是最小的
-		while (node.left != null) node = node.left
-		return node
-	}
+	return res
 }
+
+findDisappearedNumbers([0, 3, 1, 4])

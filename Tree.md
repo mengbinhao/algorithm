@@ -413,12 +413,33 @@ var maxPathSum = function (root) {
 
 ```javascript {.line-numbers}
 var countNodes = function (root) {
+	let l = (r = root),
+		hl = (hr = 0)
+	while (l) {
+		l = l.left
+		hl++
+	}
+
+	while (r) {
+		r = r.right
+		hr++
+	}
+
+	if (hl === hr) {
+		return Math.pow(2, hl) - 1
+	}
+
+	return 1 + countNodes(root.left) + countNodes(root.right)
+}
+
+//bad version
+var countNodes = function (root) {
 	if (root === null) return 0
 	const left = countLevel(root.left)
 	const right = countLevel(root.right)
 
-	//如果满二叉树的层数为h，则总节点数为：2^h - 1
-	//左子树一定是满二叉树，因为节点已经填充到右子树了，左子树必定已经填满了。所以左子树的节点总数我们可以直接得到，是 2^left - 1，加上当前这个 root 节点，则正好是 2^left。再对右子树进行递归统计
+	// 如果满二叉树的层数为h，则总节点数为：2^h - 1
+	// 左子树一定是满二叉树，因为节点已经填充到右子树了，左子树必定已经填满了。所以左子树的节点总数我们可以直接得到，是 2^left - 1，加上当前这个 root 节点，则正好是 2^left。再对右子树进行递归统计
 	if (left === right) {
 		return countNodes(root.right) + (1 << left)
 		//说明此时最后一层不满，但倒数第二层已经满了，可以直接得到右子树的节点个数。同理，右子树节点加上root节点，总数为 2^right。再对左子树进行递归查找
@@ -483,6 +504,55 @@ var kthSmallest = function (root, k) {
 		}
 		helper(node.right, k)
 	}
+}
+```
+
+### [236.二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+```javascript {.line-numbers}
+var lowestCommonAncestor = function (root, p, q) {
+	if (root === null) return null
+	if (root === p || root === q) return root
+
+	const left = lowestCommonAncestor(root.left, p, q)
+	const right = lowestCommonAncestor(root.right, p, q)
+
+	//postorder 从下往上走
+	if (left !== null && right !== null) return root
+
+	if (left === null && right === null) return null
+
+	return left === null ? right : left
+}
+```
+
+### [297.二叉树的序列化与反序列化](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/)
+
+```javascript {.line-numbers}
+const serialize = (root) => {
+	if (root == null) {
+		return 'X'
+	}
+	const left = serialize(root.left) // 左子树的序列化结果
+	const right = serialize(root.right) // 右子树的序列化结果
+	return root.val + ',' + left + ',' + right // 按  根,左,右  拼接字符串
+}
+
+const deserialize = (data) => {
+	const list = data.split(',')
+
+	const buildTree = (list) => {
+		const rootVal = list.shift()
+		if (rootVal == 'X') {
+			// 是X，返回null节点
+			return null
+		}
+		const root = new TreeNode(rootVal)
+		root.left = buildTree(list) // 递归构建左子树
+		root.right = buildTree(list) // 递归构建右子树
+		return root // 返回当前构建好的root
+	}
+	return buildTree(list) // 构建的入口
 }
 ```
 
