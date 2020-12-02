@@ -9,16 +9,17 @@
 let left = 0,
 	right = arr.length - 1, //Note!!!!!!!!
 	mid
-while (left <= right) {   //Note!!!!!!!!
+while (left <= right) {
+	//Note!!!!!!!!
 	// left + (right - left) / 2
 	// left + (right - left) >> 2
 	mid = Math.floor((left + right) / 2)
 	if (arr[mid] === target) {
 		return mid
 	} else if (arr[mid] > target) {
-		right = mid - 1  //Note!!!!!!!!
-	} else if (arr[mid] < target){
-		left = mid + 1   //Note!!!!!!!!
+		right = mid - 1 //Note!!!!!!!!
+	} else if (arr[mid] < target) {
+		left = mid + 1 //Note!!!!!!!!
 	}
 }
 return -1
@@ -27,7 +28,9 @@ return -1
 2. 查找第一个值等于给定值的元素
 
 ```javascript
-let left = 0, right = arr.length - 1, mid
+let left = 0,
+	right = arr.length - 1,
+	mid
 while (left <= right) {
 	mid = Math.floor(left + (right - left) / 2)
 	if (arr[mid] > target) {

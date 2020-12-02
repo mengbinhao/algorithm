@@ -1,13 +1,23 @@
-var findDisappearedNumbers = function (nums) {
-	const n = nums.length
-	let res = 0
-	// 新补的索引
-	res += n - 0
-	// 剩下索引和元素的差加起来
-	for (let i = 0; i < n; i++) {
-		res += i - nums[i]
+var longestPalindrome = function (s) {
+	let ret = ''
+	for (let i = 0; i < s.length; i++) {
+		// 以 s[i] 为中心的最长回文子串
+		const s1 = palindrome(s, i, i)
+		// 以 s[i] 和 s[i+1] 为中心的最长回文子串
+		const s2 = palindrome(s, i, i + 1)
+		// ret = longest(ret, s1, s2)
+		ret = ret.length > s1.length ? ret : s1
+		ret = ret.length > s2.length ? ret : s2
 	}
-	return res
+	return ret
+
+	function palindrome(s, l, r) {
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			l--
+			r++
+		}
+		return s.substring(l + 1, r)
+	}
 }
 
-findDisappearedNumbers([0, 3, 1, 4])
+console.log(longestPalindrome('babad'))

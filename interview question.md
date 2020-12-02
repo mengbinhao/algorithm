@@ -1,3 +1,176 @@
+### [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
+
+```javascript {.line-numbers}
+//brute force + reverse()
+//O(N^3) - O(1)
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
+
+	let maxLen = 1,
+		begin = 0
+
+	const isPalindrome = (s, l, r) => {
+		while (l < r) {
+			if (s[l] !== s[r]) return false
+			l++
+			r--
+		}
+		return true
+	}
+
+	for (let i = 0; i < len - 1; i++) {
+		for (let j = i + 1; j < len; j++) {
+			if (j - i + 1 > maxLen && isPalindrome(s, i, j)) {
+				maxLen = j - i + 1
+				begin = i
+			}
+		}
+	}
+
+	return s.substring(begin, begin + maxLen)
+}
+
+//DP  O(n^2) - O(n^2)
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
+
+	//dp[i..j] 表示从i到j的子串是否是回文
+	const dp = Array.from({ length: len }, () => new Array(len))
+
+	let begin = 0,
+		maxLen = 1
+
+	//i、j相等的情况
+	// for (let i = 0; i < len; i++) {
+	//   dp[i][j] = true
+	// }
+
+	for (let j = 1; j < len; j++) {
+		for (let i = 0; i < j; i++) {
+			if (s[i] !== s[j]) {
+				dp[i][j] = false
+			} else {
+				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论了
+				if (j - i < 3) dp[i][j] = true
+				else dp[i][j] = dp[i + 1][j - 1]
+			}
+
+			//每次update result
+			if (dp[i][j] && j - i + 1 > maxLen) {
+				maxLen = j - i + 1
+				begin = i
+			}
+		}
+	}
+
+	return s.substring(begin, begin + maxLen)
+}
+
+//中心扩展法
+var longestPalindrome = function (s) {
+	let res = ''
+	for (let i = 0; i < s.length; i++) {
+		// 以 s[i] 为中心的最长回文子串
+		const s1 = palindrome(s, i, i)
+		// 以 s[i] 和 s[i+1] 为中心的最长回文子串
+		const s2 = palindrome(s, i, i + 1)
+		// res = longest(res, s1, s2)
+		res = res.length > s1.length ? res : s1
+		res = res.length > s2.length ? res : s2
+	}
+	return res
+
+	function palindrome(s, l, r) {
+		// 防止索引越界
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			// 向两边展开
+			l--
+			r++
+		}
+		// 返回以 s[l] 和 s[r] 为中心的最长回文串
+		return s.substring(l + 1, r)
+	}
+}
+```
+
+### [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+
+```javascript {.line-numbers}
+//brute force O(n^2) O(1)
+
+var trap = function (height) {
+	let ret = 0,
+		len = height.length
+	//the last item can not store water
+	for (let i = 0; i < len - 1; i++) {
+		//two pointer
+		let leftMax = 0,
+			rightMax = 0
+		//Search the left part for max bar size
+		for (let j = i; j >= 0; j--) {
+			leftMax = Math.max(leftMax, height[j])
+		}
+		//Search the right part for max bar size
+		for (let j = i; j < len; j++) {
+			rightMax = Math.max(rightMax, height[j])
+		}
+		ret += Math.min(leftMax, rightMax) - height[i]
+	}
+	return ret
+}
+
+//备忘录优化 O(n) O(n)
+var trap = function (height) {
+	let ret = 0,
+		len = height.length,
+		leftMax = [],
+		rightMax = []
+
+	leftMax[0] = height[0]
+	for (let i = 1; i < len; i++) {
+		leftMax[i] = Math.max(height[i], leftMax[i - 1])
+	}
+	rightMax[len - 1] = height[len - 1]
+	for (let i = len - 2; i >= 0; i--) {
+		rightMax[i] = Math.max(height[i], rightMax[i + 1])
+	}
+	for (let i = 1; i < len - 1; i++) {
+		ret += Math.min(leftMax[i], rightMax[i]) - height[i]
+	}
+	return ret
+}
+
+//two pointer O(n) O(1)
+var trap = function (height) {
+	if (height.length === 0) return 0
+	let len = height.length,
+		left = 0,
+		right = len - 1,
+		ret = 0
+
+	let l_max = height[0],
+		r_max = height[len - 1]
+
+	while (left < right) {
+		l_max = Math.max(l_max, height[left])
+		r_max = Math.max(r_max, height[right])
+
+		if (l_max < r_max) {
+			ret += l_max - height[left]
+			left++
+		} else {
+			ret += r_max - height[right]
+			right--
+		}
+	}
+	return ret
+}
+```
+
 ### [172. 阶乘后的零](https://leetcode-cn.com/problems/factorial-trailing-zeroes/submissions/)
 
 ```javascript {.line-numbers}
@@ -42,6 +215,61 @@ var countPrimes = function (n) {
 }
 ```
 
+### [227. 基本计算器 II](https://leetcode-cn.com/problems/basic-calculator-ii/)
+
+```javascript {.line-numbers}
+var calculate = function (s) {
+	var stack = [],
+		num = 0,
+		sign = '+'
+	for (let i = 0; i < s.length; i++) {
+		const val = s[i]
+		if (isNumber(+val)) {
+			num = 10 * num + +val
+		}
+		if ((!isNumber(+val) && val !== ' ') || i === s.length - 1) {
+			switch (sign) {
+				case '+':
+					stack.push(num)
+					break
+				case '-':
+					stack.push(-num)
+					break
+				case '*':
+					stack.push(stack.pop() * num)
+					break
+				case '/':
+					stack.push(stack.pop() / num)
+					break
+			}
+			sign = val
+			num = 0
+		}
+	}
+	return stack.reduce((acc, val) => acc + (val | 0), 0)
+
+	function isNumber(val) {
+		return typeof val === 'number' && val === val
+	}
+}
+```
+
+### [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
+
+```javascript {.line-numbers}
+var canWinNim = function (n) {
+	return n % 4 !== 0
+}
+```
+
+### [319. 灯泡开关](https://leetcode-cn.com/problems/bulb-switcher/)
+
+```javascript {.line-numbers}
+var bulbSwitch = function (n) {
+	return Math.floor(Math.sqrt(n))
+}
+```
+
 ### [372. 超级次方](https://leetcode-cn.com/problems/super-pow/)
 
 ```javascript {.line-numbers}
@@ -82,5 +310,104 @@ var superPow = function (a, b) {
 	// 		return (sub * sub) % base
 	// 	}
 	// }
+}
+```
+
+### [392. 判断子序列](https://leetcode-cn.com/problems/is-subsequence/)
+
+```javascript {.line-numbers}
+var isSubsequence = function (s, t) {
+	let i = 0,
+		j = 0,
+		sLen = s.length,
+		tLen = t.length
+
+	while (i < sLen && j < tLen) {
+		if (s[i] === t[j]) {
+			i++
+		}
+		j++
+	}
+	return i === sLen
+}
+
+//optimize version
+var isSubsequence = function (s, t) {
+	const m = s.length,
+		n = t.length
+	// 对 t 进行预处理
+	const index = {}
+	for (let i = 0; i < n; i++) {
+		const c = t.charAt(i)
+		if (!index[c]) index[c] = []
+		index[c].push(i)
+	}
+
+	// 串 t 上的指针
+	let j = 0
+	// 借助 index 查找 s[i]
+	for (let i = 0; i < m; i++) {
+		const c = s.charAt(i)
+		// 整个 t 压根儿没有字符 c
+		if (!index[c]) return false
+		const pos = left_bound(index[c], j)
+		// 二分搜索区间中没有找到字符 c
+		if (pos == index[c].length) return false
+		// 向前移动指针 j
+		j = index[c][pos] + 1
+	}
+	return true
+
+	function left_bound(arr, tar) {
+		let lo = 0,
+			hi = arr.length
+		while (lo < hi) {
+			let mid = Math.floor(lo + (hi - lo) / 2)
+			if (tar > arr[mid]) {
+				lo = mid + 1
+			} else {
+				hi = mid
+			}
+		}
+		return lo
+	}
+}
+```
+
+### [654. 错误的集合](https://leetcode-cn.com/problems/set-mismatch/)
+
+```javascript {.line-numbers}
+//关键点在于元素和索引是成对儿出现的，常用的方法是排序、异或、映射
+var findErrorNums = function (nums) {
+	const n = nums.length
+	let dup = -1
+	for (let i = 0; i < n; i++) {
+		//元素是从 1 开始的
+		const index = Math.abs(nums[i]) - 1
+		// nums[index] 小于 0 则说明重复访问
+		if (nums[index] < 0) {
+			dup = Math.abs(nums[i])
+		} else {
+			nums[index] *= -1
+		}
+	}
+
+	let missing = -1
+	for (let i = 0; i < n; i++)
+		// nums[i] 大于 0 则说明没有访问
+		if (nums[i] > 0) {
+			// 将索引转换成元素
+			missing = i + 1
+		}
+
+	return [dup, missing]
+}
+```
+
+### [877. 石子游戏](https://leetcode-cn.com/problems/stone-game/)
+
+```javascript {.line-numbers}
+var stoneGame = function (piles) {
+	return true
 }
 ```

@@ -1,34 +1,34 @@
 ### [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
 ```javascript
-//brute force + reverse()     
+//brute force + reverse()
 //O(N^3) - O(1)
-var longestPalindrome = function(s) {
-  if (!s) return ''
-  const len = s.length
-  if (len < 2) return s
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
 
-  let maxLen = 1, begin = 0
+	let maxLen = 1,
+		begin = 0
 
-  const isPalindrome = (s, l, r) => {
-    while (l < r) {
-      if (s[l] !== s[r]) return false
-      l++
-      r--
-    }
-    return true
-  }
+	const isPalindrome = (s, l, r) => {
+		while (l < r) {
+			if (s[l] !== s[r]) return false
+			l++
+			r--
+		}
+		return true
+	}
 
-  for (let i = 0; i < len - 1; i++) {
-    for (let j = i + 1; j < len; j++) {
-      if (j - i + 1 > maxLen && isPalindrome(s, i, j)) {
-        maxLen = j - i + 1
-        begin = i
-      }
-    }
-  }
-
-  return s.substring(begin, begin + maxLen)
+	for (let i = 0; i < len - 1; i++) {
+		for (let j = i + 1; j < len; j++) {
+			if (j - i + 1 > maxLen && isPalindrome(s, i, j)) {
+				maxLen = j - i + 1
+				begin = i
+			}
+		}
+	}
+	return s.substring(begin, begin + maxLen)
 }
 
 //DP  O(n^2) - O(n^2)
@@ -37,13 +37,13 @@ var longestPalindrome = function (s) {
 	const len = s.length
 	if (len < 2) return s
 
-    //dp[i..j] 表示从i到j的子串是否是回文
+	//dp[i..j] 表示从i到j的子串是否是回文
 	const dp = Array.from({ length: len }, () => new Array(len))
 
 	let begin = 0,
 		maxLen = 1
 
- 	//i、j相等的情况
+	//i、j相等的情况
 	// for (let i = 0; i < len; i++) {
 	//   dp[i][j] = true
 	// }
@@ -58,40 +58,40 @@ var longestPalindrome = function (s) {
 				else dp[i][j] = dp[i + 1][j - 1]
 			}
 
-             //每次update result
+			//每次update result
 			if (dp[i][j] && j - i + 1 > maxLen) {
 				maxLen = j - i + 1
 				begin = i
 			}
 		}
 	}
-
 	return s.substring(begin, begin + maxLen)
 }
 
 //中心扩展法 O(n^2) - O(1) 更易于理解的一种code
 var longestPalindrome = function (s) {
-	if (!s) return ''
-	const len = s.length
-	if (len < 2) return s
-
-	let ret = ''
-
-    //共2 * len - 1个中心(0,0)、(0,1)、(1,1)、(1,2)...
-	for (let i = 0; i < len * 2 - 1; i++) {
-        //left和right指针和中心点的关系
-        //left有一个很明显的2倍关系的存在
-        //right，可能和left指向同一个（偶数时），也可能往后移动一个（奇数）
-		let left = Math.floor(i / 2)
-		let right = left + (i % 2)
-		while (left >= 0 && right < len && s[left] == s[right]) {
-			let tmp = s.substring(left, right + 1)
-			if (tmp.length > ret.length) ret = tmp
-			left--
-			right++
-		}
+	let res = ''
+	for (let i = 0; i < s.length; i++) {
+		// 以 s[i] 为中心的最长回文子串
+		const s1 = palindrome(s, i, i)
+		// 以 s[i] 和 s[i+1] 为中心的最长回文子串
+		const s2 = palindrome(s, i, i + 1)
+		// res = longest(res, s1, s2)
+		res = res.length > s1.length ? res : s1
+		res = res.length > s2.length ? res : s2
 	}
-	return ret
+	return res
+
+	function palindrome(s, l, r) {
+		// 防止索引越界
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			// 向两边展开
+			l--
+			r++
+		}
+		// 返回以 s[l] 和 s[r] 为中心的最长回文串
+		return s.substring(l + 1, r)
+	}
 }
 ```
 
@@ -105,14 +105,14 @@ var myAtoi = function (str) {
 		flag = 1,
 		max = Math.pow(2, 31) - 1,
 		min = -Math.pow(2, 31)
-    //handle blank space
+	//handle blank space
 	while (str[i] === ' ' && i < len) i++
-    //hanle sign bit
+	//hanle sign bit
 	if (str[i] === '+' || str[i] === '-') {
 		flag = str[i] === '+' ? 1 : -1
 		i++
 	}
-    
+
 	while (i < len && isDigit(str[i])) {
 		let val = +str[i]
 		ret = ret * 10 + val
@@ -137,26 +137,26 @@ var myAtoi = function (str) {
 //O(∣s∣) - O(∣s∣)
 //loop once, filter letter and digit, compare if target str === reverse target string
 
-
 //O(∣s∣)，其中 |s| 是字符串s的长度 - O(1)
-var isPalindrome = function(s) {
-    if (typeof s !== 'string') return false
+var isPalindrome = function (s) {
+	if (typeof s !== 'string') return false
 
-    s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
-    
-    let l = 0, r = s.length - 1
+	s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
+
+	let l = 0,
+		r = s.length - 1
 	//two pointer， 向中间夹逼
-    while (l < r) {
-      if (s[l] !== s[r]) return false
-      l++
-      r--
-    }
+	while (l < r) {
+		if (s[l] !== s[r]) return false
+		l++
+		r--
+	}
 
-    return true
+	return true
 }
 ```
 
-### [151. 翻转字符串里的单词M](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
+### [151. 翻转字符串里的单词 M](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
 
 ```javascript
 //使用系统函数
@@ -189,7 +189,7 @@ var reverseWords = function (s) {
 //使用deque_2
 ```
 
-### [344. 反转字符串E](https://leetcode-cn.com/problems/reverse-string/)
+### [344. 反转字符串 E](https://leetcode-cn.com/problems/reverse-string/)
 
 ```javascript
 //two pointer
@@ -215,7 +215,7 @@ var reverseString = function (s) {
 }
 ```
 
-### [387. 字符串中的第一个唯一字符E](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
+### [387. 字符串中的第一个唯一字符 E](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
 
 ```javascript
 var firstUniqChar = function (s) {
@@ -230,7 +230,7 @@ var firstUniqChar = function (s) {
 }
 ```
 
-### [394. 字符串解码M](https://leetcode-cn.com/problems/decode-string/)
+### [394. 字符串解码 M](https://leetcode-cn.com/problems/decode-string/)
 
 ```javascript
 var decodeString = function (s) {
@@ -243,13 +243,13 @@ var decodeString = function (s) {
 		if (!isNaN(c)) {
 			multiple = multiple * 10 + Number(c)
 		} else if (c === '[') {
-             //前面的字母和倍数都压入栈，并释放临时变量
+			//前面的字母和倍数都压入栈，并释放临时变量
 			numStack.push(multiple)
 			multiple = 0
 			strStack.push(ret)
 			ret = ''
 		} else if (c === ']') {
-            //合并两个栈顶
+			//合并两个栈顶
 			ret = strStack.pop() + ret.repeat(numStack.pop())
 		} else {
 			ret += c
@@ -408,16 +408,16 @@ var reverseWords = function (s) {
 
 //使用系统函数
 var reverseWords = function (s) {
- 	let strs = s.split(' '),
- 		ret = ''
- 	for (let str of strs) {
- 		ret += str.split('').reverse().join('') + ' '
- 	}
- 	return ret.substring(0, ret.length - 1)
- }
+	let strs = s.split(' '),
+		ret = ''
+	for (let str of strs) {
+		ret += str.split('').reverse().join('') + ' '
+	}
+	return ret.substring(0, ret.length - 1)
+}
 ```
 
-### [567. 字符串的排列M](https://leetcode-cn.com/problems/permutation-in-string/)
+### [567. 字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)
 
 ```javascript
 var checkInclusion = function (s1, s2) {
@@ -466,10 +466,10 @@ var countSubstrings = function (s) {
 	let len = s.length,
 		ret = 0
 
-    //dp[i][j] 表示字符串s在[i,j]区间的子串是否是一个回文串
+	//dp[i][j] 表示字符串s在[i,j]区间的子串是否是一个回文串
 	let dp = Array.from({ length: len }, () => new Array(len))
 
-    //填写表格上半部分
+	//填写表格上半部分
 	for (let j = 0; j < len; j++) {
 		for (let i = 0; i <= j; i++) {
 			if (i === j) {
@@ -492,42 +492,41 @@ var countSubstrings = function (s) {
 
 //中心扩展法
 var countSubstrings = function (s) {
- 	const n = s.length
- 	let ans = 0
- 	for (let i = 0; i < 2 * n - 1; ++i) {
- 		let l = i / 2,
- 			r = i / 2 + (i % 2)
- 		while (l >= 0 && r < n && s.charAt(l) == s.charAt(r)) {
- 			--l
- 			++r
- 			++ans
- 		}
- 	}
- 	return ans
- }
-
+	const n = s.length
+	let ans = 0
+	for (let i = 0; i < 2 * n - 1; ++i) {
+		let l = i / 2,
+			r = i / 2 + (i % 2)
+		while (l >= 0 && r < n && s.charAt(l) == s.charAt(r)) {
+			--l
+			++r
+			++ans
+		}
+	}
+	return ans
+}
 
 //brute force
 var countSubstrings = function (s) {
- 	let len = s.length,
- 		ret = 0
- 	for (let i = 0; i < len; i++) {
- 		for (let j = i; j < len; j++) {
- 			if (isPalindrome(s.substring(i, j + 1))) ret++
- 		}
- 	}
+	let len = s.length,
+		ret = 0
+	for (let i = 0; i < len; i++) {
+		for (let j = i; j < len; j++) {
+			if (isPalindrome(s.substring(i, j + 1))) ret++
+		}
+	}
 
- 	return ret
+	return ret
 
- 	function isPalindrome(s) {
- 		let l = 0,
- 			r = s.length - 1
- 		while (l < r) {
- 			if (s[l] !== s[r]) return false
- 			l++
+	function isPalindrome(s) {
+		let l = 0,
+			r = s.length - 1
+		while (l < r) {
+			if (s[l] !== s[r]) return false
+			l++
 			r--
- 		}
- 		return true
- 	}
- }
+		}
+		return true
+	}
+}
 ```
