@@ -342,6 +342,7 @@ var merge = function (nums1, m, nums2, n) {
 		nums1[p++] = nums1_copy[p1] < nums2[p2] ? nums1_copy[p1++] : nums2[p2++]
 	}
 
+	//handle p1 < m or p2 < n
 	while (p1 < m) {
 		nums1[p++] = nums1_copy[p1++]
 	}

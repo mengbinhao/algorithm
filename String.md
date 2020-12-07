@@ -107,7 +107,7 @@ var myAtoi = function (str) {
 		min = -Math.pow(2, 31)
 	//handle blank space
 	while (str[i] === ' ' && i < len) i++
-	//hanle sign bit
+	//handle sign bit
 	if (str[i] === '+' || str[i] === '-') {
 		flag = str[i] === '+' ? 1 : -1
 		i++

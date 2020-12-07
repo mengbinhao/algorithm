@@ -1,6 +1,53 @@
+### [94 二叉树中序遍历 M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+
+```javascript
+//recursion
+var inorderTraversal = function (root) {
+	let ret = []
+	let traversal = (node) => {
+		if (!node) return
+		traversal(node.left)
+		ret.push(node.val)
+		traversal(node.right)
+	}
+	traversal(root)
+	return ret
+}
+//iteration
+var inorderTraversal = function (root) {
+	const stack = []
+	const res = []
+
+	while (root || stack.length) {
+		// 一直放入左儿子
+		if (root) {
+			stack.push(root)
+			root = root.left
+			//访问当前元素，把右儿子压入栈
+		} else {
+			root = stack.pop()
+			res.push(root.val)
+			root = root.right
+		}
+	}
+	return res
+}
+```
+
 ### [98.验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript {.line-numbers}
+var isValidBST = function (root) {
+	let helper = (node, lower, upper) => {
+		if (!node) return true
+		if (node.val <= lower || node.val >= upper) return false
+		return (
+			helper(node.left, lower, node.val) && helper(node.right, node.val, upper)
+		)
+	}
+	return helper(root, -Infinity, Infinity)
+}
+
 var isValidBST = function (root) {
 	return helper(root, null, null)
 
@@ -11,6 +58,24 @@ var isValidBST = function (root) {
 		//limit左子树最大值node,右子树最小值node
 		return helper(node.left, min, node) && helper(node.right, node, max)
 	}
+}
+
+//In-order
+var isValidBST = function (root) {
+	let queue = []
+	let dfs = (node) => {
+		if (!node) return
+		node.left && dfs(node.left)
+		queue.push(node.val)
+		node.right && dfs(node.right)
+	}
+	dfs(root)
+	for (let i = 0; i < queue.length; i++) {
+		if (queue[i] >= queue[i + 1]) {
+			return false
+		}
+	}
+	return true
 }
 ```
 
@@ -178,6 +243,96 @@ var isSymmetric = function (root) {
 }
 ```
 
+### [102 二叉树的层序遍历 M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+
+```javascript
+//BFS iteration
+var levelOrder = function (root) {
+	if (root === null) return []
+
+	let queue = [root],
+		ret = []
+
+	while (queue.length > 0) {
+		let len = queue.length,
+			currentLevel = []
+
+		for (let i = 0; i < len; i++) {
+			let node = queue.shift()
+			currentLevel.push(node.val)
+			if (node.left) queue.push(node.left)
+			if (node.right) queue.push(node.right)
+		}
+		ret.push(currentLevel)
+	}
+	return ret
+}
+
+//DFS
+var levelOrder = function (root) {
+	if (root === null) return []
+
+	let ret = []
+
+	let dfs = (node, level) => {
+		if (node === null) return
+		if (ret[level] == undefined) ret[level] = []
+		ret[level].push(node.val)
+		dfs(node.left, level + 1)
+		dfs(node.right, level + 1)
+	}
+	dfs(root, 0)
+	return ret
+}
+```
+
+### [104 二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+
+```javascript
+var maxDepth = function (root) {
+	return root == null
+		? 0
+		: Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
+}
+
+//dfs
+var maxDepth = function (root) {
+	if (!root) {
+		return 0
+	} else {
+		let maxLeftDepth = maxDepth(root.left)
+		let maxRightDepth = maxDepth(root.right)
+		return Math.max(maxLeftDepth, maxRightDepth) + 1
+	}
+}
+
+//bfs
+var maxDepth = function (root) {
+	if (root == null) {
+		return 0
+	}
+	let queue = [root],
+		ret = 0
+	while (queue.length > 0) {
+		let size = queue.length
+		//添加当前层的所有子节点
+		while (size > 0) {
+			let node = queue.shift()
+			if (node.left != null) {
+				queue.push(node.left)
+			}
+			if (node.right != null) {
+				queue.push(node.right)
+			}
+			size--
+		}
+		//一层添加完深度+1
+		ret++
+	}
+	return ret
+}
+```
+
 ### [105.从前序与中序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
 ```javascript {.line-numbers}
@@ -276,6 +431,50 @@ var buildTree = function (inorder, postorder) {
 }
 ```
 
+### [110.平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
+
+```javascript {.line-numbers}
+var isBalanced = function (root) {
+	if (root === null) {
+		return true
+	} else {
+		return (
+			Math.abs(height(root.left) - height(root.right)) <= 1 &&
+			isBalanced(root.left) &&
+			isBalanced(root.right)
+		)
+	}
+
+	function height(node) {
+		if (node === null) {
+			return 0
+		} else {
+			return Math.max(height(node.left), height(node.right)) + 1
+		}
+	}
+}
+
+//自底向上
+var isBalanced = function (root) {
+	return height(root) >= 0
+
+	function height(node) {
+		if (node === null) return 0
+		let leftHeight = height(node.left)
+		let rightHeight = height(node.right)
+		if (
+			leftHeight === -1 ||
+			rightHeight === -1 ||
+			Math.abs(leftHeight - rightHeight) > 1
+		) {
+			return -1
+		} else {
+			return Math.max(leftHeight, rightHeight) + 1
+		}
+	}
+}
+```
+
 ### [111.二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
 ```javascript {.line-numbers}
@@ -316,6 +515,25 @@ var minDepth = function (root) {
 		depth++
 	}
 	return depth
+}
+```
+
+### [112.路径总和](https://leetcode-cn.com/problems/path-sum/)
+
+```javascript {.line-numbers}
+var hasPathSum = function (root, sum) {
+	if (root === null) {
+		return false
+	}
+
+	if (root.left === null && root.right === null) {
+		return root.val === sum
+	}
+
+	return (
+		hasPathSum(root.left, sum - root.val) ||
+		hasPathSum(root.right, sum - root.val)
+	)
 }
 ```
 
@@ -409,6 +627,80 @@ var maxPathSum = function (root) {
 }
 ```
 
+### [144 二叉树前序遍历 M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+
+```javascript
+//recursion, don't need to judge if node is null
+var preorderTraversal = function (root) {
+	let ret = []
+	let traversal = (node) => {
+		if (!node) return
+		ret.push(node.val)
+		traversal(node.left)
+		traversal(node.right)
+	}
+	traversal(root)
+	return ret
+}
+
+//iteration. use stack, need to judge if node is null
+var preorderTraversal = function (root) {
+	let ret = [],
+		stack = []
+	root && stack.push(root)
+	while (stack.length > 0) {
+		let node = stack.pop()
+		ret.push(node.val)
+		//right first
+		if (node.right) {
+			stack.push(node.right)
+		}
+		if (node.left) {
+			stack.push(node.left)
+		}
+	}
+	return ret
+}
+```
+
+### [145 二叉树后序遍历 H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+
+```javascript
+//recursion
+var postorderTraversal = function (root) {
+	let result = []
+	var traversal = (node) => {
+		if (!node) return
+		traversal(node.left)
+		traversal(node.right)
+		result.push(node.val)
+	}
+	traversal(root)
+	return result
+}
+
+//iteration
+const postorderTraversal = (root) => {
+	const ret = []
+	const stack = []
+
+	root && stack.push(root)
+	while (stack.length > 0) {
+		const node = stack.pop()
+		// 根左右=>右左根
+		ret.unshift(node.val)
+
+		if (node.left !== null) {
+			stack.push(node.left)
+		}
+		if (node.right !== null) {
+			stack.push(node.right)
+		}
+	}
+	return ret
+}
+```
+
 ### [222.完全二叉树的节点个数](https://leetcode-cn.com/problems/count-complete-tree-nodes/)
 
 ```javascript {.line-numbers}
@@ -475,7 +767,7 @@ var invertTree = function (root) {
 	if (!root) return root
 	const queue = [root]
 
-	while (queue.length) {
+	while (queue.length > 0) {
 		const cur = queue.shift()
 		;[cur.left, cur.right] = [cur.right, cur.left]
 
@@ -507,9 +799,28 @@ var kthSmallest = function (root, k) {
 }
 ```
 
+### [235 二叉搜索树的公共祖先 E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+
+```javascript
+var lowestCommonAncestor = function (root, p, q) {
+	while (root) {
+		if (root.val > p.val && root.val > q.val) root = root.left
+		else if (root.val < p.val && root.val < q.val) root = root.right
+		else return root
+	}
+}
+```
+
 ### [236.二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 ```javascript {.line-numbers}
+var lowestCommonAncestor = function (root, p, q) {
+	if (root === null || root === p || root === q) return root
+	let left = lowestCommonAncestor(root.left, p, q)
+	let right = lowestCommonAncestor(root.right, p, q)
+	return left === null ? right : right === null ? left : root
+}
+
 var lowestCommonAncestor = function (root, p, q) {
 	if (root === null) return null
 	if (root === p || root === q) return root
@@ -556,6 +867,46 @@ const deserialize = (data) => {
 }
 ```
 
+### [429 N 叉树的层序遍历 M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
+
+```javascript
+//DFS
+var levelOrder = function (root) {
+	var nums = []
+
+	let search = (nums, node, k) => {
+		if (node == null) return
+		if (nums[k] == undefined) nums[k] = []
+		nums[k].push(node.val)
+		for (var i = 0; i < node.children.length; i++) {
+			search(nums, node.children[i], k + 1)
+		}
+	}
+	search(nums, root, 0)
+	return nums
+}
+
+//BFS
+var levelOrder = function (root) {
+	if (!root) return []
+	let queue = [root]
+	let ret = []
+	while (queue.length) {
+		let level = [],
+			len = queue.length
+		for (let i = 0; i < len; i++) {
+			let current = queue.shift()
+			level.push(current.val)
+			if (current.children && current.children.length) {
+				queue.push(...current.children)
+			}
+		}
+		ret.push(level)
+	}
+	return ret
+}
+```
+
 ### [450.删除二叉搜索树中的节点](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
 
 ```javascript {.line-numbers}
@@ -581,6 +932,55 @@ var deleteNode = function (root, key) {
 		while (node.left != null) node = node.left
 		return node
 	}
+}
+```
+
+### [515 在每个树行中找最大值 M](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
+
+```javascript
+//dfs
+var largestValues = function (root) {
+	let ret = []
+
+	let dfs = (node, ret, level) => {
+		if (!node) return
+		//if it is new level, just add val
+		if (ret[level] === undefined) {
+			ret[level] = node.val
+		} else {
+			ret[level] = Math.max(ret[level], node.val)
+		}
+		dfs(node.left, ret, level + 1)
+		dfs(node.right, ret, level + 1)
+	}
+
+	dfs(root, ret, 0)
+	return ret
+}
+
+//bfs
+var largestValues = function (root) {
+	let ret = []
+	if (!root) return ret
+	let queue = [root]
+
+	while (queue.length > 0) {
+		let len = queue.length,
+			max = -Infinity
+		//loop each level
+		for (let i = 0; i < len; i++) {
+			let temp = queue.shift()
+			if (temp.left !== null) {
+				queue.push(temp.left)
+			}
+			if (temp.right !== null) {
+				queue.push(temp.right)
+			}
+			max = Math.max(max, temp.val)
+		}
+		ret.push(max)
+	}
+	return ret
 }
 ```
 
@@ -618,6 +1018,77 @@ var diameterOfBinaryTree = function (root) {
 		ret = Math.max(ret, leftDepth + rightDepth + 1)
 		return Math.max(leftDepth, rightDepth) + 1
 	}
+}
+```
+
+### [589 N 叉树的前序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
+
+```javascript
+//recursion
+var preorder = function (root) {
+	let ret = []
+	let preorderNode = (node) => {
+		if (node) {
+			ret.push(node.val)
+			if (node.children && node.children.length > 0) {
+				node.children.forEach((child) => preorderNode(child))
+			}
+		}
+	}
+	preorderNode(root)
+	return ret
+}
+//iteration
+var preorder = function (root) {
+	let ret = [],
+		stack = []
+	root && stack.push(root)
+
+	while (stack.length > 0) {
+		let node = stack.pop()
+		ret.push(node.val)
+		for (let i = node.children.length - 1; i >= 0; i--) {
+			stack.push(node.children[i])
+		}
+	}
+	return ret
+}
+```
+
+### [590 N 叉树的后序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
+
+```javascript
+//recursion
+var postorder = function (root) {
+	let ret = [],
+		stack = []
+
+	let postorderNode = (node) => {
+		if (node) {
+			node.children.forEach((child) => {
+				postorderNode(child)
+			})
+			ret.push(node.val)
+		}
+	}
+	postorderNode(root)
+	return ret
+}
+//iteration
+var postorder = function (root) {
+	let ret = [],
+		stack = []
+	root && stack.push(root)
+
+	while (stack.length > 0) {
+		let node = stack.pop()
+
+		for (let i = 0; i < node.children.length; i++) {
+			stack.push(node.children[i])
+		}
+		ret.unshift(node.val)
+	}
+	return ret
 }
 ```
 

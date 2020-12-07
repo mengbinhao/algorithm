@@ -2,12 +2,14 @@
 
 #### hash table、映射、集合
 
-##### [242有效的字母异位词E](https://leetcode-cn.com/problems/valid-anagram/)
+##### [242 有效的字母异位词 E](https://leetcode-cn.com/problems/valid-anagram/)
 
 ```javascript
 //使用系统内置函数sort O(NlogN) n为字符串长度 - O(1)
 var isAnagram = function (s, t) {
-	return s.length === t.length && [...s].sort().join('') === [...t].sort().join('')
+	return (
+		s.length === t.length && [...s].sort().join('') === [...t].sort().join('')
+	)
 }
 
 //hash 统计每个字符出现的频次,枚s增加，枚t减小，最后检查全部hash值是否为0
@@ -44,32 +46,33 @@ var isAnagram = function (s, t) {
 }
 
 //use array store each letter
-var isAnagram = function(s, t) {
-  if (s.length !== t.length) return false
+var isAnagram = function (s, t) {
+	if (s.length !== t.length) return false
 
-  const letterArr = Array.from({length: 26}, () => 0), len = s.length
+	const letterArr = Array.from({ length: 26 }, () => 0),
+		len = s.length
 
-  for (let i = 0; i < len; i++) {
-    letterArr[s.codePointAt(i) - 'a'.codePointAt(0)]++
-  }
+	for (let i = 0; i < len; i++) {
+		letterArr[s.codePointAt(i) - 'a'.codePointAt(0)]++
+	}
 
-  for (let i = 0; i < len; i++) {
-    letterArr[t.codePointAt(i) - 'a'.codePointAt(0)]--
-    if (letterArr[t.codePointAt(i) - 'a'.codePointAt(0)] < 0) {
-      return false
-    }
-  }
+	for (let i = 0; i < len; i++) {
+		letterArr[t.codePointAt(i) - 'a'.codePointAt(0)]--
+		if (letterArr[t.codePointAt(i) - 'a'.codePointAt(0)] < 0) {
+			return false
+		}
+	}
 
-  return true
-};
+	return true
+}
 ```
 
-##### [49字母异位词分组M](https://leetcode-cn.com/problems/group-anagrams/)
+##### [49 字母异位词分组 M](https://leetcode-cn.com/problems/group-anagrams/)
 
 ```javascript
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
 var groupAnagrams = function (strs) {
-  if (strs.length === 0) return [[]]
+	if (strs.length === 0) return [[]]
 	let hash = {}
 
 	for (let str of strs) {
@@ -86,77 +89,78 @@ var groupAnagrams = function (strs) {
 
 //使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
 var groupAnagrams = function (strs) {
-  if (strs.length === 0) return [[]]
-  let count = Array(26),
-    map = {}
-  for (let str of strs) {
-    //re-count each character
-    count.fill(0)
-    for (let i = 0; i < str.split('').length; i++) {
-      count[str.charCodeAt(i) - 97]++
-    }
-    //build unique key
-    let temp = ''
-    for (let i = 0; i < 26; i++) {
-      temp += `#${count[i]}`
-    }
-    if (!map[temp]) {
-      map[temp] = []
-    }
-    map[temp].push(str)
-  }
-  return Object.values(map)
+	if (strs.length === 0) return [[]]
+	let count = Array(26),
+		map = {}
+	for (let str of strs) {
+		//re-count each character
+		count.fill(0)
+		for (let i = 0; i < str.split('').length; i++) {
+			count[str.charCodeAt(i) - 97]++
+		}
+		//build unique key
+		let temp = ''
+		for (let i = 0; i < 26; i++) {
+			temp += `#${count[i]}`
+		}
+		if (!map[temp]) {
+			map[temp] = []
+		}
+		map[temp].push(str)
+	}
+	return Object.values(map)
 }
 ```
 
 #### tree、binary tree、binary search tree
 
-##### [144二叉树前序遍历M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+##### [144 二叉树前序遍历 M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
-``` javascript
+```javascript
 //recursion, don't need to judge if node is null
 var preorderTraversal = function (root) {
 	let ret = []
 	let traversal = (node) => {
-	    if (!node) return
-        ret.push(node.val)
-        traversal(node.left)
-        traversal(node.right)
+		if (!node) return
+		ret.push(node.val)
+		traversal(node.left)
+		traversal(node.right)
 	}
 	traversal(root)
 	return ret
 }
 
 //iteration. use stack, need to judge if node is null
-var preorderTraversal = function(root) {
-    let ret = [], stack = [];
-    root && stack.push(root)
-    while (stack.length > 0) {
-        let node = stack.pop()
-        ret.push(node.val)
-	    //right first
-        if (node.right) {
-            stack.push(node.right)
-        }
-        if (node.left) {
-            stack.push(node.left)
-        }
-    }
-    return ret
+var preorderTraversal = function (root) {
+	let ret = [],
+		stack = []
+	root && stack.push(root)
+	while (stack.length > 0) {
+		let node = stack.pop()
+		ret.push(node.val)
+		//right first
+		if (node.right) {
+			stack.push(node.right)
+		}
+		if (node.left) {
+			stack.push(node.left)
+		}
+	}
+	return ret
 }
 ```
 
-##### [94二叉树中序遍历M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+##### [94 二叉树中序遍历 M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```javascript
 //recursion
 var inorderTraversal = function (root) {
 	let ret = []
 	let traversal = (node) => {
-	    if (!node) return
-        traversal(node.left)
-        ret.push(node.val)
-        traversal(node.right)
+		if (!node) return
+		traversal(node.left)
+		ret.push(node.val)
+		traversal(node.right)
 	}
 	traversal(root)
 	return ret
@@ -167,32 +171,32 @@ var inorderTraversal = function (root) {
 	const res = []
 
 	while (root || stack.length) {
-        // 一直放入左儿子
+		// 一直放入左儿子
 		if (root) {
-            stack.push(root)
-            root = root.left
-         //访问当前元素，把右儿子压入栈
+			stack.push(root)
+			root = root.left
+			//访问当前元素，把右儿子压入栈
 		} else {
-            root = stack.pop()
-		   res.push(root.val)
-		   root = root.right
-        }
+			root = stack.pop()
+			res.push(root.val)
+			root = root.right
+		}
 	}
 	return res
 }
 ```
 
-##### [145二叉树后序遍历H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+##### [145 二叉树后序遍历 H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 
 ```javascript
 //recursion
 var postorderTraversal = function (root) {
 	let result = []
 	var traversal = (node) => {
-	    if (!node) return
-        traversal(node.left)
-        traversal(node.right)
-        result.push(node.val)
+		if (!node) return
+		traversal(node.left)
+		traversal(node.right)
+		result.push(node.val)
 	}
 	traversal(root)
 	return result
@@ -220,7 +224,7 @@ const postorderTraversal = (root) => {
 }
 ```
 
-##### [102二叉树的层序遍历M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+##### [102 二叉树的层序遍历 M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
 ```javascript
 //BFS iteration
@@ -263,9 +267,7 @@ var levelOrder = function (root) {
 }
 ```
 
-
-
-##### [589N叉树的前序遍历E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
+##### [589N 叉树的前序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
 
 ```javascript
 //recursion
@@ -274,9 +276,9 @@ var preorder = function (root) {
 	let preorderNode = (node) => {
 		if (node) {
 			ret.push(node.val)
-      if (node.children && node.children.length > 0) {
-        node.children.forEach((child) => preorderNode(child))
-      }
+			if (node.children && node.children.length > 0) {
+				node.children.forEach((child) => preorderNode(child))
+			}
 		}
 	}
 	preorderNode(root)
@@ -299,7 +301,7 @@ var preorder = function (root) {
 }
 ```
 
-##### [590N叉树的后序遍历E](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
+##### [590N 叉树的后序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
 
 ```javascript
 //recursion
@@ -336,7 +338,7 @@ var postorder = function (root) {
 }
 ```
 
-##### [429N叉树的层序遍历M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
+##### [429N 叉树的层序遍历 M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
 ```javascript
 //DFS
@@ -376,7 +378,7 @@ var levelOrder = function (root) {
 }
 ```
 
-##### [347前K个高频元素M](https://leetcode-cn.com/problems/top-k-frequent-elements/)
+##### [347 前 K 个高频元素 M](https://leetcode-cn.com/problems/top-k-frequent-elements/)
 
 ```javascript
 //do not meet the requirement
@@ -420,7 +422,7 @@ var topKFrequent = function (nums, k) {
 }
 ```
 
-##### [98验证二叉搜索树M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+##### [98 验证二叉搜索树 M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript
 var isValidBST = function (root) {
@@ -438,24 +440,24 @@ var isValidBST = function (root) {
 
 //In-order
 var isValidBST = function (root) {
-  let queue = []
-  let dfs = (node) => {
- 	if (!node) return
- 	node.left && dfs(node.left)
- 	queue.push(node.val)
- 	node.right && dfs(node.right)
-  }
-  dfs(root)
-  for (let i = 0; i < queue.length; i++) {
- 	if (queue[i] >= queue[i + 1]) {
- 		return false
- 	}
-  }
-  return true
+	let queue = []
+	let dfs = (node) => {
+		if (!node) return
+		node.left && dfs(node.left)
+		queue.push(node.val)
+		node.right && dfs(node.right)
+	}
+	dfs(root)
+	for (let i = 0; i < queue.length; i++) {
+		if (queue[i] >= queue[i + 1]) {
+			return false
+		}
+	}
+	return true
 }
 ```
 
-##### [236二叉树的最近公共祖先M](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+##### [236 二叉树的最近公共祖先 M](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 ```javascript
 var lowestCommonAncestor = function (root, p, q) {
@@ -466,7 +468,7 @@ var lowestCommonAncestor = function (root, p, q) {
 }
 ```
 
-##### [235二叉搜索树的公共祖先E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+##### [235 二叉搜索树的公共祖先 E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
 ```javascript
 var lowestCommonAncestor = function (root, p, q) {
@@ -478,7 +480,7 @@ var lowestCommonAncestor = function (root, p, q) {
 }
 ```
 
-##### [104二叉树的最大深度E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+##### [104 二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```javascript
 var maxDepth = function (root) {
@@ -488,7 +490,7 @@ var maxDepth = function (root) {
 }
 ```
 
-##### [111二叉树的最小深度E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+##### [111 二叉树的最小深度 E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
 ```javascript
 var minDepth = function (root) {
@@ -501,7 +503,5 @@ var minDepth = function (root) {
 		: Math.min(minLeftDepth, minRightDepth) + 1
 }
 ```
-
-
 
 #### heap、binary heap
