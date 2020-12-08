@@ -1,36 +1,36 @@
+![](./images/Tree.png)
+
 ### [94 二叉树中序遍历 M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
-```javascript
+```javascript {.line-numbers}
 //recursion
 var inorderTraversal = function (root) {
 	let ret = []
-	let traversal = (node) => {
+	let traversal = (node, ret) => {
 		if (!node) return
-		traversal(node.left)
+		traversal(node.left, ret)
 		ret.push(node.val)
-		traversal(node.right)
+		traversal(node.right, ret)
 	}
-	traversal(root)
+	traversal(root, ret)
 	return ret
 }
 //iteration
 var inorderTraversal = function (root) {
-	const stack = []
-	const res = []
+	const ret = [],
+		stack = []
 
-	while (root || stack.length) {
-		// 一直放入左儿子
-		if (root) {
+	while (root || stack.length > 0) {
+		//一直放左儿子
+		while (root) {
 			stack.push(root)
 			root = root.left
-			//访问当前元素，把右儿子压入栈
-		} else {
-			root = stack.pop()
-			res.push(root.val)
-			root = root.right
 		}
+		root = stack.pop()
+		ret.push(root.val)
+		root = root.right
 	}
-	return res
+	return ret
 }
 ```
 
@@ -245,7 +245,7 @@ var isSymmetric = function (root) {
 
 ### [102 二叉树的层序遍历 M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
-```javascript
+```javascript {.line-numbers}
 //BFS iteration
 var levelOrder = function (root) {
 	if (root === null) return []
@@ -288,7 +288,7 @@ var levelOrder = function (root) {
 
 ### [104 二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
-```javascript
+```javascript {.line-numbers}
 var maxDepth = function (root) {
 	return root == null
 		? 0
@@ -629,60 +629,89 @@ var maxPathSum = function (root) {
 
 ### [144 二叉树前序遍历 M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
-```javascript
+```javascript {.line-numbers}
 //recursion, don't need to judge if node is null
 var preorderTraversal = function (root) {
-	let ret = []
-	let traversal = (node) => {
+	const ret = []
+	const traversal = (node, ret) => {
 		if (!node) return
 		ret.push(node.val)
-		traversal(node.left)
-		traversal(node.right)
+		traversal(node.left, ret)
+		traversal(node.right, ret)
 	}
-	traversal(root)
+	traversal(root, ret)
 	return ret
 }
 
-//iteration. use stack, need to judge if node is null
+//iteration. use stack
 var preorderTraversal = function (root) {
-	let ret = [],
+	const ret = [],
 		stack = []
 	root && stack.push(root)
+
 	while (stack.length > 0) {
-		let node = stack.pop()
+		const node = stack.pop()
 		ret.push(node.val)
-		//right first
+
 		if (node.right) {
 			stack.push(node.right)
 		}
+
 		if (node.left) {
 			stack.push(node.left)
 		}
 	}
+
 	return ret
 }
 ```
 
 ### [145 二叉树后序遍历 H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 
-```javascript
+```javascript {.line-numbers}
 //recursion
 var postorderTraversal = function (root) {
-	let result = []
+	let ret = []
 	var traversal = (node) => {
 		if (!node) return
 		traversal(node.left)
 		traversal(node.right)
-		result.push(node.val)
+		ret.push(node.val)
 	}
 	traversal(root)
-	return result
+	return ret
 }
 
-//iteration
+//iteration 节点第一次访问时并不打印，而是在第二次遍历时才打印。所以需要一个变量来标记该结点是否访问过
 const postorderTraversal = (root) => {
-	const ret = []
-	const stack = []
+	const ret = [],
+		stack = []
+	let prev = null
+
+	while (root || stack.length > 0) {
+		//一直放左
+		while (root) {
+			stack.push(root)
+			root = root.left
+		}
+		root = stack.pop()
+		//root.right === prev 节点访问过一次
+		if (!root.right || root.right === prev) {
+			ret.push(root.val)
+			prev = root
+			root = null
+		} else {
+			stack.push(root)
+			root = root.right
+		}
+	}
+	return ret
+}
+
+//iteration 逆序输出
+const postorderTraversal = (root) => {
+	const ret = [],
+		stack = []
 
 	root && stack.push(root)
 	while (stack.length > 0) {
@@ -801,7 +830,7 @@ var kthSmallest = function (root, k) {
 
 ### [235 二叉搜索树的公共祖先 E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
-```javascript
+```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
 	while (root) {
 		if (root.val > p.val && root.val > q.val) root = root.left
@@ -869,7 +898,7 @@ const deserialize = (data) => {
 
 ### [429 N 叉树的层序遍历 M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
-```javascript
+```javascript {.line-numbers}
 //DFS
 var levelOrder = function (root) {
 	var nums = []
@@ -937,7 +966,7 @@ var deleteNode = function (root, key) {
 
 ### [515 在每个树行中找最大值 M](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
 
-```javascript
+```javascript {.line-numbers}
 //dfs
 var largestValues = function (root) {
 	let ret = []
@@ -1023,7 +1052,7 @@ var diameterOfBinaryTree = function (root) {
 
 ### [589 N 叉树的前序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
 
-```javascript
+```javascript {.line-numbers}
 //recursion
 var preorder = function (root) {
 	let ret = []
@@ -1057,7 +1086,7 @@ var preorder = function (root) {
 
 ### [590 N 叉树的后序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
 
-```javascript
+```javascript {.line-numbers}
 //recursion
 var postorder = function (root) {
 	let ret = [],
@@ -1236,20 +1265,20 @@ var verticalTraversal = function (root) {
 
 	// curValOfX当前遍历的节点的x的值，默认先取第一个节点的x值
 	let curValOfX = locations[0][0]
-	let result = [[locations[0][2]]]
+	let ret = [[locations[0][2]]]
 
 	// 从第2个节点开始遍历坐标数组，把x相同的val分成一组
 	for (let i = 1; i < locations.length; i++) {
 		let location = locations[i]
 		let x = location[0]
 		if (x == curValOfX) {
-			let last = result[result.length - 1]
+			let last = ret[ret.length - 1]
 			last.push(location[2])
 		} else {
 			curValOfX = x
-			result.push([location[2]])
+			ret.push([location[2]])
 		}
 	}
-	return result
+	return ret
 }
 ```

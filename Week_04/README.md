@@ -201,7 +201,7 @@ var search = function (nums, target) {
 			return true
 		}
 
-        //move left pointer to exclue repeat item, or we can not define the monotonic section
+        //move left pointer to exclude repeat item, or we can not define the monotonic section
 		if (nums[left] === nums[mid]) {
 			left++
 			continue

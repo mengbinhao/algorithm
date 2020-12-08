@@ -1,47 +1,35 @@
-var multiply = function (num1, num2) {
-	if (num1 === '0' || num2 === '0') {
-		return '0'
-	}
-	let ans = '0'
-	const m = num1.length,
-		n = num2.length
-	for (let i = n - 1; i >= 0; i--) {
-		let curr = '',
-			add = 0
-		for (let j = n - 1; j > i; j--) {
-			curr += 0
-		}
-		let y = num2.charAt(i) - 0
-		for (let j = m - 1; j >= 0; j--) {
-			let x = num1.charAt(j) - 0
-			let product = x * y + add
-			curr += product % 10
-			add = Math.floor(product / 10)
-		}
-		if (add !== 0) {
-			curr += add % 10
-		}
-		ans = addStrings(ans, curr.split('').reverse().join(''))
-	}
-	return ans
+function TreeNode(val) {
+	this.val = val
+	this.left = this.right = null
 }
 
-function addStrings(num1, num2) {
-	let i = num1.length - 1,
-		j = num2.length - 1,
-		curry = 0,
-		ret = []
+let TreeNode1 = new TreeNode(1)
+let TreeNode2 = new TreeNode(2)
+let TreeNode3 = new TreeNode(3)
+TreeNode1.right = TreeNode2
+TreeNode2.left = TreeNode3
 
-	while (i >= 0 || j >= 0 || curry) {
-		const x = i >= 0 ? num1.charAt(i) - 0 : 0
-		const y = j >= 0 ? num2.charAt(j) - 0 : 0
-		const tmp = x + y + curry
-		ret.push(tmp % 10)
-		curry = Math.floor(tmp / 10)
-		i--
-		j--
+const postorderTraversal = (root) => {
+	const ret = [],
+		stack = []
+	let prev = null
+
+	while (root || stack.length > 0) {
+		while (root) {
+			stack.push(root)
+			root = root.left
+		}
+		root = stack.pop()
+		if (root.right === null || root.right === prev) {
+			ret.push(root.val)
+			prev = root
+			root = null
+		} else {
+			stack.push(root)
+			root = root.right
+		}
 	}
-	return ret.reverse().join('')
+	return ret
 }
 
-multiply('123', '456')
+postorderTraversal([1, null, 2, 3])
