@@ -1,6 +1,6 @@
 ![](./images/Tree.png)
 
-### [94 二叉树中序遍历 M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+### [94.二叉树中序遍历](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```javascript {.line-numbers}
 //recursion
@@ -28,6 +28,7 @@ var inorderTraversal = function (root) {
 		}
 		root = stack.pop()
 		ret.push(root.val)
+		//再放入右儿子
 		root = root.right
 	}
 	return ret
@@ -243,50 +244,49 @@ var isSymmetric = function (root) {
 }
 ```
 
-### [102 二叉树的层序遍历 M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+### [102.二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
 ```javascript {.line-numbers}
-//BFS iteration
+//DFS
 var levelOrder = function (root) {
-	if (root === null) return []
+	let ret = []
 
-	let queue = [root],
-		ret = []
-
-	while (queue.length > 0) {
-		let len = queue.length,
-			currentLevel = []
-
-		for (let i = 0; i < len; i++) {
-			let node = queue.shift()
-			currentLevel.push(node.val)
-			if (node.left) queue.push(node.left)
-			if (node.right) queue.push(node.right)
-		}
-		ret.push(currentLevel)
+	const dfs = (node, level, ret) => {
+		if (node == null) return
+		if (!ret[level]) ret[level] = []
+		ret[level].push(node.val)
+		dfs(node.left, level + 1, ret)
+		dfs(node.right, level + 1, ret)
 	}
+
+	dfs(root, 0, ret)
 	return ret
 }
 
-//DFS
+//BFS iteration, use queue
 var levelOrder = function (root) {
 	if (root === null) return []
 
-	let ret = []
+	const queue = [root],
+		ret = []
 
-	let dfs = (node, level) => {
-		if (node === null) return
-		if (ret[level] == undefined) ret[level] = []
-		ret[level].push(node.val)
-		dfs(node.left, level + 1)
-		dfs(node.right, level + 1)
+	while (queue.length > 0) {
+		const size = queue.length,
+			curLevel = []
+
+		for (let i = 0; i < size; i++) {
+			const node = queue.shift()
+			curLevel.push(node.val)
+			if (node.left) queue.push(node.left)
+			if (node.right) queue.push(node.right)
+		}
+		ret.push(curLevel)
 	}
-	dfs(root, 0)
 	return ret
 }
 ```
 
-### [104 二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+### [104.二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```javascript {.line-numbers}
 var maxDepth = function (root) {
@@ -627,7 +627,7 @@ var maxPathSum = function (root) {
 }
 ```
 
-### [144 二叉树前序遍历 M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+### [144.二叉树前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
 ```javascript {.line-numbers}
 //recursion, don't need to judge if node is null
@@ -650,23 +650,20 @@ var preorderTraversal = function (root) {
 	root && stack.push(root)
 
 	while (stack.length > 0) {
-		const node = stack.pop()
-		ret.push(node.val)
-
-		if (node.right) {
-			stack.push(node.right)
+		root = stack.pop()
+		ret.push(root.val)
+		if (root.right) {
+			stack.push(root.right)
 		}
-
-		if (node.left) {
-			stack.push(node.left)
+		if (root.left) {
+			stack.push(root.left)
 		}
 	}
-
 	return ret
 }
 ```
 
-### [145 二叉树后序遍历 H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+### [145.二叉树后序遍历](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 
 ```javascript {.line-numbers}
 //recursion
@@ -682,14 +679,15 @@ var postorderTraversal = function (root) {
 	return ret
 }
 
-//iteration 节点第一次访问时并不打印，而是在第二次遍历时才打印。所以需要一个变量来标记该结点是否访问过
+//iteration
+//节点第一次访问时并不打印，而是在第二次遍历时才打印。所以需要一个变量来标记该结点是否访问过
 const postorderTraversal = (root) => {
 	const ret = [],
 		stack = []
 	let prev = null
 
 	while (root || stack.length > 0) {
-		//一直放左
+		//一直放左儿子
 		while (root) {
 			stack.push(root)
 			root = root.left
@@ -701,29 +699,69 @@ const postorderTraversal = (root) => {
 			prev = root
 			root = null
 		} else {
+			//再次放入
 			stack.push(root)
 			root = root.right
 		}
 	}
+
 	return ret
 }
 
-//iteration 逆序输出
+//逆序输出
 const postorderTraversal = (root) => {
 	const ret = [],
 		stack = []
 
 	root && stack.push(root)
 	while (stack.length > 0) {
-		const node = stack.pop()
-		// 根左右=>右左根
-		ret.unshift(node.val)
+		root = stack.pop()
+		//unshift顺序从根左右 => 右左根
+		ret.unshift(root.val)
 
-		if (node.left !== null) {
-			stack.push(node.left)
+		//右左根 => 左右根
+		if (root.left !== null) {
+			stack.push(root.left)
 		}
-		if (node.right !== null) {
-			stack.push(node.right)
+		if (root.right !== null) {
+			stack.push(root.right)
+		}
+	}
+	return ret
+}
+```
+
+### [199.二叉树的右视图](https://leetcode-cn.com/problems/binary-tree-right-side-view/)
+
+```javascript {.line-numbers}
+//recursion
+var rightSideView = function (root) {
+	const ret = []
+	const dfs = (node, level, ret) => {
+		if (!node) return
+		if (level === ret.length) ret.push(node.val)
+		//visit right son first, so above line code can visit right first node of next level
+		dfs(node.right, level + 1, ret)
+		dfs(node.left, level + 1, ret)
+	}
+
+	dfs(root, 0, ret)
+	return ret
+}
+
+//use queue
+var rightSideView = function (root) {
+	if (!root) return []
+	const ret = [],
+		queue = [root]
+
+	while (queue.length > 0) {
+		const size = queue.length
+		for (let i = 0; i < size; i++) {
+			const node = queue.shift()
+			if (node.left) queue.push(node.left)
+			if (node.right) queue.push(node.right)
+			if (i === size - 1) ret.push(node.val)
 		}
 	}
 	return ret
@@ -828,7 +866,7 @@ var kthSmallest = function (root, k) {
 }
 ```
 
-### [235 二叉搜索树的公共祖先 E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+### [235.二叉搜索树的公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
@@ -896,34 +934,34 @@ const deserialize = (data) => {
 }
 ```
 
-### [429 N 叉树的层序遍历 M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
+### [429.N 叉树的层序遍历](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
 ```javascript {.line-numbers}
 //DFS
 var levelOrder = function (root) {
 	var nums = []
 
-	let search = (nums, node, k) => {
-		if (node == null) return
-		if (nums[k] == undefined) nums[k] = []
-		nums[k].push(node.val)
+	let traversal = (node, level, nums) => {
+		if (!node) return
+		if (!nums[level]) nums[level] = []
+		nums[level].push(node.val)
 		for (var i = 0; i < node.children.length; i++) {
-			search(nums, node.children[i], k + 1)
+			traversal(node.children[i], level + 1, nums)
 		}
 	}
-	search(nums, root, 0)
+	traversal(root, 0, nums)
 	return nums
 }
 
-//BFS
+//BFS use queue
 var levelOrder = function (root) {
 	if (!root) return []
 	let queue = [root]
 	let ret = []
 	while (queue.length) {
 		let level = [],
-			len = queue.length
-		for (let i = 0; i < len; i++) {
+			size = queue.length
+		for (let i = 0; i < size; i++) {
 			let current = queue.shift()
 			level.push(current.val)
 			if (current.children && current.children.length) {
@@ -964,48 +1002,39 @@ var deleteNode = function (root, key) {
 }
 ```
 
-### [515 在每个树行中找最大值 M](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
+### [515.在每个树行中找最大值](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
 
 ```javascript {.line-numbers}
 //dfs
 var largestValues = function (root) {
-	let ret = []
-
-	let dfs = (node, ret, level) => {
+	const ret = []
+	const dfs = (node, level, ret) => {
 		if (!node) return
-		//if it is new level, just add val
-		if (ret[level] === undefined) {
-			ret[level] = node.val
-		} else {
-			ret[level] = Math.max(ret[level], node.val)
-		}
-		dfs(node.left, ret, level + 1)
-		dfs(node.right, ret, level + 1)
+		//hole!!! node's value maybe null
+		if (ret[level] === undefined) ret[level] = node.val
+		ret[level] = Math.max(ret[level], node.val)
+		dfs(node.left, level + 1, ret)
+		dfs(node.right, level + 1, ret)
 	}
 
-	dfs(root, ret, 0)
+	dfs(root, 0, ret)
 	return ret
 }
 
 //bfs
 var largestValues = function (root) {
-	let ret = []
+	const ret = []
 	if (!root) return ret
-	let queue = [root]
+	const queue = [root]
 
 	while (queue.length > 0) {
-		let len = queue.length,
+		const size = queue.length,
 			max = -Infinity
-		//loop each level
-		for (let i = 0; i < len; i++) {
-			let temp = queue.shift()
-			if (temp.left !== null) {
-				queue.push(temp.left)
-			}
-			if (temp.right !== null) {
-				queue.push(temp.right)
-			}
-			max = Math.max(max, temp.val)
+		for (let i = 0; i < size; i++) {
+			const node = queue.shift()
+			if (node.left) queue.push(node.left)
+			if (node.right) queue.push(node.right)
+			max = Math.max(max, node.val)
 		}
 		ret.push(max)
 	}
@@ -1050,72 +1079,77 @@ var diameterOfBinaryTree = function (root) {
 }
 ```
 
-### [589 N 叉树的前序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
+### [589.N 叉树的前序遍历](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
 
 ```javascript {.line-numbers}
-//recursion
 var preorder = function (root) {
 	let ret = []
-	let preorderNode = (node) => {
-		if (node) {
-			ret.push(node.val)
-			if (node.children && node.children.length > 0) {
-				node.children.forEach((child) => preorderNode(child))
-			}
+	const traversal = (node, ret) => {
+		if (!node) return
+		ret.push(node.val)
+		if (node.children && node.children.length > 0) {
+			node.children.forEach((child) => {
+				traversal(child, ret)
+			})
 		}
 	}
-	preorderNode(root)
+
+	traversal(root, ret)
 	return ret
 }
+
 //iteration
 var preorder = function (root) {
-	let ret = [],
-		stack = []
-	root && stack.push(root)
+	const ret = [],
+		stack = [root]
 
 	while (stack.length > 0) {
-		let node = stack.pop()
-		ret.push(node.val)
-		for (let i = node.children.length - 1; i >= 0; i--) {
-			stack.push(node.children[i])
+		const node = stack.pop()
+		if (node) {
+			ret.push(node.val)
+			//preorder need push right son first
+			for (let i = node.children.length - 1; i >= 0; i--) {
+				stack.push(node.children[i])
+			}
 		}
 	}
 	return ret
 }
 ```
 
-### [590 N 叉树的后序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
+### [590.N 叉树的后序遍历](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
 
 ```javascript {.line-numbers}
 //recursion
 var postorder = function (root) {
-	let ret = [],
+	const ret = [],
 		stack = []
 
-	let postorderNode = (node) => {
-		if (node) {
-			node.children.forEach((child) => {
-				postorderNode(child)
-			})
-			ret.push(node.val)
-		}
+	const postorderNode = (node, ret) => {
+		if (!node) return
+		node.children.forEach((child) => {
+			postorderNode(child, ret)
+		})
+		ret.push(node.val)
 	}
-	postorderNode(root)
+	postorderNode(root, ret)
 	return ret
 }
+
 //iteration
 var postorder = function (root) {
-	let ret = [],
-		stack = []
-	root && stack.push(root)
+	const ret = [],
+		stack = [root]
 
 	while (stack.length > 0) {
-		let node = stack.pop()
+		const node = stack.pop()
 
-		for (let i = 0; i < node.children.length; i++) {
-			stack.push(node.children[i])
+		if (node) {
+			for (let i = 0; i < node.children.length; i++) {
+				stack.push(node.children[i])
+			}
+			ret.unshift(node.val)
 		}
-		ret.unshift(node.val)
 	}
 	return ret
 }
@@ -1234,30 +1268,26 @@ var insertIntoBST = function (root, val) {
 
 ```javascript {.line-numbers}
 var verticalTraversal = function (root) {
-	if (!root) {
-		return []
-	}
+	if (!root) return []
 
 	// 二维数组 存坐标和值，形式如 [[x, y, val], [...]]
 	let locations = []
 
-	// 先dfs前序遍历记录下节点坐标和值
 	const dfs = function (root, x, y) {
-		if (!root) {
-			return
-		}
+		if (!root) return
 		locations.push([x, y, root.val])
 		dfs(root.left, x - 1, y - 1)
 		dfs(root.right, x + 1, y - 1)
 	}
+	// 先前序遍历记录下节点坐标和值
 	dfs(root, 0, 0)
 
 	// 按照x升序，y降序，val升序
 	locations = locations.sort((a, b) => {
-		if (a[0] != b[0]) {
+		if (a[0] !== b[0]) {
 			return a[0] - b[0]
 		}
-		if (a[1] != b[1]) {
+		if (a[1] !== b[1]) {
 			return b[1] - a[1]
 		}
 		return a[2] - b[2]
@@ -1265,14 +1295,14 @@ var verticalTraversal = function (root) {
 
 	// curValOfX当前遍历的节点的x的值，默认先取第一个节点的x值
 	let curValOfX = locations[0][0]
-	let ret = [[locations[0][2]]]
+	const ret = [[locations[0][2]]]
 
 	// 从第2个节点开始遍历坐标数组，把x相同的val分成一组
 	for (let i = 1; i < locations.length; i++) {
-		let location = locations[i]
-		let x = location[0]
-		if (x == curValOfX) {
-			let last = ret[ret.length - 1]
+		const location = locations[i]
+		const x = location[0]
+		if (x === curValOfX) {
+			const last = ret[ret.length - 1]
 			last.push(location[2])
 		} else {
 			curValOfX = x

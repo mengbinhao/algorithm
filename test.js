@@ -1,35 +1,32 @@
-function TreeNode(val) {
-	this.val = val
-	this.left = this.right = null
-}
+var uniquePaths = function (m, n) {
+	let dp = Array.from({ length: n }, (item, rowIdx) => {
+		return Array.from({ length: m }, (item, colIndex) => {
+			if (rowIdx === 0 || colIndex === 0) {
+				return 1
+			}
+		})
+	})
 
-let TreeNode1 = new TreeNode(1)
-let TreeNode2 = new TreeNode(2)
-let TreeNode3 = new TreeNode(3)
-TreeNode1.right = TreeNode2
-TreeNode2.left = TreeNode3
-
-const postorderTraversal = (root) => {
-	const ret = [],
-		stack = []
-	let prev = null
-
-	while (root || stack.length > 0) {
-		while (root) {
-			stack.push(root)
-			root = root.left
-		}
-		root = stack.pop()
-		if (root.right === null || root.right === prev) {
-			ret.push(root.val)
-			prev = root
-			root = null
-		} else {
-			stack.push(root)
-			root = root.right
+	for (let i = 1; i < n; i++) {
+		for (let j = 1; j < m; j++) {
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 		}
 	}
-	return ret
+
+	return dp[n - 1][m - 1]
 }
 
-postorderTraversal([1, null, 2, 3])
+var uniquePaths2 = function (m, n) {
+	//row
+	let cur = Array.from({ length: n }, () => 1)
+
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			cur[j] += cur[j - 1]
+		}
+	}
+
+	return cur[n - 1]
+}
+
+uniquePaths2(3, 2)

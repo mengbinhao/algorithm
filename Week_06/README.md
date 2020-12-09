@@ -2,13 +2,13 @@
 
 这周题做的不多，后面补上！！！
 
-##### [509斐波那契](https://leetcode-cn.com/problems/fibonacci-number/)
+##### [509 斐波那契](https://leetcode-cn.com/problems/fibonacci-number/)
 
 ```javascript
 //recursion
-var fib = function(N) {
-  return N <= 1 ? N : fib( N -1) + fib(N - 2)
-};
+var fib = function (N) {
+	return N <= 1 ? N : fib(N - 1) + fib(N - 2)
+}
 
 //dp
 var fib = function (N) {
@@ -40,48 +40,48 @@ var fib = function (N) {
 }
 ```
 
-##### [62不同路径](https://leetcode-cn.com/problems/unique-paths/)
+##### [62 不同路径](https://leetcode-cn.com/problems/unique-paths/)
 
 ```javascript
-//dp, define a two-demension array 
+//dp, define a two-dimension array
 var uniquePaths = function (m, n) {
 	// 1 子问题 f(i,j) = f(i - 1; j) + f(i; j - 1)
 	// 2 存储中间状态 dp[i, j]
 	// 3 DP方程 dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
-	//注意：自底向上推
-	let dp = Array.from({ length: m }, (item, rowIdx, arr) => {
-		return Array.from({ length: n }, (item, colIndex, arr) => {
+	// 注意：自底向上推
+	let dp = Array.from({ length: n }, (item, rowIdx) => {
+		return Array.from({ length: m }, (item, colIndex) => {
 			if (rowIdx === 0 || colIndex === 0) {
 				return 1
 			}
 		})
 	})
 
-	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
+	for (let i = 1; i < n; i++) {
+		for (let j = 1; j < m; j++) {
 			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 		}
 	}
 
-	return dp[m - 1][n - 1]
+	return dp[n - 1][m - 1]
 }
 
 //space optimal
 var uniquePaths = function (m, n) {
-  //row
-	let cur = Array.from({ length: n }, () => 1)
+	//store one dynamic row
+	let cur = Array.from({ length: m }, () => 1)
 
-	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
+	for (let i = 1; i < n; i++) {
+		for (let j = 1; j < m; j++) {
 			cur[j] += cur[j - 1]
 		}
 	}
 
-	return cur[n - 1]
+	return cur[m - 1]
 }
 ```
 
-##### [64最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
+##### [64 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
 
 ```javascript
 //DP
@@ -113,7 +113,6 @@ var minPathSum = function (grid) {
 	return dp[rows - 1][cols - 1]
 }
 
-
 //DP optimal
 var minPathSum = function (grid) {
 	if (!grid) return 0
@@ -139,25 +138,27 @@ var minPathSum = function (grid) {
 }
 ```
 
-##### [91解码方法](https://leetcode-cn.com/problems/decode-ways/)
+##### [91 解码方法](https://leetcode-cn.com/problems/decode-ways/)
 
 ```javascript
 //DP
-var numDecodings = function(s) {
-    if (!s) return 0
-    let len = s.length;
-    let dp =  Array(len + 1).fill(0);
-    dp[0] = 1;
-    dp[1] = s[0] === '0' ? 0 : 1;
-    for (let i = 2; i <= len; i++) {
-        if (s[i - 1] !== '0') {
-            dp[i] += dp[i - 1];
-        }
-        if (s[i - 2] === '1' || (s[i - 2] === '2' && s[i - 1] >= 0 && s[i - 1] <= 6)) {
-            dp[i] += dp[i - 2];
-        }
-    }
-    return dp[len];
+var numDecodings = function (s) {
+	if (!s) return 0
+	let len = s.length
+	let dp = Array(len + 1).fill(0)
+	dp[0] = 1
+	dp[1] = s[0] === '0' ? 0 : 1
+	for (let i = 2; i <= len; i++) {
+		if (s[i - 1] !== '0') {
+			dp[i] += dp[i - 1]
+		}
+		if (
+			s[i - 2] === '1' ||
+			(s[i - 2] === '2' && s[i - 1] >= 0 && s[i - 1] <= 6)
+		) {
+			dp[i] += dp[i - 2]
+		}
+	}
+	return dp[len]
 }
 ```
-
