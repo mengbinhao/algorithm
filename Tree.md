@@ -249,7 +249,7 @@ var isSymmetric = function (root) {
 ```javascript {.line-numbers}
 //DFS
 var levelOrder = function (root) {
-	let ret = []
+	const ret = []
 
 	const dfs = (node, level, ret) => {
 		if (node == null) return
@@ -264,6 +264,9 @@ var levelOrder = function (root) {
 }
 
 //BFS iteration, use queue
+//层用queue
+//层用queue
+//层用queue
 var levelOrder = function (root) {
 	if (root === null) return []
 
@@ -959,16 +962,16 @@ var levelOrder = function (root) {
 	let queue = [root]
 	let ret = []
 	while (queue.length) {
-		let level = [],
+		let curLevel = [],
 			size = queue.length
 		for (let i = 0; i < size; i++) {
 			let current = queue.shift()
-			level.push(current.val)
+			curLevel.push(current.val)
 			if (current.children && current.children.length) {
 				queue.push(...current.children)
 			}
 		}
-		ret.push(level)
+		ret.push(curLevel)
 	}
 	return ret
 }
@@ -1010,6 +1013,8 @@ var largestValues = function (root) {
 	const ret = []
 	const dfs = (node, level, ret) => {
 		if (!node) return
+		//hole!!! node's value maybe null
+		//hole!!! node's value maybe null
 		//hole!!! node's value maybe null
 		if (ret[level] === undefined) ret[level] = node.val
 		ret[level] = Math.max(ret[level], node.val)
@@ -1145,6 +1150,7 @@ var postorder = function (root) {
 		const node = stack.pop()
 
 		if (node) {
+			//左右根
 			for (let i = 0; i < node.children.length; i++) {
 				stack.push(node.children[i])
 			}

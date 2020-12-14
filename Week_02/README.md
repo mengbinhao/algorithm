@@ -73,14 +73,11 @@ var isAnagram = function (s, t) {
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
 var groupAnagrams = function (strs) {
 	if (strs.length === 0) return [[]]
-	let hash = {}
+	const hash = {}
 
 	for (let str of strs) {
-		let key = str.split('').sort().join('')
-
-		if (!hash[key]) {
-			hash[key] = []
-		}
+		const key = str.split('').sort().join('')
+		if (!hash[key]) hash[key] = []
 		hash[key].push(str)
 	}
 
@@ -90,25 +87,22 @@ var groupAnagrams = function (strs) {
 //使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
 var groupAnagrams = function (strs) {
 	if (strs.length === 0) return [[]]
-	let count = Array(26),
-		map = {}
+	const array = new Array(26),
+		hash = {}
+
 	for (let str of strs) {
-		//re-count each character
-		count.fill(0)
+		array.fill(0)
 		for (let i = 0; i < str.split('').length; i++) {
-			count[str.charCodeAt(i) - 97]++
+			array[str.charCodeAt(i) - 97]++
 		}
-		//build unique key
-		let temp = ''
+		let key = ''
 		for (let i = 0; i < 26; i++) {
-			temp += `#${count[i]}`
+			key += `#${array[i]}`
 		}
-		if (!map[temp]) {
-			map[temp] = []
-		}
-		map[temp].push(str)
+		if (!hash[key]) hash[key] = []
+		hash[key].push(str)
 	}
-	return Object.values(map)
+	return Object.values(hash)
 }
 ```
 
