@@ -46,12 +46,12 @@ var isValidBST = function (root) {
 			helper(node.left, lower, node.val) && helper(node.right, node.val, upper)
 		)
 	}
+	//增加参数，向下传递
 	return helper(root, -Infinity, Infinity)
 }
 
+//labuladuo version
 var isValidBST = function (root) {
-	return helper(root, null, null)
-
 	function helper(node, min, max) {
 		if (!node) return true
 		if (min !== null && node.val <= min.val) return false
@@ -59,22 +59,23 @@ var isValidBST = function (root) {
 		//limit左子树最大值node,右子树最小值node
 		return helper(node.left, min, node) && helper(node.right, node, max)
 	}
+	return helper(root, null, null)
 }
 
 //In-order
 var isValidBST = function (root) {
-	let queue = []
-	let dfs = (node) => {
-		if (!node) return
-		node.left && dfs(node.left)
-		queue.push(node.val)
-		node.right && dfs(node.right)
-	}
-	dfs(root)
-	for (let i = 0; i < queue.length; i++) {
-		if (queue[i] >= queue[i + 1]) {
-			return false
+	const stack = []
+	let prev = -Infinity
+
+	while (root || stack.length) {
+		while (root) {
+			stack.push(root)
+			root = root.left
 		}
+		root = stack.pop()
+		if (root.val <= prev) return false
+		prev = root.val
+		root = root.right
 	}
 	return true
 }
@@ -84,24 +85,51 @@ var isValidBST = function (root) {
 
 ```javascript {.line-numbers}
 //use array
+// interview version
+// O(n) - O(h)
+var recoverTree = function (root) {
+	const stack = []
+	let prev = (first = second = null)
+
+	while (root || stack.length) {
+		while (root) {
+			stack.push(root)
+			root = root.left
+		}
+		root = stack.pop()
+		if (prev && root.val < prev.val) {
+			second = root
+			if (first == null) {
+				first = prev
+			} else break
+		}
+		prev = root
+		root = root.right
+	}
+
+	if (first != null && second != null) {
+		;[first.val, second.val] = [second.val, first.val]
+	}
+}
+
 //O(n) - O(h)
 var recoverTree = function (root) {
 	const nums = []
-	inorder(root, nums)
-	const [first, second] = findTwoSwapped(nums)
-	recover(root, 2, first, second)
 
-	//inorder
-	function inorder(node, nums) {
-		if (node == null) return
+	const inorder = (node, nums) => {
+		if (!node) return
 		inorder(node.left, nums)
 		nums.push(node.val)
 		inorder(node.right, nums)
 	}
+	//首先inorder遍历
+	inorder(root, nums)
 
-	function findTwoSwapped(nums) {
+	const findTwoSwapped = (nums) => {
 		let x = (y = -1)
 		for (let i = 0, len = nums.length; i < len; i++) {
+			//case 1: [1,2,3,4,5,6,7] -> [1,6,3,4,5,2,7],两处不合法
+			//case 2: [1,2,3,4,5,6,7] -> [1,3,2,4,5,6,7],一处不合法
 			if (nums[i] > nums[i + 1]) {
 				y = nums[i + 1]
 				if (x === -1) {
@@ -113,49 +141,22 @@ var recoverTree = function (root) {
 		}
 		return [x, y]
 	}
+	//找到被交换的两个val
+	const [first, second] = findTwoSwapped(nums)
 
-	//preorder
-	function recover(root, count, x, y) {
-		if (root !== null) {
+	const recover = (root, count, x, y) => {
+		if (root) {
 			if (root.val === x || root.val === y) {
 				root.val = root.val === x ? y : x
-				if (--count === 0) {
-					return
-				}
+				if (--count === 0) return
 			}
 			recover(root.left, count, x, y)
 			recover(root.right, count, x, y)
 		}
 	}
-}
 
-// O(n) - O(h)
-var recoverTree = function (root) {
-	let pre = (first = second = null)
-	inorder(root)
-
-	if (first !== null && second !== null) {
-		;[first.val, second.val] = [second.val, first.val]
-	}
-
-	function inorder(node) {
-		if (node == null) return
-
-		inorder(node.left)
-
-		if (pre == null) {
-			pre = node
-		} else {
-			if (pre.val > node.val) {
-				second = node
-				if (first == null) {
-					first = pre
-				}
-			}
-			pre = node
-		}
-		inorder(node.right)
-	}
+	//preorder
+	recover(root, 2, first, second)
 }
 
 //Morris inorder
@@ -170,17 +171,17 @@ var recoverTree = function (root) {
 
 	while (root !== null) {
 		if (root.left) {
+			// predecessor 节点就是当前 root 节点向左走一步，然后一直向右走至无法走为止
 			predecessor = root.left
-			//找到最右侧的点
 			while (predecessor.right && predecessor.right !== root) {
 				predecessor = predecessor.right
 			}
 
-			//继续遍历左子树
+			// 让 predecessor 的右指针指向 root，继续遍历左子树
 			if (predecessor.right === null) {
 				predecessor.right = root
 				root = root.left
-				//左子树遍历完,断开链接
+				// 说明左子树已经访问完了，我们需要断开链接
 			} else {
 				if (pre !== null && root.val < pre.val) {
 					second = root
@@ -192,7 +193,7 @@ var recoverTree = function (root) {
 				predecessor.right = null
 				root = root.right
 			}
-			//无左孩子的情况
+			// 如果没有左孩子，则直接访问右孩子
 		} else {
 			if (pre !== null && root.val < pre.val) {
 				second = root
@@ -698,6 +699,7 @@ const postorderTraversal = (root) => {
 		root = stack.pop()
 		//root.right === prev 节点访问过一次
 		if (!root.right || root.right === prev) {
+			//因第二次才加入，这里加入即可
 			ret.push(root.val)
 			prev = root
 			root = null
@@ -851,21 +853,34 @@ var invertTree = function (root) {
 ### [230.寻找第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
 
 ```javascript {.line-numbers}
+//interview version
 var kthSmallest = function (root, k) {
-	let rank = 0,
-		ret = 0
-	helper(root, k)
-	return ret
+	const stack = []
+	while (true) {
+		while (root) {
+			stack.push(root)
+			root = root.left
+		}
+		root = stack.pop()
+		if (--k === 0) return root.val
+		root = root.right
+	}
+}
 
-	function helper(node, k) {
+var kthSmallest = function (root, k) {
+	let rank = k,
+		ret
+	const helper = (node, k) => {
 		if (!node) return
 		helper(node.left, k)
-		if (++rank === k) {
+		if (--rank === 0) {
 			ret = node.val
 			return
 		}
 		helper(node.right, k)
 	}
+	helper(root, k)
+	return ret
 }
 ```
 
@@ -974,34 +989,6 @@ var levelOrder = function (root) {
 		ret.push(curLevel)
 	}
 	return ret
-}
-```
-
-### [450.删除二叉搜索树中的节点](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
-
-```javascript {.line-numbers}
-var deleteNode = function (root, key) {
-	if (root == null) return null
-	if (root.val == key) {
-		// 这两个 if 把情况 1 和 2 都正确处理了
-		if (root.left == null) return root.right
-		if (root.right == null) return root.left
-		// 处理情况 3
-		const minNode = getMin(root.right)
-		root.val = minNode.val
-		root.right = deleteNode(root.right, minNode.val)
-	} else if (root.val > key) {
-		root.left = deleteNode(root.left, key)
-	} else if (root.val < key) {
-		root.right = deleteNode(root.right, key)
-	}
-	return root
-
-	function getMin(node) {
-		// BST 最左边的就是最小的
-		while (node.left != null) node = node.left
-		return node
-	}
 }
 ```
 
@@ -1241,6 +1228,20 @@ var widthOfBinaryTree = function (root) {
 }
 ```
 
+### [669.修剪二叉搜索树](https://leetcode-cn.com/problems/trim-a-binary-search-tree/)
+
+```javascript {.line-numbers}
+var trimBST = function (root, low, high) {
+	if (!root) return root
+	if (root.val > high) return trimBST(root.left, low, high)
+	if (root.val < low) return trimBST(root.right, low, high)
+
+	root.left = trimBST(root.left, low, high)
+	root.right = trimBST(root.right, low, high)
+	return root
+}
+```
+
 ### [700.二叉搜索树中的搜索](https://leetcode-cn.com/problems/search-in-a-binary-search-tree/)
 
 ```javascript {.line-numbers}
@@ -1263,7 +1264,7 @@ var insertIntoBST = function (root, val) {
 	if (!root) return new TreeNode(val)
 	if (root.val < val) {
 		root.right = insertIntoBST(root.right, val)
-	} else if (root.val > val) {
+	} else {
 		root.left = insertIntoBST(root.left, val)
 	}
 	return root
@@ -1307,6 +1308,7 @@ var verticalTraversal = function (root) {
 	for (let i = 1; i < locations.length; i++) {
 		const location = locations[i]
 		const x = location[0]
+		//一个垂序
 		if (x === curValOfX) {
 			const last = ret[ret.length - 1]
 			last.push(location[2])
