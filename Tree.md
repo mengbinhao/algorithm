@@ -35,6 +35,74 @@ var inorderTraversal = function (root) {
 }
 ```
 
+### [95.不同的二叉搜索树 II](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/)
+
+```javascript {.line-numbers}
+var generateTrees = function (n) {
+	if (n === 0) return []
+
+	const buildTree = (start, end) => {
+		//当前i为root能够组成的BST个数
+		const ret = []
+		if (start > end) {
+			ret.push(null)
+			return ret
+		}
+
+		//loop root node
+		for (let i = start; i <= end; i++) {
+			//获得所有可行的左子树集合
+			const leftTree = buildTree(start, i - 1)
+			//获得所有可行的右子树集合
+			const rightTree = buildTree(i + 1, end)
+
+			// 从左子树集合中选出一棵左子树，从右子树集合中选出一棵右子树，拼接到根节点上
+			for (let tl of leftTree) {
+				for (let tr of rightTree) {
+					const root = new TreeNode(i)
+					root.left = tl
+					root.right = tr
+					ret.push(root)
+				}
+			}
+		}
+		return ret
+	}
+	return buildTree(1, n)
+}
+```
+
+### [96.不同的二叉搜索树](https://leetcode-cn.com/problems/unique-binary-search-trees/)
+
+```javascript {.line-numbers}
+var numTrees = function (n) {
+	//dp[i] ：用连着的i个数，所构建出的BST种类数
+	const dp = new Array(n + 1).fill(0)
+	//base case
+	dp[0] = dp[1] = 1
+
+	for (let i = 2; i <= n; i++) {
+		//笛卡尔积
+		for (let j = 0; j <= i - 1; j++) {
+			dp[i] += dp[j] * dp[i - j - 1]
+		}
+	}
+	return dp[n]
+}
+
+//recursion
+const numTrees = (n) => {
+	// n个整数能创建出的BST的种类数
+	if (n == 0 || n == 1) return 1
+
+	let num = 0
+	for (let i = 0; i <= n - 1; i++) {
+		num += numTrees(i) * numTrees(n - i - 1)
+	}
+	return num
+}
+```
+
 ### [98.验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript {.line-numbers}
@@ -48,18 +116,6 @@ var isValidBST = function (root) {
 	}
 	//增加参数，向下传递
 	return helper(root, -Infinity, Infinity)
-}
-
-//labuladuo version
-var isValidBST = function (root) {
-	function helper(node, min, max) {
-		if (!node) return true
-		if (min !== null && node.val <= min.val) return false
-		if (max !== null && node.val >= max.val) return false
-		//limit左子树最大值node,右子树最小值node
-		return helper(node.left, min, node) && helper(node.right, node, max)
-	}
-	return helper(root, null, null)
 }
 
 //In-order
@@ -79,6 +135,18 @@ var isValidBST = function (root) {
 	}
 	return true
 }
+
+//labuladuo version
+var isValidBST = function (root) {
+	function helper(node, min, max) {
+		if (!node) return true
+		if (min !== null && node.val <= min.val) return false
+		if (max !== null && node.val >= max.val) return false
+		//limit左子树最大值node,右子树最小值node
+		return helper(node.left, min, node) && helper(node.right, node, max)
+	}
+	return helper(root, null, null)
+}
 ```
 
 ### [99.恢复二叉搜索树](https://leetcode-cn.com/problems/recover-binary-search-tree/)
@@ -97,66 +165,22 @@ var recoverTree = function (root) {
 			root = root.left
 		}
 		root = stack.pop()
+		//case 1: [1,2,3,4,5,6,7] -> [1,6,3,4,5,2,7],两处不合法
+		//case 2: [1,2,3,4,5,6,7] -> [1,3,2,4,5,6,7],一处不合法
 		if (prev && root.val < prev.val) {
 			second = root
 			if (first == null) {
 				first = prev
+				//提前返回
 			} else break
 		}
 		prev = root
 		root = root.right
 	}
 
-	if (first != null && second != null) {
+	if (first && second) {
 		;[first.val, second.val] = [second.val, first.val]
 	}
-}
-
-//O(n) - O(h)
-var recoverTree = function (root) {
-	const nums = []
-
-	const inorder = (node, nums) => {
-		if (!node) return
-		inorder(node.left, nums)
-		nums.push(node.val)
-		inorder(node.right, nums)
-	}
-	//首先inorder遍历
-	inorder(root, nums)
-
-	const findTwoSwapped = (nums) => {
-		let x = (y = -1)
-		for (let i = 0, len = nums.length; i < len; i++) {
-			//case 1: [1,2,3,4,5,6,7] -> [1,6,3,4,5,2,7],两处不合法
-			//case 2: [1,2,3,4,5,6,7] -> [1,3,2,4,5,6,7],一处不合法
-			if (nums[i] > nums[i + 1]) {
-				y = nums[i + 1]
-				if (x === -1) {
-					x = nums[i]
-				} else {
-					break
-				}
-			}
-		}
-		return [x, y]
-	}
-	//找到被交换的两个val
-	const [first, second] = findTwoSwapped(nums)
-
-	const recover = (root, count, x, y) => {
-		if (root) {
-			if (root.val === x || root.val === y) {
-				root.val = root.val === x ? y : x
-				if (--count === 0) return
-			}
-			recover(root.left, count, x, y)
-			recover(root.right, count, x, y)
-		}
-	}
-
-	//preorder
-	recover(root, 2, first, second)
 }
 
 //Morris inorder
@@ -208,6 +232,24 @@ var recoverTree = function (root) {
 
 	if (first !== null && second !== null) {
 		;[first.val, second.val] = [second.val, first.val]
+	}
+}
+```
+
+### [100.相同的树](https://leetcode-cn.com/problems/same-tree/)
+
+```javascript {.line-numbers}
+var isSameTree = function (p, q) {
+	if (p == null && q == null) {
+		return true
+	} else if (p == null || q == null) {
+		return false
+	} else {
+		return (
+			p.val === q.val &&
+			isSameTree(p.left, q.left) &&
+			isSameTree(p.right, q.right)
+		)
 	}
 }
 ```
@@ -435,6 +477,50 @@ var buildTree = function (inorder, postorder) {
 }
 ```
 
+### [108.将有序数组转换为二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
+
+```javascript {.line-numbers}
+var sortedArrayToBST = function (nums) {
+	const helper = (nums, left, right) => {
+		if (left > right) return null
+
+		//choose the root node
+		const mid = Math.floor((right + left) / 2)
+		const root = new TreeNode(nums[mid])
+		root.left = helper(nums, left, mid - 1)
+		root.right = helper(nums, mid + 1, right)
+		return root
+	}
+	return helper(nums, 0, nums.length - 1)
+}
+```
+
+### [109.有序链表转换二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/)
+
+```javascript {.line-numbers}
+var sortedListToBST = function (head) {
+	const getMedian = (left, right) => {
+		let fast = (slow = left)
+		while (fast !== right && fast.next !== right) {
+			fast = fast.next.next
+			slow = slow.next
+		}
+		return slow
+	}
+
+	const buildTree = (left, right) => {
+		if (left === right) return null
+		const mid = getMedian(left, right)
+		const root = new TreeNode(mid.val)
+		root.left = buildTree(left, mid)
+		root.right = buildTree(mid.next, right)
+		return root
+	}
+	//左闭右开
+	return buildTree(head, null)
+}
+```
+
 ### [110.平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
 ```javascript {.line-numbers}
@@ -585,7 +671,7 @@ var connect = function (root) {
 
 //BFS
 var connect = function (root) {
-	if (!root) return root
+	if (!root) return null
 
 	const queue = [root]
 
@@ -836,7 +922,7 @@ var invertTree = function (root) {
 }
 
 var invertTree = function (root) {
-	if (!root) return root
+	if (!root) return null
 	const queue = [root]
 
 	while (queue.length > 0) {
@@ -867,6 +953,7 @@ var kthSmallest = function (root, k) {
 	}
 }
 
+//bad version
 var kthSmallest = function (root, k) {
 	let rank = k,
 		ret
@@ -889,10 +976,15 @@ var kthSmallest = function (root, k) {
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
 	while (root) {
-		if (root.val > p.val && root.val > q.val) root = root.left
-		else if (root.val < p.val && root.val < q.val) root = root.right
-		else return root
+		if (root.val > p.val && root.val > q.val) {
+			root = root.left
+		} else if (root.val < p.val && root.val < q.val) {
+			root = root.right
+		} else {
+			return root
+		}
 	}
+	return null
 }
 ```
 
@@ -1232,10 +1324,11 @@ var widthOfBinaryTree = function (root) {
 
 ```javascript {.line-numbers}
 var trimBST = function (root, low, high) {
-	if (!root) return root
+	if (!root) return null
 	if (root.val > high) return trimBST(root.left, low, high)
 	if (root.val < low) return trimBST(root.right, low, high)
 
+	//需要连接，所以需要返回递归的头结点
 	root.left = trimBST(root.left, low, high)
 	root.right = trimBST(root.right, low, high)
 	return root
@@ -1267,6 +1360,7 @@ var insertIntoBST = function (root, val) {
 	} else {
 		root.left = insertIntoBST(root.left, val)
 	}
+	//需要连接，所以需要返回递归的头结点
 	return root
 }
 ```
