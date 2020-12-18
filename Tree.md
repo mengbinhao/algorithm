@@ -42,7 +42,7 @@ var generateTrees = function (n) {
 	if (n === 0) return []
 
 	const buildTree = (start, end) => {
-		//当前i为root能够组成的BST个数
+		//以当前i为root能够组成的BST个数
 		const ret = []
 		if (start > end) {
 			ret.push(null)
@@ -258,9 +258,7 @@ var isSameTree = function (p, q) {
 
 ```javascript {.line-numbers}
 var isSymmetric = function (root) {
-	return helper(root, root)
-
-	function helper(n1, n2) {
+	const helper = (n1, n2) => {
 		if (n1 === null && n2 === null) return true
 		if (n1 === null || n2 === null) return false
 		return (
@@ -269,10 +267,11 @@ var isSymmetric = function (root) {
 			helper(n1.right, n2.left)
 		)
 	}
+	return helper(root, root)
 }
 
 var isSymmetric = function (root) {
-	let queue = [root, root]
+	const queue = [root, root]
 	while (queue.length) {
 		const n1 = queue.shift()
 		const n2 = queue.shift()
@@ -282,7 +281,6 @@ var isSymmetric = function (root) {
 		queue.push(n1.left, n2.right)
 		queue.push(n2.left, n1.right)
 	}
-
 	return true
 }
 ```
@@ -321,10 +319,10 @@ var levelOrder = function (root) {
 			curLevel = []
 
 		for (let i = 0; i < size; i++) {
-			const node = queue.shift()
+			const curNode = queue.shift()
 			curLevel.push(node.val)
-			if (node.left) queue.push(node.left)
-			if (node.right) queue.push(node.right)
+			if (curNode.left) queue.push(curNode.left)
+			if (curNode.right) queue.push(curNode.right)
 		}
 		ret.push(curLevel)
 	}
@@ -336,40 +334,24 @@ var levelOrder = function (root) {
 
 ```javascript {.line-numbers}
 var maxDepth = function (root) {
+	//+1是加上当前node的深度
 	return root == null
 		? 0
 		: Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
 }
 
-//dfs
-var maxDepth = function (root) {
-	if (!root) {
-		return 0
-	} else {
-		let maxLeftDepth = maxDepth(root.left)
-		let maxRightDepth = maxDepth(root.right)
-		return Math.max(maxLeftDepth, maxRightDepth) + 1
-	}
-}
-
 //bfs
 var maxDepth = function (root) {
-	if (root == null) {
-		return 0
-	}
-	let queue = [root],
-		ret = 0
-	while (queue.length > 0) {
-		let size = queue.length
+	if (!root == null) return 0
+	const queue = [root]
+	let ret = 0
+	while (queue.length) {
+		const size = queue.length
 		//添加当前层的所有子节点
 		while (size > 0) {
-			let node = queue.shift()
-			if (node.left != null) {
-				queue.push(node.left)
-			}
-			if (node.right != null) {
-				queue.push(node.right)
-			}
+			const curNode = queue.shift()
+			if (curNode.left) queue.push(curNode.left)
+			if (curNode.right) queue.push(curNode.right)
 			size--
 		}
 		//一层添加完深度+1
@@ -512,6 +494,7 @@ var sortedListToBST = function (head) {
 		if (left === right) return null
 		const mid = getMedian(left, right)
 		const root = new TreeNode(mid.val)
+		//左闭右开
 		root.left = buildTree(left, mid)
 		root.right = buildTree(mid.next, right)
 		return root
@@ -525,43 +508,17 @@ var sortedListToBST = function (head) {
 
 ```javascript {.line-numbers}
 var isBalanced = function (root) {
-	if (root === null) {
-		return true
-	} else {
-		return (
-			Math.abs(height(root.left) - height(root.right)) <= 1 &&
-			isBalanced(root.left) &&
-			isBalanced(root.right)
-		)
+	const getTreeHeight = (node) => {
+		return !node
+			? 0
+			: Math.max(getTreeHeight(node.left), getTreeHeight(node.right)) + 1
 	}
 
-	function height(node) {
-		if (node === null) {
-			return 0
-		} else {
-			return Math.max(height(node.left), height(node.right)) + 1
-		}
-	}
-}
-
-//自底向上
-var isBalanced = function (root) {
-	return height(root) >= 0
-
-	function height(node) {
-		if (node === null) return 0
-		let leftHeight = height(node.left)
-		let rightHeight = height(node.right)
-		if (
-			leftHeight === -1 ||
-			rightHeight === -1 ||
-			Math.abs(leftHeight - rightHeight) > 1
-		) {
-			return -1
-		} else {
-			return Math.max(leftHeight, rightHeight) + 1
-		}
-	}
+	return !root
+		? true
+		: Math.abs(getTreeHeight(root.left) - getTreeHeight(root.right)) <= 1 &&
+				isBalanced(root.left) &&
+				isBalanced(root.right)
 }
 ```
 
@@ -570,7 +527,7 @@ var isBalanced = function (root) {
 ```javascript {.line-numbers}
 //DFS
 var minDepth = function (root) {
-	if (root === null) return 0
+	if (!root) return 0
 	const minLeftDepth = minDepth(root.left)
 	const minRightDepth = minDepth(root.right)
 
@@ -581,26 +538,17 @@ var minDepth = function (root) {
 
 //BFS
 var minDepth = function (root) {
-	if (root === null) return 0
+	if (!root) return 0
 	const queue = [root]
 	let depth = 1
 
-	while (queue.length > 0) {
+	while (queue.length) {
 		const size = queue.length
-
 		for (let i = 0; i < size; i++) {
 			const curNode = queue.shift()
-			if (curNode.left === null && curNode.right === null) {
-				return depth
-			}
-
-			if (curNode.left) {
-				queue.push(curNode.left)
-			}
-
-			if (curNode.right) {
-				queue.push(curNode.right)
-			}
+			if (!curNode.left && !curNode.right) return depth
+			if (curNode.left) queue.push(curNode.left)
+			if (curNode.right) queue.push(curNode.right)
 		}
 		depth++
 	}
@@ -679,14 +627,13 @@ var connect = function (root) {
 		const size = queue.length
 
 		for (let i = 0; i < size; i++) {
-			const node = queue.shift()
+			const curNode = queue.shift()
 			//connect
 			if (i < size - 1) {
-				node.next = queue[0]
+				curNode.next = queue[0]
 			}
-
-			if (node.left) queue.push(node.left)
-			if (node.right) queue.push(node.right)
+			if (curNode.left) queue.push(curNode.left)
+			if (curNode.right) queue.push(curNode.right)
 		}
 	}
 
@@ -849,10 +796,10 @@ var rightSideView = function (root) {
 	while (queue.length > 0) {
 		const size = queue.length
 		for (let i = 0; i < size; i++) {
-			const node = queue.shift()
-			if (node.left) queue.push(node.left)
-			if (node.right) queue.push(node.right)
-			if (i === size - 1) ret.push(node.val)
+			const curNode = queue.shift()
+			if (curNode.left) queue.push(curNode.left)
+			if (curNode.right) queue.push(curNode.right)
+			if (i === size - 1) ret.push(curNode.val)
 		}
 	}
 	return ret
@@ -884,7 +831,16 @@ var countNodes = function (root) {
 
 //bad version
 var countNodes = function (root) {
-	if (root === null) return 0
+	const countLevel = (node) => {
+		let level = 0
+		while (node) {
+			node = node.left
+			level++
+		}
+		return level
+	}
+
+	if (!root) return 0
 	const left = countLevel(root.left)
 	const right = countLevel(root.right)
 
@@ -896,22 +852,13 @@ var countNodes = function (root) {
 	} else {
 		return countNodes(root.left) + (1 << right)
 	}
-
-	function countLevel(node) {
-		let level = 0
-		while (node) {
-			level++
-			node = node.left
-		}
-		return level
-	}
 }
 ```
 
 ### [226.翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
 
 ```javascript {.line-numbers}
-//preorder or postorder
+//preorder or postorder can work
 var invertTree = function (root) {
 	if (!root) return null
 	const left = invertTree(root.left)
@@ -921,14 +868,14 @@ var invertTree = function (root) {
 	return root
 }
 
+//自上往下
 var invertTree = function (root) {
 	if (!root) return null
 	const queue = [root]
 
-	while (queue.length > 0) {
+	while (queue.length) {
 		const cur = queue.shift()
 		;[cur.left, cur.right] = [cur.right, cur.left]
-
 		if (cur.left) queue.push(cur.left)
 		if (cur.right) queue.push(cur.right)
 	}
@@ -1115,10 +1062,10 @@ var largestValues = function (root) {
 		const size = queue.length,
 			max = -Infinity
 		for (let i = 0; i < size; i++) {
-			const node = queue.shift()
-			if (node.left) queue.push(node.left)
-			if (node.right) queue.push(node.right)
-			max = Math.max(max, node.val)
+			const curNode = queue.shift()
+			if (curNode.left) queue.push(curNode.left)
+			if (curNode.right) queue.push(curNode.right)
+			max = Math.max(max, curNode.val)
 		}
 		ret.push(max)
 	}
@@ -1188,12 +1135,12 @@ var preorder = function (root) {
 		stack = [root]
 
 	while (stack.length > 0) {
-		const node = stack.pop()
-		if (node) {
-			ret.push(node.val)
+		const curNode = stack.pop()
+		if (curNode) {
+			ret.push(curNode.val)
 			//preorder need push right son first
-			for (let i = node.children.length - 1; i >= 0; i--) {
-				stack.push(node.children[i])
+			for (let i = curNode.children.length - 1; i >= 0; i--) {
+				stack.push(curNode.children[i])
 			}
 		}
 	}
@@ -1226,14 +1173,14 @@ var postorder = function (root) {
 		stack = [root]
 
 	while (stack.length > 0) {
-		const node = stack.pop()
+		const curNode = stack.pop()
 
-		if (node) {
+		if (curNode) {
 			//左右根
-			for (let i = 0; i < node.children.length; i++) {
-				stack.push(node.children[i])
+			for (let i = 0; i < curNode.children.length; i++) {
+				stack.push(curNode.children[i])
 			}
-			ret.unshift(node.val)
+			ret.unshift(curNode.val)
 		}
 	}
 	return ret
