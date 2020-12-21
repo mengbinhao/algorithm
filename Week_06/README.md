@@ -87,11 +87,11 @@ var uniquePaths = function (m, n) {
 //DP
 var minPathSum = function (grid) {
 	if (!grid) return 0
-	let rows = grid.length,
+	const rows = grid.length,
 		cols = grid[0].length
 	if (rows === 0 || cols === 0) return 0
 	//dp[i][j]表示从(i,j)点走到(m-1, n-1)点的最小路径和
-	let dp = Array.from({ length: rows }, () => new Array(cols).fill(Infinity))
+	const dp = Array.from({ length: rows }, () => new Array(cols).fill(Infinity))
 
 	dp[0][0] = grid[0][0]
 
@@ -121,7 +121,7 @@ var minPathSum = function (grid) {
 	if (rows === 0 || cols === 0) return 0
 
 	//滚动数组
-	let dp = new Array(cols).fill(Infinity)
+	const dp = new Array(cols).fill(Infinity)
 
 	//initial
 	dp[0] = grid[0][0]

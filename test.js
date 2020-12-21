@@ -1,39 +1,18 @@
-var generateTrees = function (n) {
-	if (n === 0) return []
-
-	const buildTree = (start, end) => {
-		const ret = []
-		if (start > end) {
-			ret.push(null)
-			return ret
+var widthOfBinaryTree = function (root) {
+	if (!root) return 0
+	let ans = 1,
+		que = [[0n, root]]
+	while (que.length) {
+		const width = que[que.length - 1][0] - que[0][0] + 1n
+		if (width > ans) {
+			ans = width
 		}
-
-		//loop root node
-		for (let i = start; i <= end; i++) {
-			//获得所有可行的左子树集合
-			const treeLeft = buildTree(start, i - 1)
-			//获得所有可行的右子树集合
-			const treeRight = buildTree(i + 1, end)
-
-			// 从左子树集合中选出一棵左子树，从右子树集合中选出一棵右子树，拼接到根节点上
-			for (let tl of treeLeft) {
-				for (let tr of treeRight) {
-					const curTree = new TreeNode(i)
-					curTree.left = tl
-					curTree.right = tr
-					ret.push(curTree)
-				}
-			}
+		let tmp = []
+		for (const [i, q] of que) {
+			q.left && tmp.push([i * 2n, q.left])
+			q.right && tmp.push([i * 2n + 1n, q.right])
 		}
-		return ret
+		que = tmp
 	}
-	return buildTree(1, n)
-}
-
-generateTrees(1)
-
-function TreeNode(val) {
-	this.val = val
-	this.left = null
-	this.right = null
+	return Number(ans)
 }

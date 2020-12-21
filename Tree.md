@@ -259,13 +259,17 @@ var isSameTree = function (p, q) {
 ```javascript {.line-numbers}
 var isSymmetric = function (root) {
 	const helper = (n1, n2) => {
-		if (n1 === null && n2 === null) return true
-		if (n1 === null || n2 === null) return false
-		return (
-			n1.val === n2.val &&
-			helper(n1.left, n2.right) &&
-			helper(n1.right, n2.left)
-		)
+		if (n1 == null && n2 == null) {
+			return true
+		} else if (n1 == null || n2 == null) {
+			return false
+		} else {
+			return (
+				n1.val === n2.val &&
+				helper(n1.left, n2.right) &&
+				helper(n2.right, n1.left)
+			)
+		}
 	}
 	return helper(root, root)
 }
@@ -508,15 +512,13 @@ var sortedListToBST = function (head) {
 
 ```javascript {.line-numbers}
 var isBalanced = function (root) {
-	const getTreeHeight = (node) => {
-		return !node
-			? 0
-			: Math.max(getTreeHeight(node.left), getTreeHeight(node.right)) + 1
+	const depth = (node) => {
+		return !node ? 0 : Math.max(depth(node.left), depth(node.right)) + 1
 	}
 
 	return !root
 		? true
-		: Math.abs(getTreeHeight(root.left) - getTreeHeight(root.right)) <= 1 &&
+		: Math.abs(depth(root.left) - depth(root.right)) <= 1 &&
 				isBalanced(root.left) &&
 				isBalanced(root.right)
 }
@@ -810,27 +812,6 @@ var rightSideView = function (root) {
 
 ```javascript {.line-numbers}
 var countNodes = function (root) {
-	let l = (r = root),
-		hl = (hr = 0)
-	while (l) {
-		l = l.left
-		hl++
-	}
-
-	while (r) {
-		r = r.right
-		hr++
-	}
-
-	if (hl === hr) {
-		return Math.pow(2, hl) - 1
-	}
-
-	return 1 + countNodes(root.left) + countNodes(root.right)
-}
-
-//bad version
-var countNodes = function (root) {
 	const countLevel = (node) => {
 		let level = 0
 		while (node) {
@@ -841,16 +822,16 @@ var countNodes = function (root) {
 	}
 
 	if (!root) return 0
-	const left = countLevel(root.left)
-	const right = countLevel(root.right)
+	const leftLevel = countLevel(root.left)
+	const rightLevel = countLevel(root.right)
 
 	// 如果满二叉树的层数为h，则总节点数为：2^h - 1
 	// 左子树一定是满二叉树，因为节点已经填充到右子树了，左子树必定已经填满了。所以左子树的节点总数我们可以直接得到，是 2^left - 1，加上当前这个 root 节点，则正好是 2^left。再对右子树进行递归统计
-	if (left === right) {
-		return countNodes(root.right) + (1 << left)
+	if (leftLevel === rightLevel) {
+		return countNodes(root.right) + (1 << leftLevel)
 		//说明此时最后一层不满，但倒数第二层已经满了，可以直接得到右子树的节点个数。同理，右子树节点加上root节点，总数为 2^right。再对左子树进行递归查找
 	} else {
-		return countNodes(root.left) + (1 << right)
+		return countNodes(root.left) + (1 << rightLevel)
 	}
 }
 ```
@@ -940,24 +921,56 @@ var lowestCommonAncestor = function (root, p, q) {
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
 	if (root === null || root === p || root === q) return root
-	let left = lowestCommonAncestor(root.left, p, q)
-	let right = lowestCommonAncestor(root.right, p, q)
+	const left = lowestCommonAncestor(root.left, p, q)
+	const right = lowestCommonAncestor(root.right, p, q)
 	return left === null ? right : right === null ? left : root
 }
 
+//normal version
 var lowestCommonAncestor = function (root, p, q) {
-	if (root === null) return null
-	if (root === p || root === q) return root
-
+	if (root === null || root === p || root === q) return root
 	const left = lowestCommonAncestor(root.left, p, q)
 	const right = lowestCommonAncestor(root.right, p, q)
-
-	//postorder 从下往上走
 	if (left !== null && right !== null) return root
-
-	if (left === null && right === null) return null
-
 	return left === null ? right : left
+}
+```
+
+### [257.二叉树的所有路径](https://leetcode-cn.com/problems/binary-tree-paths/)
+
+```javascript {.line-numbers}
+var binaryTreePaths = function (root) {
+	const paths = []
+	const dfs = (node, paths, path) => {
+		if (!node) return
+		if (!node.left && !node.right) {
+			paths.push(path + node.val)
+			return
+		}
+
+		dfs(node.left, paths, path + node.val + '->')
+		dfs(node.right, paths, path + node.val + '->')
+	}
+	dfs(root, paths, '')
+	return paths
+}
+
+var binaryTreePaths = function (root) {
+	const paths = []
+	const dfs = (node, path) => {
+		if (node) {
+			path += node.val
+			if (!node.left && !node.right) {
+				paths.push(path)
+			} else {
+				path += '->'
+				dfs(node.left, path)
+				dfs(node.right, path)
+			}
+		}
+	}
+	dfs(root, '')
+	return paths
 }
 ```
 
@@ -1096,17 +1109,35 @@ var convertBST = function (root) {
 
 ```javascript {.line-numbers}
 var diameterOfBinaryTree = function (root) {
-	let ret = 1
-	dfs(root)
-	return ret - 1
-
-	function dfs(node) {
+	const dfs = (node) => {
 		if (!node) return 0
 		const leftDepth = dfs(node.left)
 		const rightDepth = dfs(node.right)
+		//inner cycle
 		ret = Math.max(ret, leftDepth + rightDepth + 1)
+		//return该节点为根的子树深度
 		return Math.max(leftDepth, rightDepth) + 1
 	}
+	let ret = 1
+	dfs(root)
+	return ret - 1
+}
+```
+
+### [563.二叉树的坡度](https://leetcode-cn.com/problems/binary-tree-tilt/)
+
+```javascript {.line-numbers}
+var findTilt = function (root) {
+	let ret = 0
+	const dfs = (node) => {
+		if (!node) return 0
+		const left = dfs(node.left)
+		const right = dfs(node.right)
+		ret += Math.abs(left - right)
+		return left + right + node.val
+	}
+	dfs(root)
+	return ret
 }
 ```
 
@@ -1247,23 +1278,54 @@ var constructMaximumBinaryTree = function (nums) {
 ### [662.二叉树最大宽度](https://leetcode-cn.com/problems/maximum-width-of-binary-tree/)
 
 ```javascript {.line-numbers}
-//not AC
-//not AC
-//not AC
+//not AC!!!
 //如果我们走向左子树，那么 position -> position * 2，如果我们走向右子树，那么 position -> position * 2 + 1。当我们在看同一层深度的位置值 L 和 R 的时候，宽度就是 R - L + 1
 var widthOfBinaryTree = function (root) {
-	let ret = 0
-	const map = new Map()
-	dfs(root, 0, 0)
-	return ret
+	if (!root) return 0
+	//node + depth + position
+	const queue = [[root, 0, 0]]
+	let curDepth = (left = ret = 0)
 
-	function dfs(node, depth, position) {
-		if (!node) return
-		if (!map.has(depth)) map.set(depth, position)
-		ret = Math.max(ret, position - map.get(depth) + 1)
-		dfs(node.left, depth + 1, position * 2)
-		dfs(node.right, depth + 1, position * 2 + 1)
+	while (queue.length) {
+		const nodeWithDepthAndPosition = queue.shift()
+		if (nodeWithDepthAndPosition[0]) {
+			queue.push([
+				nodeWithDepthAndPosition[0].left,
+				nodeWithDepthAndPosition[1] + 1,
+				nodeWithDepthAndPosition[2] * 2,
+			])
+			queue.push([
+				nodeWithDepthAndPosition[0].right,
+				nodeWithDepthAndPosition[1] + 1,
+				nodeWithDepthAndPosition[2] * 2 + 1,
+			])
+			if (curDepth !== nodeWithDepthAndPosition[1]) {
+				curDepth = nodeWithDepthAndPosition[1]
+				left = nodeWithDepthAndPosition[2]
+			}
+			ret = Math.max(ret, nodeWithDepthAndPosition[2] - left + 1)
+		}
 	}
+	return ret
+}
+
+var widthOfBinaryTree = function (root) {
+	if (!root) return 0
+	let ans = 1,
+		que = [[0n, root]]
+	while (que.length) {
+		const width = que[que.length - 1][0] - que[0][0] + 1n
+		if (width > ans) {
+			ans = width
+		}
+		let tmp = []
+		for (const [i, q] of que) {
+			q.left && tmp.push([i * 2n, q.left])
+			q.right && tmp.push([i * 2n + 1n, q.right])
+		}
+		que = tmp
+	}
+	return Number(ans)
 }
 ```
 
@@ -1359,5 +1421,26 @@ var verticalTraversal = function (root) {
 		}
 	}
 	return ret
+}
+```
+
+### [1123.最深叶节点的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-deepest-leaves/)
+
+```javascript {.line-numbers}
+var lcaDeepestLeaves = function (root) {
+	const depth = (root) => {
+		if (!root) return 0
+		const left = depth(root.left)
+		const right = depth(root.right)
+		return Math.max(left, right) + 1
+	}
+
+	if (!root) return null
+	const left = depth(root.left)
+	const right = depth(root.right)
+	if (left === right) return root
+	return left > right
+		? lcaDeepestLeaves(root.left)
+		: lcaDeepestLeaves(root.right)
 }
 ```
