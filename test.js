@@ -1,18 +1,16 @@
-var widthOfBinaryTree = function (root) {
-	if (!root) return 0
-	let ans = 1,
-		que = [[0n, root]]
-	while (que.length) {
-		const width = que[que.length - 1][0] - que[0][0] + 1n
-		if (width > ans) {
-			ans = width
+var pathSum = function (root, sum) {
+	const dfs = (root, sum, path) => {
+		if (!root) return
+		path.push(root.val)
+		sum -= root.val
+		if (!root.left && !root.right && sum === 0) {
+			ret.push([...path])
 		}
-		let tmp = []
-		for (const [i, q] of que) {
-			q.left && tmp.push([i * 2n, q.left])
-			q.right && tmp.push([i * 2n + 1n, q.right])
-		}
-		que = tmp
+		dfs(root.left, sum, path)
+		dfs(root.right, sum, path)
 	}
-	return Number(ans)
+	const ret = []
+
+	dfs(root, sum, [])
+	return ret
 }

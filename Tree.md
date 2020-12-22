@@ -346,7 +346,7 @@ var maxDepth = function (root) {
 
 //bfs
 var maxDepth = function (root) {
-	if (!root == null) return 0
+	if (!root) return 0
 	const queue = [root]
 	let ret = 0
 	while (queue.length) {
@@ -358,7 +358,7 @@ var maxDepth = function (root) {
 			if (curNode.right) queue.push(curNode.right)
 			size--
 		}
-		//一层添加完深度+1
+		//一层处理完深度+1
 		ret++
 	}
 	return ret
@@ -457,7 +457,6 @@ var buildTree = function (inorder, postorder) {
 			pIndex + 1,
 			inRight
 		)
-
 		return root
 	}
 }
@@ -562,18 +561,35 @@ var minDepth = function (root) {
 
 ```javascript {.line-numbers}
 var hasPathSum = function (root, sum) {
-	if (root === null) {
-		return false
-	}
+	if (!root) return false
 
-	if (root.left === null && root.right === null) {
-		return root.val === sum
-	}
+	if (!root.left && !root.right) return root.val === sum
 
 	return (
 		hasPathSum(root.left, sum - root.val) ||
 		hasPathSum(root.right, sum - root.val)
 	)
+}
+```
+
+### [113.路径总和 II](https://leetcode-cn.com/problems/path-sum-ii/)
+
+```javascript {.line-numbers}
+//backtrack
+var pathSum = function (root, sum) {
+	const dfs = (root, sum, path) => {
+		if (!root) return
+		path.push(root.val)
+		//due to pass reference so add a copy
+		if (!root.left && !root.right && sum === root.val) ret.push([...path])
+		dfs(root.left, sum - root.val, path)
+		dfs(root.right, sum - root.val, path)
+		//backtrack
+		path.pop()
+	}
+	const ret = []
+	dfs(root, sum, [])
+	return ret
 }
 ```
 
@@ -646,23 +662,35 @@ var connect = function (root) {
 ### [124.二叉树中的最大路径和](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
 
 ```javascript {.line-numbers}
-//dfs_post traversal
 var maxPathSum = function (root) {
 	let retMax = Number.MIN_SAFE_INTEGER
 
 	const dfs = (node) => {
 		if (node == null) return 0
 		//if negative, then return 0 to outerSum
-		let left = Math.max(dfs(node.left), 0)
-		let right = Math.max(dfs(node.right), 0)
+		const left = Math.max(dfs(node.left), 0)
+		const right = Math.max(dfs(node.right), 0)
 
-		const innerSum = left + right + node.val
-		//update innerSum
-		retMax = Math.max(retMax, innerSum)
+		//update innerSum = left + right + node.val
+		retMax = Math.max(retMax, left + right + node.val)
 		return Math.max(left, right) + node.val
 	}
 	dfs(root)
 	return retMax
+}
+```
+
+### [129.求根到叶子节点数字之和](https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/)
+
+```javascript {.line-numbers}
+var sumNumbers = function (root, preSum) {
+	const dfs = (node, preSum) => {
+		if (!node) return 0
+		preSum = preSum * 10 + node.val
+		if (!node.left && !node.right) return preSum
+		return dfs(node.left, preSum) + dfs(node.right, preSum)
+	}
+	return dfs(root, 0)
 }
 ```
 
@@ -839,7 +867,7 @@ var countNodes = function (root) {
 ### [226.翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
 
 ```javascript {.line-numbers}
-//preorder or postorder can work
+//preorder or postorder can work, inorder means no invert
 var invertTree = function (root) {
 	if (!root) return null
 	const left = invertTree(root.left)
@@ -934,6 +962,36 @@ var lowestCommonAncestor = function (root, p, q) {
 	if (left !== null && right !== null) return root
 	return left === null ? right : left
 }
+
+var lowestCommonAncestor = function (root, p, q) {
+	//store left/right son map root
+	const parent = new Map()
+	const visited = new Set()
+
+	const dfs = (root) => {
+		if (root.left) {
+			parent.set(root.left.val, root)
+			dfs(root.left)
+		}
+		if (root.right) {
+			parent.set(root.right.val, root)
+			dfs(root.right)
+		}
+	}
+
+	dfs(root)
+	while (p != null) {
+		visited.add(p.val)
+		p = parent.get(p.val)
+	}
+	while (q != null) {
+		if (visited.has(q.val)) {
+			return q
+		}
+		q = parent.get(q.val)
+	}
+	return null
+}
 ```
 
 ### [257.二叉树的所有路径](https://leetcode-cn.com/problems/binary-tree-paths/)
@@ -947,7 +1005,6 @@ var binaryTreePaths = function (root) {
 			paths.push(path + node.val)
 			return
 		}
-
 		dfs(node.left, paths, path + node.val + '->')
 		dfs(node.right, paths, path + node.val + '->')
 	}
@@ -963,9 +1020,8 @@ var binaryTreePaths = function (root) {
 			if (!node.left && !node.right) {
 				paths.push(path)
 			} else {
-				path += '->'
-				dfs(node.left, path)
-				dfs(node.right, path)
+				dfs(node.left, path + '->')
+				dfs(node.right, path + '->')
 			}
 		}
 	}
@@ -1001,6 +1057,28 @@ const deserialize = (data) => {
 		return root // 返回当前构建好的root
 	}
 	return buildTree(list) // 构建的入口
+}
+```
+
+### [404.左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
+
+```javascript {.line-numbers}
+var sumOfLeftLeaves = function (root) {
+	const dfs = (node) => {
+		const isLeaf = (node) => {
+			return !node.left && !node.right
+		}
+		let ret = 0
+		if (node.left) {
+			ret += isLeaf(node.left) ? node.left.val : dfs(node.left)
+		}
+
+		if (node.right && !isLeaf(node.right)) {
+			ret += dfs(node.right)
+		}
+		return ret
+	}
+	return !root ? 0 : dfs(root)
 }
 ```
 
@@ -1041,6 +1119,25 @@ var levelOrder = function (root) {
 		ret.push(curLevel)
 	}
 	return ret
+}
+```
+
+### [437.路径总和 III](https://leetcode-cn.com/problems/path-sum-iii/)
+
+```javascript {.line-numbers}
+var pathSum = function (root, sum) {
+	const dfs = (node, sum) => {
+		if (!node) return 0
+		let ret = 0
+		if (sum === node.val) ret++
+		ret += dfs(node.left, sum - node.val)
+		ret += dfs(node.right, sum - node.val)
+		return ret
+	}
+
+	return !root
+		? 0
+		: dfs(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum)
 }
 ```
 
@@ -1278,6 +1375,8 @@ var constructMaximumBinaryTree = function (nums) {
 ### [662.二叉树最大宽度](https://leetcode-cn.com/problems/maximum-width-of-binary-tree/)
 
 ```javascript {.line-numbers}
+//not AC!!!
+//not AC!!!
 //not AC!!!
 //如果我们走向左子树，那么 position -> position * 2，如果我们走向右子树，那么 position -> position * 2 + 1。当我们在看同一层深度的位置值 L 和 R 的时候，宽度就是 R - L + 1
 var widthOfBinaryTree = function (root) {
