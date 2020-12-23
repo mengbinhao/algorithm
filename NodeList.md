@@ -1,16 +1,25 @@
+> 一个原则: 画图
+> 两种题型: 指针的修改、链表的拼接
+> 三个注意: 环、边界、递归
+> 四个技巧: 虚拟头、、、
+> other: 前序遍历很容易改造成迭代,准确的说前序遍历容易改成不需要栈的递归，而后续遍历需要借助栈来完成
+
 ### insert & delete
 
 - 插入
+
 ```practice
-target.next = source.next
-source.next = target
+temp = 待插入位置的前驱节点.next
+待插入位置的前驱节点.next = 待插入指针
+待插入指针.next = temp
 ```
 
 ![](./images/NodeList_insert.png)
-- 删除`source.next = source.next.next`
-![](./images/NodeList_delete.png)
 
-### [2. 两数相加M](https://leetcode-cn.com/problems/add-two-numbers/)
+- 删除`待删除位置的前驱节点.next = 待删除位置的前驱节点.next.next`
+  ![](./images/NodeList_delete.png)
+
+### [2. 两数相加 M](https://leetcode-cn.com/problems/add-two-numbers/)
 
 ```javascript
 //three point + dummyNode
@@ -40,7 +49,7 @@ var addTwoNumbers = function (l1, l2) {
 }
 ```
 
-### [19. 删除链表的倒数第N个节点M](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+### [19. 删除链表的倒数第 N 个节点 M](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
 
 ```javascript
 //two pointers + dummyNode O(n) - O(1)
@@ -48,7 +57,7 @@ var removeNthFromEnd = function (head, n) {
 	let dummy = new ListNode(0)
 	;(dummy.next = head), (first = dummy), (second = dummy)
 
-    // Advances first pointer so that the gap between first and second is n nodes apart
+	// Advances first pointer so that the gap between first and second is n nodes apart
 	for (let i = 1; i <= n + 1; i++) {
 		first = first.next
 	}
@@ -62,31 +71,31 @@ var removeNthFromEnd = function (head, n) {
 }
 ```
 
-### [21. 合并两个有序链表E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+### [21. 合并两个有序链表 E](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 ```javascript
 //iteration
-var mergeTwoLists = function(l1, l2) {
-    const prehead = new ListNode(-1);
+var mergeTwoLists = function (l1, l2) {
+	const prehead = new ListNode(-1)
 
-    let prev = prehead;
-    while (l1 != null && l2 != null) {
-        if (l1.val <= l2.val) {
-            prev.next = l1;
-            l1 = l1.next;
-        } else {
-            prev.next = l2;
-            l2 = l2.next;
-        }
-        //move prev
-        prev = prev.next;
-    }
+	let prev = prehead
+	while (l1 != null && l2 != null) {
+		if (l1.val <= l2.val) {
+			prev.next = l1
+			l1 = l1.next
+		} else {
+			prev.next = l2
+			l2 = l2.next
+		}
+		//move prev
+		prev = prev.next
+	}
 
-    //合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
-    prev.next = l1 === null ? l2 : l1;
-    //返回合并后的头结点
-    return prehead.next;
-};
+	//合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
+	prev.next = l1 === null ? l2 : l1
+	//返回合并后的头结点
+	return prehead.next
+}
 
 //recursion
 var mergeTwoLists = function (l1, l2) {
@@ -104,7 +113,7 @@ var mergeTwoLists = function (l1, l2) {
 }
 ```
 
-### [23. 合并K个排序链表H](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+### [23. 合并 K 个排序链表 H](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```javascript
 var mergeKLists = function (lists) {
@@ -139,62 +148,61 @@ var mergeKLists = function (lists) {
 
 //O(NlogK) - O(n)
 var mergeKLists = function (lists) {
- 	let len = lists.length
- 	if (len === 0) return null
+	let len = lists.length
+	if (len === 0) return null
 
- 	let mergeTwoLists = (l1, l2) => {
- 		if (!l1) return l2
- 		if (!l2) return l1
+	let mergeTwoLists = (l1, l2) => {
+		if (!l1) return l2
+		if (!l2) return l1
 
- 		if (l1.val < l2.val) {
- 			l1.next = mergeTwoLists(l1.next, l2)
- 			return l1
- 		} else {
- 			l2.next = mergeTwoLists(l1, l2.next)
- 			return l2
- 		}
- 	}
+		if (l1.val < l2.val) {
+			l1.next = mergeTwoLists(l1.next, l2)
+			return l1
+		} else {
+			l2.next = mergeTwoLists(l1, l2.next)
+			return l2
+		}
+	}
 
- 	let merge = (left, right) => {
- 		if (left === right) return lists[left]
- 		let mid = (left + right) >> 1
- 		let l1 = merge(left, mid)
- 		let l2 = merge(mid + 1, right)
- 		return mergeTwoLists(l1, l2)
- 	}
+	let merge = (left, right) => {
+		if (left === right) return lists[left]
+		let mid = (left + right) >> 1
+		let l1 = merge(left, mid)
+		let l2 = merge(mid + 1, right)
+		return mergeTwoLists(l1, l2)
+	}
 
- 	return merge(0, len - 1)
- }
+	return merge(0, len - 1)
+}
 
 //O(KN) - O(n)
 var mergeKLists = function (lists) {
- 	let len = lists.length
- 	if (len === 0) return null
+	let len = lists.length
+	if (len === 0) return null
 
- 	let mergeTwoLists = (l1, l2) => {
- 		if (!l1) return l2
- 		if (!l2) return l1
+	let mergeTwoLists = (l1, l2) => {
+		if (!l1) return l2
+		if (!l2) return l1
 
- 		if (l1.val < l2.val) {
- 			l1.next = mergeTwoLists(l1.next, l2)
- 			return l1
- 		} else {
- 			l2.next = mergeTwoLists(l1, l2.next)
- 			return l2
- 		}
- 	}
+		if (l1.val < l2.val) {
+			l1.next = mergeTwoLists(l1.next, l2)
+			return l1
+		} else {
+			l2.next = mergeTwoLists(l1, l2.next)
+			return l2
+		}
+	}
 
- 	let ret = lists[0]
- 	for (let i = 1; i < len; i++) {
- 		ret = mergeTwoLists(ret, lists[i])
- 	}
+	let ret = lists[0]
+	for (let i = 1; i < len; i++) {
+		ret = mergeTwoLists(ret, lists[i])
+	}
 
- 	return ret
- }
-
+	return ret
+}
 ```
 
-### [24. 两两交换链表M](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
+### [24. 两两交换链表 M](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
 ```javascript
 //iteration, three pointer  O(N) - O(1)
@@ -202,7 +210,7 @@ var swapPairs = function (head) {
 	let dummyNode = new ListNode(0)
 	;(dummyNode.next = head), (cur = dummyNode)
 
-    //够2个才换
+	//够2个才换
 	while (cur.next !== null && cur.next.next !== null) {
 		const first = cur.next
 		const second = first.next
@@ -233,16 +241,15 @@ var swapPairs = function (head) {
 	// 返回交换完成的子链表，second变成了头结点
 	return second
 }
-
 ```
 
-### [25. K个一组翻转链表H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==不熟==
+### [25. K 个一组翻转链表 H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==不熟==
 
 ```javascript
 const myReverse = (head, tail) => {
 	let prev = tail.next,
 		p = head
-    //翻转结束条件
+	//翻转结束条件
 	while (prev !== tail) {
 		const nex = p.next
 		p.next = prev
@@ -278,11 +285,11 @@ var reverseKGroup = function (head, k) {
 }
 ```
 
-### [61. 旋转链表M](https://leetcode-cn.com/problems/rotate-list/)
+### [61. 旋转链表 M](https://leetcode-cn.com/problems/rotate-list/)
 
 ```javascript
 var rotateRight = function (head, k) {
-    // 避免掉 空和只有一个元素的情况
+	// 避免掉 空和只有一个元素的情况
 	if (head === null || head.next === null) return head
 	let length = 1,
 		cur = head
@@ -291,23 +298,23 @@ var rotateRight = function (head, k) {
 		length++
 	}
 	cur.next = head //form ring
-    // 因为当k大于长度时, 又是一个轮回, 所以对长度取余
+	// 因为当k大于长度时, 又是一个轮回, 所以对长度取余
 	let num = k % length,
 		index = 1,
 		node = head
-    //find new tail
+	//find new tail
 	while (index < length - num) {
 		node = node.next
 		index++
 	}
-    //new head
+	//new head
 	let vnode = node.next
 	node.next = null //break ring
 	return vnode
 }
 ```
 
-### [109. 有序链表转换二叉搜索树M](https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/)
+### [109. 有序链表转换二叉搜索树 M](https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/)
 
 ```javascript
 var sortedListToBST = function (head) {
@@ -334,31 +341,31 @@ var sortedListToBST = function (head) {
 }
 ```
 
-### [141. 环形链表E](https://leetcode-cn.com/problems/linked-list-cycle/)
+### [141. 环形链表 E](https://leetcode-cn.com/problems/linked-list-cycle/)
 
 ```javascript
 //标记法 O(n) - O(1)
-var hasCycle = function(head) {
-   while (head) {
-       if (head.flag) {
-            return true
-       } else {
-           head.flag = true
-           head = head.next
-       }
-   }
-   return false
+var hasCycle = function (head) {
+	while (head) {
+		if (head.flag) {
+			return true
+		} else {
+			head.flag = true
+			head = head.next
+		}
+	}
+	return false
 }
 
 //fast and slow pointer O(n) - O(1)
-var hasCycle = function(head) {
-   let fast = slow = head
-   while (fast && fast.next) {
-       fast = fast.next.next
-       slow = slow.next
-       if (fast === slow) return true
-   }
-   return false
+var hasCycle = function (head) {
+	let fast = (slow = head)
+	while (fast && fast.next) {
+		fast = fast.next.next
+		slow = slow.next
+		if (fast === slow) return true
+	}
+	return false
 }
 
 //hash O(n) - O(n)
@@ -375,7 +382,7 @@ var hasCycle = function (head) {
 }
 ```
 
-### [142. 环形链表M](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+### [142. 环形链表 M](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 
 ```javascript
 var detectCycle = function (head) {
@@ -392,7 +399,7 @@ var detectCycle = function (head) {
 }
 ```
 
-### [146. LRU缓存机制](https://leetcode-cn.com/problems/lru-cache/)
+### [146. LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
 
 ```javascript
 function ListNode(key, value) {
@@ -474,7 +481,7 @@ LRUCache.prototype.popTail = function () {
 }
 ```
 
-### [206. 反转链表E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
+### [206. 反转链表 E](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 ```javascript
 //pre, cur, two pointer
@@ -484,16 +491,16 @@ var reverseList = function (head) {
 		next
 
 	while (cur) {
-        //store previous next
+		//store previous next
 		next = cur.next
-        //adjust ..3->2->1->null
+		//adjust ..3->2->1->null
 		cur.next = pre
-        //move prev forward
+		//move prev forward
 		pre = cur
-        //move cur forward
+		//move cur forward
 		cur = next
 	}
-    //return new head
+	//return new head
 	return pre
 }
 
@@ -508,17 +515,16 @@ var reverseList = function (head) {
 //返回上一层reverseList(3)
 //处理完后返回的是4 -> 3
 //依次向上
-var reverseList = function(head) {
-    if (!head || !head.next) return head
-    const p = reverseList(head.next)
-    head.next.next = head
-    head.next = null
-    return p
-};
+var reverseList = function (head) {
+	if (!head || !head.next) return head
+	const p = reverseList(head.next)
+	head.next.next = head
+	head.next = null
+	return p
+}
 ```
 
-
-### [876. 链表中间节点E](https://leetcode-cn.com/problems/middle-of-the-linked-list/)
+### [876. 链表中间节点 E](https://leetcode-cn.com/problems/middle-of-the-linked-list/)
 
 ```javascript
 //fast slow pointer, when fast goto end, slow must be in the middle of ListNode
@@ -533,12 +539,14 @@ var middleNode = function (head) {
 }
 
 //array
-var middleNode = function(head) {
-  let len = 0, newHead = head, res = []
-  while(newHead){
-      res[len++] = newHead
-      newHead = newHead.next
-  }
-  return res[len>>1]
+var middleNode = function (head) {
+	let len = 0,
+		newHead = head,
+		res = []
+	while (newHead) {
+		res[len++] = newHead
+		newHead = newHead.next
+	}
+	return res[len >> 1]
 }
 ```

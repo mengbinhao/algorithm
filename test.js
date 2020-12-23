@@ -1,16 +1,13 @@
-var pathSum = function (root, sum) {
-	const dfs = (root, sum, path) => {
-		if (!root) return
-		path.push(root.val)
-		sum -= root.val
-		if (!root.left && !root.right && sum === 0) {
-			ret.push([...path])
-		}
-		dfs(root.left, sum, path)
-		dfs(root.right, sum, path)
+var firstUniqChar = function (s) {
+	const hash = {}
+	for (let c of s) {
+		!hash[c] ? (hash[c] = 1) : hash[c]++
 	}
-	const ret = []
 
-	dfs(root, sum, [])
-	return ret
+	for (let i = 0, len = s.length; i < len; i++) {
+		if (hash[s[i]] === 1) return s[i]
+	}
+	return -1
 }
+
+console.log(firstUniqChar('leetcode'))
