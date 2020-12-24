@@ -208,7 +208,7 @@ var maxProfit = function (prices) {
 	return dfs(prices, 0)
 }
 
-//DP O(N)-O(N)
+//DP O(n)-O(n)
 var maxProfit = function (prices) {
 	let len = prices.length
 	if (len < 2) return 0
@@ -230,7 +230,7 @@ var maxProfit = function (prices) {
 	return dp[len - 1][0]
 }
 
-//DP O(N)-O(N)
+//DP O(n)-O(n)
 var maxProfit = function (prices) {
 	let len = prices.length
 	if (len < 2) return 0
@@ -249,7 +249,7 @@ var maxProfit = function (prices) {
 	return cash[len - 1]
 }
 
-//DP O(N)-O(1)
+//DP O(n)-O(1)
 var maxProfit = function (prices) {
 	let len = prices.length
 	if (len < 2) return 0
