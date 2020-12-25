@@ -1,6 +1,6 @@
 学习笔记
 
-##### [79单词搜索](https://leetcode-cn.com/problems/word-search/)
+##### [79 单词搜索](https://leetcode-cn.com/problems/word-search/)
 
 ```javascript
 //DFS Time Exceeded
@@ -56,7 +56,7 @@ function isValid(x, y, row, col) {
 }
 ```
 
-##### [208实现Trie](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+##### [208. 实现 Trie](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```javascript
 var TrieNode = function () {
@@ -117,7 +117,7 @@ Trie.prototype.startsWith = function (prefix) {
 }
 ```
 
-##### [547朋友圈](https://leetcode-cn.com/problems/friend-circles/) ==backlog==
+##### [547 朋友圈](https://leetcode-cn.com/problems/friend-circles/) ==backlog==
 
 ```javascript
 var findCircleNum = function (M) {
@@ -147,7 +147,7 @@ var findCircleNum = function (M) {
 }
 ```
 
-##### [200岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
+##### [200 岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```javascript
 //DFS
@@ -182,7 +182,6 @@ var numIslands = function (grid) {
 
 	return ret
 }
-
 
 //BFS
 var numIslands = function (grid) {
@@ -227,7 +226,7 @@ var numIslands = function (grid) {
 }
 ```
 
-##### [130被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)
+##### [130 被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)
 
 ```javascript
 //DFS
@@ -279,7 +278,7 @@ var solve = function (board) {
 }
 ```
 
-##### [36有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)
+##### [36 有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)
 
 ```javascript
 var isValidSudoku = function (board) {
@@ -310,4 +309,3 @@ var isValidSudoku = function (board) {
 	return true
 }
 ```
-

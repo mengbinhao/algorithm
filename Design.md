@@ -1,0 +1,318 @@
+### [146.LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
+
+```javascript {.line-numbers}
+//头代表最新,尾代表老
+function ListNode(key, value) {
+	this.key = key
+	this.value = value
+	this.next = null
+	this.prev = null
+}
+
+var LRUCache = function (capacity) {
+	// 缓存容量
+	this.capacity = capacity
+	// 哈希表
+	this.hashTable = {}
+	// 缓存数目
+	this.count = 0
+	this.dummyHead = new ListNode()
+	this.dummyTail = new ListNode()
+	// 相联系
+	this.dummyHead.next = this.dummyTail
+	this.dummyTail.prev = this.dummyHead
+}
+
+//若哈希表中没有对应值,返回-1。若存在节点,刷新它的位置,移动到链表头部,返回该节点值
+LRUCache.prototype.get = function (key) {
+	const node = this.hashTable[key]
+	if (node == null) return -1
+	this.moveToHead(node)
+	return node.value
+}
+
+LRUCache.prototype.moveToHead = function (node) {
+	//从链表中删除该节点
+	this.removeFromList(node)
+	//该节点添加到链表的头部
+	this.addToHead(node)
+}
+
+LRUCache.prototype.removeFromList = function (node) {
+	const prev = node.prev
+	const next = node.next
+	prev.next = next // 前驱节点的next指向后继节点
+	next.prev = prev // 后继节点的prev指向前驱节点
+}
+
+LRUCache.prototype.addToHead = function (node) {
+	//插入到虚拟头结点和真实头结点之间
+	//node的prev指针指向虚拟头结点
+	node.prev = this.dummyHead
+	//node的next指针指向原来的真实头结点
+	node.next = this.dummyHead.next
+	//原来的真实头结点的prev指向node
+	this.dummyHead.next.prev = node
+	//虚拟头结点的next指向node
+	this.dummyHead.next = node
+}
+
+//写入新数据,创建新的节点,添加到链表头部(最不优先被淘汰),并存入哈希表,检查是否超容,决定是否剔除"老家伙"
+//写入已有的数据,则更新数据值,刷新节点的位置
+LRUCache.prototype.put = function (key, value) {
+	const node = this.hashTable[key]
+	if (node == null) {
+		const newNode = new ListNode(key, value)
+		this.hashTable[key] = newNode
+		this.addToHead(newNode)
+		this.count++
+		if (this.count > this.capacity) {
+			this.removeLRUItem()
+		}
+	} else {
+		node.value = value
+		this.moveToHead(node)
+	}
+}
+
+LRUCache.prototype.removeLRUItem = function () {
+	//删除"老家伙",将它从链表尾部删除
+	const tail = this.popTail()
+	delete this.hashTable[tail.key]
+	this.count--
+}
+
+LRUCache.prototype.popTail = function () {
+	const tailItem = this.dummyTail.prev
+	this.removeFromList(tailItem)
+	return tailItem
+}
+```
+
+### [208.实现 Trie](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+
+```javascript {.line-numbers}
+var TrieNode = function () {
+	//next[i]保存着下一个字符i的节点引用
+	this.next = {}
+	//当前节点是否可以作为一个单词的结束位置
+	this.isEnd = false
+}
+
+var Trie = function () {
+	this.root = new TrieNode()
+}
+
+Trie.prototype.insert = function (word) {
+	if (!word) return false
+
+	let node = this.root
+
+	for (let i = 0; i < word.length; i++) {
+		if (!node.next[word[i]]) {
+			node.next[word[i]] = new TrieNode()
+		}
+		node = node.next[word[i]]
+	}
+	node.isEnd = true
+	return true
+}
+
+Trie.prototype.search = function (word) {
+	if (!word) return false
+
+	let node = this.root
+
+	for (let i = 0; i < word.length; i++) {
+		if (node.next[word[i]]) {
+			node = node.next[word[i]]
+		} else {
+			return false
+		}
+	}
+	return node.isEnd
+}
+
+Trie.prototype.startsWith = function (prefix) {
+	if (!prefix) return true
+
+	let node = this.root
+	for (let i = 0; i < prefix.length; i++) {
+		if (node.next[prefix[i]]) {
+			node = node.next[prefix[i]]
+		} else {
+			return false
+		}
+	}
+	return true
+}
+```
+
+### [225.用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
+
+```javascript {.line-numbers}
+var MyStack = function () {
+	this.stack = []
+}
+
+MyStack.prototype.push = function (x) {
+	this.stack[this.stack.length] = x
+}
+
+MyStack.prototype.pop = function () {
+	if (this.empty()) return undefined
+	const popItem = this.stack[this.stack.length - 1]
+	this.stack.length = this.stack.length - 1
+	return popItem
+}
+
+MyStack.prototype.top = function () {
+	return this.stack[this.stack.length - 1]
+}
+
+MyStack.prototype.empty = function () {
+	return this.stack.length === 0 ? true : false
+}
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * var obj = new MyStack()
+ * obj.push(x)
+ * var param_2 = obj.pop()
+ * var param_3 = obj.top()
+ * var param_4 = obj.empty()
+ */
+```
+
+### [232.用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
+
+```javascript {.line-numbers}
+//use two stacks
+var MyQueue = function () {
+	this.input = []
+	this.output = []
+}
+
+MyQueue.prototype.push = function (x) {
+	this.input.push(x)
+}
+
+MyQueue.prototype.pop = function () {
+	//当output没有数据时input全部放入output
+	this.addToOutput()
+	//弹出返回最后一个元素
+	return this.output.pop()
+}
+
+MyQueue.prototype.peek = function () {
+	//当output没有数据时input全部放入output
+	this.addToOutput()
+	//返回最后一个元素
+	return this.output[this.output.length - 1]
+}
+
+MyQueue.prototype.empty = function () {
+	return !this.input.length && !this.output.length
+}
+
+MyQueue.prototype.addToOutput = function () {
+	if (!this.output.length) {
+		while (this.input.length) {
+			this.output.push(this.input.pop())
+		}
+	}
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * var obj = new MyQueue()
+ * obj.push(x)
+ * var param_2 = obj.pop()
+ * var param_3 = obj.peek()
+ * var param_4 = obj.empty()
+ */
+```
+
+### [641.设计循环双端队列](https://leetcode-cn.com/problems/design-circular-deque/)
+
+```javascript {.line-numbers}
+var MyCircularDeque = function (k) {
+	//point to first valid position
+	this.front = 0
+	//point to last valid position
+	this.rear = 0
+	this.capacity = k + 1
+	this.arr = Array(this.capacity)
+}
+
+MyCircularDeque.prototype.insertFront = function (value) {
+	if (this.isFull()) return false
+	this.front = (this.front - 1 + this.capacity) % this.capacity
+	this.arr[this.front] = value
+	return true
+}
+
+MyCircularDeque.prototype.insertLast = function (value) {
+	if (this.isFull()) {
+		return false
+	}
+	this.arr[this.rear] = value
+	this.rear = (this.rear + 1) % this.capacity
+	return true
+}
+
+MyCircularDeque.prototype.deleteFront = function () {
+	if (this.isEmpty()) {
+		return false
+	}
+	// front 被设计在数组的开头，所以是 +1
+	this.front = (this.front + 1) % this.capacity
+	return true
+}
+
+MyCircularDeque.prototype.deleteLast = function () {
+	if (this.isEmpty()) {
+		return false
+	}
+	// rear 被设计在数组的末尾，所以是 -1
+	this.rear = (this.rear - 1 + this.capacity) % this.capacity
+	return true
+}
+
+MyCircularDeque.prototype.getFront = function () {
+	if (this.isEmpty()) {
+		return -1
+	}
+	return this.arr[this.front]
+}
+
+MyCircularDeque.prototype.getRear = function () {
+	if (this.isEmpty()) {
+		return -1
+	}
+	// 当 rear 为 0 时防止数组越界
+	return this.arr[(this.rear - 1 + this.capacity) % this.capacity]
+}
+
+MyCircularDeque.prototype.isEmpty = function () {
+	return this.front === this.rear
+}
+
+MyCircularDeque.prototype.isFull = function () {
+	// 注意：这个设计是非常经典的做法
+	return (this.rear + 1) % this.capacity == this.front
+}
+
+/**
+ * Your MyCircularDeque object will be instantiated and called as such:
+ * var obj = new MyCircularDeque(k)
+ * var param_1 = obj.insertFront(value)
+ * var param_2 = obj.insertLast(value)
+ * var param_3 = obj.deleteFront()
+ * var param_4 = obj.deleteLast()
+ * var param_5 = obj.getFront()
+ * var param_6 = obj.getRear()
+ * var param_7 = obj.isEmpty()
+ * var param_8 = obj.isFull()
+ */
+```
