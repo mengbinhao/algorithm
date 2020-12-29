@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-07 12:46:29
- * @LastEditTime: 2020-06-07 23:02:30
+ * @LastEditTime: 2020-12-29 17:40:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /algorithm009-class02/Users/jack/.leetcode/46.全排列.js
@@ -19,32 +19,28 @@
  * @return {number[][]}
  */
 var permute = function (nums) {
-	if (nums.length === 0) return []
+	const len = nums.length,
+		ans = []
+	if (len === 0) return ans
+	//store those number which have been visited
+	const visited = Array.from({ length: len }, () => false)
 
-	let ret = [],
-		path = []
-	used = Array.from({ length: nums.length }, (item) => false)
-
-	let dfs = (nums, depth, path, used, ret) => {
+	const dfs = (nums, depth, curState) => {
 		if (depth === nums.length) {
-			ret.push([...path])
+			ans.push([...curState])
 			return
 		}
 
-		for (let i = 0; i < nums.length; i++) {
-			if (used[i]) continue
-			path.push(nums[i])
-			used[i] = true
-			dfs(nums, depth + 1, path, used, ret)
-
+		for (let i = 0, len = nums.length; i < len; i++) {
+			if (visited[i]) continue
+			visited[i] = true
+			dfs(nums, depth + 1, [...curState, nums[i]])
 			//reverse
-			path.pop(nums[i])
-			used[i] = false
+			visited[i] = false
 		}
 	}
 
-	dfs(nums, 0, path, used, ret)
-
-	return ret
+	dfs(nums, 0, [])
+	return ans
 }
 // @lc code=end

@@ -1,24 +1,26 @@
-var generateParenthesis = function (n) {
-	const ret = []
-	let count = 0
+var permute = function (nums) {
+	const len = nums.length,
+		ans = []
+	if (len === 0) return ans
+	//store those number which have been visited
+	const visited = Array.from({ length: len }, () => false)
 
-	const dfs = (left, right, n, str) => {
-		console.log(++count)
-		if (left === n && right === n) {
-			ret.push(str)
+	const dfs = (nums, depth, curState) => {
+		if (depth === nums.length) {
+			ans.push(curState)
 			return
 		}
 
-		if (left < n) {
-			dfs(left + 1, right, n, `${str}(`)
-		}
-
-		if (left > right) {
-			dfs(left, right + 1, n, `${str})`)
+		for (let i = 0, len = nums.length; i < len; i++) {
+			if (visited[i]) continue
+			visited[i] = true
+			dfs(nums, depth + 1, [...curState, nums[i]])
+			//reverse
+			visited[i] = false
 		}
 	}
-	dfs(0, 0, n, '')
-	return ret
+	dfs(nums, 0, [])
+	return ans
 }
 
-console.log(generateParenthesis(2))
+console.log(permute([1, 2, 3]))
