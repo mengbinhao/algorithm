@@ -3,27 +3,11 @@
 ##### [22 括号生成 M](https://leetcode-cn.com/problems/generate-parentheses/)
 
 ```javascript
-//brute forve O(2^3n * n) - O(n)
+//brute force O(2^3n * n) - O(n)
 var generateParenthesis = function (n) {
-	let ret = []
-	let recursionParenthesis = (level, max, s) => {
-		//recursion terminal
-		if (level >= max) {
-			if (isValid(s)) {
-				ret.push(s)
-			}
-			return
-		}
+	const ret = []
 
-		//precess login of current level
-		//drill down
-		recursionParenthesis(level + 1, max, `${s}(`)
-		recursionParenthesis(level + 1, max, `${s})`)
-
-		//reverse current params if needed
-	}
-
-	let isValid = (s) => {
+	const isValid = (s) => {
 		let balance = 0
 		for (let c of s) {
 			if (c === '(') {
@@ -36,54 +20,47 @@ var generateParenthesis = function (n) {
 		return balance === 0
 	}
 
-	recursionParenthesis(0, 2 * n, '')
+	const dfs = (level, max, s) => {
+		//recursion terminal
+		if (level >= max) {
+			if (isValid(s)) ret.push(s)
+			return
+		}
+
+		//precess login of current level
+		//drill down
+		dfs(level + 1, max, `${s}(`)
+		dfs(level + 1, max, `${s})`)
+
+		//reverse current params if needed
+	}
+
+	dfs(0, 2 * n, '')
 	return ret
 }
 
-//回溯,直接过滤掉无效的组合
+//回溯
 var generateParenthesis = function (n) {
-	let ret = []
+	const ret = []
 
-	let backTracking = (left, right, n, ret, s) => {
+	const dfs = (left, right, n, ret, s) => {
 		if (left === n && right === n) {
 			ret.push(s)
 			return
 		}
 
-		//剪枝
+		//回溯的过程中直接剪枝掉无效的组合
 		if (left < n) {
-			backTracking(left + 1, right, n, ret, s + '(')
+			dfs(left + 1, right, n, ret, s + '(')
 		}
 
-		//剪枝
+		//回溯的过程中直接剪枝掉无效的组合
 		if (left > right) {
-			backTracking(left, right + 1, n, ret, s + ')')
+			dfs(left, right + 1, n, ret, s + ')')
 		}
 	}
 
-	backTracking(0, 0, n, ret, '')
-	return ret
-}
-
-//倒推
-var generateParenthesis = function (n) {
-	let ret = []
-	let recursionParenthesis = (left, right, s) => {
-		if (left === 0 && right === 0) {
-			ret.push(s)
-			return
-		}
-
-		if (left) {
-			recursionParenthesis(left - 1, right, s + '(')
-		}
-
-		if (right > left) {
-			recursionParenthesis(left, right - 1, s + ')')
-		}
-	}
-
-	recursionParenthesis(n, n, '')
+	dfs(0, 0, n, ret, '')
 	return ret
 }
 ```
@@ -279,7 +256,7 @@ var majorityElement = function (nums) {
 
 // O(NlogN)
 // sort array then the middle is majority
-// due to must be hava an answer
+// due to must be have an answer
 var majorityElement = function (nums) {
 	nums.sort((a, b) => a - b)
 	return nums[Math.floor(nums.length / 2)]
