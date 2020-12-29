@@ -94,7 +94,7 @@ var minWindow = function (s, t) {
 
 - brute force O(n \* k) - O(n - k +1)
 
-  ```javascript
+  ```javascript {.line-numbers}
   var maxSlidingWindow = function (nums, k) {
   	let slideWindow = [],
   		ret = [],
@@ -113,7 +113,7 @@ var minWindow = function (s, t) {
 
 - deque O(n) - O(n)
 
-  ```javascript
+  ```javascript {.line-numbers}
   var maxSlidingWindow = function (nums, k) {
   	//放的下标,递减队列,第一个第一大的index,依此类推
   	let deque = [],
@@ -146,7 +146,7 @@ var minWindow = function (s, t) {
 
 ### [438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
-```javascript
+```javascript {.line-numbers}
 var findAnagrams = function (s, p) {
 	let sLen = s.length,
 		pLen = p.length
@@ -191,7 +191,7 @@ var findAnagrams = function (s, p) {
 
 ### [567.字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)
 
-```javascript
+```javascript {.line-numbers}
 //labuladong version
 var checkInclusion = function (s, t) {
 	let sLen = s.length,

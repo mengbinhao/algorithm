@@ -21,7 +21,7 @@
 
 ### [322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)
 
-```javascript
+```javascript {.line-numbers}
 //greedy + dfs
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
@@ -137,7 +137,7 @@ var coinChange = function (coins, amount) {
 
 #### [121. 买股票的最佳时机 E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
-```javascript
+```javascript {.line-numbers}
 //brute force O(n^2) - O(1)
 var maxProfit = function (prices) {
 	let len = prices.length
@@ -171,7 +171,7 @@ var maxProfit = function (prices) {
 
 #### [122. 买卖股票的最佳时机 2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
-```javascript
+```javascript {.line-numbers}
 //Greedy
 var maxProfit = function (prices) {
 	let maxProfit = 0

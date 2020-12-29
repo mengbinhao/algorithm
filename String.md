@@ -1,6 +1,6 @@
 ### [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
-```javascript
+```javascript {.line-numbers}
 //brute force + reverse()
 //O(N^3) - O(1)
 var longestPalindrome = function (s) {
@@ -97,7 +97,7 @@ var longestPalindrome = function (s) {
 
 ### [8. 字符串转换整数(atoi)M](https://leetcode-cn.com/problems/string-to-integer-atoi/)
 
-```javascript
+```javascript {.line-numbers}
 var myAtoi = function (str) {
 	let len = str.length,
 		ret = 0,
@@ -133,7 +133,7 @@ var myAtoi = function (str) {
 
 ### [125. 验证回文串](https://leetcode-cn.com/problems/valid-palindrome/)
 
-```javascript
+```javascript {.line-numbers}
 //O(∣s∣) - O(∣s∣)
 //loop once, filter letter and digit, compare if target str === reverse target string
 
@@ -158,7 +158,7 @@ var isPalindrome = function (s) {
 
 ### [151. 翻转字符串里的单词 M](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
 
-```javascript
+```javascript {.line-numbers}
 //使用系统函数
 var reverseWords = function (s) {
 	return s.trim().replace(/ {2,}/g, ' ').split(' ').reverse().join(' ')
@@ -191,7 +191,7 @@ var reverseWords = function (s) {
 
 ### [344. 反转字符串 E](https://leetcode-cn.com/problems/reverse-string/)
 
-```javascript
+```javascript {.line-numbers}
 //two pointer
 var reverseString = function (s) {
 	helper(s, 0, s.length - 1)
@@ -217,7 +217,7 @@ var reverseString = function (s) {
 
 ### [387. 字符串中的第一个唯一字符 E](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
 
-```javascript
+```javascript {.line-numbers}
 var firstUniqChar = function (s) {
 	const obj = {}
 	for (let c of s) {
@@ -232,7 +232,7 @@ var firstUniqChar = function (s) {
 
 ### [394. 字符串解码 M](https://leetcode-cn.com/problems/decode-string/)
 
-```javascript
+```javascript {.line-numbers}
 var decodeString = function (s) {
 	let numStack = [],
 		strStack = [],
@@ -261,7 +261,7 @@ var decodeString = function (s) {
 
 ### [415. 字符串相加](https://leetcode-cn.com/problems/add-strings/)
 
-```javascript
+```javascript {.line-numbers}
 var addStrings = function (num1, num2) {
 	let i = num1.length - 1,
 		j = num2.length - 1,
@@ -283,7 +283,7 @@ var addStrings = function (num1, num2) {
 
 ### [43. 字符串相乘](https://leetcode-cn.com/problems/multiply-strings/)
 
-```javascript
+```javascript {.line-numbers}
 var multiply = function (num1, num2) {
 	if (num1 === '0' || num2 === '0') {
 		return '0'
@@ -292,22 +292,22 @@ var multiply = function (num1, num2) {
 	const m = num1.length,
 		n = num2.length
 	for (let i = n - 1; i >= 0; i--) {
-		let curr = '',
+		let cur = '',
 			add = 0
 		for (let j = n - 1; j > i; j--) {
-			curr += 0
+			cur += 0
 		}
 		let y = num2.charAt(i) - 0
 		for (let j = m - 1; j >= 0; j--) {
 			let x = num1.charAt(j) - 0
 			let product = x * y + add
-			curr += product % 10
+			cur += product % 10
 			add = Math.floor(product / 10)
 		}
 		if (add !== 0) {
-			curr += add % 10
+			cur += add % 10
 		}
-		ans = addStrings(ans, curr.split('').reverse().join(''))
+		ans = addStrings(ans, cur.split('').reverse().join(''))
 	}
 	return ans
 }
@@ -333,7 +333,7 @@ function addStrings(num1, num2) {
 
 ### [459. 重复的子字符串](https://leetcode-cn.com/problems/repeated-substring-pattern/)
 
-```javascript
+```javascript {.line-numbers}
 var repeatedSubstringPattern = function (s) {
 	if (!s || s.length === 0) return false
 	let len = s.length
@@ -360,7 +360,7 @@ var repeatedSubstringPattern = function (s) {
 
 ### [438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
-```javascript
+```javascript {.line-numbers}
 var findAnagrams = function (s, p) {
 	let sLen = s.length,
 		pLen = p.length
@@ -406,7 +406,7 @@ var findAnagrams = function (s, p) {
 
 ### [541. 反转字符串 II](https://leetcode-cn.com/problems/reverse-string-ii/)
 
-```javascript
+```javascript {.line-numbers}
 var reverseStr = function (s, k) {
 	let arr = s.split('')
 	for (let start = 0; start < arr.length; start += 2 * k) {
@@ -422,7 +422,7 @@ var reverseStr = function (s, k) {
 
 ### [557. 反转字符串中的单词 III](https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/)
 
-```javascript
+```javascript {.line-numbers}
 //自己写split和reverse
 var reverseWords = function (s) {
 	function mySplit(s) {
@@ -469,7 +469,7 @@ var reverseWords = function (s) {
 
 ### [567. 字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)
 
-```javascript
+```javascript {.line-numbers}
 var checkInclusion = function (s1, s2) {
 	let s1Len = s1.length,
 		s2Len = s2.length
@@ -510,7 +510,7 @@ var checkInclusion = function (s1, s2) {
 
 ### [647. 回文子串](https://leetcode-cn.com/problems/palindromic-substrings/)
 
-```javascript
+```javascript {.line-numbers}
 //DP
 var countSubstrings = function (s) {
 	let len = s.length,
