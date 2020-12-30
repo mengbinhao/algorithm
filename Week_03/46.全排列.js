@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-07 12:46:29
- * @LastEditTime: 2020-12-29 17:40:08
+ * @LastEditTime: 2020-12-30 10:38:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /algorithm009-class02/Users/jack/.leetcode/46.全排列.js
@@ -27,6 +27,7 @@ var permute = function (nums) {
 
 	const dfs = (nums, depth, curState) => {
 		if (depth === nums.length) {
+			//因数组传递引用，copy一份
 			ans.push([...curState])
 			return
 		}

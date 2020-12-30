@@ -28,7 +28,6 @@ var longestPalindrome = function (s) {
 			}
 		}
 	}
-
 	return s.substring(begin, begin + maxLen)
 }
 
@@ -44,17 +43,14 @@ var longestPalindrome = function (s) {
 	let begin = 0,
 		maxLen = 1
 
-	//i、j相等的情况
-	// for (let i = 0; i < len; i++) {
-	//   dp[i][j] = true
-	// }
-
+	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
+	//先升序填列，再升序填行
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
 			if (s[i] !== s[j]) {
 				dp[i][j] = false
 			} else {
-				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论了
+				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论
 				if (j - i < 3) dp[i][j] = true
 				else dp[i][j] = dp[i + 1][j - 1]
 			}
@@ -66,11 +62,10 @@ var longestPalindrome = function (s) {
 			}
 		}
 	}
-
 	return s.substring(begin, begin + maxLen)
 }
 
-//中心扩展法
+//中心扩展法 simple version
 var longestPalindrome = function (s) {
 	let res = ''
 	for (let i = 0; i < s.length; i++) {
@@ -85,14 +80,42 @@ var longestPalindrome = function (s) {
 	return res
 
 	function palindrome(s, l, r) {
-		// 防止索引越界
+		// 向两边展开
 		while (l >= 0 && r < s.length && s[l] === s[r]) {
-			// 向两边展开
 			l--
 			r++
 		}
-		// 返回以 s[l] 和 s[r] 为中心的最长回文串
+		// 返回本次的回文串长度，长度不包括最后的l和r
 		return s.substring(l + 1, r)
+	}
+}
+
+//中心扩展法 advanced version
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
+	let maxLen = 1,
+		begin = 0
+	for (let i = 0; i < s.length; i++) {
+		const oddLen = palindrome(s, i, i)
+		const evenLen = palindrome(s, i, i + 1)
+		const curMaxLen = Math.max(oddLen, evenLen)
+		if (curMaxLen > maxLen) {
+			maxLen = curMaxLen
+			//奇/偶两种情况向下取整
+			begin = i - Math.floor((maxLen - 1) / 2)
+		}
+	}
+	return s.substring(begin, begin + maxLen)
+
+	function palindrome(s, l, r) {
+		// 向两边扩散
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			l--
+			r++
+		}
+		return r - l - 1
 	}
 }
 ```
