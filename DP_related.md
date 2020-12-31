@@ -66,6 +66,8 @@ var longestPalindrome = function (s) {
 
 	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
 	//先升序填列，再升序填行
+	//只需要填dp table上班边
+	//对角线等于true的case未用到
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
 			if (s[i] !== s[j]) {
@@ -86,7 +88,7 @@ var longestPalindrome = function (s) {
 	return s.substring(begin, begin + maxLen)
 }
 
-//中心扩展法 advanced version
+//中心扩展法 O(n^2) - O(1)
 var longestPalindrome = function (s) {
 	if (!s) return ''
 	const len = s.length
@@ -94,8 +96,8 @@ var longestPalindrome = function (s) {
 	let maxLen = 1,
 		begin = 0
 	for (let i = 0; i < s.length; i++) {
-		const oddLen = palindrome(s, i, i)
-		const evenLen = palindrome(s, i, i + 1)
+		const oddLen = palindrome(s, i, i + 1)
+		const evenLen = palindrome(s, i, i)
 		const curMaxLen = Math.max(oddLen, evenLen)
 		if (curMaxLen > maxLen) {
 			maxLen = curMaxLen
@@ -113,6 +115,367 @@ var longestPalindrome = function (s) {
 		}
 		return r - l - 1
 	}
+}
+```
+
+### [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+```javascript {.line-numbers}
+//brute force 两层循环
+var maxSubArray = function (nums) {
+	let max = -Infinity,
+	const len = nums.length
+	for (let i = 0; i < len; i++) {
+		let sum = 0
+		for (let j = i; j < len; j++) {
+			sum += nums[j]
+			if (sum > max) max = sum
+		}
+	}
+	return max
+}
+
+//dp[i]表示nums中以nums[i]结尾的最大子序和
+//dp[i] = max(dp[i - 1] + nums[i], nums[i])
+//O(n) - O(1)
+var maxSubArray = function (nums) {
+	let pre = 0,
+		maxAns = nums[0]
+	nums.forEach((x) => {
+		//若前面sum小于0,舍弃
+		pre = Math.max(pre + x, x)
+		maxAns = Math.max(maxAns, pre)
+	})
+	return maxAns
+}
+```
+
+### [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
+
+```javascript {.line-numbers}
+var uniquePaths = function (m, n) {
+	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
+	//base case第一列
+	for (let i = 0; i < m; i++) {
+		dp[i][0] = 1
+	}
+	//base case第一行
+	for (let j = 0; j < n; j++) {
+		dp[0][j] = 1
+	}
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+		}
+	}
+	return dp[m - 1][n - 1]
+}
+
+var uniquePaths = function (m, n) {
+	//纵向一列
+	const dp = new Array(n).fill(1)
+
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			dp[j] += dp[j - 1]
+		}
+	}
+	return dp[j - 1]
+}
+```
+
+### [64. 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
+
+```javascript {.line-numbers}
+//dp[i][j]表示从(i,j)走到(m-1, n-1)点的最小路径和
+var minPathSum = function (grid) {
+	if (!grid) return 0
+	const rows = grid.length,
+		cols = grid[0].length
+	if (rows === 0 || cols === 0) return 0
+
+	const dp = Array.from({ length: rows }, () => new Array(cols).fill(Infinity))
+
+	//base case
+	dp[0][0] = grid[0][0]
+
+	//第一列
+	for (let i = 1; i < rows; i++) {
+		dp[i][0] = dp[i - 1][0] + grid[i][0]
+	}
+
+	//第一行
+	for (let j = 1; j < cols; j++) {
+		dp[0][j] = dp[0][j - 1] + grid[0][j]
+	}
+
+	for (let i = 1; i < rows; i++) {
+		for (let j = 1; j < cols; j++) {
+			dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
+		}
+	}
+	return dp[rows - 1][cols - 1]
+}
+
+var minPathSum = function (grid) {
+	if (!grid) return 0
+	const rows = grid.length,
+		cols = grid[0].length
+
+	if (!rows || !cols) return 0
+
+	//滚动列
+	const dp = new Array(cols).fill(Infinity)
+
+	dp[0] = grid[0][0]
+
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (i === 0 && j === 0) continue
+			else if (i === 0) {
+				dp[j] = dp[j - 1] + grid[i][j]
+			} else if (j === 0) {
+				dp[j] += grid[i][j]
+			} else {
+				dp[j] = Math.min(dp[j], dp[j - 1]) + grid[i][j]
+			}
+		}
+	}
+	return dp[cols - 1]
+}
+```
+
+### [70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+
+```javascript {.line-numbers}
+//recursion O(2^n)
+//memo recursion
+
+//O(n) - O(n)
+var climbStairs = function (n) {
+	//dp[i]表示爬到第i级台阶的方案数
+	const dp = new Array(n + 1)
+	dp[1] = 1
+	dp[2] = 2
+
+	for (let i = 3; i <= n; i++) {
+		dp[i] = dp[i - 1] + dp[i - 2]
+	}
+	return dp[n]
+}
+
+//O(n) - O(1)
+var climbStairs = function (n) {
+	if (n <= 2) return n
+
+	let first = 1,
+		second = 2,
+		third
+
+	for (let i = 3; i <= n; i++) {
+		third = first + second
+		first = second
+		second = third
+	}
+	return third
+}
+```
+
+### [118. 杨辉三角](https://leetcode-cn.com/problems/pascals-triangle/)
+
+```javascript {.line-numbers}
+var generate = function (numRows) {
+	const triangle = []
+	for (let i = 0; i < numRows; i++) {
+		const curRow = []
+		curRow[0] = 1
+		curRow[i] = 1
+		if (i > 1) {
+			for (let j = 1; j < i; j++) {
+				curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
+			}
+		}
+		triangle.push(curRow)
+	}
+	return triangle
+}
+```
+
+### [121. 买股票的最佳时机 E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+
+```javascript {.line-numbers}
+//brute force O(n^2) - O(1)
+var maxProfit = function (prices) {
+	let len = prices.length
+	if (len < 2) return 0
+
+	let ret = 0
+	//loop every day, find the ret
+	for (let i = 0; i < len - 1; i++) {
+		for (let j = i + 1; j < len; j++) {
+			let profit = prices[j] - prices[i]
+			if (profit > ret) ret = profit
+		}
+	}
+	return ret
+}
+
+//loop once
+var maxProfit = function (prices) {
+	let len = prices.length
+	if (len < 2) return 0
+
+	let ret = 0,
+		minPrices = Infinity
+	for (let i = 0; i < len; i++) {
+		if (prices[i] < minPrices) minPrices = prices[i]
+		else if (prices[i] - minPrices > ret) ret = prices[i] - minPrices
+	}
+	return ret
+}
+```
+
+### [122. 买卖股票的最佳时机 2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+
+```javascript {.line-numbers}
+//Greedy
+var maxProfit = function (prices) {
+	let maxProfit = 0
+
+	for (let i = 1; i < prices.length; i++) {
+		if (prices[i] > prices[i - 1]) {
+			maxProfit += prices[i] - prices[i - 1]
+		}
+	}
+	return maxProfit
+}
+
+//DFS  Time Limit Exceeded
+var maxProfit = function (prices) {
+	let dfs = (prices, level) => {
+		if (level >= prices.length) return 0
+		let ret = 0
+
+		//计算每天可能的利润
+		for (let start = level; start < prices.length; start++) {
+			let maxProfit = 0
+			for (let i = start + 1; i < prices.length; i++) {
+				if (prices[i] > prices[start]) {
+					let profit = dfs(prices, i + 1) + prices[i] - prices[start]
+					if (profit > maxProfit) maxProfit = profit
+				}
+			}
+			//每一次的最大利润
+			if (maxProfit > ret) ret = maxProfit
+		}
+		return ret
+	}
+
+	return dfs(prices, 0)
+}
+
+//DP O(n)-O(n)
+var maxProfit = function (prices) {
+	let len = prices.length
+	if (len < 2) return 0
+
+	//状态 dp[i][j]
+	//第一维i表示索引为i的那一天（具有前缀性质，即考虑了之前天数的收益）能获得的最大利润
+	//第二维j表示索引为i的那一天是持有股票，还是持有现金。这里0表示持有现金（cash），1表示持有股票（stock）
+
+	let dp = Array.from({ length: len }, (v, i) => new Array(2))
+
+	dp[0][0] = 0
+	dp[0][1] = -prices[0]
+
+	for (let i = 1; i < len; i++) {
+		dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i])
+		dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i])
+	}
+
+	return dp[len - 1][0]
+}
+
+//DP O(n)-O(n)
+var maxProfit = function (prices) {
+	let len = prices.length
+	if (len < 2) return 0
+
+	//分开定义
+	let cash = new Array(len)
+	let hold = new Array(len)
+
+	cash[0] = 0
+	hold[0] = -prices[0]
+	for (let i = 1; i < len; i++) {
+		cash[i] = Math.max(cash[i - 1], hold[i - 1] + prices[i])
+		hold[i] = Math.max(hold[i - 1], cash[i - 1] - prices[i])
+	}
+
+	return cash[len - 1]
+}
+
+//DP O(n)-O(1)
+var maxProfit = function (prices) {
+	let len = prices.length
+	if (len < 2) return 0
+
+	//分开定义
+	let cash = 0
+	let hold = -prices[0]
+
+	let preCash = cash,
+		preHold = hold
+	for (let i = 1; i < len; i++) {
+		cash = Math.max(preCash, preHold + prices[i])
+		hold = Math.max(preHold, preCash - prices[i])
+
+		preCash = cash
+		preHold = hold
+	}
+
+	return cash
+}
+```
+
+### [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+
+```javascript {.line-numbers}
+var lengthOfLIS = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度,注意nums[i]必须被选取
+	const dp = new Array(len).fill(1)
+	let ret = 1
+
+	for (let i = 0; i < len; i++) {
+		for (let j = 0; j < i; j++) {
+			if (nums[i] > nums[j]) {
+				dp[i] = Math.max(dp[i], dp[j] + 1)
+			}
+		}
+		ret = Math.max(ret, dp[i])
+	}
+	return ret
+}
+
+//dp + Dichotomy
+var lengthOfLIS = function (nums) {
+	const tails = new Array(nums.length)
+	let res = 0
+	for (let num of nums) {
+		let i = 0,
+			j = res
+		//Dichotomy
+		while (i < j) {
+			const m = Math.floor((i + j) / 2)
+			if (tails[m] < num) i = m + 1
+			else j = m
+		}
+		tails[i] = num
+		if (res === j) res++
+	}
+	return res
 }
 ```
 
@@ -232,139 +595,31 @@ var coinChange = function (coins, amount) {
 }
 ```
 
-#### [121. 买股票的最佳时机 E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+### [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/)
 
 ```javascript {.line-numbers}
-//brute force O(n^2) - O(1)
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-
-	let ret = 0
-	//loop every day, find the ret
-	for (let i = 0; i < len - 1; i++) {
-		for (let j = i + 1; j < len; j++) {
-			let profit = prices[j] - prices[i]
-			if (profit > ret) ret = profit
-		}
+var minCostClimbingStairs = function (cost) {
+	const len = cost.length
+	const dp = new Array(len + 1)
+	//由于可以选择下标0或1作为初始阶梯，因此有dp[0]=dp[1]=0
+	dp[0] = dp[1] = 0
+	for (let i = 2; i <= len; i++) {
+		dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2])
 	}
-	return ret
+	return dp[len]
 }
 
-//loop once
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-
-	let ret = 0,
-		minPrices = Infinity
-	for (let i = 0; i < len; i++) {
-		if (prices[i] < minPrices) minPrices = prices[i]
-		else if (prices[i] - minPrices > ret) ret = prices[i] - minPrices
+//dp[i] 表示达到下标i的最小花费
+//dp[i]=min(dp[i−1]+cost[i−1],dp[i−2]+cost[i−2])
+var minCostClimbingStairs = function (cost) {
+	const len = cost.length
+	let prev = (cur = 0),
+		next
+	for (let i = 2; i <= len; i++) {
+		next = Math.min(cur + cost[i - 1], prev + cost[i - 2])
+		prev = cur
+		cur = next
 	}
-	return ret
-}
-```
-
-#### [122. 买卖股票的最佳时机 2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
-
-```javascript {.line-numbers}
-//Greedy
-var maxProfit = function (prices) {
-	let maxProfit = 0
-
-	for (let i = 1; i < prices.length; i++) {
-		if (prices[i] > prices[i - 1]) {
-			maxProfit += prices[i] - prices[i - 1]
-		}
-	}
-	return maxProfit
-}
-
-//DFS  Time Limit Exceeded
-var maxProfit = function (prices) {
-	let dfs = (prices, level) => {
-		if (level >= prices.length) return 0
-		let ret = 0
-
-		//计算每天可能的利润
-		for (let start = level; start < prices.length; start++) {
-			let maxProfit = 0
-			for (let i = start + 1; i < prices.length; i++) {
-				if (prices[i] > prices[start]) {
-					let profit = dfs(prices, i + 1) + prices[i] - prices[start]
-					if (profit > maxProfit) maxProfit = profit
-				}
-			}
-			//每一次的最大利润
-			if (maxProfit > ret) ret = maxProfit
-		}
-		return ret
-	}
-
-	return dfs(prices, 0)
-}
-
-//DP O(n)-O(n)
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-
-	//状态 dp[i][j]
-	//第一维i表示索引为i的那一天（具有前缀性质，即考虑了之前天数的收益）能获得的最大利润
-	//第二维j表示索引为i的那一天是持有股票，还是持有现金。这里0表示持有现金（cash），1表示持有股票（stock）
-
-	let dp = Array.from({ length: len }, (v, i) => new Array(2))
-
-	dp[0][0] = 0
-	dp[0][1] = -prices[0]
-
-	for (let i = 1; i < len; i++) {
-		dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i])
-		dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i])
-	}
-
-	return dp[len - 1][0]
-}
-
-//DP O(n)-O(n)
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-
-	//分开定义
-	let cash = new Array(len)
-	let hold = new Array(len)
-
-	cash[0] = 0
-	hold[0] = -prices[0]
-	for (let i = 1; i < len; i++) {
-		cash[i] = Math.max(cash[i - 1], hold[i - 1] + prices[i])
-		hold[i] = Math.max(hold[i - 1], cash[i - 1] - prices[i])
-	}
-
-	return cash[len - 1]
-}
-
-//DP O(n)-O(1)
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-
-	//分开定义
-	let cash = 0
-	let hold = -prices[0]
-
-	let preCash = cash,
-		preHold = hold
-	for (let i = 1; i < len; i++) {
-		cash = Math.max(preCash, preHold + prices[i])
-		hold = Math.max(preHold, preCash - prices[i])
-
-		preCash = cash
-		preHold = hold
-	}
-
-	return cash
+	return cur
 }
 ```
