@@ -1,6 +1,6 @@
 学习笔记
 
-##### [515在每个树行中找最大值M](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
+##### [515.在每个树行中找最大值 M](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
 
 ```javascript
 //dfs
@@ -32,7 +32,7 @@ var largestValues = function (root) {
 	while (queue.length > 0) {
 		let len = queue.length,
 			max = -Infinity
-         //loop each level
+		//loop each level
 		for (let i = 0; i < len; i++) {
 			let temp = queue.shift()
 			if (temp.left !== null) {
@@ -49,7 +49,7 @@ var largestValues = function (root) {
 }
 ```
 
-##### [69 X的平方根E](https://leetcode-cn.com/problems/sqrtx/)
+##### [69.X 的平方根 E](https://leetcode-cn.com/problems/sqrtx/)
 
 ```javascript
 //1 单调性 2上下边 3 可以index访问(可选)
@@ -76,7 +76,7 @@ var mySqrt = function (x) {
 }
 ```
 
-##### [367有效的完全平方数E](https://leetcode-cn.com/problems/valid-perfect-square/)
+##### [367.有效的完全平方数 E](https://leetcode-cn.com/problems/valid-perfect-square/)
 
 ```javascript
 var isPerfectSquare = function (num) {
@@ -102,9 +102,7 @@ var isPerfectSquare = function (num) {
 }
 ```
 
-
-
-##### [153寻找旋转数组中的最小值M](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
+##### [153.寻找旋转数组中的最小值 M](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 ```javascript
 var findMin = function (nums) {
@@ -114,22 +112,22 @@ var findMin = function (nums) {
 	let left = 0,
 		right = nums.length - 1,
 		mid
-    //in case array is a sorted array
+	//in case array is a sorted array
 	if (nums[right] > nums[left]) return nums[0]
 	while (left <= right) {
 		mid = Math.floor(left + (right - left) / 2)
 
-        //judge according to nums[mid]
+		//judge according to nums[mid]
 		if (nums[mid] > nums[mid + 1]) {
 			return nums[mid + 1]
 		}
 
-        //judge according to nums[mid]
+		//judge according to nums[mid]
 		if (nums[mid] < nums[mid - 1]) {
 			return nums[mid]
 		}
 
-        //binary search
+		//binary search
 		if (nums[mid] > nums[0]) {
 			left = mid + 1
 		} else {
@@ -141,7 +139,7 @@ var findMin = function (nums) {
 }
 ```
 
-##### [33搜索旋转排序数组M](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
+##### [33.搜索旋转排序数组 M](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
 
 ```javascript
 var search = function (nums, target) {
@@ -153,7 +151,7 @@ var search = function (nums, target) {
 		mid
 
 	while (left <= right) {
-		mid = Number.parseInt(left + (right - left) /2)
+		mid = Number.parseInt(left + (right - left) / 2)
 		if (nums[mid] === target) {
 			return mid
 		}
@@ -179,7 +177,7 @@ var search = function (nums, target) {
 }
 ```
 
-##### [81搜索旋转排序数组2M](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
+##### [81.搜索旋转排序数组 2M](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
 
 ```javascript
 var search = function (nums, target) {
@@ -201,7 +199,7 @@ var search = function (nums, target) {
 			return true
 		}
 
-        //move left pointer to exclude repeat item, or we can not define the monotonic section
+		//move left pointer to exclude repeat item, or we can not define the monotonic section
 		if (nums[left] === nums[mid]) {
 			left++
 			continue
@@ -226,38 +224,46 @@ var search = function (nums, target) {
 }
 ```
 
-##### [200岛屿数量M](https://leetcode-cn.com/problems/number-of-islands/)
+##### [200.岛屿数量 M](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```javascript
 //dfs
-var numIslands = function(grid) {
-    if (!grid || !grid.length) return 0
+var numIslands = function (grid) {
+	if (!grid || !grid.length) return 0
 
-    let rows = grid.length, cols = grid[0].length, ret = 0
+	let rows = grid.length,
+		cols = grid[0].length,
+		ret = 0
 
-    let dfs = (grid, rows, cols, row, col) => {
-        if (row < 0 || col < 0 || row > rows -1 || col > cols - 1 || grid[row][col] === '0') return
+	let dfs = (grid, rows, cols, row, col) => {
+		if (
+			row < 0 ||
+			col < 0 ||
+			row > rows - 1 ||
+			col > cols - 1 ||
+			grid[row][col] === '0'
+		)
+			return
 
-        grid[row][col] = '0' //marked as 0
+		grid[row][col] = '0' //marked as 0
 
-        dfs(grid, rows, cols, row - 1, col)
-        dfs(grid, rows, cols, row + 1, col)
-        dfs(grid, rows, cols, row, col - 1)
-        dfs(grid, rows, cols, row, col + 1)
-    }
+		dfs(grid, rows, cols, row - 1, col)
+		dfs(grid, rows, cols, row + 1, col)
+		dfs(grid, rows, cols, row, col - 1)
+		dfs(grid, rows, cols, row, col + 1)
+	}
 
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            if (grid[row][col] === '1') {
-                ret++
-                dfs(grid, rows, cols, row, col)
-            }
-        }
-    }
+	for (let row = 0; row < rows; row++) {
+		for (let col = 0; col < cols; col++) {
+			if (grid[row][col] === '1') {
+				ret++
+				dfs(grid, rows, cols, row, col)
+			}
+		}
+	}
 
-    return ret
-};
-
+	return ret
+}
 
 //bfs
 var numIslands = function (grid) {
@@ -271,8 +277,8 @@ var numIslands = function (grid) {
 				islands++
 				grid[i][j] = 0
 				let queue = []
-                 //二维转一维
-                 //queue.add(i * n + j);
+				//二维转一维
+				//queue.add(i * n + j);
 				queue.push([i, j])
 				while (queue.length > 0) {
 					let cur = queue.shift()

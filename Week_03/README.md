@@ -1,6 +1,6 @@
 学习笔记
 
-##### [22 括号生成 M](https://leetcode-cn.com/problems/generate-parentheses/)
+##### [22.括号生成 M](https://leetcode-cn.com/problems/generate-parentheses/)
 
 ```javascript
 //brute force O(2^3n * n) - O(n)
@@ -65,7 +65,7 @@ var generateParenthesis = function (n) {
 }
 ```
 
-##### [98 验证二叉树搜索 M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+##### [98.验证二叉树搜索 M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript
 var isValidBST = function (root) {
@@ -80,7 +80,7 @@ var isValidBST = function (root) {
 }
 ```
 
-##### [104 二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+##### [104.二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```javascript
 //dfs
@@ -121,7 +121,7 @@ var maxDepth = function (root) {
 }
 ```
 
-##### [111 二叉树的最小深度 E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+##### [111.二叉树的最小深度 E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
 ```javascript
 var minDepth = function (root) {
@@ -135,7 +135,7 @@ var minDepth = function (root) {
 }
 ```
 
-##### [226 翻转二叉树 E](https://leetcode-cn.com/problems/invert-binary-tree/)
+##### [226.翻转二叉树 E](https://leetcode-cn.com/problems/invert-binary-tree/)
 
 ```javascript
 //recursion 自底向上
@@ -159,7 +159,7 @@ var invertTree = function (root) {
 }
 ```
 
-##### [50Pow(x, n)M](https://leetcode-cn.com/problems/powx-n/)
+##### [50.Pow(x, n)M](https://leetcode-cn.com/problems/powx-n/)
 
 ```javascript
 //brute force
@@ -206,7 +206,7 @@ var myPow = function (x, n) {
 }
 ```
 
-##### [78 子集 M](https://leetcode-cn.com/problems/subsets/)
+##### [78.子集 M](https://leetcode-cn.com/problems/subsets/)
 
 ```javascript
 //recursion
@@ -238,7 +238,7 @@ var subsets = function (nums) {
 }
 ```
 
-##### [169 多数元素 E](https://leetcode-cn.com/problems/majority-element/)
+##### [169.多数元素 E](https://leetcode-cn.com/problems/majority-element/)
 
 ```javascript
 //brute force O(n^2)
@@ -302,7 +302,7 @@ var majorityElement = function (nums) {
 }
 ```
 
-##### [17 电话号码的字母组合 M](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+##### [17.电话号码的字母组合 M](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
 ```javascript
 //recursion
@@ -369,7 +369,7 @@ var letterCombinations = function (digits) {
 }
 ```
 
-##### [51N 皇后 H](https://leetcode-cn.com/problems/n-queens/)
+##### [51.N 皇后 H](https://leetcode-cn.com/problems/n-queens/)
 
 ```javascript
 var solveNQueens = function (n) {
@@ -420,7 +420,7 @@ var solveNQueens = function (n) {
 }
 ```
 
-##### [52N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)
+##### [52.N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)
 
 ```javascript
 var totalNQueens = function (n) {
@@ -485,7 +485,7 @@ var totalNQueens = function (n) {
 }
 ```
 
-##### [46 全排列 M](https://leetcode-cn.com/problems/permutations/)
+##### [46.全排列 M](https://leetcode-cn.com/problems/permutations/)
 
 ```javascript
 //回溯 dfs
@@ -517,7 +517,7 @@ var permute = function (nums) {
 }
 ```
 
-##### [47 全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)
+##### [47.全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)
 
 ```javascript
 var permuteUnique = function (nums) {

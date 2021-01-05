@@ -2,7 +2,7 @@
 
 #### hash table、映射、集合
 
-##### [242 有效的字母异位词 E](https://leetcode-cn.com/problems/valid-anagram/)
+##### [242.有效的字母异位词 E](https://leetcode-cn.com/problems/valid-anagram/)
 
 ```javascript
 //使用系统内置函数sort O(NlogN) n为字符串长度 - O(1)
@@ -67,7 +67,7 @@ var isAnagram = function (s, t) {
 }
 ```
 
-##### [49 字母异位词分组 M](https://leetcode-cn.com/problems/group-anagrams/)
+##### [49.字母异位词分组 M](https://leetcode-cn.com/problems/group-anagrams/)
 
 ```javascript
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
@@ -108,7 +108,7 @@ var groupAnagrams = function (strs) {
 
 #### tree、binary tree、binary search tree
 
-##### [144 二叉树前序遍历 M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+##### [144.二叉树前序遍历 M](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
 ```javascript
 //recursion, don't need to judge if node is null
@@ -144,7 +144,7 @@ var preorderTraversal = function (root) {
 }
 ```
 
-##### [94 二叉树中序遍历 M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+##### [94.二叉树中序遍历 M](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```javascript
 //recursion
@@ -180,7 +180,7 @@ var inorderTraversal = function (root) {
 }
 ```
 
-##### [145 二叉树后序遍历 H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+##### [145.二叉树后序遍历 H](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 
 ```javascript
 //recursion
@@ -218,7 +218,7 @@ const postorderTraversal = (root) => {
 }
 ```
 
-##### [102 二叉树的层序遍历 M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+##### [102.二叉树的层序遍历 M](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
 ```javascript
 //BFS iteration
@@ -261,7 +261,7 @@ var levelOrder = function (root) {
 }
 ```
 
-##### [589N 叉树的前序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
+##### [589.N 叉树的前序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
 
 ```javascript
 //recursion
@@ -295,7 +295,7 @@ var preorder = function (root) {
 }
 ```
 
-##### [590N 叉树的后序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
+##### [590.N 叉树的后序遍历 E](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
 
 ```javascript
 //recursion
@@ -332,7 +332,7 @@ var postorder = function (root) {
 }
 ```
 
-##### [429N 叉树的层序遍历 M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
+##### [429.N 叉树的层序遍历 M](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
 ```javascript
 //DFS
@@ -372,7 +372,7 @@ var levelOrder = function (root) {
 }
 ```
 
-##### [347 前 K 个高频元素 M](https://leetcode-cn.com/problems/top-k-frequent-elements/)
+##### [347.前 K 个高频元素 M](https://leetcode-cn.com/problems/top-k-frequent-elements/)
 
 ```javascript
 //do not meet the requirement
@@ -416,7 +416,7 @@ var topKFrequent = function (nums, k) {
 }
 ```
 
-##### [98 验证二叉搜索树 M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+##### [98.验证二叉搜索树 M](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript
 var isValidBST = function (root) {
@@ -451,7 +451,7 @@ var isValidBST = function (root) {
 }
 ```
 
-##### [236 二叉树的最近公共祖先 M](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+##### [236.二叉树的最近公共祖先 M](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 ```javascript
 var lowestCommonAncestor = function (root, p, q) {
@@ -462,7 +462,7 @@ var lowestCommonAncestor = function (root, p, q) {
 }
 ```
 
-##### [235 二叉搜索树的公共祖先 E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+##### [235.二叉搜索树的公共祖先 E](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
 ```javascript
 var lowestCommonAncestor = function (root, p, q) {
@@ -474,7 +474,7 @@ var lowestCommonAncestor = function (root, p, q) {
 }
 ```
 
-##### [104 二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+##### [104.二叉树的最大深度 E](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```javascript
 var maxDepth = function (root) {
@@ -484,7 +484,7 @@ var maxDepth = function (root) {
 }
 ```
 
-##### [111 二叉树的最小深度 E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+##### [111.二叉树的最小深度 E](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
 ```javascript
 var minDepth = function (root) {

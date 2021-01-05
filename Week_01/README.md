@@ -2,7 +2,7 @@
 
 #### Array
 
-##### [283 移动零 E](https://leetcode-cn.com/problems/move-zeroes/)
+##### [283.移动零 E](https://leetcode-cn.com/problems/move-zeroes/)
 
 - 循环 3 次，额外使用一个数组空间，第一次记录 0 的位置和填入非 0 值，第二次额外数组再加入 0 的个数，第三次交换到原数组 O(n) - O(n)
 
@@ -44,7 +44,7 @@
   }
   ```
 
-##### [11 装最多水的容器 M](https://leetcode-cn.com/problems/container-with-most-water/)
+##### [11.装最多水的容器 M](https://leetcode-cn.com/problems/container-with-most-water/)
 
 - brute force O(n^2) - O(1)
 
@@ -79,7 +79,7 @@
   }
   ```
 
-##### ==[1 两数之和 E](https://leetcode-cn.com/problems/two-sum/)==
+##### ==[1.两数之和 E](https://leetcode-cn.com/problems/two-sum/)==
 
 ```javascript
 //brute force O(n^2) - O(1)
@@ -104,110 +104,49 @@ var twoSum = function (nums, target) {
 }
 
 //两次哈希 O(n) - O(n)
+//obj or map
 var twoSum = function (nums, target) {
-	if (!Array.isArray(nums) || nums.length < 2) {
-		throw new TypeError(`invalid parameter, nums=${nums}`)
-	}
-	if (
-		typeof target !== 'number' ||
-		Number.isNaN(target) ||
-		!Number.isFinite(target)
-	) {
-		throw new TypeError(`invalid parameter, target=${target}`)
-	}
-	let map = new Map(),
-		len = nums.length
-	for (let i = 0; i < len; i++) {
-		for (let j = i + 1; j < len; j++) {
-			map.set(target - nums[i], i)
-		}
-	}
-	for (let j = 0; j < len; j++) {
-    //can not be itself
-		if (map.has(nums[j]) && map.get(nums[j]) !== j) {
-			return [j, map.get(nums[j])]
-		}
-	}
-}
-//obj
-var twoSum = function (nums, target) {
-	if (!Array.isArray(nums) || nums.length < 2) {
-		throw new TypeError(`invalid parameter, nums=${nums}`)
-	}
-	if (
-		typeof target !== 'number' ||
-		Number.isNaN(target) ||
-		!Number.isFinite(target)
-	) {
-		throw new TypeError(`invalid parameter, target=${target}`)
-	}
-	let hash = {},
+	const hash = {},
 		len = nums.length
 	for (let i = 0; i < len; i++) {
 		//[2, 7] 9, store 7,the other loop to search 7
 		hash[target - nums[i]] = i
 	}
 	for (let j = 0; j < len; j++) {
-    //exclude same item
-		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) {
+		//exclude same item
+		if (hash[nums[j]] && hash[nums[j]] !== j) {
 			return [j, hash[nums[j]]]
 		}
 	}
 }
 
 //一次哈希 optimal,先放再回头找，不需要后续判重
-//map
+//obj or map
 var twoSum = function (nums, target) {
-	if (!Array.isArray(nums) || nums.length < 2) {
-		throw new TypeError(`invalid parameter, nums=${nums}`)
-	}
-	if (
-		typeof target !== 'number' ||
-		Number.isNaN(target) ||
-		!Number.isFinite(target)
-	) {
-		throw new TypeError(`invalid parameter, target=${target}`)
-	}
-	let map = new Map()
+	const hash = {}
 	for (let i = 0, len = nums.length; i < len; i++) {
-		let temp = target - nums[i]
-		if (map.has(temp)) {
-			return [map.get(temp), i]
-		}
-		map.set(nums[i], i)
-	}
-}
-
-//obj  不需要判重，先检查若没有再加
-var twoSum = function (nums, target) {
-	let hash = {}
-
-	for (let i = 0, len = nums.length; i < len; i++) {
-		let idx = hash[nums[i]]
-		if (idx !== undefined) {
-			return [idx, i]
-		}
+		if (hash[nums[i]] !== undefined) return [hash[nums[i]], i]
 		hash[target - nums[i]] = i
 	}
-}}
+}
 ```
 
-##### ==[15 三数之和 M](https://leetcode-cn.com/problems/3sum/)==
+##### ==[15.三数之和 M](https://leetcode-cn.com/problems/3sum/)==
 
 - brute force O(n^3) O(1) //Time limit exceeded
 
   ```javascript
   var threeSum = function (nums) {
-  	let ret = []
+  	const ret = []
   	if (nums == null || nums.length < 3) return ret
-  	let len = nums.length,
+  	const len = nums.length,
   		map = {}
   	for (let i = 0; i < len - 2; i++) {
   		for (let j = i + 1; j < len - 1; j++) {
   			for (let k = j + 1; k < len; k++) {
   				if (nums[i] + nums[j] + nums[k] === 0) {
   					//duplicate-removal
-  					let key = [nums[i], nums[j], nums[k]].sort()
+  					const key = [nums[i], nums[j], nums[k]].sort()
   					//point is not repeat
   					if (map[key] === undefined) {
   						map[key] = true
@@ -225,41 +164,40 @@ var twoSum = function (nums, target) {
 
   ```javascript
   var threeSum = function (nums) {
-  	let arr = []
+  	const arr = []
   	if (nums == null || nums.length < 3) return arr
+  	//precondition！！！
   	nums.sort((a, b) => a - b)
   	for (var i = 0; i < nums.length - 2; i++) {
   		if (nums[i] > 0) break
   		if (i > 0 && nums[i] == nums[i - 1]) continue
-  		const hashMap = new Map()
+  		const hash = new Map()
   		for (var j = i + 1; j < nums.length; j++) {
   			const val = -(nums[i] + nums[j])
-  			// hashMap是首次记录第二次才会push到数组
-  			// 前三个数肯定不重，所以j > i + 2
-  			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2]) {
+  			// 前三个数组成的结果肯定不重，所以j > i + 2
+  			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2])
   				continue
+  			//hash是首次记录第二次才会push到数组
+  			if (hash.has(val)) {
+  				arr.push([nums[i], nums[hash.get(val)], nums[j]])
+  				//使用完删除防止重复[-2, 0, 0, 2, 2]
+  				hash.delete(val)
   			}
-  			//第二次push
-  			if (hashMap.has(val)) {
-  				arr.push([nums[i], nums[hashMap.get(val)], nums[j]])
-  				//防止重复[-2, 0, 0, 2, 2]
-  				hashMap.delete(val)
-  			}
-  			//第一次直接加
-  			hashMap.set(nums[j], j)
+  			//第一次直接加,加的是结果中的第二个数
+  			hash.set(nums[j], j)
   		}
   	}
   	return arr
   }
   ```
 
-- 夹逼（大部分情况需已排序） O(n^2) O(1)
+- 夹逼（大部分情况需已排序） O(n^2) - O(1)
 
   ```javascript
   var threeSum = function (nums) {
   	let ret = []
   	if (nums == null || nums.length < 3) return ret
-  	//here is a hole, need sort first
+  	//precondition！！！
   	nums.sort((a, b) => a - b)
   	//至少留k那一位和2个pointer
   	for (let k = 0; k < nums.length - 2; k++) {
@@ -270,7 +208,7 @@ var twoSum = function (nums, target) {
   		let left = k + 1,
   			right = nums.length - 1
   		while (left < right) {
-  			let sum = nums[k] + nums[left] + nums[right]
+  			const sum = nums[k] + nums[left] + nums[right]
   			if (sum === 0) {
   				ret.push([nums[k], nums[left], nums[right]])
   				//skip duplicated nums[left]
@@ -290,7 +228,7 @@ var twoSum = function (nums, target) {
   }
   ```
 
-##### [70 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+##### [70.爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
 
 - 类斐波那契数 O(n) - O(1)
 
@@ -327,7 +265,7 @@ var twoSum = function (nums, target) {
   }
   ```
 
-##### [88 合并两个有序数组 E](https://leetcode-cn.com/problems/merge-sorted-array/)
+##### [88.合并两个有序数组 E](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
 //双指针 / 从前往后 O(n+m) - O(m)
@@ -363,7 +301,7 @@ var merge = (nums1, m, nums2, n) => {
 }
 ```
 
-##### [26 删除排序数组重复项 E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
+##### [26.删除排序数组重复项 E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
 //slow / fast two pointer
@@ -379,7 +317,7 @@ var removeDuplicates = function (nums) {
 }
 ```
 
-##### [189 旋转数组 E](https://leetcode-cn.com/problems/rotate-array/)
+##### [189.旋转数组 E](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript
 //brute force O(n*k) O(1)
@@ -426,7 +364,7 @@ var rotate = (nums, k) => {
 
 #### 栈(典型的空间换时间)
 
-##### [20 有效括号 E](https://leetcode-cn.com/problems/valid-parentheses/)
+##### [20.有效括号 E](https://leetcode-cn.com/problems/valid-parentheses/)
 
 - brute force 一直替换
 
@@ -463,7 +401,7 @@ var rotate = (nums, k) => {
   }
   ```
 
-##### [155 最小栈 E](https://leetcode-cn.com/problems/min-stack/)
+##### [155.最小栈 E](https://leetcode-cn.com/problems/min-stack/)
 
 - 使用辅助栈
 
@@ -495,9 +433,9 @@ var rotate = (nums, k) => {
   }
   ```
 
-##### [84 柱状图中最大的矩形 H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) ==backlog==
+##### [84.柱状图中最大的矩形 H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/) ==backlog==
 
-##### [239 滑动窗口最大值 H ](https://leetcode-cn.com/problems/sliding-window-maximum/)
+##### [239.滑动窗口最大值 H ](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 - brute force O(n \* k) - O(n - k +1)
 
@@ -548,11 +486,10 @@ var rotate = (nums, k) => {
 
 #### 作业
 
-##### [42Trapping Rain WaterH](https://leetcode-cn.com/problems/trapping-rain-water/)
+##### [42.接雨水 H](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript
-//brute force O(n^2) O(1)
-
+//brute force O(n^2) - O(1)
 var trap = function (height) {
 	let ret = 0,
 		len = height.length
@@ -574,7 +511,7 @@ var trap = function (height) {
 	return ret
 }
 
-//备忘录优化 O(n) O(n)
+//备忘录优化 O(n) - O(n)
 var trap = function (height) {
 	let ret = 0,
 		len = height.length,
@@ -589,6 +526,7 @@ var trap = function (height) {
 	for (let i = len - 2; i >= 0; i--) {
 		rightMax[i] = Math.max(height[i], rightMax[i + 1])
 	}
+    //两边无法接雨水
 	for (let i = 1; i < len - 1; i++) {
 		ret += Math.min(leftMax[i], rightMax[i]) - height[i]
 	}
@@ -622,7 +560,7 @@ var trap = function (height) {
 }
 ```
 
-##### [66 加一 E](https://leetcode-cn.com/problems/plus-one/)
+##### [66.加一 E](https://leetcode-cn.com/problems/plus-one/)
 
 ```javascript
 var plusOne = function (digits) {

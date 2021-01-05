@@ -2,7 +2,7 @@
 
 这周题做的不多，后面补上！！！
 
-##### [509 斐波那契](https://leetcode-cn.com/problems/fibonacci-number/)
+##### [509.斐波那契](https://leetcode-cn.com/problems/fibonacci-number/)
 
 ```javascript
 //recursion
@@ -18,7 +18,6 @@ var fib = function (N) {
 	for (let i = 2; i <= N; i++) {
 		ret[i] = ret[i - 1] + ret[i - 2]
 	}
-
 	return ret[N]
 }
 
@@ -40,7 +39,7 @@ var fib = function (N) {
 }
 ```
 
-##### [62 不同路径](https://leetcode-cn.com/problems/unique-paths/)
+##### [62.不同路径](https://leetcode-cn.com/problems/unique-paths/)
 
 ```javascript
 //dp, define a two-dimension array
@@ -81,7 +80,7 @@ var uniquePaths = function (m, n) {
 }
 ```
 
-##### [64 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
+##### [64.最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
 
 ```javascript
 //DP
@@ -138,7 +137,7 @@ var minPathSum = function (grid) {
 }
 ```
 
-##### [91 解码方法](https://leetcode-cn.com/problems/decode-ways/)
+##### [91.解码方法](https://leetcode-cn.com/problems/decode-ways/)
 
 ```javascript
 //DP

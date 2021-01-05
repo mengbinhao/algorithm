@@ -1,6 +1,6 @@
-学习笔记(需要好好补习DP)
+学习笔记(需要好好补习 DP)
 
-##### [14.最长公共前缀E](https://leetcode-cn.com/problems/longest-common-prefix/)
+##### [14.最长公共前缀 E](https://leetcode-cn.com/problems/longest-common-prefix/)
 
 ```javascript
 //取第一个单词一个一个字符比
@@ -20,14 +20,13 @@ var longestCommonPrefix = function (strs) {
 	return first
 }
 
-
 //二分
 var longestCommonPrefix = function (strs) {
 	if (!strs || !Array.isArray(strs) || !strs.length) return ''
 
 	let minLength = Number.MAX_SAFE_INTEGER
 
-    //取最短的字符串
+	//取最短的字符串
 	for (let str of strs) {
 		minLength = Math.min(minLength, str.length)
 	}
@@ -49,7 +48,7 @@ var longestCommonPrefix = function (strs) {
 		right = minLength,
 		mid
 
-    //二分比较
+	//二分比较
 	while (left < right) {
 		mid = Number.parseInt(left + (right - left) / 2)
 		if (isCommonPrefix(strs, mid)) {
@@ -63,7 +62,7 @@ var longestCommonPrefix = function (strs) {
 }
 ```
 
-##### [917仅仅反转字母E](https://leetcode-cn.com/problems/reverse-only-letters/)
+##### [917.仅仅反转字母 E](https://leetcode-cn.com/problems/reverse-only-letters/)
 
 ```javascript
 //use stack
@@ -106,4 +105,3 @@ var reverseOnlyLetters = function (S) {
 	return ret
 }
 ```
-

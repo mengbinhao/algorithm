@@ -24,8 +24,8 @@ temp = 待插入位置的前驱节点.next
 
 ```javascript {.line-numbers}
 var addTwoNumbers = function (l1, l2) {
-	let dummyNode = new ListNode(0),
-		p1 = l1,
+	const dummyNode = new ListNode(0)
+	let p1 = l1,
 		p2 = l2,
 		cur = dummyNode,
 		carry = 0
@@ -52,8 +52,8 @@ var addTwoNumbers = function (l1, l2) {
 ```javascript {.line-numbers}
 //O(n) - O(1)
 var removeNthFromEnd = function (head, n) {
-	const dummy = new ListNode(0)
-	;(dummy.next = head), (first = dummy), (second = dummy)
+	const dummyNode = new ListNode(0)
+	;(dummyNode.next = head), (first = dummyNode), (second = dummyNode)
 
 	//move first pointer so that the gap between first and second is n nodes apart
 	for (let i = 1; i <= n + 1; i++) {
@@ -65,7 +65,7 @@ var removeNthFromEnd = function (head, n) {
 		second = second.next
 	}
 	second.next = second.next.next
-	return dummy.next
+	return dummyNode.next
 }
 ```
 
@@ -74,8 +74,8 @@ var removeNthFromEnd = function (head, n) {
 ```javascript {.line-numbers}
 //iteration
 var mergeTwoLists = function (l1, l2) {
-	const dummy = new ListNode(-1)
-	let prev = dummy
+	const dummyNode = new ListNode(-1)
+	let prev = dummyNode
 	while (l1 != null && l2 != null) {
 		if (l1.val < l2.val) {
 			prev.next = l1
@@ -89,7 +89,7 @@ var mergeTwoLists = function (l1, l2) {
 	}
 	//合并后 l1 和 l2 最多只有一个还未被合并完,我们直接将链表末尾指向未合并完的链表即可
 	prev.next = l1 == null ? l2 : l1
-	return dummy.next
+	return dummyNode.next
 }
 
 //recursion
@@ -254,9 +254,9 @@ const myReverse = (head, tail) => {
 }
 
 var reverseKGroup = function (head, k) {
-	const dummy = new ListNode(0)
-	dummy.next = head
-	let pre = dummy
+	const dummyNode = new ListNode(0)
+	dummyNode.next = head
+	let pre = dummyNode
 
 	while (head) {
 		let tail = pre
@@ -264,7 +264,7 @@ var reverseKGroup = function (head, k) {
 		for (let i = 0; i < k; ++i) {
 			tail = tail.next
 			if (!tail) {
-				return dummy.next
+				return dummyNode.next
 			}
 		}
 		const nex = tail.next
@@ -275,7 +275,7 @@ var reverseKGroup = function (head, k) {
 		pre = tail
 		head = tail.next
 	}
-	return dummy.next
+	return dummyNode.next
 }
 ```
 
@@ -316,9 +316,9 @@ var rotateRight = function (head, k) {
 //two pointer
 var deleteDuplicates = function (head) {
 	if (!head || !head.next) return head
-	const dummy = new ListNode(-1)
-	dummy.next = head
-	let p1 = dummy,
+	const dummyNode = new ListNode(-1)
+	dummyNode.next = head
+	let p1 = dummyNode,
 		p2 = head
 	while (p2 && p2.next) {
 		//初始化的时p1指向的是哑结点,所以比较逻辑应该是p1的下一个节点和p2的下一个节点
@@ -332,7 +332,7 @@ var deleteDuplicates = function (head) {
 			p2 = p2.next
 		}
 	}
-	return dummy.next
+	return dummyNode.next
 }
 ```
 
