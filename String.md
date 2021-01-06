@@ -120,6 +120,34 @@ var longestPalindrome = function (s) {
 }
 ```
 
+### [6. Z 字形变换](https://leetcode-cn.com/problems/zigzag-conversion/)
+
+```javascript {.line-numbers}
+var convert = function (s, numRows) {
+	if (numRows === 1) return s
+	const rows = []
+	for (let i = 0; i < Math.min(numRows, s.length); i++) {
+		rows[i] = ''
+	}
+
+	let curRow = 0,
+		goDown = false
+
+	for (let c of s) {
+		rows[curRow] += c
+		//第0行或最后一行变换方向
+		if (curRow === 0 || curRow === numRows - 1) goDown = !goDown
+		curRow += goDown ? 1 : -1
+	}
+
+	let ret = ''
+	for (let row of rows) {
+		ret += row
+	}
+	return ret
+}
+```
+
 ### [8. 字符串转换整数(atoi)M](https://leetcode-cn.com/problems/string-to-integer-atoi/)
 
 ```javascript {.line-numbers}
@@ -153,6 +181,82 @@ var myAtoi = function (str) {
 	function isDigit(val) {
 		return !Number.isNaN(Number.parseInt(val))
 	}
+}
+```
+
+### [14. 最长公共前缀](https://leetcode-cn.com/problems/longest-common-prefix/)
+
+```javascript {.line-numbers}
+//横向扫描 O(mn) - O(1)
+var longestCommonPrefix = function (strs) {
+	if (strs == null || strs.length === 0) return ''
+
+	let prefix = strs[0]
+	for (let i = 1, len = strs.length; i < len; i++) {
+		//依次得到每个str的prefix
+		prefix = getLCP(prefix, strs[i])
+		if (prefix.length === 0) break
+	}
+	return prefix
+
+	function getLCP(s1, s2) {
+		const length = Math.min(s1.length, s2.length)
+		let idx = 0
+		while (idx < length && s1.charAt(idx) === s2.charAt(idx)) idx++
+		return s1.substring(0, idx)
+	}
+}
+
+//纵向扫描
+var longestCommonPrefix = function (strs) {
+	if (strs == null || strs.length === 0) return ''
+	const length = strs[0].length,
+		count = strs.length
+	//枚strs[0]每个char
+	for (let i = 0; i < length; i++) {
+		for (let j = 1; j < count; j++) {
+			if (i === strs[j].length || strs[j].charAt(i) !== strs[0].charAt(i)) {
+				return strs[0].substring(0, i)
+			}
+		}
+	}
+	return strs[0]
+}
+
+//二分
+var longestCommonPrefix = function (strs) {
+	if (!strs || !Array.isArray(strs) || !strs.length) return ''
+
+	let minLength = Number.MAX_SAFE_INTEGER
+
+	//取最短的字符串
+	for (let str of strs) {
+		minLength = Math.min(minLength, str.length)
+	}
+
+	const isCommonPrefix = (strs, len) => {
+		const curPrefix = strs[0].substring(0, len)
+		for (let i = 1, count = strs.length; i < count; i++) {
+			for (let j = 0; j < len; j++) {
+				if (curPrefix.charAt(j) !== strs[i].charAt(j)) return false
+			}
+		}
+		return true
+	}
+
+	let left = 0,
+		right = minLength,
+		mid
+
+	while (left < right) {
+		mid = Math.floor(left + (right - left + 1) / 2)
+		if (isCommonPrefix(strs, mid)) {
+			left = mid
+		} else {
+			right = mid - 1
+		}
+	}
+	return strs[0].substring(0, left)
 }
 ```
 
@@ -219,13 +323,12 @@ var reverseWords = function (s) {
 ```javascript {.line-numbers}
 //two pointer
 var reverseString = function (s) {
-	helper(s, 0, s.length - 1)
-
-	function helper(s, left, right) {
-		if (left >= right) return
-		;[s[left++], s[right--]] = [s[right], s[left]]
-		helper(s, left, right)
+	let l = 0,
+		r = s.length - 1
+	while (l < r) {
+		;[s[l++], s[r--]] = [s[r], s[l]]
 	}
+	return s
 }
 
 //recursion
