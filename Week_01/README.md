@@ -526,7 +526,7 @@ var trap = function (height) {
 	for (let i = len - 2; i >= 0; i--) {
 		rightMax[i] = Math.max(height[i], rightMax[i + 1])
 	}
-    //两边无法接雨水
+	//两边无法接雨水
 	for (let i = 1; i < len - 1; i++) {
 		ret += Math.min(leftMax[i], rightMax[i]) - height[i]
 	}

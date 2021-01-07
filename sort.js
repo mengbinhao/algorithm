@@ -149,7 +149,7 @@ const heapSort = (arr) => {
 	return arr
 }
 
-const arr = [5, 7, 6, 3, 4, 1, 2]
+const arr = [5, 6, 3, 4, 1, 2]
 
 //console.log(bubbleSort([...arr]))
 //console.log(insert([...arr]))

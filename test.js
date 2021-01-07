@@ -1,23 +1,31 @@
-const trailingZeroes = (n) => {
-	let zeroCount = 0
-	for (let i = 5; i <= n; i += 5) {
-		let currentFactor = i
-		while (currentFactor % 5 == 0) {
-			zeroCount++
-			currentFactor /= 5
+function findKthLargest(nums, k) {
+	const swap = (a, i, j) => ([a[i], a[j]] = [a[j], a[i]])
+	const heapSort = (a) => {
+		const len = a.length
+		let heapSize = len
+
+		for (let i = len >> 1; i >= 0; i--) heapify(a, i, heapSize)
+
+		for (let i = len - 1; i > len - k; i--) {
+			swap(a, i, 0)
+			heapify(a, 0, --heapSize)
+		}
+		return a[0]
+	}
+	const heapify = (a, i, heapSize) => {
+		const l = i * 2 + 1,
+			r = i * 2 + 2
+		let max = i
+
+		if (l < heapSize && a[l] > a[max]) max = l
+		if (r < heapSize && a[r] > a[max]) max = r
+
+		if (max !== i) {
+			swap(a, i, max)
+			heapify(a, max, heapSize)
 		}
 	}
-	return zeroCount
+	return heapSort(nums)
 }
 
-const trailingZeroes2 = (n) => {
-	let zeroCount = 0
-	let currentMultiple = 5
-	while (n >= currentMultiple) {
-		zeroCount += (n / currentMultiple) | 0
-		currentMultiple *= 5
-	}
-	return zeroCount
-}
-
-trailingZeroes2(26)
+console.log(findKthLargest([-1, 2, 0], 2))

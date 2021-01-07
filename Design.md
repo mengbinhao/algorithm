@@ -89,6 +89,38 @@ LRUCache.prototype.popTail = function () {
 }
 ```
 
+### [155.最小栈 E](https://leetcode-cn.com/problems/min-stack/)
+
+```javascript {.line-numbers}
+//使用辅助栈
+var MinStack = function () {
+	this.stack = []
+	//add a initial value
+	this.minStack = [Infinity]
+}
+
+//sync push
+MinStack.prototype.push = function (x) {
+	this.stack.push(x)
+	//peek always min item
+	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
+}
+
+//sync pop
+MinStack.prototype.pop = function () {
+	this.stack.pop()
+	this.minStack.pop()
+}
+
+MinStack.prototype.top = function () {
+	return this.stack[this.stack.length - 1]
+}
+
+MinStack.prototype.getMin = function () {
+	return this.minStack[this.minStack.length - 1]
+}
+```
+
 ### [208.实现 Trie](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```javascript {.line-numbers}
