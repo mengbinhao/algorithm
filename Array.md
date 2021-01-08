@@ -146,3 +146,54 @@ var setZeroes = function (matrix) {
 	}
 }
 ```
+
+### [189.旋转数组 E](https://leetcode-cn.com/problems/rotate-array/)
+
+```javascript {.line-numbers}
+//brute force O(n*k) - O(1)
+var rotate = function (nums, k) {
+	const len = nums.length
+	let previous, temp
+	for (let i = 0; i < k; i++) {
+		previous = nums[len - 1]
+		for (let j = 0; j < len; j++) {
+			temp = nums[j]
+			nums[j] = previous
+			previous = temp
+		}
+	}
+}
+
+//额外数组 O(n) - O(n)
+var rotate = (nums, k) => {
+	const len = nums.length,
+		arr = new Array(len)
+	for (let i = 0; i < len; i++) {
+		//旋转后的数值位置
+		arr[(i + k) % len] = nums[i]
+	}
+	for (let i = 0; i < len; i++) {
+		nums[i] = arr[i]
+	}
+}
+
+//数组翻转 O(n) - O(1)
+// 1 翻转所有元素
+// 2 翻转 [0, k\bmod n - 1][0,kmodn−1] 区间的元素
+// 3 翻转 [k\bmod n, n - 1][kmodn,n−1] 区间的元素
+var rotate = (nums, k) => {
+	const reverse = (nums, start, end) => {
+		while (start < end) {
+			const temp = nums[start]
+			nums[start] = nums[end]
+			nums[end] = temp
+			start++
+			end--
+		}
+	}
+	k %= nums.length
+	reverse(nums, 0, nums.length - 1)
+	reverse(nums, 0, k - 1)
+	reverse(nums, k, nums.length - 1)
+}
+```

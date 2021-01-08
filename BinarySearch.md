@@ -2,7 +2,6 @@
 
 1. 单调的
 2. 有上下界
-3. 可通过索引访问其中的元素(可选)
 
 ### framework
 
@@ -21,9 +20,10 @@
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	if (arr.length === 0) return arr - 1
+	if (arr.length === 0) return arr
 	let left = 0,
-		right = arr.length - 1, //Note!!!
+		//Note!!!
+		right = arr.length - 1,
 		mid
 	//Note!!!
 	while (left <= right) {
@@ -31,9 +31,11 @@ const binarySearch = (arr, target) => {
 		// mid = left + (right - left) >> 2
 		mid = Math.floor(left + (right - left) / 2)
 		if (arr[mid] < target) {
-			left = mid + 1 //Note!!!
+			//Note!!!
+			left = mid + 1
 		} else if (arr[mid] > target) {
-			right = mid - 1 //Note!!!
+			//Note!!!
+			right = mid - 1
 		} else if (arr[mid] === target) {
 			return mid
 		}
@@ -233,6 +235,41 @@ var search = function (nums, target) {
 }
 ```
 
+#### [34.在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+
+```javascript {.line-numbers}
+const binarySearch = (nums, target, lower) => {
+	let left = 0,
+		right = nums.length - 1,
+		ans = nums.length
+	while (left <= right) {
+		const mid = Math.floor((left + right) / 2)
+		if (nums[mid] > target || (lower && nums[mid] >= target)) {
+			right = mid - 1
+			ans = mid
+		} else {
+			left = mid + 1
+		}
+	}
+	return ans
+}
+
+var searchRange = function (nums, target) {
+	const ans = [-1, -1]
+	const leftIdx = binarySearch(nums, target, true)
+	const rightIdx = binarySearch(nums, target, false) - 1
+	if (
+		leftIdx <= rightIdx &&
+		rightIdx < nums.length &&
+		nums[leftIdx] === target &&
+		nums[rightIdx] === target
+	) {
+		ans = [leftIdx, rightIdx]
+	}
+	return ans
+}
+```
+
 #### [69. x 的平方根](https://leetcode-cn.com/problems/sqrtx/)
 
 ```javascript {.line-numbers}
@@ -313,7 +350,6 @@ var findMin = function (nums) {
 
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
-
 		//judge according to nums[mid]
 		if (nums[mid] < nums[mid - 1]) {
 			return nums[mid]

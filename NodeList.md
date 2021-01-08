@@ -620,6 +620,8 @@ var reverseList = function (head) {
 var reverseList = function (head) {
 	if (!head || !head.next) return head
 	const p = reverseList(head.next)
+	//let node = head.next
+	//node.next = head
 	head.next.next = head
 	head.next = null
 	return p

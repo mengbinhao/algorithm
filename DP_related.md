@@ -171,6 +171,7 @@ var uniquePaths = function (m, n) {
 	return dp[m - 1][n - 1]
 }
 
+//优化空间
 var uniquePaths = function (m, n) {
 	//纵向一列
 	const dp = new Array(n).fill(1)
@@ -181,6 +182,47 @@ var uniquePaths = function (m, n) {
 		}
 	}
 	return dp[j - 1]
+}
+```
+
+### [63. 不同路径 II](https://leetcode-cn.com/problems/unique-paths-ii/)
+
+```javascript {.line-numbers}
+var uniquePathsWithObstacles = function (obstacleGrid) {
+	const m = obstacleGrid.length,
+		n = obstacleGrid[0].length,
+		dp = Array.from({ length: m }, () => new Array(n).fill(0))
+
+	for (let i = 0; i < m && obstacleGrid[i][0] === 0; i++) dp[i][0] = 1
+	for (let i = 0; i < n && obstacleGrid[0][i] === 0; i++) dp[0][i] = 1
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			if (obstacleGrid[i][j] === 1) continue
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+		}
+	}
+	return dp[m - 1][n - 1]
+}
+
+//优化空间
+var uniquePathsWithObstacles = function (obstacleGrid) {
+	const m = obstacleGrid.length,
+		n = obstacleGrid[0].length,
+		dp = new Array(n).fill(0)
+
+	//每列第一个由obstacleGrid[0][0]决定
+	dp[0] = obstacleGrid[0][0] === 1 ? 0 : 1
+	for (let i = 0; i < m; i++) {
+		for (let j = 0; j < n; j++) {
+			if (obstacleGrid[i][j] === 1) {
+				dp[j] = 0
+				continue
+			}
+			//加上obstacleGrid[i][j - 1] === 0更严谨
+			if (j - 1 >= 0 && obstacleGrid[i][j - 1] === 0) dp[j] += dp[j - 1]
+		}
+	}
+	return dp[n - 1]
 }
 ```
 
@@ -217,6 +259,7 @@ var minPathSum = function (grid) {
 	return dp[rows - 1][cols - 1]
 }
 
+//优化空间
 var minPathSum = function (grid) {
 	if (!grid) return 0
 	const rows = grid.length,
@@ -257,7 +300,6 @@ var climbStairs = function (n) {
 	const dp = new Array(n + 1)
 	dp[1] = 1
 	dp[2] = 2
-
 	for (let i = 3; i <= n; i++) {
 		dp[i] = dp[i - 1] + dp[i - 2]
 	}
@@ -278,6 +320,39 @@ var climbStairs = function (n) {
 		second = third
 	}
 	return third
+}
+```
+
+### [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)
+
+```javascript {.line-numbers}
+var minDistance = function (word1, word2) {
+	const m = word1.length,
+		n = word2.length
+
+	//D[i][j] 表示A的前i个字母和B的前j个字母之间的编辑距离
+	const dp = Array.from({ length: m + 1 }, () => new Array(n + 1))
+
+	//一个空串和一个非空串的编辑距离为 D[i][0] = i 和 D[0][j] = j，D[i][0] 相当于对 word1 执行 i 次删除操作
+	for (let i = 0; i <= m; i++) {
+		dp[i][0] = i
+	}
+
+	//D[0][j] 相当于对 word1执行 j 次插入操作
+	for (let j = 0; j <= n; j++) {
+		dp[0][j] = j
+	}
+
+	for (let i = 1; i <= m; i++) {
+		for (let j = 1; j <= n; j++) {
+			if (word1[i - 1] === word2[j - 1]) {
+				dp[i][j] = dp[i - 1][j - 1]
+			} else {
+				dp[i][j] = 1 + Math.min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1])
+			}
+		}
+	}
+	return dp[m][n]
 }
 ```
 

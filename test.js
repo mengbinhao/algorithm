@@ -1,31 +1,32 @@
-function findKthLargest(nums, k) {
-	const swap = (a, i, j) => ([a[i], a[j]] = [a[j], a[i]])
-	const heapSort = (a) => {
-		const len = a.length
-		let heapSize = len
+var minPathSum = function (grid) {
+	if (!grid) return 0
+	const rows = grid.length,
+		cols = grid[0].length
 
-		for (let i = len >> 1; i >= 0; i--) heapify(a, i, heapSize)
+	if (!rows || !cols) return 0
 
-		for (let i = len - 1; i > len - k; i--) {
-			swap(a, i, 0)
-			heapify(a, 0, --heapSize)
-		}
-		return a[0]
-	}
-	const heapify = (a, i, heapSize) => {
-		const l = i * 2 + 1,
-			r = i * 2 + 2
-		let max = i
+	//滚动列
+	const dp = new Array(cols).fill(Infinity)
 
-		if (l < heapSize && a[l] > a[max]) max = l
-		if (r < heapSize && a[r] > a[max]) max = r
+	dp[0] = grid[0][0]
 
-		if (max !== i) {
-			swap(a, i, max)
-			heapify(a, max, heapSize)
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (i === 0 && j === 0) continue
+			else if (i === 0) {
+				dp[j] = dp[j - 1] + grid[i][j]
+			} else if (j === 0) {
+				dp[j] += grid[i][j]
+			} else {
+				dp[j] = Math.min(dp[j], dp[j - 1]) + grid[i][j]
+			}
 		}
 	}
-	return heapSort(nums)
+	return dp[cols - 1]
 }
 
-console.log(findKthLargest([-1, 2, 0], 2))
+minPathSum([
+	[1, 3, 1],
+	[1, 5, 1],
+	[4, 2, 1],
+])
