@@ -1,9 +1,34 @@
 ### [54.螺旋矩阵](https://leetcode-cn.com/problems/spiral-matrix/)
 
 ```javascript {.line-numbers}
-//O(n) - O(n) 没写directionIndex = (directionIndex + 1) % 4;
+//O(n) - O(n) 没写 directionIndex = (directionIndex + 1) % 4;
 
-//O(n) - O(1)
+//O(mn) - O(1)
+var spiralOrder = function (matrix) {
+	let top = 0,
+		bottom = matrix.length - 1,
+		left = 0,
+		right = matrix[0].length - 1
+	const ret = []
+	while (true) {
+		//向右移动直到最右
+		for (let i = left; i <= right; i++) ret.push(matrix[top][i])
+		//重新设定上边界，若上边界大于下边界，则遍历遍历完成，下同
+		if (++top > bottom) break
+		//向下
+		for (let i = top; i <= bottom; i++) ret.push(matrix[i][right])
+		if (--right < left) break
+		//向左
+		for (let i = right; i >= left; i--) ret.push(matrix[bottom][i])
+		if (--bottom < top) break
+		//向上
+		for (let i = bottom; i >= top; i--) ret.push(matrix[i][left])
+		if (++left > right) break
+	}
+	return ret
+}
+
+//O(mn) - O(1)
 var spiralOrder = function (matrix) {
 	const ret = []
 	if (matrix == null || matrix.length === 0 || matrix[0].length === 0) return
@@ -39,6 +64,35 @@ var spiralOrder = function (matrix) {
 		right--
 		top++
 		bottom--
+	}
+	return ret
+}
+```
+
+### [52.螺旋矩阵 II](https://leetcode-cn.com/problems/spiral-matrix-ii/)
+
+```javascript {.line-numbers}
+var generateMatrix = function (n) {
+	let left = 0,
+		right = n - 1,
+		top = 0,
+		bottom = n - 1
+	const ret = Array.from({ length: n }, () => new Array(n))
+	const total = n * n
+	let num = 1
+	while (num <= total) {
+		// left to right
+		for (let i = left; i <= right; i++) ret[top][i] = num++
+		top++
+		// top to bottom
+		for (let i = top; i <= bottom; i++) ret[i][right] = num++
+		right--
+		// right to left
+		for (let i = right; i >= left; i--) ret[bottom][i] = num++
+		bottom--
+		// bottom to top
+		for (let i = bottom; i >= top; i--) ret[i][left] = num++
+		lef++
 	}
 	return ret
 }

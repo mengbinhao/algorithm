@@ -1,32 +1,25 @@
-var minPathSum = function (grid) {
-	if (!grid) return 0
-	const rows = grid.length,
-		cols = grid[0].length
-
-	if (!rows || !cols) return 0
-
-	//滚动列
-	const dp = new Array(cols).fill(Infinity)
-
-	dp[0] = grid[0][0]
-
-	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) {
-			if (i === 0 && j === 0) continue
-			else if (i === 0) {
-				dp[j] = dp[j - 1] + grid[i][j]
-			} else if (j === 0) {
-				dp[j] += grid[i][j]
-			} else {
-				dp[j] = Math.min(dp[j], dp[j - 1]) + grid[i][j]
-			}
-		}
+var spiralOrder = function (matrix) {
+	let top = 0 //赋值上下左右边界
+	bottom = matrix.length - 1
+	left = 0
+	right = matrix[0].length - 1
+	const ret = []
+	while (true) {
+		for (let i = left; i <= right; i++) ret.push(matrix[top][i]) //向右移动直到最右
+		if (++top > bottom) break //重新设定上边界，若上边界大于下边界，则遍历遍历完成，下同
+		for (let i = top; i <= bottom; i++) ret.push(matrix[i][right]) //向下
+		if (--right < left) break //重新设定有边界
+		for (let i = right; i >= left; i--) ret.push(matrix[bottom][i]) //向左
+		if (--bottom < top) break //重新设定下边界
+		for (let i = bottom; i >= top; i--) ret.push(matrix[i][left]) //向上
+		if (++left > right) break //重新设定左边界
 	}
-	return dp[cols - 1]
+	return ret
 }
-
-minPathSum([
-	[1, 3, 1],
-	[1, 5, 1],
-	[4, 2, 1],
-])
+console.log(
+	spiralOrder([
+		[1, 2, 3],
+		[4, 5, 6],
+		[7, 8, 9],
+	])
+)
