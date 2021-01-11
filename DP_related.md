@@ -1,19 +1,19 @@
 - DP 使用场景
-  - 求‘最’优解问题（最大值和最小值）
+  - 求`最优解`问题(最大值和最小值)
     - 乘积最大子数组
     - 最长回文子串
     - 最长上升子序列
     - 打家劫舍 3 道
     - 股票 6 道
-  - 求可行性（True 或 False）
+  - 求可行性(True 或 False)
     - 零钱兑换问题
     - 字符串交错组成问题
   - 求方案总数
     - 硬币组合问题
     - 路径规划问题
-  - 数据结构不可排序（Unsortable）
+  - 数据结构不可排序(Unsortable)
     - 最小的 k 个数 不能 DP
-  - 算法不可使用交换（Non-swappable）
+  - 算法不可使用交换(Non-swappable)
     - 8 皇后 不能 DP
     - 全排列 不能 DP
 
@@ -64,8 +64,8 @@ var longestPalindrome = function (s) {
 	let begin = 0,
 		maxLen = 1
 
-	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
-	//先升序填列，再升序填行
+	//在状态转移方程中,是从长度较短的字符串向长度较长的字符串进行转移的,因此要注意动态规划的循环顺序
+	//先升序填列,再升序填行
 	//只需要填dp table上班边
 	//对角线等于true的case未用到
 	for (let j = 1; j < len; j++) {
@@ -73,7 +73,7 @@ var longestPalindrome = function (s) {
 			if (s[i] !== s[j]) {
 				dp[i][j] = false
 			} else {
-				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论
+				//j - i + 1 < 4,即当子串s[i..j]的长度等于2 or 3的时候,只需要判断一下头尾两个字符是否相等就可以直接下结论
 				if (j - i < 3) dp[i][j] = true
 				else dp[i][j] = dp[i + 1][j - 1]
 			}
@@ -118,6 +118,153 @@ var longestPalindrome = function (s) {
 }
 ```
 
+### [32.最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
+
+```javascript {.line-numbers}
+//brute force O(n^3)
+var longestValidParentheses = function (s) {
+	const len = s.length
+	if (len < 2) return 0
+	//有效括号肯定是偶数
+	const end = len % 2 === 0 ? len : len - 1
+	//从最长开始偶数递减loop
+	for (let i = end; i >= 0; i -= 2) {
+		for (let j = 0; j < len - i + 1; j++) {
+			//找到即是最长的
+			if (isValid(s.substring(j, j + i))) return i
+		}
+	}
+
+	function isValid(s) {
+		const stack = []
+		for (let c of s) {
+			if (c === '(') {
+				stack.push('(')
+			} else if (stack.length > 0 && stack[stack.length - 1] === '(') {
+				stack.pop()
+			} else {
+				return false
+			}
+		}
+		return stack.length === 0
+	}
+}
+
+//DP O(n) - O(n)
+var longestValidParentheses = function (s) {
+	const len = s.length
+	if (len < 2) return 0
+	let ret = 0
+	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
+	const dp = new Array(len).fill(0)
+	for (let i = 1; i < len; i++) {
+		if (s[i] == ')') {
+			if (s[i - 1] == '(') {
+				//s[i] = ')' 且 s[i - 1] = '(',也就是字符串形如 '……()'
+				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
+			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] == '(') {
+				//s[i] = ')' 且 s[i - 1] = ')',也就是字符串形如 '……))'
+				dp[i] = dp[i - 1] + (i - dp[i - 1] >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
+			}
+			ret = Math.max(ret, dp[i])
+		}
+	}
+	return ret
+}
+
+//stack O(n) - O(n)
+//始终保持栈底元素为当前已经遍历过的元素中「最后一个没有被匹配的右括号的下标」
+//对于遇到的每个(,将它下标放入栈中
+//对于遇到的每个),先弹出栈顶元素表示匹配了当前右括号:
+//  如果栈为空,说明当前的右括号为没有被匹配的左括号,将其下标放入栈中来更新「最后一个没有被匹配的右括号的下标」
+//  如果栈不为空,当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
+var longestValidParentheses = function (s) {
+	const len = s.length
+	if (len < 2) return 0
+	//最长子串只能从0开始
+	const stack = [-1]
+	let maxLen = 0
+	for (let i = 0; i < len; i++) {
+		if (s[i] === '(') {
+			stack.push(i)
+		} else {
+			stack.pop()
+			if (stack.length === 0) {
+				stack.push(i)
+			} else {
+				maxLen = Math.max(maxLen, i - stack[stack.length - 1])
+			}
+		}
+	}
+	return maxLen
+}
+
+//正向逆向结合 O(n) - O(1)
+var longestValidParentheses = function (s) {
+	const len = s.length
+	if (len < 2) return 0
+	let left = 0,
+		right = 0
+	maxLen = 0
+	for (let i = 0; i < len; i++) {
+		s[i] === '(' ? left++ : right++
+		if (left === right) {
+			maxLen = Math.max(maxLen, left * 2)
+		} else if (right > left) {
+			left = right = 0
+		}
+	}
+	left = right = 0
+	for (let i = len - 1; i >= 0; i--) {
+		s[i] === '(' ? left++ : right++
+		if (left === right) {
+			maxLen = Math.max(maxLen, left * 2)
+		} else if (left > right) {
+			left = right = 0
+		}
+	}
+	return maxLen
+}
+```
+
+### [44. 通配符匹配](https://leetcode-cn.com/problems/wildcard-matching/)
+
+```javascript {.line-numbers}
+var isMatch = function (s, p) {
+	const m = s.length,
+		n = p.length
+	//dp[i][j] 表示字符串s的前i个字符和模式p的前j个字符是否能匹配
+	const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(false))
+
+	//base case
+	//1 空串和空模式匹配
+	//2 dp[i][0]=false,即空模式无法匹配非空字符串
+	//3 dp[0][j] 需要分情况讨论:因为星号才能匹配空字符串,所以只有当模式p的前j个字符均为星号时,dp[0][j]才为真
+	//case 1
+	dp[0][0] = true
+	//case 3
+	for (let i = 1; i <= n; i++) {
+		if (p[i - 1] === '*') {
+			dp[0][i] = true
+		} else {
+			break
+		}
+	}
+
+	for (let i = 1; i <= m; i++) {
+		for (let j = 1; j <= n; j++) {
+			if (p[j - 1] === '*') {
+				//使用星或不使用星
+				dp[i][j] = dp[i][j - 1] || dp[i - 1][j]
+			} else if (p[j - 1] === '?' || s[i - 1] === p[j - 1]) {
+				dp[i][j] = dp[i - 1][j - 1]
+			}
+		}
+	}
+	return dp[m][n]
+}
+```
+
 ### [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 
 ```javascript {.line-numbers}
@@ -153,6 +300,17 @@ var maxSubArray = function (nums) {
 ### [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
 
 ```javascript {.line-numbers}
+//DFS O(2^(m + n - 1) - 1)
+var uniquePaths = function (m, n) {
+	return dfs(1, 1, m, n)
+	function dfs(i, j, m, n) {
+		if (i > m || j > n) return 0 // 越界了
+		if (i === m && j === n) return 1 // 找到一种方法,相当于找到了叶子节点
+		return dfs(i + 1, j, m, n) + dfs(i, j + 1, m, n)
+	}
+}
+
+//O(mn) - O(mn)
 var uniquePaths = function (m, n) {
 	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
 	//base case第一列
@@ -326,6 +484,7 @@ var climbStairs = function (n) {
 ### [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)
 
 ```javascript {.line-numbers}
+//O(mn) - O(mn)
 var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
@@ -333,7 +492,7 @@ var minDistance = function (word1, word2) {
 	//D[i][j] 表示A的前i个字母和B的前j个字母之间的编辑距离
 	const dp = Array.from({ length: m + 1 }, () => new Array(n + 1))
 
-	//一个空串和一个非空串的编辑距离为 D[i][0] = i 和 D[0][j] = j，D[i][0] 相当于对 word1 执行 i 次删除操作
+	//一个空串和一个非空串的编辑距离为 D[i][0] = i 和 D[0][j] = j,D[i][0] 相当于对 word1 执行 i 次删除操作
 	for (let i = 0; i <= m; i++) {
 		dp[i][0] = i
 	}
@@ -348,11 +507,44 @@ var minDistance = function (word1, word2) {
 			if (word1[i - 1] === word2[j - 1]) {
 				dp[i][j] = dp[i - 1][j - 1]
 			} else {
-				dp[i][j] = 1 + Math.min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1])
+				dp[i][j] = Math.min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1]) + 1
 			}
 		}
 	}
 	return dp[m][n]
+}
+
+//O(mn) - O(n)
+var minDistance = function (word1, word2) {
+	const m = word1.length,
+		n = word2.length
+
+	const dp = new Array(n + 1)
+
+	//第一列
+	for (let j = 0; j <= n; j++) {
+		dp[j] = j
+	}
+
+	for (let i = 1; i <= m; i++) {
+		//save下面需要替换
+		let temp = dp[0]
+		//dp数组的每一列的第一个j-1，也就是第一行的这个格子
+		dp[0] = i
+		for (let j = 1; j <= n; j++) {
+			//dp[i - 1][j - 1]
+			const pre = temp
+			//update dp[i - 1][j - 1]
+			temp = dp[j]
+			if (word1[i - 1] === word2[j - 1]) {
+				dp[j] = pre
+			} else {
+				// dp[j] = min(dp[j-1], pre, dp[j]) + 1
+				dp[j] = Math.min(dp[j - 1], dp[j], pre) + 1
+			}
+		}
+	}
+	return dp[n]
 }
 ```
 
@@ -373,6 +565,74 @@ var generate = function (numRows) {
 		triangle.push(curRow)
 	}
 	return triangle
+}
+```
+
+### [120. 三角形最小路径和](https://leetcode-cn.com/problems/triangle/)
+
+```javascript {.line-numbers}
+//DFS O(2^^n)
+const minimumTotal = (triangle) => {
+	return dfs(0, 0, triangle) + triangle[0][0]
+	function dfs(i, i) {
+		if (i >= triangle.length - 1) return 0
+		// 往左下节点走
+		const leftSum = traverse(i + 1, j) + triangle[i + 1][j]
+		// 往右下节点走
+		const rightSum = traverse(i + 1, j + 1) + triangle[i + 1][j + 1]
+		// 记录每个节点往左和往右遍历的路径和的最小值
+		return Math.min(leftSum, rightSum)
+	}
+}
+
+//O(n^2) - O(n^2)
+//自底向上不需要最后再遍历最后一层数组找最小值
+const minimumTotal = (triangle) => {
+	if (!triangle) return 0
+	let height = triangle.length
+	if (height === 0) return 0
+
+	const dp = Array.from(
+		{ length: height },
+		(val, index) => new Array(triangle[index].length)
+	)
+
+	// 自底而上遍历
+	for (let i = height - 1; i >= 0; i--) {
+		for (let j = 0; j < triangle[i].length; j++) {
+			// base case 最底层
+			if (i == height - 1) {
+				dp[i][j] = triangle[i][j]
+			} else {
+				// 状态转移方程，上一层由它下一层计算出
+				dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + triangle[i][j]
+			}
+		}
+	}
+	return dp[0][0]
+}
+
+//O(n^2) - O(2n)
+//滚动数组优化
+
+//O(n^2) - O(n)
+var minimumTotal = function (triangle) {
+	if (!triangle) return 0
+	let height = triangle.length
+	if (height === 0) return 0
+
+	const dp = new Array(height)
+	// base case 是最后一行
+	for (let i = 0; i < height; i++) {
+		dp[i] = triangle[height - 1][i]
+	}
+
+	for (let i = height - 2; i >= 0; i--) {
+		for (let j = 0; j <= i; j++) {
+			dp[j] = Math.min(dp[j], dp[j + 1]) + triangle[i][j]
+		}
+	}
+	return dp[0]
 }
 ```
 
@@ -455,8 +715,8 @@ var maxProfit = function (prices) {
 	if (len < 2) return 0
 
 	//状态 dp[i][j]
-	//第一维i表示索引为i的那一天（具有前缀性质，即考虑了之前天数的收益）能获得的最大利润
-	//第二维j表示索引为i的那一天是持有股票，还是持有现金。这里0表示持有现金（cash），1表示持有股票（stock）
+	//第一维i表示索引为i的那一天(具有前缀性质,即考虑了之前天数的收益)能获得的最大利润
+	//第二维j表示索引为i的那一天是持有股票,还是持有现金。这里0表示持有现金(cash),1表示持有股票(stock)
 
 	let dp = Array.from({ length: len }, (v, i) => new Array(2))
 
@@ -516,13 +776,14 @@ var maxProfit = function (prices) {
 ### [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
 ```javascript {.line-numbers}
+//O(n^2) - O(n)
 var lengthOfLIS = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度,注意nums[i]必须被选取
 	const dp = new Array(len).fill(1)
 	let ret = 1
-
+	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
 	for (let i = 0; i < len; i++) {
 		for (let j = 0; j < i; j++) {
 			if (nums[i] > nums[j]) {
@@ -532,25 +793,6 @@ var lengthOfLIS = function (nums) {
 		ret = Math.max(ret, dp[i])
 	}
 	return ret
-}
-
-//dp + Dichotomy
-var lengthOfLIS = function (nums) {
-	const tails = new Array(nums.length)
-	let res = 0
-	for (let num of nums) {
-		let i = 0,
-			j = res
-		//Dichotomy
-		while (i < j) {
-			const m = Math.floor((i + j) / 2)
-			if (tails[m] < num) i = m + 1
-			else j = m
-		}
-		tails[i] = num
-		if (res === j) res++
-	}
-	return res
 }
 ```
 
@@ -598,7 +840,7 @@ var coinChange = function (coins, amount) {
 
 	let ans = amount + 1
 
-	let dfs = (coins, remain, count) => {
+	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
 
 		if (remain === 0) {
@@ -623,7 +865,7 @@ var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
 
-	let cache = {}
+	const cache = {}
 
 	return dfs(coins, amount)
 
@@ -646,21 +888,21 @@ var coinChange = function (coins, amount) {
 	}
 }
 
-//dp
+//dp 自底向上
 //O(Sn) + O(S)
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
 
 	const max = amount + 1,
-		//dp[i]:组成金额i所需最少的硬币数量
-		//初始化成不可能的数
+		//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数
 		dp = new Array(max).fill(max)
 	//当i=0时无法用硬币组成
 	dp[0] = 0
 	for (let i = 1; i <= amount; i++) {
+		//dp[i]=min(F(1−1),F(1−2),F(1−5)) + 1
 		for (let j = 0; j < coins.length; j++) {
-			//忽略dp[i]为负数
+			//数组越界
 			if (i - coins[j] >= 0) {
 				dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
 			}
@@ -676,7 +918,7 @@ var coinChange = function (coins, amount) {
 var minCostClimbingStairs = function (cost) {
 	const len = cost.length
 	const dp = new Array(len + 1)
-	//由于可以选择下标0或1作为初始阶梯，因此有dp[0]=dp[1]=0
+	//由于可以选择下标0或1作为初始阶梯,因此有dp[0]=dp[1]=0
 	dp[0] = dp[1] = 0
 	for (let i = 2; i <= len; i++) {
 		dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2])
@@ -696,5 +938,27 @@ var minCostClimbingStairs = function (cost) {
 		cur = next
 	}
 	return cur
+}
+```
+
+### [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)
+
+```javascript {.line-numbers}
+var longestCommonSubsequence = function (text1, text2) {
+	const n = text1.length
+	const m = text2.length
+	//直接第一行和第一列赋值base case为0,第一行第一列代表的是空,下面也不需要判断越界
+	const dp = Array.from(new Array(n + 1), () => new Array(m + 1).fill(0))
+
+	for (let i = 1; i <= n; i++) {
+		for (let j = 1; j <= m; j++) {
+			if (text1[i - 1] === text2[j - 1]) {
+				dp[i][j] = dp[i - 1][j - 1] + 1
+			} else {
+				dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j])
+			}
+		}
+	}
+	return dp[n][m]
 }
 ```

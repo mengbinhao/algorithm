@@ -62,7 +62,26 @@ var longestValidParentheses = function (s) {
 }
 
 //DP O(n) - O(n)
-//dp[i] 表示以下标i字符结尾的最长有效括号的长度
+var longestValidParentheses = function (s) {
+	const len = s.length
+	if (len < 2) return 0
+	let ret = 0
+	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
+	const dp = new Array(len).fill(0)
+	for (let i = 1; i < len; i++) {
+		if (s[i] == ')') {
+			if (s[i - 1] == '(') {
+				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串形如 '……()'
+				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
+			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] == '(') {
+				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
+				dp[i] = dp[i - 1] + (i - dp[i - 1] >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
+			}
+			ret = Math.max(ret, dp[i])
+		}
+	}
+	return ret
+}
 
 //stack O(n) - O(n)
 //始终保持栈底元素为当前已经遍历过的元素中「最后一个没有被匹配的右括号的下标」
