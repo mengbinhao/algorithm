@@ -1,23 +1,6 @@
-- DP 使用场景
-  - 求`最优解`问题(最大值和最小值)
-    - 乘积最大子数组
-    - 最长回文子串
-    - 最长上升子序列
-    - 打家劫舍 3 道
-    - 股票 6 道
-  - 求可行性(True 或 False)
-    - 零钱兑换问题
-    - 字符串交错组成问题
-  - 求方案总数
-    - 硬币组合问题
-    - 路径规划问题
-  - 数据结构不可排序(Unsortable)
-    - 最小的 k 个数 不能 DP
-  - 算法不可使用交换(Non-swappable)
-    - 8 皇后 不能 DP
-    - 全排列 不能 DP
+![](./images/dp.png)
 
----
+# 1、线性 DP
 
 ### [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
@@ -253,8 +236,9 @@ var isMatch = function (s, p) {
 
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
+			//当前字符
 			if (p[j - 1] === '*') {
-				//使用星或不使用星
+				//不使用星 or 使用星
 				dp[i][j] = dp[i][j - 1] || dp[i - 1][j]
 			} else if (p[j - 1] === '?' || s[i - 1] === p[j - 1]) {
 				dp[i][j] = dp[i - 1][j - 1]
@@ -265,7 +249,7 @@ var isMatch = function (s, p) {
 }
 ```
 
-### [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
+### [53. ==最大子序和==](https://leetcode-cn.com/problems/maximum-subarray/)
 
 ```javascript {.line-numbers}
 //brute force 两层循环
@@ -294,93 +278,6 @@ var maxSubArray = function (nums) {
 		maxAns = Math.max(maxAns, pre)
 	})
 	return maxAns
-}
-```
-
-### [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
-
-```javascript {.line-numbers}
-//DFS O(2^(m + n - 1) - 1)
-var uniquePaths = function (m, n) {
-	return dfs(1, 1, m, n)
-	function dfs(i, j, m, n) {
-		if (i > m || j > n) return 0 // 越界了
-		if (i === m && j === n) return 1 // 找到一种方法,相当于找到了叶子节点
-		return dfs(i + 1, j, m, n) + dfs(i, j + 1, m, n)
-	}
-}
-
-//O(mn) - O(mn)
-var uniquePaths = function (m, n) {
-	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
-	//base case第一列
-	for (let i = 0; i < m; i++) {
-		dp[i][0] = 1
-	}
-	//base case第一行
-	for (let j = 0; j < n; j++) {
-		dp[0][j] = 1
-	}
-	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
-			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
-		}
-	}
-	return dp[m - 1][n - 1]
-}
-
-//优化空间
-var uniquePaths = function (m, n) {
-	//纵向一列
-	const dp = new Array(n).fill(1)
-
-	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
-			dp[j] += dp[j - 1]
-		}
-	}
-	return dp[j - 1]
-}
-```
-
-### [63. 不同路径 II](https://leetcode-cn.com/problems/unique-paths-ii/)
-
-```javascript {.line-numbers}
-var uniquePathsWithObstacles = function (obstacleGrid) {
-	const m = obstacleGrid.length,
-		n = obstacleGrid[0].length,
-		dp = Array.from({ length: m }, () => new Array(n).fill(0))
-
-	for (let i = 0; i < m && obstacleGrid[i][0] === 0; i++) dp[i][0] = 1
-	for (let i = 0; i < n && obstacleGrid[0][i] === 0; i++) dp[0][i] = 1
-	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
-			if (obstacleGrid[i][j] === 1) continue
-			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
-		}
-	}
-	return dp[m - 1][n - 1]
-}
-
-//优化空间
-var uniquePathsWithObstacles = function (obstacleGrid) {
-	const m = obstacleGrid.length,
-		n = obstacleGrid[0].length,
-		dp = new Array(n).fill(0)
-
-	//每列第一个由obstacleGrid[0][0]决定
-	dp[0] = obstacleGrid[0][0] === 1 ? 0 : 1
-	for (let i = 0; i < m; i++) {
-		for (let j = 0; j < n; j++) {
-			if (obstacleGrid[i][j] === 1) {
-				dp[j] = 0
-				continue
-			}
-			//加上obstacleGrid[i][j - 1] === 0更严谨
-			if (j - 1 >= 0 && obstacleGrid[i][j - 1] === 0) dp[j] += dp[j - 1]
-		}
-	}
-	return dp[n - 1]
 }
 ```
 
@@ -443,41 +340,6 @@ var minPathSum = function (grid) {
 		}
 	}
 	return dp[cols - 1]
-}
-```
-
-### [70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
-
-```javascript {.line-numbers}
-//recursion O(2^n)
-//memo recursion
-
-//O(n) - O(n)
-var climbStairs = function (n) {
-	//dp[i]表示爬到第i级台阶的方案数
-	const dp = new Array(n + 1)
-	dp[1] = 1
-	dp[2] = 2
-	for (let i = 3; i <= n; i++) {
-		dp[i] = dp[i - 1] + dp[i - 2]
-	}
-	return dp[n]
-}
-
-//O(n) - O(1)
-var climbStairs = function (n) {
-	if (n <= 2) return n
-
-	let first = 1,
-		second = 2,
-		third
-
-	for (let i = 3; i <= n; i++) {
-		third = first + second
-		first = second
-		second = third
-	}
-	return third
 }
 ```
 
@@ -568,7 +430,7 @@ var generate = function (numRows) {
 }
 ```
 
-### [120. 三角形最小路径和](https://leetcode-cn.com/problems/triangle/)
+### [120. ==三角形最小路径和==](https://leetcode-cn.com/problems/triangle/)
 
 ```javascript {.line-numbers}
 //DFS O(2^^n)
@@ -635,6 +497,212 @@ var minimumTotal = function (triangle) {
 	return dp[0]
 }
 ```
+
+### [152. ==乘积最大子数组==](https://leetcode-cn.com/problems/maximum-product-subarray/)
+
+```javascript {.line-numbers}
+//O(n) - O(n)
+var maxProduct = function (nums) {
+	let len = nums.length
+	if (len === 0) return 0
+
+	const maxDP = [...nums],
+		minDP = [...nums]
+
+	for (let i = 1; i < len; i++) {
+		maxDP[i] = Math.max(maxDP[i - 1] * nums[i], nums[i], minDP[i - 1] * nums[i])
+		minDP[i] = Math.min(minDP[i - 1] * nums[i], nums[i], maxDP[i - 1] * nums[i])
+	}
+	let ret = maxDP[0]
+	for (let i = 1; i < len; i++) {
+		ret = Math.max(ret, maxDP[i])
+	}
+	return ret
+}
+
+//O(n) - O(1)
+var maxProduct = function (nums) {
+	let len = nums.length
+	if (len === 0) return 0
+
+	let preMax = nums[0],
+		preMin = nums[0],
+		curMax,
+		curMin,
+		ret = nums[0]
+
+	for (let i = 1; i < len; i++) {
+		curMax = Math.max(nums[i], preMax * nums[i], preMin * nums[i])
+		curMin = Math.min(nums[i], preMin * nums[i], preMax * nums[i])
+		ret = Math.max(ret, curMax)
+		preMax = curMax
+		preMin = curMin
+	}
+
+	return ret
+}
+```
+
+### [300. ==最长递增子序列==](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+
+```javascript {.line-numbers}
+//O(n^2) - O(n)
+var lengthOfLIS = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度,注意nums[i]必须被选取
+	const dp = new Array(len).fill(1)
+	let ret = 1
+	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
+	for (let i = 0; i < len; i++) {
+		for (let j = 0; j < i; j++) {
+			if (nums[i] > nums[j]) {
+				dp[i] = Math.max(dp[i], dp[j] + 1)
+			}
+		}
+		ret = Math.max(ret, dp[i])
+	}
+	return ret
+}
+```
+
+### [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/)
+
+```javascript {.line-numbers}
+var minCostClimbingStairs = function (cost) {
+	const len = cost.length
+	const dp = new Array(len + 1)
+	//由于可以选择下标0或1作为初始阶梯,因此有dp[0]=dp[1]=0
+	dp[0] = dp[1] = 0
+	for (let i = 2; i <= len; i++) {
+		dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2])
+	}
+	return dp[len]
+}
+
+//dp[i] 表示达到下标i的最小花费
+//dp[i]=min(dp[i−1]+cost[i−1],dp[i−2]+cost[i−2])
+var minCostClimbingStairs = function (cost) {
+	const len = cost.length
+	let prev = (cur = 0),
+		next
+	for (let i = 2; i <= len; i++) {
+		next = Math.min(cur + cost[i - 1], prev + cost[i - 2])
+		prev = cur
+		cur = next
+	}
+	return cur
+}
+```
+
+### [1143. ==最长公共子序列==](https://leetcode-cn.com/problems/longest-common-subsequence/)
+
+```javascript {.line-numbers}
+var longestCommonSubsequence = function (text1, text2) {
+	const n = text1.length
+	const m = text2.length
+	//直接第一行和第一列赋值base case为0,第一行第一列代表的是空,下面也不需要判断越界
+	const dp = Array.from(new Array(n + 1), () => new Array(m + 1).fill(0))
+
+	for (let i = 1; i <= n; i++) {
+		for (let j = 1; j <= m; j++) {
+			if (text1[i - 1] === text2[j - 1]) {
+				dp[i][j] = dp[i - 1][j - 1] + 1
+			} else {
+				dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j])
+			}
+		}
+	}
+	return dp[n][m]
+}
+```
+
+## 打家劫舍系列
+
+### [198. 打家劫舍](https://leetcode-cn.com/problems/house-robber/)
+
+```javascript {.line-numbers}
+//O(n) - O(n)
+var rob = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	if (len === 1) return nums[0]
+	//dp[i] 表示前i间房屋能偷窃到的最高总金额
+	const dp = new Array(len)
+	;(dp[0] = nums[0]), (dp[1] = Math.max(nums[0], nums[1]))
+	for (let i = 2; i < len; i++) {
+		dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i])
+	}
+	return dp[len - 1]
+}
+
+//O(n) - O(1)
+var rob = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	if (len === 1) return nums[0]
+	let first = nums[0],
+		second = Math.max(nums[0], nums[1]),
+		temp
+	for (let i = 2; i < len; i++) {
+		temp = second
+		second = Math.max(second, first + nums[i])
+		first = temp
+	}
+	return second
+}
+```
+
+### [213. 打家劫舍 II](https://leetcode-cn.com/problems/house-robber-ii/)
+
+```javascript {.line-numbers}
+//O(n) - O(1)
+var rob = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	if (len === 1) return nums[0]
+	//该问题可以看成两个单排问题
+	return Math.max(robRange(nums, 0, len - 2), robRange(nums, 1, len - 1))
+
+	function robRange(nums, start, end) {
+		let dp_i_1 = 0,
+			dp_i_2 = 0,
+			dp_i = 0
+		for (let i = start; i <= end; i++) {
+			dp_i = Math.max(dp_i_1, nums[i] + dp_i_2)
+			dp_i_2 = dp_i_1
+			dp_i_1 = dp_i
+		}
+		return dp_i
+	}
+}
+```
+
+### [337. 打家劫舍 III](https://leetcode-cn.com/problems/house-robber-iii/)
+
+```javascript {.line-numbers}
+//time exceeded!!!
+var rob = function (root) {
+	const helper = (root) => {
+		if (root == null) return 0
+		if (memo.has(root)) return memo.get(root)
+		// 抢，然后去下下家
+		const do_it =
+			root.val +
+			(root.left == null ? 0 : rob(root.left.left) + rob(root.left.right)) +
+			(root.right == null ? 0 : rob(root.right.left) + rob(root.right.right))
+		// 不抢，然后去下家
+		const not_do = rob(root.left) + rob(root.right)
+		const res = Math.max(do_it, not_do)
+		memo.set(root, res)
+		return res
+	}
+	const memo = new Map()
+	return helper(root)
+}
+```
+
+## 股票系列
 
 ### [121. 买股票的最佳时机 E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
@@ -773,28 +841,33 @@ var maxProfit = function (prices) {
 }
 ```
 
-### [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+# 2、区间 DP
+
+### [516. 最长回文子序列](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
 
 ```javascript {.line-numbers}
-//O(n^2) - O(n)
-var lengthOfLIS = function (nums) {
-	const len = nums.length
-	if (len === 0) return 0
-	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度,注意nums[i]必须被选取
-	const dp = new Array(len).fill(1)
-	let ret = 1
-	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
-	for (let i = 0; i < len; i++) {
-		for (let j = 0; j < i; j++) {
-			if (nums[i] > nums[j]) {
-				dp[i] = Math.max(dp[i], dp[j] + 1)
+var longestPalindromeSubseq = function (s) {
+	const len = s.length
+	//dp[i][j] 表示s前i个字符到前j个字符的最长回文子序列
+	//只填写了上半部，未优化
+	const dp = Array.from({ length: len }, () => new Array(len).fill(0))
+
+	//i 从最后一个字符开始往前遍历，j 从 i + 1 开始往后遍历，这样可以保证每个子问题都已经算好
+	for (let i = len - 1; i >= 0; i--) {
+		dp[i][i] = 1
+		for (let j = i + 1; j < len; j++) {
+			if (s[i] === s[j]) {
+				dp[i][j] = dp[i + 1][j - 1] + 2
+			} else {
+				dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1])
 			}
 		}
-		ret = Math.max(ret, dp[i])
 	}
-	return ret
+	return dp[0][len - 1]
 }
 ```
+
+# 3、背包 DP
 
 ### [322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)
 
@@ -804,32 +877,29 @@ var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
 
-	let ans = amount + 1
-
-	let dfs = (coins, remain, coinsIdx, count) => {
+	let ret = amount + 1
+	const dfs = (coins, remain, coinsIdx, count) => {
 		if (remain === 0) {
-			ans = Math.min(count, ans)
+			ret = Math.min(count, ret)
 			return
 		}
 
 		if (coinsIdx >= coins.length) return
 		//直接拿最大币值的最大个数找解
-		//coins递减k + count < ans剪纸非最小count解
+		//coins递减
+		//k + count < ret剪枝非最小count解
 		for (
-			let k = Math.floor(remain / coins[coinsIdx]);
-			k >= 0 && k + count < ans;
-			k--
+			let i = Math.floor(remain / coins[coinsIdx]);
+			i >= 0 && i + count < ret;
+			i--
 		) {
-			dfs(coins, remain - k * coins[coinsIdx], coinsIdx + 1, k + count)
+			dfs(coins, remain - i * coins[coinsIdx], coinsIdx + 1, i + count)
 		}
 	}
-
 	//greedy前提
 	coins.sort((a, b) => b - a)
-
 	dfs(coins, amount, 0, 0)
-
-	return ans === amount + 1 ? -1 : ans
+	return ret === amount + 1 ? -1 : ret
 }
 
 //dfs time exceeded
@@ -838,14 +908,11 @@ var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
 
-	let ans = amount + 1
-
+	let ret = amount + 1
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
-
 		if (remain === 0) {
-			//穷举更新最小解
-			ans = Math.min(count, ans)
+			ret = Math.min(count, ret)
 			return
 		}
 		//穷举
@@ -853,10 +920,8 @@ var coinChange = function (coins, amount) {
 			dfs(coins, remain - coins[i], count + 1)
 		}
 	}
-
 	dfs(coins, amount, 0)
-
-	return ans === amount + 1 ? -1 : ans
+	return ret === amount + 1 ? -1 : ret
 }
 
 //dfs + Memoization
@@ -864,22 +929,17 @@ var coinChange = function (coins, amount) {
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-
 	const cache = {}
-
 	return dfs(coins, amount)
 
-	//返回cache[remain]
 	function dfs(coins, remain) {
 		if (remain < 0) return -1
-
 		if (remain === 0) return 0
-
 		if (cache[remain]) return cache[remain]
 
 		let min = Infinity
-		for (let i = 0; i < coins.length; i++) {
-			let ret = dfs(coins, remain - coins[i])
+		for (let i = 0, len = coins.length; i < len; i++) {
+			const ret = dfs(coins, remain - coins[i])
 			//加1是为了加上得到res结果的那个步骤中兑换的那一个硬币
 			//下层返回需要小于当前的min才更新min
 			if (ret >= 0 && ret < min) min = ret + 1
@@ -897,10 +957,10 @@ var coinChange = function (coins, amount) {
 	const max = amount + 1,
 		//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数
 		dp = new Array(max).fill(max)
-	//当i=0时无法用硬币组成
+	//当i = 0时无法用硬币组成
 	dp[0] = 0
 	for (let i = 1; i <= amount; i++) {
-		//dp[i]=min(F(1−1),F(1−2),F(1−5)) + 1
+		//dp[i] = min(F(1−1),F(1−2),F(1−5)) + 1
 		for (let j = 0; j < coins.length; j++) {
 			//数组越界
 			if (i - coins[j] >= 0) {
@@ -912,53 +972,262 @@ var coinChange = function (coins, amount) {
 }
 ```
 
-### [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/)
+# 4、树形 DP
+
+### 见打家劫舍 III
+
+# 5、状态压缩 DP
+
+# 6、数位 DP
+
+# 7、计数型 DP
+
+### [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
 
 ```javascript {.line-numbers}
-var minCostClimbingStairs = function (cost) {
-	const len = cost.length
-	const dp = new Array(len + 1)
-	//由于可以选择下标0或1作为初始阶梯,因此有dp[0]=dp[1]=0
-	dp[0] = dp[1] = 0
-	for (let i = 2; i <= len; i++) {
-		dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2])
+//DFS O(2^(m + n - 1) - 1)
+var uniquePaths = function (m, n) {
+	return dfs(1, 1, m, n)
+	function dfs(i, j, m, n) {
+		// 越界了
+		if (i > m || j > n) return 0
+		// 找到一种方法,相当于找到了叶子节点
+		if (i === m && j === n) return 1
+		return dfs(i + 1, j, m, n) + dfs(i, j + 1, m, n)
 	}
-	return dp[len]
 }
 
-//dp[i] 表示达到下标i的最小花费
-//dp[i]=min(dp[i−1]+cost[i−1],dp[i−2]+cost[i−2])
-var minCostClimbingStairs = function (cost) {
-	const len = cost.length
-	let prev = (cur = 0),
-		next
-	for (let i = 2; i <= len; i++) {
-		next = Math.min(cur + cost[i - 1], prev + cost[i - 2])
-		prev = cur
-		cur = next
+//O(mn) - O(mn)
+var uniquePaths = function (m, n) {
+	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
+	//base case第一列
+	for (let i = 0; i < m; i++) {
+		dp[i][0] = 1
 	}
-	return cur
+	//base case第一行
+	for (let j = 0; j < n; j++) {
+		dp[0][j] = 1
+	}
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+		}
+	}
+	return dp[m - 1][n - 1]
+}
+
+//O(mn) - O(n)
+var uniquePaths = function (m, n) {
+	//滚动纵向一列
+	const dp = new Array(n).fill(1)
+
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			dp[j] += dp[j - 1]
+		}
+	}
+	return dp[j - 1]
 }
 ```
 
-### [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)
+### [63. 不同路径 II](https://leetcode-cn.com/problems/unique-paths-ii/)
 
 ```javascript {.line-numbers}
-var longestCommonSubsequence = function (text1, text2) {
-	const n = text1.length
-	const m = text2.length
-	//直接第一行和第一列赋值base case为0,第一行第一列代表的是空,下面也不需要判断越界
-	const dp = Array.from(new Array(n + 1), () => new Array(m + 1).fill(0))
+var uniquePathsWithObstacles = function (obstacleGrid) {
+	const m = obstacleGrid.length,
+		n = obstacleGrid[0].length,
+		dp = Array.from({ length: m }, () => new Array(n).fill(0))
 
-	for (let i = 1; i <= n; i++) {
-		for (let j = 1; j <= m; j++) {
-			if (text1[i - 1] === text2[j - 1]) {
-				dp[i][j] = dp[i - 1][j - 1] + 1
-			} else {
-				dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j])
-			}
+	//base case
+	for (let i = 0; i < m && obstacleGrid[i][0] === 0; i++) dp[i][0] = 1
+	for (let i = 0; i < n && obstacleGrid[0][i] === 0; i++) dp[0][i] = 1
+
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			if (obstacleGrid[i][j] === 1) continue
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 		}
 	}
-	return dp[n][m]
+	return dp[m - 1][n - 1]
+}
+
+//优化空间
+var uniquePathsWithObstacles = function (obstacleGrid) {
+	const m = obstacleGrid.length,
+		n = obstacleGrid[0].length,
+		dp = new Array(n).fill(0)
+
+	//每列第一个由obstacleGrid[0][0]决定
+	dp[0] = obstacleGrid[0][0] === 1 ? 0 : 1
+	for (let i = 0; i < m; i++) {
+		for (let j = 0; j < n; j++) {
+			if (obstacleGrid[i][j] === 1) {
+				dp[j] = 0
+				continue
+			}
+			//加上obstacleGrid[i][j - 1] === 0更严谨
+			if (j - 1 >= 0 && obstacleGrid[i][j - 1] === 0) dp[j] += dp[j - 1]
+		}
+	}
+	return dp[n - 1]
+}
+```
+
+### [96.不同的二叉搜索树](https://leetcode-cn.com/problems/unique-binary-search-trees/)
+
+```javascript {.line-numbers}
+var numTrees = function (n) {
+	//dp[i] ：用连着的i个数，所构建出的BST种类数
+	const dp = new Array(n + 1).fill(0)
+	//base case
+	dp[0] = dp[1] = 1
+
+	for (let i = 2; i <= n; i++) {
+		//笛卡尔积
+		for (let j = 0; j <= i - 1; j++) {
+			dp[i] += dp[j] * dp[i - j - 1]
+		}
+	}
+	return dp[n]
+}
+
+//recursion
+const numTrees = (n) => {
+	// n个整数能创建出的BST的种类数
+	if (n == 0 || n == 1) return 1
+
+	let num = 0
+	for (let i = 0; i <= n - 1; i++) {
+		num += numTrees(i) * numTrees(n - i - 1)
+	}
+	return num
+}
+```
+
+# 8、递推型 DP
+
+### [70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+
+```javascript {.line-numbers}
+//recursion O(2^n)
+//memo recursion
+
+//O(n) - O(n)
+var climbStairs = function (n) {
+	//dp[i]表示爬到第i级台阶的方案数
+	const dp = new Array(n + 1)
+	dp[1] = 1
+	dp[2] = 2
+	for (let i = 3; i <= n; i++) {
+		dp[i] = dp[i - 1] + dp[i - 2]
+	}
+	return dp[n]
+}
+
+//O(n) - O(1)
+var climbStairs = function (n) {
+	if (n <= 2) return n
+
+	let first = 1,
+		second = 2,
+		third
+
+	for (let i = 3; i <= n; i++) {
+		third = first + second
+		first = second
+		second = third
+	}
+	return third
+}
+```
+
+### [509. 斐波那契数](https://leetcode-cn.com/problems/fibonacci-number/)
+
+```javascript {.line-numbers}
+var fib = function (n) {
+	if (n < 2) return n
+	let p = 0,
+		q = 0,
+		r = 1
+	for (let i = 2; i <= n; i++) {
+		p = q
+		q = r
+		r = p + q
+	}
+	return r
+}
+```
+
+### [1137. 第 N 个泰波那契数](https://leetcode-cn.com/problems/n-th-tribonacci-number/)
+
+```javascript {.line-numbers}
+var tribonacci = function (n) {
+	if (n < 3) return n === 0 ? 0 : 1
+
+	let x = 0,
+		y = 1,
+		z = 1,
+		tmp
+	for (let i = 3; i <= n; i++) {
+		tmp = x + y + z
+		x = y
+		y = z
+		z = tmp
+	}
+	return z
+}
+```
+
+# 9、概率型 DP
+
+# 10、博弈型 DP
+
+### [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
+
+```javascript {.line-numbers}
+var canWinNim = function (n) {
+	return n % 4 !== 0
+}
+
+//DP内存超限-滚动数组则超时
+```
+
+### [877. 石子游戏](https://leetcode-cn.com/problems/stone-game/)
+
+```javascript {.line-numbers}
+var stoneGame = function (piles) {
+	return true
+}
+
+//DP O(n^2) - O(n^2)
+var stoneGame = function (piles) {
+	const len = piles.length,
+		//dp[i][j] 表示当剩下的石子堆为下标 i 到下标 j 时，当前玩家与另一个玩家的石子数量之差的最大值，注意当前玩家不一定是先手Alex
+		dp = Array.from({ length: len }, () => new Array(len).fill(0))
+	for (let i = 0; i < len; i++) {
+		dp[i][i] = piles[i]
+	}
+	//从下往上dp
+	for (let i = len - 2; i >= 0; i--) {
+		for (let j = i + 1; j < len; j++) {
+			dp[i][j] = Math.max(piles[i] - dp[i + 1][j], piles[j] - dp[i][j - 1])
+		}
+	}
+	return dp[0][len - 1] > 0
+}
+
+//DP O(n^2) - O(n)
+var stoneGame = function (piles) {
+	const len = piles.length,
+		dp = new Array(len).fill(0)
+	for (let i = 0; i < len; i++) {
+		dp[i] = piles[i]
+	}
+	for (let i = len - 2; i >= 0; i--) {
+		for (let j = i + 1; j < len; j++) {
+			dp[j] = Math.max(piles[i] - dp[j], piles[j] - dp[j - 1])
+		}
+	}
+	return dp[len - 1] > 0
 }
 ```
