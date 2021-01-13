@@ -1,9 +1,17 @@
-> 一个原则: 画图
-> 两种题型: 指针的修改、链表的拼接
-> 三个注意: 环、边界、递归
-> 四个技巧: 虚拟头、快慢指针、穿针引线、先穿再排后判空
-> other: 如果你想递归和迭代都写, 推荐你用前序遍历,因为前序遍历很容易改造成迭代,准确的说前序遍历容易改成不需要栈的递归,而后续遍历需要借助栈来完成
-> summary: 如果是单链表,我们无法在`O(1)`的时间拿到前驱节点,这也是为什么我们遍历的时候老是维护一个前驱节点`pre`的原因。但是本质原因其实是链表的增删操作都依赖前驱节点。这是链表的基本操作,是链表的特性天生决定的
+### 心得
+
+- 一个原则: 画图
+- 两种题型: 指针的修改、链表的拼接
+- 三个注意: 环、边界、递归
+- 四个技巧:
+  - 虚拟头
+    - 若题目的头节点可能被移除，使用虚拟节点，这样头节点就变成了中间节点，就不需要为头节点做特殊判断了
+    - 通过在合适的时候断开链接，返回链表的中间节点
+  - 快慢指针
+  - 穿针引线
+  - 先穿再排后判空
+- other: 如果你想递归和迭代都写, 推荐前序遍历,因为前序遍历很容易改造成迭代,准确的说前序遍历容易改成不需要栈的递归,而后续遍历需要借助栈来完成
+- summary: 如果是单链表,我们无法在`O(1)`的时间拿到前驱节点,这也是为什么我们遍历的时候老是维护一个前驱节点`pre`的原因。但是本质原因其实是链表的增删操作都依赖前驱节点。这是链表的基本操作,是链表的特性天生决定的
 
 ### insert & delete
 
@@ -110,7 +118,7 @@ var mergeTwoLists = function (l1, l2) {
 }
 ```
 
-### [23. 合并 K 个排序链表](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+### [23. 合并 K 个排序链表 H](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```javascript {.line-numbers}
 var mergeKLists = function (lists) {
@@ -237,7 +245,7 @@ var swapPairs = function (head) {
 }
 ```
 
-### [25. K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/) ==不熟==
+### [25. K 个一组翻转链表 H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
 ```javascript {.line-numbers}
 const myReverse = (head, tail) => {
@@ -610,17 +618,12 @@ var reverseList = function (head) {
 }
 
 //recursion
-//返回了5这个节点
-//reverseList(4)中
-//p为5
-//head.next.next = head 相当于 5 -> 4
-//现在节点情况为 4 -> 5 -> 4
-//head.next = null,切断4 -> 5 这一条,现在只有 5 -> 4 -> null
-//一直返回5这个node
 var reverseList = function (head) {
 	if (!head || !head.next) return head
+	//处理好的后续头结点
 	const p = reverseList(head.next)
-	//let node = head.next
+	//等同于
+	//const node = head.next
 	//node.next = head
 	head.next.next = head
 	head.next = null

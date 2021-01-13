@@ -1,20 +1,27 @@
-var mySqrt = function (x) {
-	if (x < 2) return x
-	let l = 0,
-		r = x,
-		mid
-
-	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
-		if (mid * mid < x) {
-			l = mid + 1
-		} else if (mid * mid > x) {
-			r = mid - 1
-		} else if (mid * mid === x) {
-			return mid
-		}
-	}
-	return r
+var queue = [2, 3, 1]
+for (const [i, q] of queue) {
+	console.log(`${i}-----${q}`)
 }
 
-mySqrt(8)
+    int ans;
+    public int sumRootToLeaf(TreeNode root) {
+        sumbinary(root, 0);
+        return ans;
+    }
+
+    public void sumbinary(TreeNode root, int cur){
+        if(root == null){
+            return;
+        }
+        if(root.left == null && root.right == null){
+            ans += cur * 2 + root.val;
+            return;
+        }
+        sumbinary(root.left, cur * 2 + root.val);
+        sumbinary(root.right, cur * 2 + root.val);
+    }
+
+作者：java-man
+链接：https://leetcode-cn.com/problems/sum-of-root-to-leaf-binary-numbers/solution/yong-shi-100nei-cun-9517-by-lzx_javaxiao-bai/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

@@ -1,10 +1,42 @@
+# Basic Concept
+
+- node
+- root
+- branch
+- child
+- leaf
+- level: 根为第一层,根的孩子为第二层
+- height:节点到叶子节点的最大值就是其高度
+- depth:高度和深度是相反的,高度是从下往上数,深度是从上往下.因此根节点的深度和叶子节点的高度是 0
+- width
+- 二叉树,三叉树... N 叉树,由其子节点最多可以有几个决定,最多有 N 个就是 N 叉树
+  - 完全二叉树、满二叉树、二叉搜索树、平衡二叉树、红黑树...
+
+# 解题要素
+
+- 一个中心:遍历
+- 两个基本点:DFS/BFS -> preorder/inorder/postorder 的 DFS
+- 三种题型:搜索类,构建类和修改类
+- 四个重要概念:二叉搜索树(中序遍历是有序的)、完全二叉树、路径、距离
+- 七个技巧
+  - dfs(root)
+  - 单/双递归(如果题目有类似,`任意节点开始 xxxx 或者所有 xxx `这样的说法,就可以考虑使用双递归.但是如果递归中有重复计算,则可以使用双递归 + 记忆化或者直接单递归)
+    ![](./images/Tree_1.png)
+  - 前后遍历
+    - `自顶向下`:就是在每个递归层级,首先访问节点来计算一些值,并在递归调用函数时将这些值传递到子节点,一般是通过参数传到子树中
+    - `自底向上`是另一种常见的递归方法,首先对所有子节点递归地调用函数,然后根据返回值和根节点本身的值得到答案
+  - 虚拟节点
+  - 边界
+  - 参数扩展大法
+  - 返回元组/列表
+
 # Binary Tree
 
 ![](./images/Tree.png)
 
-## Binary Tree traversal
+## Binary Tree Traversal
 
-### preorder/inorder/postorder
+### Preorder/Inorder/Postorder
 
 ##### [144.二叉树前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
@@ -12,11 +44,11 @@
 //recursion, don't need to judge if node is null
 var preorderTraversal = function (root) {
 	const ret = []
-	const traversal = (node, ret) => {
-		if (!node) return
-		ret.push(node.val)
-		traversal(node.left, ret)
-		traversal(node.right, ret)
+	const traversal = (root, ret) => {
+		if (!root) return
+		ret.push(root.val)
+		traversal(root.left, ret)
+		traversal(root.right, ret)
 	}
 	traversal(root, ret)
 	return ret
@@ -47,11 +79,11 @@ var preorderTraversal = function (root) {
 ```javascript {.line-numbers}
 var preorder = function (root) {
 	let ret = []
-	const traversal = (node, ret) => {
-		if (!node) return
-		ret.push(node.val)
-		if (node.children && node.children.length > 0) {
-			node.children.forEach((child) => {
+	const traversal = (root, ret) => {
+		if (!root) return
+		ret.push(root.val)
+		if (root.children && root.children.length > 0) {
+			root.children.forEach((child) => {
 				traversal(child, ret)
 			})
 		}
@@ -86,11 +118,11 @@ var preorder = function (root) {
 //recursion
 var inorderTraversal = function (root) {
 	let ret = []
-	let traversal = (node, ret) => {
-		if (!node) return
-		traversal(node.left, ret)
-		ret.push(node.val)
-		traversal(node.right, ret)
+	let traversal = (root, ret) => {
+		if (!root) return
+		traversal(root.left, ret)
+		ret.push(root.val)
+		traversal(root.right, ret)
 	}
 	traversal(root, ret)
 	return ret
@@ -121,18 +153,18 @@ var inorderTraversal = function (root) {
 //recursion
 var postorderTraversal = function (root) {
 	let ret = []
-	var traversal = (node) => {
-		if (!node) return
-		traversal(node.left)
-		traversal(node.right)
-		ret.push(node.val)
+	var traversal = (root) => {
+		if (!root) return
+		traversal(root.left)
+		traversal(root.right)
+		ret.push(root.val)
 	}
 	traversal(root)
 	return ret
 }
 
 //iteration
-//节点第一次访问时并不打印，而是在第二次遍历时才打印。所以需要一个变量来标记该结点是否访问过
+//节点第一次访问时并不打印,而是在第二次遍历时才打印.所以需要一个变量来标记该结点是否访问过
 const postorderTraversal = (root) => {
 	const ret = [],
 		stack = []
@@ -147,7 +179,7 @@ const postorderTraversal = (root) => {
 		root = stack.pop()
 		//root.right === prev 节点访问过一次
 		if (!root.right || root.right === prev) {
-			//因第二次才加入，这里加入即可
+			//因第二次才加入,这里加入即可
 			ret.push(root.val)
 			prev = root
 			root = null
@@ -192,12 +224,12 @@ var postorder = function (root) {
 	const ret = [],
 		stack = []
 
-	const postorderNode = (node, ret) => {
-		if (!node) return
-		node.children.forEach((child) => {
+	const postorderNode = (root, ret) => {
+		if (!root) return
+		root.children.forEach((child) => {
 			postorderNode(child, ret)
 		})
-		ret.push(node.val)
+		ret.push(root.val)
 	}
 	postorderNode(root, ret)
 	return ret
@@ -223,7 +255,7 @@ var postorder = function (root) {
 }
 ```
 
-### level traversal
+### Level Traversal
 
 ##### [102.二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
@@ -244,7 +276,7 @@ var levelOrder = function (root) {
 
 		for (let i = 0; i < size; i++) {
 			const curNode = queue.shift()
-			curLevel.push(node.val)
+			curLevel.push(curNode.val)
 			if (curNode.left) queue.push(curNode.left)
 			if (curNode.right) queue.push(curNode.right)
 		}
@@ -257,12 +289,12 @@ var levelOrder = function (root) {
 var levelOrder = function (root) {
 	const ret = []
 
-	const dfs = (node, level, ret) => {
-		if (node == null) return
+	const dfs = (root, level, ret) => {
+		if (root == null) return
 		if (!ret[level]) ret[level] = []
-		ret[level].push(node.val)
-		dfs(node.left, level + 1, ret)
-		dfs(node.right, level + 1, ret)
+		ret[level].push(root.val)
+		dfs(root.left, level + 1, ret)
+		dfs(root.right, level + 1, ret)
 	}
 
 	dfs(root, 0, ret)
@@ -297,12 +329,12 @@ var levelOrder = function (root) {
 var levelOrder = function (root) {
 	var nums = []
 
-	let traversal = (node, level, nums) => {
-		if (!node) return
+	let traversal = (root, level, nums) => {
+		if (!root) return
 		if (!nums[level]) nums[level] = []
-		nums[level].push(node.val)
-		for (var i = 0; i < node.children.length; i++) {
-			traversal(node.children[i], level + 1, nums)
+		nums[level].push(root.val)
+		for (var i = 0; i < root.children.length; i++) {
+			traversal(root.children[i], level + 1, nums)
 		}
 	}
 	traversal(root, 0, nums)
@@ -322,14 +354,14 @@ var zigzagLevelOrder = function (root) {
 		const size = queue.length,
 			curLevel = []
 		for (let i = 0; i < size; i++) {
-			const node = queue.shift()
+			const curNode = queue.shift()
 			if (direction) {
-				curLevel.push(node.val)
+				curLevel.push(curNode.val)
 			} else {
-				curLevel.unshift(node.val)
+				curLevel.unshift(curNode.val)
 			}
-			if (node.left) queue.push(node.left)
-			if (node.right) queue.push(node.right)
+			if (curNode.left) queue.push(curNode.left)
+			if (curNode.right) queue.push(curNode.right)
 		}
 		ret.push(curLevel)
 		direction = !direction
@@ -365,15 +397,15 @@ var largestValues = function (root) {
 //dfs
 var largestValues = function (root) {
 	const ret = []
-	const dfs = (node, level, ret) => {
-		if (!node) return
+	const dfs = (root, level, ret) => {
+		if (!root) return
 		//hole!!! node's value maybe null
 		//hole!!! node's value maybe null
 		//hole!!! node's value maybe null
-		if (ret[level] === undefined) ret[level] = node.val
-		ret[level] = Math.max(ret[level], node.val)
-		dfs(node.left, level + 1, ret)
-		dfs(node.right, level + 1, ret)
+		if (ret[level] === undefined) ret[level] = root.val
+		ret[level] = Math.max(ret[level], root.val)
+		dfs(root.left, level + 1, ret)
+		dfs(root.right, level + 1, ret)
 	}
 
 	dfs(root, 0, ret)
@@ -405,12 +437,12 @@ var rightSideView = function (root) {
 //recursion
 var rightSideView = function (root) {
 	const ret = []
-	const dfs = (node, level, ret) => {
-		if (!node) return
-		if (level === ret.length) ret.push(node.val)
+	const dfs = (root, level, ret) => {
+		if (!root) return
+		if (level === ret.length) ret.push(root.val)
 		//visit right son first, so above line code can visit right first node of next level
-		dfs(node.right, level + 1, ret)
-		dfs(node.left, level + 1, ret)
+		dfs(root.right, level + 1, ret)
+		dfs(root.left, level + 1, ret)
 	}
 
 	dfs(root, 0, ret)
@@ -418,7 +450,7 @@ var rightSideView = function (root) {
 }
 ```
 
-### other
+### Others
 
 ##### [987.二叉树的垂序遍历](https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/)
 
@@ -426,7 +458,7 @@ var rightSideView = function (root) {
 var verticalTraversal = function (root) {
 	if (!root) return []
 
-	// 二维数组 存坐标和值，形式如 [[x, y, val], [...]]
+	// 二维数组 存坐标和值,形式如 [[x, y, val], [...]]
 	let locations = []
 
 	const dfs = function (root, x, y) {
@@ -438,7 +470,7 @@ var verticalTraversal = function (root) {
 	// 先前序遍历记录下节点坐标和值
 	dfs(root, 0, 0)
 
-	// 按照x升序，y降序，val升序
+	// 按照x升序,y降序,val升序
 	locations = locations.sort((a, b) => {
 		if (a[0] !== b[0]) {
 			return a[0] - b[0]
@@ -449,11 +481,11 @@ var verticalTraversal = function (root) {
 		return a[2] - b[2]
 	})
 
-	// curValOfX当前遍历的节点的x的值，默认先取第一个节点的x值
+	// curValOfX当前遍历的节点的x的值,默认先取第一个节点的x值
 	let curValOfX = locations[0][0]
 	const ret = [[locations[0][2]]]
 
-	// 从第2个节点开始遍历坐标数组，把x相同的val分成一组
+	// 从第2个节点开始遍历坐标数组,把x相同的val分成一组
 	for (let i = 1; i < locations.length; i++) {
 		const location = locations[i]
 		const x = location[0]
@@ -472,20 +504,20 @@ var verticalTraversal = function (root) {
 
 ## BST
 
-### crud
+### CRUD
 
 ##### [98.验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript {.line-numbers}
 var isValidBST = function (root) {
-	let helper = (node, lower, upper) => {
-		if (!node) return true
-		if (node.val <= lower || node.val >= upper) return false
+	let helper = (root, lower, upper) => {
+		if (!root) return true
+		if (root.val <= lower || root.val >= upper) return false
 		return (
-			helper(node.left, lower, node.val) && helper(node.right, node.val, upper)
+			helper(root.left, lower, root.val) && helper(root.right, root.val, upper)
 		)
 	}
-	//增加参数，向下传递
+	//增加参数,向下传递
 	return helper(root, -Infinity, Infinity)
 }
 
@@ -509,12 +541,12 @@ var isValidBST = function (root) {
 
 //labuladuo version
 var isValidBST = function (root) {
-	function helper(node, min, max) {
-		if (!node) return true
-		if (min !== null && node.val <= min.val) return false
-		if (max !== null && node.val >= max.val) return false
+	function helper(root, min, max) {
+		if (!root) return true
+		if (min !== null && root.val <= min.val) return false
+		if (max !== null && root.val >= max.val) return false
 		//limit左子树最大值node,右子树最小值node
-		return helper(node.left, min, node) && helper(node.right, node, max)
+		return helper(root.left, min, root) && helper(root.right, root, max)
 	}
 	return helper(root, null, null)
 }
@@ -555,28 +587,28 @@ var recoverTree = function (root) {
 }
 
 //Morris inorder
-//来到当前节点，记为cur(引用)
-//1、如果cur无左孩子，cur向右移动(cur = cur.right)
-//2、如果cur有左孩子，找到cur左子树上最右的节点，记为predecessor
-//  (1)如果predecessor的right指针指向空，让其指向cur，cur向左移动(cur = cur.left)
-//  (2)如果predecessor的right指针指向cur，说明我们已经遍历完cur的左子树,让其指向空，cur向右移动(cur = cur.right)
-//  (3)重复上述操作，直至访问完整棵树
+//来到当前节点,记为cur(引用)
+//1、如果cur无左孩子,cur向右移动(cur = cur.right)
+//2、如果cur有左孩子,找到cur左子树上最右的节点,记为predecessor
+//  (1)如果predecessor的right指针指向空,让其指向cur,cur向左移动(cur = cur.left)
+//  (2)如果predecessor的right指针指向cur,说明我们已经遍历完cur的左子树,让其指向空,cur向右移动(cur = cur.right)
+//  (3)重复上述操作,直至访问完整棵树
 var recoverTree = function (root) {
 	let first = (second = pre = predecessor = null)
 
 	while (root !== null) {
 		if (root.left) {
-			// predecessor 节点就是当前 root 节点向左走一步，然后一直向右走至无法走为止
+			// predecessor 节点就是当前 root 节点向左走一步,然后一直向右走至无法走为止
 			predecessor = root.left
 			while (predecessor.right && predecessor.right !== root) {
 				predecessor = predecessor.right
 			}
 
-			// 让 predecessor 的右指针指向 root，继续遍历左子树
+			// 让 predecessor 的右指针指向 root,继续遍历左子树
 			if (predecessor.right === null) {
 				predecessor.right = root
 				root = root.left
-				// 说明左子树已经访问完了，我们需要断开链接
+				// 说明左子树已经访问完了,我们需要断开链接
 			} else {
 				if (pre !== null && root.val < pre.val) {
 					second = root
@@ -588,7 +620,7 @@ var recoverTree = function (root) {
 				predecessor.right = null
 				root = root.right
 			}
-			// 如果没有左孩子，则直接访问右孩子
+			// 如果没有左孩子,则直接访问右孩子
 		} else {
 			if (pre !== null && root.val < pre.val) {
 				second = root
@@ -615,7 +647,7 @@ var trimBST = function (root, low, high) {
 	if (root.val > high) return trimBST(root.left, low, high)
 	if (root.val < low) return trimBST(root.right, low, high)
 
-	//需要连接，所以需要返回递归的头结点
+	//需要连接,所以需要返回递归的头结点
 	root.left = trimBST(root.left, low, high)
 	root.right = trimBST(root.right, low, high)
 	return root
@@ -658,14 +690,14 @@ var kthSmallest = function (root, k) {
 var kthSmallest = function (root, k) {
 	let rank = k,
 		ret
-	const helper = (node, k) => {
-		if (!node) return
-		helper(node.left, k)
+	const helper = (root, k) => {
+		if (!root) return
+		helper(root.left, k)
 		if (--rank === 0) {
-			ret = node.val
+			ret = root.val
 			return
 		}
-		helper(node.right, k)
+		helper(root.right, k)
 	}
 	helper(root, k)
 	return ret
@@ -682,18 +714,18 @@ var insertIntoBST = function (root, val) {
 	} else {
 		root.left = insertIntoBST(root.left, val)
 	}
-	//需要连接，所以需要返回递归的头结点
+	//需要连接,所以需要返回递归的头结点
 	return root
 }
 ```
 
-### others
+### Others
 
 ##### [96.不同的二叉搜索树](https://leetcode-cn.com/problems/unique-binary-search-trees/)
 
 ```javascript {.line-numbers}
 var numTrees = function (n) {
-	//dp[i] ：用连着的i个数，所构建出的BST种类数
+	//dp[i]:用连着的i个数,所构建出的BST种类数
 	const dp = new Array(n + 1).fill(0)
 	//base case
 	dp[0] = dp[1] = 1
@@ -741,7 +773,7 @@ var generateTrees = function (n) {
 			//获得所有可行的右子树集合
 			const rightTree = buildTree(i + 1, end)
 
-			// 从左子树集合中选出一棵左子树，从右子树集合中选出一棵右子树，拼接到根节点上
+			// 从左子树集合中选出一棵左子树,从右子树集合中选出一棵右子树,拼接到根节点上
 			for (let tl of leftTree) {
 				for (let tr of rightTree) {
 					const root = new TreeNode(i)
@@ -825,12 +857,12 @@ var lowestCommonAncestor = function (root, p, q) {
 //反序中序遍历
 var convertBST = function (root) {
 	let sum = 0
-	const dfs = (node) => {
-		if (!node) return null
-		dfs(node.right)
-		sum += node.val
-		node.val = sum
-		dfs(node.left)
+	const dfs = (root) => {
+		if (!root) return null
+		dfs(root.right)
+		sum += root.val
+		root.val = sum
+		dfs(root.left)
 	}
 
 	dfs(root)
@@ -990,8 +1022,8 @@ var minDepth = function (root) {
 
 ```javascript {.line-numbers}
 var isBalanced = function (root) {
-	const depth = (node) => {
-		return !node ? 0 : Math.max(depth(node.left), depth(node.right)) + 1
+	const depth = (root) => {
+		return !root ? 0 : Math.max(depth(root.left), depth(root.right)) + 1
 	}
 
 	return !root
@@ -1006,10 +1038,10 @@ var isBalanced = function (root) {
 
 ```javascript {.line-numbers}
 var countNodes = function (root) {
-	const countLevel = (node) => {
+	const countLevel = (root) => {
 		let level = 0
-		while (node) {
-			node = node.left
+		while (root) {
+			root = root.left
 			level++
 		}
 		return level
@@ -1019,11 +1051,11 @@ var countNodes = function (root) {
 	const leftLevel = countLevel(root.left)
 	const rightLevel = countLevel(root.right)
 
-	// 如果满二叉树的层数为h，则总节点数为：2^h - 1
-	// 左子树一定是满二叉树，因为节点已经填充到右子树了，左子树必定已经填满了。所以左子树的节点总数我们可以直接得到，是 2^left - 1，加上当前这个 root 节点，则正好是 2^left。再对右子树进行递归统计
+	// 如果满二叉树的层数为h,则总节点数为:2^h - 1
+	// 左子树一定是满二叉树,因为节点已经填充到右子树了,左子树必定已经填满了.所以左子树的节点总数我们可以直接得到,是 2^left - 1,加上当前这个 root 节点,则正好是 2^left.再对右子树进行递归统计
 	if (leftLevel === rightLevel) {
 		return countNodes(root.right) + (1 << leftLevel)
-		//说明此时最后一层不满，但倒数第二层已经满了，可以直接得到右子树的节点个数。同理，右子树节点加上root节点，总数为 2^right。再对左子树进行递归查找
+		//说明此时最后一层不满,但倒数第二层已经满了,可以直接得到右子树的节点个数.同理,右子树节点加上root节点,总数为 2^right.再对左子树进行递归查找
 	} else {
 		return countNodes(root.left) + (1 << rightLevel)
 	}
@@ -1034,7 +1066,7 @@ var countNodes = function (root) {
 
 ```javascript {.line-numbers}
 //not AC!!!
-//如果我们走向左子树，那么 position -> position * 2，如果我们走向右子树，那么 position -> position * 2 + 1。当我们在看同一层深度的位置值 L 和 R 的时候，宽度就是 R - L + 1
+//如果我们走向左子树,那么 position -> position * 2,如果我们走向右子树,那么 position -> position * 2 + 1.当我们在看同一层深度的位置值 L 和 R 的时候,宽度就是 R - L + 1
 var widthOfBinaryTree = function (root) {
 	if (!root) return 0
 	//node + depth + position
@@ -1066,21 +1098,20 @@ var widthOfBinaryTree = function (root) {
 
 var widthOfBinaryTree = function (root) {
 	if (!root) return 0
-	let ans = 1,
-		que = [[0n, root]]
-	while (que.length) {
-		const width = que[que.length - 1][0] - que[0][0] + 1n
-		if (width > ans) {
-			ans = width
-		}
-		let tmp = []
-		for (const [i, q] of que) {
+	let ret = 1,
+		//太大了所以用bigint
+		queue = [[0n, root]]
+	while (queue.length > 0) {
+		const width = queue[queue.length - 1][0] - queue[0][0] + 1n
+		if (width > ret) ret = width
+		const tmp = []
+		for (const [i, q] of queue) {
 			q.left && tmp.push([i * 2n, q.left])
 			q.right && tmp.push([i * 2n + 1n, q.right])
 		}
-		que = tmp
+		queue = tmp
 	}
-	return Number(ans)
+	return Number(ret)
 }
 ```
 
@@ -1088,10 +1119,10 @@ var widthOfBinaryTree = function (root) {
 
 ```javascript {.line-numbers}
 var diameterOfBinaryTree = function (root) {
-	const dfs = (node) => {
-		if (!node) return 0
-		const leftDepth = dfs(node.left)
-		const rightDepth = dfs(node.right)
+	const dfs = (root) => {
+		if (!root) return 0
+		const leftDepth = dfs(root.left)
+		const rightDepth = dfs(root.right)
 		//inner cycle
 		ret = Math.max(ret, leftDepth + rightDepth + 1)
 		//return该节点为根的子树深度
@@ -1108,12 +1139,12 @@ var diameterOfBinaryTree = function (root) {
 ```javascript {.line-numbers}
 var findTilt = function (root) {
 	let ret = 0
-	const dfs = (node) => {
-		if (!node) return 0
-		const left = dfs(node.left)
-		const right = dfs(node.right)
+	const dfs = (root) => {
+		if (!root) return 0
+		const left = dfs(root.left)
+		const right = dfs(root.right)
 		ret += Math.abs(left - right)
-		return left + right + node.val
+		return left + right + root.val
 	}
 	dfs(root)
 	return ret
@@ -1125,14 +1156,14 @@ var findTilt = function (root) {
 ```javascript {.line-numbers}
 var binaryTreePaths = function (root) {
 	const paths = []
-	const dfs = (node, paths, path) => {
-		if (!node) return
-		if (!node.left && !node.right) {
-			paths.push(path + node.val)
+	const dfs = (root, paths, path) => {
+		if (!root) return
+		if (!root.left && !root.right) {
+			paths.push(path + root.val)
 			return
 		}
-		dfs(node.left, paths, path + node.val + '->')
-		dfs(node.right, paths, path + node.val + '->')
+		dfs(root.left, paths, path + root.val + '->')
+		dfs(root.right, paths, path + root.val + '->')
 	}
 	dfs(root, paths, '')
 	return paths
@@ -1140,14 +1171,14 @@ var binaryTreePaths = function (root) {
 
 var binaryTreePaths = function (root) {
 	const paths = []
-	const dfs = (node, path) => {
-		if (node) {
-			path += node.val
-			if (!node.left && !node.right) {
+	const dfs = (root, path) => {
+		if (root) {
+			path += root.val
+			if (!root.left && !root.right) {
 				paths.push(path)
 			} else {
-				dfs(node.left, path + '->')
-				dfs(node.right, path + '->')
+				dfs(root.left, path + '->')
+				dfs(root.right, path + '->')
 			}
 		}
 	}
@@ -1234,16 +1265,15 @@ var findDuplicateSubtrees = function (root) {
 	const map = new Map(),
 		ret = []
 
-	const dfs = (node) => {
-		if (!node) return '#'
+	const dfs = (root) => {
+		if (!root) return '#'
+		const left = dfs(root.left)
+		const right = dfs(root.right)
 
-		const left = dfs(node.left)
-		const right = dfs(node.right)
-
-		const subTree = `${left},${right},${node.val}`
+		const subTree = `${left},${right},${root.val}`
 		if (map.has(subTree)) {
 			if (map.get(subTree) === 1) {
-				ret.push(node)
+				ret.push(root)
 			}
 			map.set(subTree, map.get(subTree) + 1)
 		} else {
@@ -1256,23 +1286,23 @@ var findDuplicateSubtrees = function (root) {
 }
 ```
 
-## path sum
+## Path Sum
 
 ##### [404.左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
 
 ```javascript {.line-numbers}
 var sumOfLeftLeaves = function (root) {
-	const dfs = (node) => {
-		const isLeaf = (node) => {
-			return !node.left && !node.right
+	const dfs = (root) => {
+		const isLeaf = (root) => {
+			return !root.left && !root.right
 		}
 		let ret = 0
-		if (node.left) {
-			ret += isLeaf(node.left) ? node.left.val : dfs(node.left)
+		if (root.left) {
+			ret += isLeaf(root.left) ? root.left.val : dfs(root.left)
 		}
 
-		if (node.right && !isLeaf(node.right)) {
-			ret += dfs(node.right)
+		if (root.right && !isLeaf(root.right)) {
+			ret += dfs(root.right)
 		}
 		return ret
 	}
@@ -1285,9 +1315,7 @@ var sumOfLeftLeaves = function (root) {
 ```javascript {.line-numbers}
 var hasPathSum = function (root, sum) {
 	if (!root) return false
-
 	if (!root.left && !root.right) return root.val === sum
-
 	return (
 		hasPathSum(root.left, sum - root.val) ||
 		hasPathSum(root.right, sum - root.val)
@@ -1320,15 +1348,14 @@ var pathSum = function (root, sum) {
 
 ```javascript {.line-numbers}
 var pathSum = function (root, sum) {
-	const dfs = (node, sum) => {
-		if (!node) return 0
+	const dfs = (root, sum) => {
+		if (!root) return 0
 		let ret = 0
-		if (sum === node.val) ret++
-		ret += dfs(node.left, sum - node.val)
-		ret += dfs(node.right, sum - node.val)
+		if (sum === root.val) ret++
+		ret += dfs(root.left, sum - root.val)
+		ret += dfs(root.right, sum - root.val)
 		return ret
 	}
-
 	return !root
 		? 0
 		: dfs(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum)
@@ -1341,15 +1368,15 @@ var pathSum = function (root, sum) {
 var maxPathSum = function (root) {
 	let retMax = Number.MIN_SAFE_INTEGER
 
-	const dfs = (node) => {
-		if (node == null) return 0
+	const dfs = (root) => {
+		if (root == null) return 0
 		//if negative, then return 0 to outerSum
-		const left = Math.max(dfs(node.left), 0)
-		const right = Math.max(dfs(node.right), 0)
+		const left = Math.max(dfs(root.left), 0)
+		const right = Math.max(dfs(root.right), 0)
 
 		//update innerSum = left + right + node.val
-		retMax = Math.max(retMax, left + right + node.val)
-		return Math.max(left, right) + node.val
+		retMax = Math.max(retMax, left + right + root.val)
+		return Math.max(left, right) + root.val
 	}
 	dfs(root)
 	return retMax
@@ -1360,17 +1387,17 @@ var maxPathSum = function (root) {
 
 ```javascript {.line-numbers}
 var sumNumbers = function (root, preSum) {
-	const dfs = (node, preSum) => {
-		if (!node) return 0
-		preSum = preSum * 10 + node.val
-		if (!node.left && !node.right) return preSum
-		return dfs(node.left, preSum) + dfs(node.right, preSum)
+	const dfs = (root, preSum) => {
+		if (!root) return 0
+		preSum = preSum * 10 + root.val
+		if (!root.left && !root.right) return preSum
+		return dfs(root.left, preSum) + dfs(root.right, preSum)
 	}
 	return dfs(root, 0)
 }
 ```
 
-## serialize/deserialize
+## Serialize/Deserialize
 
 ##### [105.从前序与中序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
@@ -1578,15 +1605,13 @@ var connect = function (root) {
 //BFS
 var connect = function (root) {
 	if (!root) return null
-
 	const queue = [root]
-
 	while (queue.length > 0) {
 		const size = queue.length
 
 		for (let i = 0; i < size; i++) {
 			const curNode = queue.shift()
-			//connect
+			//assign right point
 			if (i < size - 1) {
 				curNode.next = queue[0]
 			}
@@ -1594,7 +1619,6 @@ var connect = function (root) {
 			if (curNode.right) queue.push(curNode.right)
 		}
 	}
-
 	return root
 }
 ```

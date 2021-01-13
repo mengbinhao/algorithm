@@ -1,125 +1,3 @@
-### [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
-
-```javascript {.line-numbers}
-//brute force + reverse()
-//O(N^3) - O(1)
-var longestPalindrome = function (s) {
-	if (!s) return ''
-	const len = s.length
-	if (len < 2) return s
-
-	let maxLen = 1,
-		begin = 0
-
-	const isPalindrome = (s, l, r) => {
-		while (l < r) {
-			if (s[l] !== s[r]) return false
-			l++
-			r--
-		}
-		return true
-	}
-
-	for (let i = 0; i < len - 1; i++) {
-		for (let j = i + 1; j < len; j++) {
-			if (j - i + 1 > maxLen && isPalindrome(s, i, j)) {
-				maxLen = j - i + 1
-				begin = i
-			}
-		}
-	}
-	return s.substring(begin, begin + maxLen)
-}
-
-//DP  O(n^2) - O(n^2)
-var longestPalindrome = function (s) {
-	if (!s) return ''
-	const len = s.length
-	if (len < 2) return s
-
-	//dp[i..j] 表示从i到j的子串是否是回文
-	const dp = Array.from({ length: len }, () => new Array(len))
-
-	let begin = 0,
-		maxLen = 1
-
-	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
-	//先升序填列，再升序填行
-	for (let j = 1; j < len; j++) {
-		for (let i = 0; i < j; i++) {
-			if (s[i] !== s[j]) {
-				dp[i][j] = false
-			} else {
-				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论
-				if (j - i < 3) dp[i][j] = true
-				else dp[i][j] = dp[i + 1][j - 1]
-			}
-
-			//每次update result
-			if (dp[i][j] && j - i + 1 > maxLen) {
-				maxLen = j - i + 1
-				begin = i
-			}
-		}
-	}
-	return s.substring(begin, begin + maxLen)
-}
-
-//中心扩展法 simple version
-var longestPalindrome = function (s) {
-	let res = ''
-	for (let i = 0; i < s.length; i++) {
-		// 以 s[i] 为中心的最长回文子串
-		const s1 = palindrome(s, i, i)
-		// 以 s[i] 和 s[i+1] 为中心的最长回文子串
-		const s2 = palindrome(s, i, i + 1)
-		// res = longest(res, s1, s2)
-		res = res.length > s1.length ? res : s1
-		res = res.length > s2.length ? res : s2
-	}
-	return res
-
-	function palindrome(s, l, r) {
-		// 向两边展开
-		while (l >= 0 && r < s.length && s[l] === s[r]) {
-			l--
-			r++
-		}
-		// 返回本次的回文串长度，长度不包括最后的l和r
-		return s.substring(l + 1, r)
-	}
-}
-
-//中心扩展法 advanced version
-var longestPalindrome = function (s) {
-	if (!s) return ''
-	const len = s.length
-	if (len < 2) return s
-	let maxLen = 1,
-		begin = 0
-	for (let i = 0; i < s.length; i++) {
-		const oddLen = palindrome(s, i, i)
-		const evenLen = palindrome(s, i, i + 1)
-		const curMaxLen = Math.max(oddLen, evenLen)
-		if (curMaxLen > maxLen) {
-			maxLen = curMaxLen
-			//奇/偶两种情况向下取整
-			begin = i - Math.floor((maxLen - 1) / 2)
-		}
-	}
-	return s.substring(begin, begin + maxLen)
-
-	function palindrome(s, l, r) {
-		// 向两边扩散
-		while (l >= 0 && r < s.length && s[l] === s[r]) {
-			l--
-			r++
-		}
-		return r - l - 1
-	}
-}
-```
-
 ### [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript {.line-numbers}
@@ -194,28 +72,6 @@ var trap = function (height) {
 }
 ```
 
-### [172. 阶乘后的零](https://leetcode-cn.com/problems/factorial-trailing-zeroes/submissions/)
-
-```javascript {.line-numbers}
-var trailingZeroes = function (n) {
-	let ret = 0,
-		division = 5
-	while (division <= n) {
-		ret += Math.floor(n / division)
-		division *= 5
-	}
-	return ret
-}
-
-var trailingZeroes = function (n) {
-	let ret = 0
-	for (let d = n; d / 5 > 0; d = d / 5) {
-		ret += Math.floor(d / 5)
-	}
-	return ret
-}
-```
-
 ### [204. 计数质数](https://leetcode-cn.com/problems/count-primes/)
 
 ```javascript {.line-numbers}
@@ -274,14 +130,6 @@ var calculate = function (s) {
 	function isNumber(val) {
 		return typeof val === 'number' && val === val
 	}
-}
-```
-
-### [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
-
-```javascript {.line-numbers}
-var canWinNim = function (n) {
-	return n % 4 !== 0
 }
 ```
 
@@ -424,13 +272,5 @@ var findErrorNums = function (nums) {
 		}
 
 	return [dup, missing]
-}
-```
-
-### [877. 石子游戏](https://leetcode-cn.com/problems/stone-game/)
-
-```javascript {.line-numbers}
-var stoneGame = function (piles) {
-	return true
 }
 ```
