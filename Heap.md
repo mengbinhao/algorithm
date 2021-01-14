@@ -9,8 +9,8 @@
 
 - 一个中心:动态求极值,动态和极值二者缺一不可
 - 两个实现:跳表、二叉堆(heappop、heappush)
-- 三种技巧
-- 四大应用
+- 三种技巧:多路归并、固定堆、事后小诸葛
+- 四大应用:topK、带权最短距离、因子分解、堆排序
 
 ### [215.数组中的第 K 个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 

@@ -9,20 +9,21 @@
  * @param {number[]} nums
  * @return {number}
  */
-
+//Greedy
+//O(N) - O(1)
 var jump = function (nums) {
 	let steps = 0,
 		end = 0,
 		maxPosition = 0
-
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
+		//当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
+		//到上次跳到的最远位置后继续update
 		if (i === end) {
 			end = maxPosition
 			steps++
 		}
 	}
-
 	return steps
 }
 // @lc code=end
