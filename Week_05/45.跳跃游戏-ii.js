@@ -18,7 +18,7 @@ var jump = function (nums) {
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
 		//当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
-		//到上次跳到的最远位置后继续update
+		//跳到上次能跳到的最远位置后update
 		if (i === end) {
 			end = maxPosition
 			steps++

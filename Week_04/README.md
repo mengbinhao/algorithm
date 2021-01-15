@@ -227,75 +227,77 @@ var search = function (nums, target) {
 ##### [200.岛屿数量 M](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```javascript
-//dfs
+//DFS
 var numIslands = function (grid) {
-	if (!grid || !grid.length) return 0
+	let ret = 0
+	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
 
-	let rows = grid.length,
-		cols = grid[0].length,
-		ret = 0
+	let row = grid.length,
+		col = grid[0].length
 
-	let dfs = (grid, rows, cols, row, col) => {
-		if (
-			row < 0 ||
-			col < 0 ||
-			row > rows - 1 ||
-			col > cols - 1 ||
-			grid[row][col] === '0'
-		)
-			return
+	const dfs = (grid, i, j, row, col) => {
+		//terminator
+		if (i < 0 || j < 0 || i >= row || j >= col || grid[i][j] === '0') return
 
-		grid[row][col] = '0' //marked as 0
+		//process current logic
+		//marked as zero
+		grid[i][j] = '0'
 
-		dfs(grid, rows, cols, row - 1, col)
-		dfs(grid, rows, cols, row + 1, col)
-		dfs(grid, rows, cols, row, col - 1)
-		dfs(grid, rows, cols, row, col + 1)
+		//drill down
+		dfs(grid, i + 1, j, row, col)
+		dfs(grid, i, j + 1, row, col)
+		dfs(grid, i - 1, j, row, col)
+		dfs(grid, i, j - 1, row, col)
 	}
 
-	for (let row = 0; row < rows; row++) {
-		for (let col = 0; col < cols; col++) {
-			if (grid[row][col] === '1') {
+	for (let i = 0; i < row; i++) {
+		for (let j = 0; j < col; j++) {
+			if (grid[i][j] === '1') {
 				ret++
-				dfs(grid, rows, cols, row, col)
+				dfs(grid, i, j, row, col)
 			}
 		}
 	}
-
 	return ret
 }
 
-//bfs
+//BFS
 var numIslands = function (grid) {
-	if (grid.length < 1) return 0
-	let m = grid.length
-	let n = grid[0].length
-	let islands = 0
+	let ret = 0
+	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
+	const m = grid.length,
+		n = grid[0].length
 	for (let i = 0; i < m; i++) {
 		for (let j = 0; j < n; j++) {
-			if (grid[i][j] == 1) {
-				islands++
+			if (grid[i][j] === '1') {
+				ret++
+				//marked as zero
 				grid[i][j] = 0
-				let queue = []
+				//store each level's item
+				const queue = []
 				//二维转一维
 				//queue.add(i * n + j);
 				queue.push([i, j])
 				while (queue.length > 0) {
-					let cur = queue.shift()
-					let x = cur[0],
+					const cur = queue.shift(),
+						x = cur[0],
 						y = cur[1]
+					//往左
 					if (x - 1 >= 0 && grid[x - 1][y] == 1) {
 						queue.push([x - 1, y])
 						grid[x - 1][y] = 0
 					}
+					//往右
 					if (x + 1 < m && grid[x + 1][y] == 1) {
 						queue.push([x + 1, y])
 						grid[x + 1][y] = 0
 					}
+					//往上
 					if (y - 1 >= 0 && grid[x][y - 1] == 1) {
 						queue.push([x, y - 1])
 						grid[x][y - 1] = 0
 					}
+					//往下
 					if (y + 1 < n && grid[x][y + 1] == 1) {
 						queue.push([x, y + 1])
 						grid[x][y + 1] = 0
@@ -304,6 +306,6 @@ var numIslands = function (grid) {
 			}
 		}
 	}
-	return islands
+	return ret
 }
 ```

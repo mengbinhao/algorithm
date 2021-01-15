@@ -154,14 +154,16 @@ var findCircleNum = function (M) {
 var numIslands = function (grid) {
 	let ret = 0
 	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
+
 	let row = grid.length,
 		col = grid[0].length
 
-	let dfs = (grid, i, j, row, col) => {
+	const dfs = (grid, i, j, row, col) => {
 		//terminator
 		if (i < 0 || j < 0 || i >= row || j >= col || grid[i][j] === '0') return
 
 		//process current logic
+		//marked as zero
 		grid[i][j] = '0'
 
 		//drill down
@@ -179,7 +181,6 @@ var numIslands = function (grid) {
 			}
 		}
 	}
-
 	return ret
 }
 
@@ -187,41 +188,47 @@ var numIslands = function (grid) {
 var numIslands = function (grid) {
 	let ret = 0
 	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
-	let row = grid.length,
-		col = grid[0].length,
-		queue = [],
-		dirs = [
-			[0, 1],
-			[1, 0],
-			[0, -1],
-			[-1, 0],
-		]
-
-	let bfs = (grid, queue, dirs, row, col) => {
-		while (queue.length > 0) {
-			let cur = queue.shift()
-			for (let [deltaX, deltaY] of dirs) {
-				const x = cur[0] + deltaX,
-					y = cur[1] + deltaYBFS
-				if (x < 0 || y < 0 || x >= row || y >= col || grid[x][y] === '0')
-					continueBFS
-
-				grid[x][y] = '0'
-				queue.push([x, y])
-			}
-		}
-	}
-	for (let i = 0; i < row; i++) {
-		for (let j = 0; j < col; j++) {
+	const m = grid.length,
+		n = grid[0].length
+	for (let i = 0; i < m; i++) {
+		for (let j = 0; j < n; j++) {
 			if (grid[i][j] === '1') {
 				ret++
-				grid[i][j] = '0'
+				//marked as zero
+				grid[i][j] = 0
+				//store each level's item
+				const queue = []
+				//二维转一维
+				//queue.add(i * n + j);
 				queue.push([i, j])
-				bfs(grid, queue, dirs, row, col)
+				while (queue.length > 0) {
+					const cur = queue.shift(),
+						x = cur[0],
+						y = cur[1]
+					//往左
+					if (x - 1 >= 0 && grid[x - 1][y] == 1) {
+						queue.push([x - 1, y])
+						grid[x - 1][y] = 0
+					}
+					//往右
+					if (x + 1 < m && grid[x + 1][y] == 1) {
+						queue.push([x + 1, y])
+						grid[x + 1][y] = 0
+					}
+					//往上
+					if (y - 1 >= 0 && grid[x][y - 1] == 1) {
+						queue.push([x, y - 1])
+						grid[x][y - 1] = 0
+					}
+					//往下
+					if (y + 1 < n && grid[x][y + 1] == 1) {
+						queue.push([x, y + 1])
+						grid[x][y + 1] = 0
+					}
+				}
 			}
 		}
 	}
-
 	return ret
 }
 ```
