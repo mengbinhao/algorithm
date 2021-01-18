@@ -496,7 +496,7 @@ var permute = function (nums) {
 	//space for time
 	const visited = Array.from({ length: len }, () => false)
 
-	let dfs = (nums, depth, path) => {
+	const dfs = (nums, depth, path) => {
 		if (depth === nums.length) {
 			ans.push([...path])
 			return
