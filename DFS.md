@@ -1,20 +1,17 @@
 # 基本概念
 
-- xxx
-
 # 解题要素
-
-- xxx
 
 ### [39.组合总和](https://leetcode-cn.com/problems/combination-sum/)
 
 ```javascript {.line-numbers}
-//candidates无重复!!!!
+//candidates无重复
 var combinationSum = function (candidates, target) {
 	const len = candidates.length,
 		ret = []
 	if (len === 0) return ret
 
+	//出来的结果是倒序的
 	const dfs = (candidates, remain, index, curState) => {
 		if (index === candidates.length || remain < 0) return
 		if (remain === 0) {
@@ -40,7 +37,7 @@ var combinationSum = function (candidates, target) {
 ### [40.组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)
 
 ```javascript {.line-numbers}
-//candidates有重复!!!!
+//candidates有重复
 var combinationSum2 = function (candidates, target) {
 	//剪枝前提
 	candidates.sort((a, b) => a - b)

@@ -678,7 +678,7 @@ var rob = function (nums) {
 }
 ```
 
-### [337. 打家劫舍 III](https://leetcode-cn.com/problems/house-robber-iii/)
+### [337. 打家劫舍 III 树形DP](https://leetcode-cn.com/problems/house-robber-iii/)
 
 ```javascript {.line-numbers}
 //time exceeded!!!
@@ -868,6 +868,21 @@ var longestPalindromeSubseq = function (s) {
 ```
 
 # 3、背包 DP
+
+### [01背包]
+
+![](images/dp_1.png)
+
+**背包问题的理论基础重中之重是01背包，一定要理解透！**
+
+1. **dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为j的背包，价值总和最大是多少**
+
+2. dp\[i\]\[j\] = max(dp\[i - 1\]\[j\], dp\[i - 1\]\[j - weight\[i\]\] + value\[i\])
+3. base case, 注意倒序遍历和是否价值有正负
+
+![](images/dp_2.png)
+
+4. 优化：注意遍历方向
 
 ### [322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)
 
