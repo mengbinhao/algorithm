@@ -1328,15 +1328,15 @@ var hasPathSum = function (root, sum) {
 ```javascript {.line-numbers}
 //backtrack
 var pathSum = function (root, sum) {
-	const dfs = (root, sum, curPath) => {
+	const dfs = (root, sum, path) => {
 		if (!root) return
-		curPath.push(root.val)
+		path.push(root.val)
 		//due to pass reference so add a copy
-		if (!root.left && !root.right && sum === root.val) ret.push([...curPath])
-		dfs(root.left, sum - root.val, curPath)
-		dfs(root.right, sum - root.val, curPath)
+		if (!root.left && !root.right && sum === root.val) ret.push([...path])
+		dfs(root.left, sum - root.val, path)
+		dfs(root.right, sum - root.val, path)
 		//backtrack
-		curPath.pop()
+		path.pop()
 	}
 	const ret = []
 	dfs(root, sum, [])

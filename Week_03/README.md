@@ -379,10 +379,9 @@ var solveNQueens = function (n) {
 		pies = new Set(), //左对角线攻击位置
 		nas = new Set() //右对角线攻击位置
 
-	let dfs = (row, curState) => {
+	const dfs = (row, path) => {
 		if (row >= n) {
-			//复制curState
-			solutions.push([...curState])
+			solutions.push([...path])
 			return
 		}
 
@@ -392,16 +391,16 @@ var solveNQueens = function (n) {
 			cols.add(col)
 			pies.add(row + col)
 			nas.add(row - col)
-			curState.push(col)
+			path.push(col)
 
 			//drill down
-			dfs(row + 1, curState)
+			dfs(row + 1, path)
 
 			//reverse
 			cols.delete(col)
 			pies.delete(row + col)
 			nas.delete(row - col)
-			curState.pop()
+			path.pop()
 		}
 	}
 
