@@ -227,7 +227,6 @@ var subsets = function (nums) {
 		ret.push([...path])
 		for (let i = start, len = nums.length; i < len; i++) {
 			path.push(nums[i])
-			//i + 1不是start + 1
 			dfs(nums, i + 1, path)
 			path.pop()
 		}

@@ -930,7 +930,7 @@ var isSymmetric = function (root) {
 ```javascript {.line-numbers}
 //preorder or postorder can work, inorder means no invert
 var invertTree = function (root) {
-	if (!root) return null
+	if (root == null) return root
 	const left = invertTree(root.left)
 	const right = invertTree(root.right)
 	root.left = right
@@ -940,10 +940,10 @@ var invertTree = function (root) {
 
 //自上往下
 var invertTree = function (root) {
-	if (!root) return null
+	if (root == null) return root
 	const queue = [root]
 
-	while (queue.length) {
+	while (queue.length > 0) {
 		const cur = queue.shift()
 		;[cur.left, cur.right] = [cur.right, cur.left]
 		if (cur.left) queue.push(cur.left)
