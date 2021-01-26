@@ -23,6 +23,10 @@
 - `x & 1 === 1` or `x & 1 === 0` 判断奇偶 `x % 2 === 1`
 - `x = x & (x - 1)` 清零最低位的 1
 - `x & -x` 得到最低位的 1, `-x`得到反码再加 1
+- `x ^ 0 = x`
+- `x ^ x = 0`
+- `x ^ y ^ x = y`
+- `x ^ y ^ x = (x ^ y) ^ x = x ^ (y ^ x)`
 
 ### [136.只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
 
@@ -84,6 +88,49 @@ var singleNumber = function (nums) {
 }
 ```
 
+### [260.只出现一次的数字 III](https://leetcode-cn.com/problems/single-number-iii/)
+
+```javascript {.line-numbers}
+var singleNumber = function (nums) {
+	const map = new Map()
+	for (let num of nums) {
+		if (!map.has(num)) {
+			map.set(num, 1)
+		} else {
+			map.set(num, map.get(num) + 1)
+		}
+	}
+	let index = 0,
+		ret = []
+	for (let [idx, val] of map.entries()) {
+		if (val === 1) {
+			ret[index++] = idx
+		}
+	}
+	return ret
+}
+
+var singleNumber = function (nums) {
+	let bitMask = 0
+	//bitMask会保留只出现一次的两个数字之间的差异
+	for (let num of nums) {
+		bitMask ^= num
+	}
+
+	//得到最右边的1,这个1要么来自x,要么来自y
+	const diff = bitMask & -bitMask
+
+	let x = 0
+	//从diff分离出x
+	for (let num of nums) {
+		if ((num & diff) !== 0) {
+			x ^= num
+		}
+	}
+	return Array.of(x, bitMask ^ x)
+}
+```
+
 ### [190.颠倒二进制位](https://leetcode-cn.com/problems/reverse-bits/)
 
 ```javascript {.line-numbers}
@@ -103,7 +150,6 @@ var reverseBits = function (n) {
 ### [191.位 1 的个数](https://leetcode-cn.com/problems/number-of-1-bits/)
 
 ```javascript {.line-numbers}
-//bad version
 var hammingWeight = function (n) {
 	let ret = 0
 	for (let i = 0; i < 32; i++) {
@@ -168,5 +214,73 @@ var countBits = function (num) {
 		ret[i] += ret[i & (i - 1)] + 1
 	}
 	return ret
+}
+```
+
+### [645.错误的集合](https://leetcode-cn.com/problems/set-mismatch/)
+
+```javascript {.line-numbers}
+// 1 brute force 双循环 O(n^2) - O(1)
+// 2 brute force 双循环找到直接break
+// 3 sort O(nlogn) - O(logn)
+// 4 Map O(2n) - O(n)
+// 5 Array 在数组中,索引代表数字,arr存储每个数字出现的次数.例如 arr[i]存储数字 i出现的次数 O(n) - O(n)
+// 6 使用额外空间 O(n) - O(1)
+// 7 异或 O(n) - O(1)
+var findErrorNums = function (nums) {
+	const n = nums.length
+	let dup = -1
+	for (let i = 0; i < n; i++) {
+		//元素是从 1 开始的
+		const index = Math.abs(nums[i]) - 1
+		// nums[index] 小于0则说明重复访问
+		if (nums[index] < 0) {
+			dup = Math.abs(nums[i])
+		} else {
+			nums[index] *= -1
+		}
+	}
+
+	let missing = -1
+	for (let i = 0; i < n; i++)
+		// nums[i] 大于 0 则说明没有访问
+		if (nums[i] > 0) {
+			// 将索引转换成元素
+			missing = i + 1
+			break
+		}
+
+	return [dup, missing]
+}
+
+var findErrorNums = function (nums) {
+	let xor = 0,
+		xor0 = 0,
+		xor1 = 0
+	for (let num of nums) xor ^= num
+	const len = nums.length
+	//得到x和y的xor结果
+	for (let i = 1; i <= len; i++) xor ^= i
+
+	const diff = xor & -xor
+	for (let num of nums) {
+		if ((num & diff) !== 0) {
+			xor1 ^= num
+		} else {
+			xor0 ^= num
+		}
+	}
+	for (let i = 1; i <= len; i++) {
+		if ((i & diff) !== 0) {
+			xor1 ^= i
+		} else {
+			xor0 ^= i
+		}
+	}
+	//确定两个数字中哪个为重复数字，哪个为缺失数字
+	for (let i = 0; i < len; i++) {
+		if (nums[i] === xor0) return Array.of(xor0, xor1)
+	}
+	return Array.of(xor1, xor0)
 }
 ```

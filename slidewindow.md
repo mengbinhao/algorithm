@@ -107,6 +107,33 @@ var minWindow = function (s, t) {
 }
 ```
 
+### [209.长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
+
+```javascript {.line-numbers}
+// 1 brute force O(n^2) - O(1)
+// 2 前缀和 + 二分查找
+// 3 双指针 O(n) - O(1)
+var minSubArrayLen = function (s, nums) {
+	const len = nums.length
+	if (len === 0) return 0
+
+	let ret = Number.MAX_SAFE_INTEGER,
+		left = 0,
+		right = 0,
+		sum = 0
+	while (right < len) {
+		sum += nums[right]
+		while (sum >= s) {
+			ret = Math.min(ret, right - left + 1)
+			sum -= nums[left]
+			left++
+		}
+		right++
+	}
+	return ret === Number.MAX_SAFE_INTEGER ? 0 : ret
+}
+```
+
 ### [239.滑动窗口最大值 H ](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 - brute force O(n \* k) - O(n - k +1)

@@ -566,6 +566,36 @@ var lengthOfLIS = function (nums) {
 }
 ```
 
+### [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
+
+```javascript {.line-numbers}
+/**
+ * @param {number[]} A
+ * @param {number[]} B
+ * @return {number}
+ */
+var findLength = function (A, B) {
+	let m = A.length,
+		n = B.length,
+		ret = 0,
+		//init two-dimension array
+		dp = new Array(m + 1)
+	for (let i = 0; i < m + 1; i++) {
+		dp[i] = new Array(n + 1).fill(0)
+	}
+
+	for (let i = 1; i <= m; i++) {
+		for (let j = 1; j <= n; j++) {
+			if (A[i - 1] === B[j - 1]) {
+				dp[i][j] = dp[i - 1][j - 1] + 1
+			}
+			ret = Math.max(ret, dp[i][j])
+		}
+	}
+	return ret
+}
+```
+
 ### [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/)
 
 ```javascript {.line-numbers}
@@ -678,7 +708,7 @@ var rob = function (nums) {
 }
 ```
 
-### [337. 打家劫舍 III 树形DP](https://leetcode-cn.com/problems/house-robber-iii/)
+### [337. 打家劫舍 III 树形 DP](https://leetcode-cn.com/problems/house-robber-iii/)
 
 ```javascript {.line-numbers}
 //time exceeded!!!
@@ -869,13 +899,13 @@ var longestPalindromeSubseq = function (s) {
 
 # 3、背包 DP
 
-### [01背包]
+### [01 背包]
 
 ![](images/dp_1.png)
 
-**背包问题的理论基础重中之重是01背包，一定要理解透！**
+**背包问题的理论基础重中之重是 01 背包，一定要理解透！**
 
-1. **dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为j的背包，价值总和最大是多少**
+1. **dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的背包，价值总和最大是多少**
 
 2. dp\[i\]\[j\] = max(dp\[i - 1\]\[j\], dp\[i - 1\]\[j - weight\[i\]\] + value\[i\])
 3. base case, 注意倒序遍历和是否价值有正负
