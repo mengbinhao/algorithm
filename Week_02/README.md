@@ -16,7 +16,7 @@ var isAnagram = function (s, t) {
 //O(n) - O(1)
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
-	let hash = {}
+	const hash = {}
 	for (let c of s) {
 		hash[c] ? hash[c]++ : (hash[c] = 1)
 	}
@@ -38,6 +38,7 @@ var isAnagram = function (s, t) {
 	for (let c of t) {
 		if (hash[c]) {
 			hash[c]--
+			//meet return immediately
 		} else {
 			return false
 		}
@@ -62,7 +63,6 @@ var isAnagram = function (s, t) {
 			return false
 		}
 	}
-
 	return true
 }
 ```
@@ -80,7 +80,6 @@ var groupAnagrams = function (strs) {
 		if (!hash[key]) hash[key] = []
 		hash[key].push(str)
 	}
-
 	return Object.values(hash)
 }
 
