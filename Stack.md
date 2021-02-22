@@ -22,6 +22,7 @@ var isValid = function (s) {
 		if (map[c]) {
 			stack.push(map[c])
 		} else {
+			//included empty condition of stack
 			if (c !== stack.pop()) return false
 		}
 	}

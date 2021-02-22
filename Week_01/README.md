@@ -125,6 +125,7 @@ var twoSum = function (nums, target) {
 var twoSum = function (nums, target) {
 	const hash = {}
 	for (let i = 0, len = nums.length; i < len; i++) {
+		//the index in array should be zero
 		if (hash[nums[i]] !== undefined) return [hash[nums[i]], i]
 		hash[target - nums[i]] = i
 	}
@@ -304,16 +305,17 @@ var merge = (nums1, m, nums2, n) => {
 ##### [26.删除排序数组重复项 E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
-//slow / fast two pointer
+//slow / fast pointer
 var removeDuplicates = function (nums) {
-	if (nums.length === 0) return 0
-	let i = 0
-	for (let j = 1; j < nums.length; j++) {
-		if (nums[i] !== nums[j]) {
-			nums[++i] = nums[j]
+	const len = nums.length
+	if (len === 0) return 0
+	let slow = 0
+	for (let fast = 1; fast < len; fast++) {
+		if (nums[slow] !== nums[fast]) {
+			nums[++slow] = nums[fast]
 		}
 	}
-	return i + 1
+	return slow + 1
 }
 ```
 

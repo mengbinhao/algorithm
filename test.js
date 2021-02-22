@@ -1,16 +1,13 @@
-function test() {
-	const weight = [1, 3, 4],
-		value = [15, 20, 30],
-		bagWeight = 4
-
-	// 初始化
-	const dp = new Array(bagWeight + 1).fill(0)
-	for (let j = bagWeight; j >= weight[i]; j--) {
-		for (let i = 0; i < weight.length; i++) {
-			dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
+var removeDuplicates = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	let i = 0
+	for (let j = 1; j < len; j++) {
+		if (nums[i] !== nums[j]) {
+			nums[++i] = nums[j]
 		}
 	}
-	debugger
+	return i + 1
 }
 
-test()
+console.log(removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]))

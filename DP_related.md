@@ -252,7 +252,8 @@ var isMatch = function (s, p) {
 ### [53. ==最大子序和==](https://leetcode-cn.com/problems/maximum-subarray/)
 
 ```javascript {.line-numbers}
-//brute force 两层循环
+//brute force
+//前缀和
 var maxSubArray = function (nums) {
 	let max = -Infinity,
 	const len = nums.length
@@ -723,9 +724,9 @@ var rob = function (root) {
 			(root.right == null ? 0 : rob(root.right.left) + rob(root.right.right))
 		// 不抢，然后去下家
 		const not_do = rob(root.left) + rob(root.right)
-		const res = Math.max(do_it, not_do)
-		memo.set(root, res)
-		return res
+		const ret = Math.max(do_it, not_do)
+		memo.set(root, ret)
+		return ret
 	}
 	const memo = new Map()
 	return helper(root)
@@ -917,34 +918,33 @@ var longestPalindromeSubseq = function (s) {
 ### [322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)
 
 ```javascript {.line-numbers}
-//greedy + dfs
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
 
-	let ret = amount + 1
-	const dfs = (coins, remain, coinsIdx, count) => {
+	let ret = Infinity
+	const greedyDFS = (coins, remain, coinsIdx, count) => {
 		if (remain === 0) {
-			ret = Math.min(count, ret)
+			ret = Math.min(ret, count)
 			return
 		}
+		if (coinsIdx > coins.length) return
 
-		if (coinsIdx >= coins.length) return
 		//直接拿最大币值的最大个数找解
 		//coins递减
-		//k + count < ret剪枝非最小count解
+		//k + count < ret剪枝非最小count解，不加则time exceeded
 		for (
 			let i = Math.floor(remain / coins[coinsIdx]);
 			i >= 0 && i + count < ret;
 			i--
 		) {
-			dfs(coins, remain - i * coins[coinsIdx], coinsIdx + 1, i + count)
+			greedyDFS(coins, remain - i * coins[coinsIdx], coinsIdx + 1, i + count)
 		}
 	}
-	//greedy前提
+	//desc + precondition for greedy
 	coins.sort((a, b) => b - a)
-	dfs(coins, amount, 0, 0)
-	return ret === amount + 1 ? -1 : ret
+	greedyDFS(coins, amount, 0, 0)
+	return ret === Infinity ? -1 : ret
 }
 
 //dfs time exceeded
@@ -985,8 +985,8 @@ var coinChange = function (coins, amount) {
 		let min = Infinity
 		for (let i = 0, len = coins.length; i < len; i++) {
 			const ret = dfs(coins, remain - coins[i])
-			//加1是为了加上得到res结果的那个步骤中兑换的那一个硬币
-			//下层返回需要小于当前的min才更新min
+			//加1是为了加上得到ret结果的那个步骤中兑换的那一个硬币
+			//下层返回需要有意义并且比较过后是需要最少的硬币个数
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
 		return (cache[remain] = min === Infinity ? -1 : min)
@@ -1006,8 +1006,8 @@ var coinChange = function (coins, amount) {
 	dp[0] = 0
 	for (let i = 1; i <= amount; i++) {
 		//dp[i] = min(F(1−1),F(1−2),F(1−5)) + 1
-		for (let j = 0; j < coins.length; j++) {
-			//数组越界
+		for (let j = 0, len = coins.length; j < len; j++) {
+			//数组越界,语义上是当前剩余面值需要大于硬币价值才有意义
 			if (i - coins[j] >= 0) {
 				dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
 			}
