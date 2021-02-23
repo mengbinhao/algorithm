@@ -269,28 +269,28 @@ var twoSum = function (nums, target) {
 ##### [88.合并两个有序数组 E](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
-//双指针 / 从前往后 O(n+m) - O(m)
+//三指针 / 从前往后 O(n+m) - O(m)
 var merge = function (nums1, m, nums2, n) {
-	let nums1_copy = [...nums1.slice(0, m)],
-		// Two get pointers for nums1_copy and nums2.
+	const nums1Copy = [...nums1.slice(0, m)],
+		// Two pointers for nums1Copy and nums2
 		p1 = 0,
 		p2 = 0,
 		// Set pointer for nums1
 		p = 0
 	while (p1 < m && p2 < n) {
-		nums1[p++] = nums1_copy[p1] < nums2[p2] ? nums1_copy[p1++] : nums2[p2++]
+		nums1[p++] = nums1Copy[p1] < nums2[p2] ? nums1Copy[p1++] : nums2[p2++]
 	}
 
 	//handle p1 < m or p2 < n
 	while (p1 < m) {
-		nums1[p++] = nums1_copy[p1++]
+		nums1[p++] = nums1Copy[p1++]
 	}
 	while (p2 < n) {
 		nums1[p++] = nums2[p2++]
 	}
 }
 
-//双指针 / 从前往后 O(n+m) - O(1)
+//三指针 / 从后往前 O(n+m) - O(1)
 var merge = (nums1, m, nums2, n) => {
 	let p = m - 1,
 		q = n - 1,
@@ -567,13 +567,14 @@ var trap = function (height) {
 ```javascript
 var plusOne = function (digits) {
 	const len = digits.length
-	//从后往前+
 	for (let i = len - 1; i >= 0; i--) {
 		digits[i]++
 		//变回个位数
 		digits[i] %= 10
-		if (digits[i] != 0) return digits
+		//检查是否还需要进位，不需要直接返回即可
+		if (digits[i] !== 0) return digits
 	}
+	//全部加完还需要进位的情况
 	digits = [...Array(len + 1)].map((_) => 0)
 	digits[0] = 1
 	return digits

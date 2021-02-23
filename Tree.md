@@ -912,11 +912,11 @@ var isSymmetric = function (root) {
 
 var isSymmetric = function (root) {
 	const queue = [root, root]
-	while (queue.length) {
+	while (queue.length > 0) {
 		const n1 = queue.shift()
 		const n2 = queue.shift()
-		if (n1 === null && n2 === null) continue
-		if (n1 === null || n2 === null) return false
+		if (n1 == null && n2 == null) continue
+		if (n1 == null || n2 == null) return false
 		if (n1.val !== n2.val) return false
 		queue.push(n1.left, n2.right)
 		queue.push(n2.left, n1.right)
@@ -968,8 +968,8 @@ var maxDepth = function (root) {
 	if (!root) return 0
 	const queue = [root]
 	let ret = 0
-	while (queue.length) {
-		const size = queue.length
+	while (queue.length > 0) {
+		let size = queue.length
 		//添加当前层的所有子节点
 		while (size > 0) {
 			const curNode = queue.shift()

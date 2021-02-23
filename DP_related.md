@@ -252,7 +252,6 @@ var isMatch = function (s, p) {
 ### [53. ==最大子序和==](https://leetcode-cn.com/problems/maximum-subarray/)
 
 ```javascript {.line-numbers}
-//brute force
 //前缀和
 var maxSubArray = function (nums) {
 	let max = -Infinity,
@@ -267,18 +266,32 @@ var maxSubArray = function (nums) {
 	return max
 }
 
+//前缀和优化
+//O(n) - O(1)
+var maxSubArray = function(nums) {
+  let sum = 0, maxSum = nums[0], minSum = 0
+
+  for (let num of nums) {
+    sum += num
+    maxSum = Math.max(maxSum, sum - minSum)
+    minSum = Math.min(minSum, sum)
+  }
+  return maxSum
+}
+
 //dp[i]表示nums中以nums[i]结尾的最大子序和
 //dp[i] = max(dp[i - 1] + nums[i], nums[i])
+//base case dp[0] = nums[0]
 //O(n) - O(1)
 var maxSubArray = function (nums) {
 	let pre = 0,
-		maxAns = nums[0]
+		ret = nums[0]
 	nums.forEach((x) => {
 		//若前面sum小于0,舍弃
 		pre = Math.max(pre + x, x)
-		maxAns = Math.max(maxAns, pre)
+		ret = Math.max(ret, pre)
 	})
-	return maxAns
+	return ret
 }
 ```
 

@@ -1,13 +1,14 @@
-var removeDuplicates = function (nums) {
-	const len = nums.length
-	if (len === 0) return 0
-	let i = 0
-	for (let j = 1; j < len; j++) {
-		if (nums[i] !== nums[j]) {
-			nums[++i] = nums[j]
-		}
+var plusOne = function (digits) {
+	const len = digits.length
+	//从后往前+
+	for (let i = len - 1; i >= 0; i--) {
+		digits[i]++
+		//变回个位数
+		digits[i] %= 10
+		if (digits[i] !== 0) return digits
 	}
-	return i + 1
+	digits = [...Array(len + 1)].map((_) => 0)
+	digits[0] = 1
+	return digits
 }
-
-console.log(removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]))
+console.log(plusOne([1, 9]))
