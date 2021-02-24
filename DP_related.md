@@ -751,40 +751,47 @@ var rob = function (root) {
 ### [121. 买股票的最佳时机 E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```javascript {.line-numbers}
-//brute force O(n^2) - O(1)
+//只能交易一次
+//brute force O(n^2) - O(1) Time exceeded
 var maxProfit = function (prices) {
-	let len = prices.length
+	const len = prices.length
 	if (len < 2) return 0
+	let maxProfit = 0,
+		profit
 
-	let ret = 0
-	//loop every day, find the ret
+	//loop every two different days
 	for (let i = 0; i < len - 1; i++) {
 		for (let j = i + 1; j < len; j++) {
-			let profit = prices[j] - prices[i]
-			if (profit > ret) ret = profit
+			profit = prices[j] - prices[i]
+			if (profit > maxProfit) maxProfit = profit
 		}
 	}
-	return ret
+
+	return maxProfit
 }
 
 //loop once
 var maxProfit = function (prices) {
-	let len = prices.length
+	const len = prices.length
 	if (len < 2) return 0
 
-	let ret = 0,
-		minPrices = Infinity
-	for (let i = 0; i < len; i++) {
-		if (prices[i] < minPrices) minPrices = prices[i]
-		else if (prices[i] - minPrices > ret) ret = prices[i] - minPrices
+	let profit = 0,
+		minPrices = prices[0]
+	for (let i = 1; i < len; i++) {
+		if (prices[i] > prices[i - 1]) {
+			profit = Math.max(profit, prices[i] - minPrices)
+		} else {
+			minPrices = Math.min(minPrices, prices[i])
+		}
 	}
-	return ret
+	return profit
 }
 ```
 
 ### [122. 买卖股票的最佳时机 2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```javascript {.line-numbers}
+//每天可以交易一次
 //Greedy
 var maxProfit = function (prices) {
 	let maxProfit = 0
@@ -799,7 +806,7 @@ var maxProfit = function (prices) {
 
 //DFS  Time Limit Exceeded
 var maxProfit = function (prices) {
-	let dfs = (prices, level) => {
+	const dfs = (prices, level) => {
 		if (level >= prices.length) return 0
 		let ret = 0
 
@@ -830,7 +837,7 @@ var maxProfit = function (prices) {
 	//第一维i表示索引为i的那一天(具有前缀性质,即考虑了之前天数的收益)能获得的最大利润
 	//第二维j表示索引为i的那一天是持有股票,还是持有现金。这里0表示持有现金(cash),1表示持有股票(stock)
 
-	let dp = Array.from({ length: len }, (v, i) => new Array(2))
+	const dp = Array.from({ length: len }, (v, i) => new Array(2))
 
 	dp[0][0] = 0
 	dp[0][1] = -prices[0]

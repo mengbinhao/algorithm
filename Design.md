@@ -99,14 +99,12 @@ var MinStack = function () {
 	this.minStack = [Infinity]
 }
 
-//sync push
 MinStack.prototype.push = function (x) {
 	this.stack.push(x)
 	//peek always min item
 	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
 }
 
-//sync pop
 MinStack.prototype.pop = function () {
 	this.stack.pop()
 	this.minStack.pop()
