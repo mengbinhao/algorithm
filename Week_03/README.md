@@ -243,7 +243,7 @@ var subsets = function (nums) {
 ```javascript
 //brute force O(n^2)
 var majorityElement = function (nums) {
-	let len = nums.length
+	const len = nums.length
 	for (let i = 0; i < len; i++) {
 		let count = 0
 		for (let j = 0; j < len; j++) {
@@ -264,7 +264,7 @@ var majorityElement = function (nums) {
 
 //hash O(n)
 var majorityElement = function (nums) {
-	let hash = {}
+	const hash = {}
 
 	for (let num of nums) {
 		hash[num] ? hash[num]++ : (hash[num] = 1)
@@ -284,6 +284,7 @@ var majorityElement = function (nums) {
 }
 
 //O(n) - O(1) best
+//投票算法
 var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1

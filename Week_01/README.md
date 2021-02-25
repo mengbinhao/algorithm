@@ -4,23 +4,20 @@
 
 ##### [283.移动零 E](https://leetcode-cn.com/problems/move-zeroes/)
 
-- 循环 3 次，额外使用一个数组空间，第一次记录 0 的位置和填入非 0 值，第二次额外数组再加入 0 的个数，第三次交换到原数组 O(n) - O(n)
-
-- 循环一次，splice 去掉 0 值，然后最后 push 个 0,splice 改变了数组的长度，这里有坑，所以必须从后面循环 O(n^2) - O(1)
-
 - 循环一整次把非 0 换到前面，第二次循环把 0 填到后面 O(n) - O(1)
 
   ```javascript
   var moveZeroes = function (nums) {
   	let lastFoundZeroIndex = 0
-  	for (let i = 0; i < nums.length; i++) {
+  	const len = nums.length
+  	for (let i = 0; i < len; i++) {
   		//move non-zero to front
   		if (nums[i] !== 0) {
   			nums[lastFoundZeroIndex++] = nums[i]
   		}
   	}
   	//update behind item to zero
-  	for (let i = lastFoundZeroIndex; i < nums.length; i++) {
+  	for (let i = lastFoundZeroIndex; i < len; i++) {
   		nums[i] = 0
   	}
   	return nums
@@ -31,8 +28,8 @@
 
   ```javascript
   var moveZeroes = function (nums) {
-  	let lastFoundZeroIndex = 0,
-  		len = nums.length
+  	let lastFoundZeroIndex = 0
+  	const len = nums.length
   	for (let cur = 0; cur < len; cur++) {
   		if (nums[cur] !== 0) {
   			;[nums[lastFoundZeroIndex++], nums[cur]] = [

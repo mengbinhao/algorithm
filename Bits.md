@@ -136,7 +136,7 @@ var singleNumber = function (nums) {
 ```javascript {.line-numbers}
 var reverseBits = function (n) {
 	let result = 0
-	//于位于索引i处的位，在反转之后，其位置应为31-i
+	//位于索引i处的位，在反转之后，其位置应为31-i
 	for (let i = 0; i < 32; i++) {
 		//n & 1获取末位数,0或1与1相与,都等于其本身
 		result = (result << 1) + (n & 1)
@@ -161,12 +161,12 @@ var hammingWeight = function (n) {
 
 //good version
 var hammingWeight = function (n) {
-	let sum = 0
-	while (n != 0) {
-		sum++
+	let count = 0
+	while (n !== 0) {
+		count++
 		n &= n - 1
 	}
-	return sum
+	return count
 }
 ```
 

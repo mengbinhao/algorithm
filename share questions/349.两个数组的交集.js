@@ -16,13 +16,3 @@ var intersection = function (nums1, nums2) {
 	)
 }
 // @lc code=end
-
-// var intersection = function (nums1, nums2) {
-// 	let tmp = {}
-// 	return nums1.filter((item) => {
-// 		if (!tmp[item]) {
-// 			tmp[item] = true
-// 			return nums2.includes(item)
-// 		}
-// 	})
-// }
