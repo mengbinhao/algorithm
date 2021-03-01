@@ -111,7 +111,7 @@ var twoSum = function (nums, target) {
 	}
 	for (let j = 0; j < len; j++) {
 		//exclude same item
-		if (hash[nums[j]] && hash[nums[j]] !== j) {
+		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) {
 			return [j, hash[nums[j]]]
 		}
 	}
