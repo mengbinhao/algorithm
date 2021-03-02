@@ -12,6 +12,7 @@ var isValid = function (s) {
 
 //O(n) - O(n)
 var isValid = function (s) {
+	if ((s.length & 1) === 1) return false
 	let map = {
 			'(': ')',
 			'[': ']',
@@ -22,7 +23,7 @@ var isValid = function (s) {
 		if (map[c]) {
 			stack.push(map[c])
 		} else {
-			//included empty condition of stack
+			//included empty condition
 			if (c !== stack.pop()) return false
 		}
 	}
