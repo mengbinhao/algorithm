@@ -71,12 +71,14 @@ var longestValidParentheses = function (s) {
 	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
 	const dp = new Array(len).fill(0)
 	for (let i = 1; i < len; i++) {
-		if (s[i] == ')') {
-			if (s[i - 1] == '(') {
+		//只有右括号结尾的字符才合法
+		if (s[i] === ')') {
+			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串形如 '……()'
 				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
-			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] == '(') {
+			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
+				//内部的有效长度 + 前面的有效长度 + 2
 				dp[i] = dp[i - 1] + (i - dp[i - 1] >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
 			}
 			ret = Math.max(ret, dp[i])

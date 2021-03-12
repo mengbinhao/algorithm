@@ -619,16 +619,16 @@ var reverseList = function (head) {
 }
 
 //recursion
+//翻转head.next并且返回的是tail节点
 var reverseList = function (head) {
 	if (!head || !head.next) return head
-	//处理好的后续头结点
-	const p = reverseList(head.next)
+	const tail = reverseList(head.next)
 	//等同于
 	//const node = head.next
 	//node.next = head
 	head.next.next = head
 	head.next = null
-	return p
+	return tail
 }
 ```
 

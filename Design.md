@@ -115,7 +115,8 @@ MinStack.prototype.top = function () {
 }
 
 MinStack.prototype.getMin = function () {
-	return this.minStack[this.minStack.length - 1]
+	const val = this.minStack[this.minStack.length - 1]
+	return val === Infinity ? void 0 : val
 }
 ```
 

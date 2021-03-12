@@ -252,7 +252,7 @@ var isMatch = function (s, p) {
 ### [53. ==最大子序和==](https://leetcode-cn.com/problems/maximum-subarray/)
 
 ```javascript {.line-numbers}
-//前缀和
+//brute force
 var maxSubArray = function (nums) {
 	let max = -Infinity,
 	const len = nums.length
@@ -267,16 +267,19 @@ var maxSubArray = function (nums) {
 }
 
 //前缀和优化
+//S(i)表示以 0(包括 0)开始加到 i(包括 i)的前缀和,那么S(j) - S(i - 1)就等于从i开始(包括 i)加到j(包括 j)的前缀和
+//只需要遍历一次计算出所有的 S(i), 其中 i = 0,1,2....,n-1.然后我们再减去之前的S(k),其中 k = 0，1，i - 1,中的最小值即可
 //O(n) - O(1)
 var maxSubArray = function(nums) {
-  let sum = 0, maxSum = nums[0], minSum = 0
+  let preSum = 0, maxPreSum = nums[0], minPreSum = 0
 
   for (let num of nums) {
-    sum += num
-    maxSum = Math.max(maxSum, sum - minSum)
-    minSum = Math.min(minSum, sum)
+		//prefix sum
+    preSum += num
+    maxPreSum = Math.max(maxPreSum, preSum - minPreSum)
+    minPreSum = Math.min(minPreSum, preSum)
   }
-  return maxSum
+  return maxPreSum
 }
 
 //dp[i]表示nums中以nums[i]结尾的最大子序和
@@ -286,9 +289,9 @@ var maxSubArray = function(nums) {
 var maxSubArray = function (nums) {
 	let pre = 0,
 		ret = nums[0]
-	nums.forEach((x) => {
+	nums.forEach((num) => {
 		//若前面sum小于0,舍弃
-		pre = Math.max(pre + x, x)
+		pre = Math.max(pre + num, num)
 		ret = Math.max(ret, pre)
 	})
 	return ret

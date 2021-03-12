@@ -572,7 +572,7 @@ var plusOne = function (digits) {
 		if (digits[i] !== 0) return digits
 	}
 	//全部加完还需要进位的情况
-	digits = [...Array(len + 1)].map((_) => 0)
+	digits = [...Array(len + 1)].map(() => 0)
 	digits[0] = 1
 	return digits
 }
