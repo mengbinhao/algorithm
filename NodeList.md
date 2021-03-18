@@ -13,6 +13,8 @@
 - other: 如果你想递归和迭代都写, 推荐前序遍历,因为前序遍历很容易改造成迭代,准确的说前序遍历容易改成不需要栈的递归,而后续遍历需要借助栈来完成
 - summary: 如果是单链表,我们无法在`O(1)`的时间拿到前驱节点,这也是为什么我们遍历的时候老是维护一个前驱节点`pre`的原因。但是本质原因其实是链表的增删操作都依赖前驱节点。这是链表的基本操作,是链表的特性天生决定的
 
+==上一行的赋值右边为下一行的赋值左边，赋值的时候从左边思考好理解==
+
 ### insert & delete
 
 - 插入
@@ -392,39 +394,24 @@ var partition = function (head, x) {
 ### [92. 反转链表 II](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
 
 ```javascript {.line-numbers}
-var reverseBetween = function (head, m, n) {
-	if (head == null) return null
-
-	//move prev and cur to proper position
-	let prev = null,
-		cur = head
-	while (m > 1) {
-		prev = cur
-		cur = cur.next
-		m--
-		n--
+//loop once
+var reverseBetween = function (head, left, right) {
+	const dummyNode = new ListNode(-1)
+	dummyNode.next = head
+	let pre = dummyNode
+	for (let i = 0; i < left - 1; i++) {
+		pre = pre.next
 	}
 
-	let con = prev,
-		tail = cur,
-		next
-	while (n > 0) {
-		next = cur.next
-		cur.next = prev
-		prev = cur
-		cur = next
-		n--
+	let cur = pre.next
+	for (let i = 0; i < right - left; i++) {
+		const next = cur.next
+		//穿3次，不能乱
+		cur.next = next.next
+		next.next = pre.next
+		pre.next = next
 	}
-
-	//handle m = 1 case
-	if (con != null) {
-		con.next = prev
-	} else {
-		head = prev
-	}
-
-	tail.next = cur
-	return head
+	return dummyNode.next
 }
 ```
 
