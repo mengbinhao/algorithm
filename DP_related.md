@@ -256,8 +256,9 @@ var isMatch = function (s, p) {
 var maxSubArray = function (nums) {
 	let max = -Infinity,
 	const len = nums.length
+	let sum = 0
 	for (let i = 0; i < len; i++) {
-		let sum = 0
+		sum = 0
 		for (let j = i; j < len; j++) {
 			sum += nums[j]
 			if (sum > max) max = sum
@@ -287,14 +288,14 @@ var maxSubArray = function(nums) {
 //base case dp[0] = nums[0]
 //O(n) - O(1)
 var maxSubArray = function (nums) {
-	let pre = 0,
-		ret = nums[0]
+	let preSum = 0,
+		maxPreSum = nums[0]
 	nums.forEach((num) => {
 		//若前面sum小于0,舍弃
-		pre = Math.max(pre + num, num)
-		ret = Math.max(ret, pre)
+		preSum = Math.max(preSum + num, num)
+		maxPreSum = Math.max(maxPreSum, preSum)
 	})
-	return ret
+	return maxPreSum
 }
 ```
 
@@ -769,23 +770,21 @@ var maxProfit = function (prices) {
 			if (profit > maxProfit) maxProfit = profit
 		}
 	}
-
 	return maxProfit
 }
 
-//loop once
+//Greedy - loop once
 var maxProfit = function (prices) {
 	const len = prices.length
 	if (len < 2) return 0
 
 	let profit = 0,
-		minPrices = prices[0]
-	for (let i = 1; i < len; i++) {
-		if (prices[i] > prices[i - 1]) {
-			profit = Math.max(profit, prices[i] - minPrices)
-		} else {
-			minPrices = Math.min(minPrices, prices[i])
-		}
+		minPrices = Infinity
+	for (let i = 0; i < len; i++) {
+		//update minPrices
+		minPrices = Math.min(minPrices, prices[i])
+		//update profit
+		profit = Math.max(profit, prices[i] - minPrices)
 	}
 	return profit
 }
@@ -794,17 +793,17 @@ var maxProfit = function (prices) {
 ### [122. 买卖股票的最佳时机 2E](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```javascript {.line-numbers}
-//每天可以交易一次
-//Greedy
+//Greedy 每天可以交易一次
 var maxProfit = function (prices) {
-	let maxProfit = 0
+	let profit = 0
 
 	for (let i = 1; i < prices.length; i++) {
+		//profit += max(prices[i] - prices[i - 1], 0);
 		if (prices[i] > prices[i - 1]) {
-			maxProfit += prices[i] - prices[i - 1]
+			profit += prices[i] - prices[i - 1]
 		}
 	}
-	return maxProfit
+	return profit
 }
 
 //DFS  Time Limit Exceeded
@@ -827,7 +826,6 @@ var maxProfit = function (prices) {
 		}
 		return ret
 	}
-
 	return dfs(prices, 0)
 }
 
@@ -849,7 +847,6 @@ var maxProfit = function (prices) {
 		dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i])
 		dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i])
 	}
-
 	return dp[len - 1][0]
 }
 

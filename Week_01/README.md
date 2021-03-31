@@ -267,12 +267,10 @@ var twoSum = function (nums, target) {
 
 ```javascript
 //三指针 / 从前往后 O(n+m) - O(m)
-var merge = function (nums1, m, nums2, n) {
-	const nums1Copy = [...nums1.slice(0, m)],
-		// Two pointers for nums1Copy and nums2
-		p1 = 0,
+var merge = (nums1, m, nums2, n) => {
+	const nums1Copy = nums1.slice(0, m)
+	let p1 = 0,
 		p2 = 0,
-		// Set pointer for nums1
 		p = 0
 	while (p1 < m && p2 < n) {
 		nums1[p++] = nums1Copy[p1] < nums2[p2] ? nums1Copy[p1++] : nums2[p2++]
@@ -568,7 +566,7 @@ var plusOne = function (digits) {
 		digits[i]++
 		//变回个位数
 		digits[i] %= 10
-		//检查是否还需要进位，不需要直接返回即可
+		//检查是否还需要进位，若不需要直接返回
 		if (digits[i] !== 0) return digits
 	}
 	//全部加完还需要进位的情况
