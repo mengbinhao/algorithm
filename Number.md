@@ -68,33 +68,22 @@ var isPalindrome = function (x) {
 var trailingZeroes = function (n) {
 	let ret = 0
 	while (n > 0) {
-		//转为整数
+		//|转为整数
 		n = (n / 5) | 0
 		ret += n
 	}
 	return ret
 }
 
-//O(logN) - O(1) same as above
-const trailingZeroes2 = (n) => {
-	let zeroCount = 0
-	let currentMultiple = 5
-	while (n >= currentMultiple) {
-		zeroCount += (n / currentMultiple) | 0
-		currentMultiple *= 5
-	}
-	return zeroCount
-}
-
 //O(n) - O(1)
 const trailingZeroes = (n) => {
 	let zeroCount = 0
 	for (let i = 5; i <= n; i += 5) {
-		let currentFactor = i
+		let curFactor = i
 		//25..75...
-		while (currentFactor % 5 === 0) {
+		while (curFactor % 5 === 0) {
 			zeroCount++
-			currentFactor /= 5
+			curFactor /= 5
 		}
 	}
 	return zeroCount

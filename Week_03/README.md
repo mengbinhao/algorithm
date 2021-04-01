@@ -218,7 +218,6 @@ var subsets = function (nums) {
 			res.push([...item, nums[i]])
 		})
 	}
-
 	return res
 }
 
@@ -243,9 +242,10 @@ var subsets = function (nums) {
 ```javascript
 //brute force O(n^2)
 var majorityElement = function (nums) {
-	const len = nums.length
+	const len = nums.length,
+		count
 	for (let i = 0; i < len; i++) {
-		let count = 0
+		count = 0
 		for (let j = 0; j < len; j++) {
 			if (nums[i] === nums[j]) {
 				if (++count > Math.floor(len / 2)) return nums[i]
@@ -255,8 +255,7 @@ var majorityElement = function (nums) {
 }
 
 // O(NlogN)
-// sort array then the middle is majority
-// due to must be have an answer
+// sort array then the middle is majority,due to must be have an answer
 var majorityElement = function (nums) {
 	nums.sort((a, b) => a - b)
 	return nums[Math.floor(nums.length / 2)]
@@ -290,6 +289,7 @@ var majorityElement = function (nums) {
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
 		//note sequence!!!
+		//只要是最多的肯定不会减到0
 		if (count === 0) {
 			count++
 			ret = nums[i]

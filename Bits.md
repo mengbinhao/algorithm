@@ -136,11 +136,12 @@ var singleNumber = function (nums) {
 ```javascript {.line-numbers}
 var reverseBits = function (n) {
 	let result = 0
-	//位于索引i处的位，在反转之后，其位置应为31-i
+	//位于索引i处的位，在翻转之后，其位置为31-i
 	for (let i = 0; i < 32; i++) {
-		//n & 1获取末位数,0或1与1相与,都等于其本身
-		result = (result << 1) + (n & 1)
-		n >>= 1
+		//1 依次获取n的第k位 ((n >> i) & 1)
+		//2 二进制转10进制result << 1 + 最高位
+		//n & 1获取末位数
+		result = (result << 1) + ((n >> i) & 1)
 	}
 	//convert non-Numbers to Number, the Numbers that can be expressed as 32-bit unsigned ints
 	return result >>> 0

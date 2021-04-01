@@ -269,9 +269,7 @@ var longestCommonPrefix = function (strs) {
 //O(∣s∣)，其中 |s| 是字符串s的长度 - O(1)
 var isPalindrome = function (s) {
 	if (typeof s !== 'string') return false
-
 	s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
-
 	let l = 0,
 		r = s.length - 1
 	//two pointer， 向中间夹逼
@@ -280,7 +278,6 @@ var isPalindrome = function (s) {
 		l++
 		r--
 	}
-
 	return true
 }
 ```

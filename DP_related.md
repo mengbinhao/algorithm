@@ -777,16 +777,14 @@ var maxProfit = function (prices) {
 var maxProfit = function (prices) {
 	const len = prices.length
 	if (len < 2) return 0
-
-	let profit = 0,
-		minPrices = Infinity
+	let maxProfit = 0,
+		//维护一个最小值
+		minPrice = Infinity
 	for (let i = 0; i < len; i++) {
-		//update minPrices
-		minPrices = Math.min(minPrices, prices[i])
-		//update profit
-		profit = Math.max(profit, prices[i] - minPrices)
+		minPrice = Math.min(minPrice, prices[i])
+		maxProfit = Math.max(maxProfit, prices[i] - minPrice)
 	}
-	return profit
+	return maxProfit
 }
 ```
 
@@ -795,15 +793,17 @@ var maxProfit = function (prices) {
 ```javascript {.line-numbers}
 //Greedy 每天可以交易一次
 var maxProfit = function (prices) {
-	let profit = 0
-
-	for (let i = 1; i < prices.length; i++) {
-		//profit += max(prices[i] - prices[i - 1], 0);
-		if (prices[i] > prices[i - 1]) {
-			profit += prices[i] - prices[i - 1]
-		}
+	let ret = 0
+	let len = prices.length
+	if (len < 2) return 0
+	for (let i = 1; i < len; i++) {
+		//profit += Math.max(prices[i] - prices[i - 1], 0);
+		// if (prices[i] > prices[i - 1]) {
+		// 	profit += prices[i] - prices[i - 1]
+		// }
+		ret += Math.max(prices[i] - prices[i - 1], 0)
 	}
-	return profit
+	return ret
 }
 
 //DFS  Time Limit Exceeded
@@ -887,7 +887,6 @@ var maxProfit = function (prices) {
 		preCash = cash
 		preHold = hold
 	}
-
 	return cash
 }
 ```

@@ -118,6 +118,52 @@ MinStack.prototype.getMin = function () {
 	const val = this.minStack[this.minStack.length - 1]
 	return val === Infinity ? void 0 : val
 }
+
+//O(n) O(1)
+var MinStack = function () {
+	this.stack = []
+	this.minV = Number.MAX_VALUE
+}
+
+MinStack.prototype.push = function (val) {
+	// update 'min'
+	const minV = this.minV
+	if (val < this.minV) {
+		this.minV = val
+	}
+	//存的是真实值与min的差
+	return this.stack.push(val - minV)
+}
+
+MinStack.prototype.pop = function () {
+	const item = this.stack.pop()
+	const minV = this.minV
+
+	//如果栈顶元素小于0，说明栈顶是当前最小的元素，它出栈会对min造成影响，我们需要去更新min
+	//上一个最小的是“min - 栈顶元素”,我们需要将上一个最小值更新为当前的最小值
+	//因为栈顶元素入栈的时候的通过 栈顶元素 = 真实值 - 上一个最小的元素 得到的
+	//而真实值 = min， 因此可以得出上一个最小的元素 = 真实值 -栈顶元素
+	if (item < 0) {
+		this.minV = minV - item
+		return minV
+	}
+	return item + minV
+}
+
+MinStack.prototype.top = function () {
+	const item = this.stack[this.stack.length - 1]
+	const minV = this.minV
+
+	if (item < 0) {
+		return minV
+	}
+	//top时候需要对数据还原，这里千万注意是“上一个”最小值
+	return item + minV
+}
+
+MinStack.prototype.min = function () {
+	return this.minV
+}
 ```
 
 ### [208.实现 Trie](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)

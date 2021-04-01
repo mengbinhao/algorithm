@@ -795,8 +795,7 @@ var generateTrees = function (n) {
 var sortedArrayToBST = function (nums) {
 	const helper = (nums, left, right) => {
 		if (left > right) return null
-
-		//choose the root node
+		//因高度平衡则需从中点创建根节点开始
 		const mid = Math.floor((right + left) / 2)
 		const root = new TreeNode(nums[mid])
 		root.left = helper(nums, left, mid - 1)
@@ -894,16 +893,16 @@ var isSameTree = function (p, q) {
 
 ```javascript {.line-numbers}
 var isSymmetric = function (root) {
-	const helper = (n1, n2) => {
-		if (n1 == null && n2 == null) {
+	const helper = (left, right) => {
+		if (left == null && right == null) {
 			return true
-		} else if (n1 == null || n2 == null) {
+		} else if (left == null || right == null) {
 			return false
 		} else {
 			return (
-				n1.val === n2.val &&
-				helper(n1.left, n2.right) &&
-				helper(n2.right, n1.left)
+				left.val === right.val &&
+				helper(left.left, right.right) &&
+				helper(right.right, left.left)
 			)
 		}
 	}
@@ -911,15 +910,18 @@ var isSymmetric = function (root) {
 }
 
 var isSymmetric = function (root) {
+	if (!root) return true
 	const queue = [root, root]
-	while (queue.length > 0) {
-		const n1 = queue.shift()
-		const n2 = queue.shift()
-		if (n1 == null && n2 == null) continue
-		if (n1 == null || n2 == null) return false
-		if (n1.val !== n2.val) return false
-		queue.push(n1.left, n2.right)
-		queue.push(n2.left, n1.right)
+	while (queue.length) {
+		const left = queue.shift()
+		const right = queue.shift()
+		if (left && right) {
+			if (left.val !== right.val) return false
+			queue.push(left.left, right.right)
+			queue.push(left.right, right.left)
+		} else if (left || right) {
+			return false
+		}
 	}
 	return true
 }
@@ -971,11 +973,10 @@ var maxDepth = function (root) {
 	while (queue.length > 0) {
 		let size = queue.length
 		//添加当前层的所有子节点
-		while (size > 0) {
-			const curNode = queue.shift()
-			if (curNode.left) queue.push(curNode.left)
-			if (curNode.right) queue.push(curNode.right)
-			size--
+		for (let i = 0; i < size; i++) {
+			const cur = queue.shift()
+			if (cur.left) queue.push(cur.left)
+			if (cur.right) queue.push(cur.right)
 		}
 		//一层处理完深度+1
 		ret++
@@ -1007,10 +1008,11 @@ var minDepth = function (root) {
 	while (queue.length) {
 		const size = queue.length
 		for (let i = 0; i < size; i++) {
-			const curNode = queue.shift()
-			if (!curNode.left && !curNode.right) return depth
-			if (curNode.left) queue.push(curNode.left)
-			if (curNode.right) queue.push(curNode.right)
+			const cur = queue.shift()
+			//find it
+			if (cur.left == null && cur.right == null) return depth
+			if (cur.left) queue.push(cur.left)
+			if (cur.right) queue.push(cur.right)
 		}
 		depth++
 	}
