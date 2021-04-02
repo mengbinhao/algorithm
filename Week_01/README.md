@@ -488,21 +488,22 @@ var rotate = (nums, k) => {
 ```javascript
 //brute force O(n^2) - O(1)
 var trap = function (height) {
-	let ret = 0,
-		len = height.length
+	let ret = 0
+	const len = height.length
 	//the last item can not store water
-	for (let i = 0; i < len - 1; i++) {
+	for (let i = 1; i < len - 1; i++) {
 		//two pointer
 		let leftMax = 0,
 			rightMax = 0
-		//Search the left part for max bar size
+		//找到左边的最高柱
 		for (let j = i; j >= 0; j--) {
 			leftMax = Math.max(leftMax, height[j])
 		}
-		//Search the right part for max bar size
+		//找到右边的最高柱
 		for (let j = i; j < len; j++) {
 			rightMax = Math.max(rightMax, height[j])
 		}
+		//计算每个height[i]能接到的雨水，并加到最终结果
 		ret += Math.min(leftMax, rightMax) - height[i]
 	}
 	return ret
@@ -510,13 +511,15 @@ var trap = function (height) {
 
 //备忘录优化 O(n) - O(n)
 var trap = function (height) {
+	const len = height.length
 	let ret = 0,
-		len = height.length,
+		//提前存储每个height[i]对应的左右最大值
 		leftMax = [],
 		rightMax = []
 
 	leftMax[0] = height[0]
 	for (let i = 1; i < len; i++) {
+		//leftMax会传递
 		leftMax[i] = Math.max(height[i], leftMax[i - 1])
 	}
 	rightMax[len - 1] = height[len - 1]
@@ -530,11 +533,11 @@ var trap = function (height) {
 	return ret
 }
 
-//two pointer O(n) O(1)
+//two pointer O(n) - O(1)
 var trap = function (height) {
-	if (height.length === 0) return 0
-	let len = height.length,
-		left = 0,
+	const len = height.length
+	if (len === 0) return 0
+	let left = 0,
 		right = len - 1,
 		ret = 0
 
