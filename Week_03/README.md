@@ -282,14 +282,12 @@ var majorityElement = function (nums) {
 	return ret
 }
 
-//O(n) - O(1) best
-//投票算法
+//投票算法 O(n) - O(1) best
 var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
-		//note sequence!!!
-		//只要是最多的肯定不会减到0
+		//note sequence!
 		if (count === 0) {
 			count++
 			ret = nums[i]

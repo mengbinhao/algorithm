@@ -275,16 +275,12 @@ MyQueue.prototype.push = function (x) {
 }
 
 MyQueue.prototype.pop = function () {
-	//当output没有数据时input全部放入output
 	this.addToOutput()
-	//弹出返回最后一个元素
 	return this.output.pop()
 }
 
 MyQueue.prototype.peek = function () {
-	//当output没有数据时input全部放入output
 	this.addToOutput()
-	//返回最后一个元素
 	return this.output[this.output.length - 1]
 }
 
@@ -292,6 +288,7 @@ MyQueue.prototype.empty = function () {
 	return !this.input.length && !this.output.length
 }
 
+//当output没有数据时input全部放入output
 MyQueue.prototype.addToOutput = function () {
 	if (!this.output.length) {
 		while (this.input.length) {

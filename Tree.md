@@ -940,7 +940,7 @@ var invertTree = function (root) {
 	return root
 }
 
-//自上往下
+//bfs自上往下
 var invertTree = function (root) {
 	if (root == null) return root
 	const queue = [root]

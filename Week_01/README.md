@@ -29,8 +29,7 @@
   ```javascript
   var moveZeroes = function (nums) {
   	let lastFoundZeroIndex = 0
-  	const len = nums.length
-  	for (let cur = 0; cur < len; cur++) {
+  	for (let cur = 0, len = nums.length; cur < len; cur++) {
   		if (nums[cur] !== 0) {
   			;[nums[lastFoundZeroIndex++], nums[cur]] = [
   				nums[cur],

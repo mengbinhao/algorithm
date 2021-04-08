@@ -675,7 +675,7 @@ var rob = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
-	//dp[i] 表示前i间房屋能偷窃到的最高总金额
+	//dp[i] 表示前i - 1间房屋能偷窃到的最高总金额
 	const dp = new Array(len)
 	;(dp[0] = nums[0]), (dp[1] = Math.max(nums[0], nums[1]))
 	for (let i = 2; i < len; i++) {
