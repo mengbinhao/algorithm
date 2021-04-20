@@ -1419,9 +1419,9 @@ var buildTree = function (preorder, inorder) {
 		map.set(inorder[i], i)
 	}
 
-	return helper(preorder, 0, preLen - 1, map, 0, inLen - 1)
+	return dfs(preorder, 0, preLen - 1, map, 0, inLen - 1)
 
-	function helper(preorder, preLeft, preRight, map, inLeft, inRight) {
+	function dfs(preorder, preLeft, preRight, map, inLeft, inRight) {
 		if (preLeft > preRight || inLeft > inRight) return null
 
 		const rootVal = preorder[preLeft],
