@@ -186,6 +186,27 @@ var minSubArrayLen = function (s, nums) {
   }
   ```
 
+- stack
+  ```javascript {.line-numbers}
+  var maxSlidingWindow = function (nums, k) {
+  	let l = 0,
+  		r = -1
+  	//单调递减
+  	const stack = [],
+  		ans = []
+  	for (let i = 0, len = nums.length; i < len; i++) {
+  		//缩小右边界知道满足条件
+  		while (l <= r && nums[stack[r]] < nums[i]) r--
+  		stack[++r] = i
+  		//缩小左边界，每次移动一下
+  		if (i - stack[l] + 1 > k) l++
+  		//满足条件才放答案
+  		if (i >= k - 1) ans.push(nums[stack[l]])
+  	}
+  	return ans
+  }
+  ```
+
 ### [438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 ```javascript {.line-numbers}
