@@ -127,6 +127,35 @@ const mergeSort = (arr) => {
 	//分治
 	return merge(mergeSort(left), mergeSort(right))
 }
+
+//大雪菜version
+// 1 确定分界点 mid = (l + r) / 2
+// 2 递归排序left, right
+// 3 归并 - 合二为一
+const mergeSort = (arr) => {
+	const helper = (arr, l, r, tmp) => {
+		if (l >= r) return
+		const mid = (l + r) >> 1
+
+		helper(arr, l, mid, tmp)
+		helper(arr, mid + 1, r, tmp)
+
+		//归的过程
+		let k = 0,
+			i = l,
+			j = mid + 1
+
+		while (i <= mid && j <= r) {
+			tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
+		}
+		while (i <= mid) tmp[k++] = arr[i++]
+		while (j <= r) tmp[k++] = arr[j++]
+		//复制回arr
+		for (let i = l, j = 0; i <= r; i++, j++) arr[i] = tmp[j]
+		return arr
+	}
+	return helper(arr, 0, arr.length - 1, [])
+}
 ```
 
 ### 5 quick
@@ -171,6 +200,56 @@ const quickSort = (arr) => {
 		return index
 	}
 	return quickSorted(arr, 0, len - 1)
+}
+
+//大雪菜version 双指针
+// 1 确定分界点 可以arr[l]、arr[r]、arr[(l + r) / 2]
+// 2 调整该区间
+// 3 递归处理左右子区间
+const quickSort = (arr) => {
+	if (!arr || !Array.isArray(arr)) return
+	const len = arr.length
+	if (len < 2) return arr
+
+	const helper = (arr, l, r) => {
+		if (l >= r) return
+		const x = arr[l]
+		let i = l - 1,
+			j = r + 1
+		while (i < j) {
+			//不管三七二十一先移动，所以上面定义的时候外移1位
+			while (arr[++i] < x);
+			while (arr[--j] > x);
+			if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]]
+		}
+
+		helper(arr, l, j)
+		helper(arr, j + 1, r)
+		return arr
+	}
+
+	return helper(arr, 0, len - 1)
+}
+
+//快选
+const quickChoose = (arr, n, k) => {
+	const helper = (arr, l, r, k) => {
+		if (l === r) return arr[l]
+		const x = arr[l]
+		let i = l - 1,
+			j = r + 1
+		while (i < j) {
+			while (arr[++i] < x);
+			while (arr[--j] > x);
+			if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]]
+		}
+
+		//排完后看左边的数字个数
+		const sl = j - l + 1
+		if (k <= sl) return helper(arr, l, j, k)
+		return helper(arr, j + 1, r, k - sl)
+	}
+	return helper(arr, 0, n - 1, k)
 }
 ```
 
