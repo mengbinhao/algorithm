@@ -166,7 +166,7 @@ var minSubArrayLen = function (s, nums) {
   	for (let i = 0, len = nums.length; i < len; i++) {
   		//队列满了移出去一个
   		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
-  		if (deque.length && deque[0] <= i - k) deque.shift()
+  		if (deque.length && deque[0] < i - k + 1) deque.shift()
 
   		//维护递减队列,第一个第一大的index,依此类推
   		while (deque.length && nums[deque[deque.length - 1]] < nums[i])
@@ -182,6 +182,7 @@ var minSubArrayLen = function (s, nums) {
   ```
 
 - stack
+
   ```javascript {.line-numbers}
   var maxSlidingWindow = function (nums, k) {
   	let l = 0,
@@ -189,12 +190,12 @@ var minSubArrayLen = function (s, nums) {
   	//单调递减
   	const stack = [],
   		ans = []
+
   	for (let i = 0, len = nums.length; i < len; i++) {
-  		//缩小右边界知道满足条件
+  		if (i - k + 1 > stack[l]) l++
+  		//缩小右边界直到满足条件
   		while (l <= r && nums[stack[r]] < nums[i]) r--
   		stack[++r] = i
-  		//缩小左边界，每次移动一下
-  		if (i - stack[l] + 1 > k) l++
   		//满足条件才放答案
   		if (i >= k - 1) ans.push(nums[stack[l]])
   	}

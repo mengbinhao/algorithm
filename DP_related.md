@@ -934,7 +934,7 @@ var longestPalindromeSubseq = function (s) {
 
 4. 优化：注意遍历方向
 
-### [322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)
+### ==[322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)==
 
 ```javascript {.line-numbers}
 var coinChange = function (coins, amount) {
@@ -967,36 +967,33 @@ var coinChange = function (coins, amount) {
 }
 
 //dfs time exceeded
-//O(S^n) - O(n)
+//O(S^n) - O(n)  S总金额
 var coinChange = function (coins, amount) {
-	if (coins.length === 0) return -1
+	if (coins.length === 0) -1
 	if (amount < 1) return 0
 
-	let ret = amount + 1
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
 		if (remain === 0) {
-			ret = Math.min(count, ret)
+			ret = Math.min(ret, count)
 			return
 		}
-		//穷举
-		for (let i = 0; i < coins.length; i++) {
+		for (let i = 0, len = coins.length; i < len; i++) {
 			dfs(coins, remain - coins[i], count + 1)
 		}
 	}
+	let ret = Infinity
 	dfs(coins, amount, 0)
-	return ret === amount + 1 ? -1 : ret
+	return ret === Infinity ? -1 : ret
 }
 
 //dfs + Memoization
 //O(Sn) + O(S)
 var coinChange = function (coins, amount) {
-	if (coins.length === 0) return -1
+	if (coins.length === 0) -1
 	if (amount < 1) return 0
-	const cache = {}
-	return dfs(coins, amount)
 
-	function dfs(coins, remain) {
+	const dfs = (coins, remain) => {
 		if (remain < 0) return -1
 		if (remain === 0) return 0
 		if (cache[remain]) return cache[remain]
@@ -1005,11 +1002,13 @@ var coinChange = function (coins, amount) {
 		for (let i = 0, len = coins.length; i < len; i++) {
 			const ret = dfs(coins, remain - coins[i])
 			//加1是为了加上得到ret结果的那个步骤中兑换的那一个硬币
-			//下层返回需要有意义并且比较过后是需要最少的硬币个数
+			//下层返回需要有意义并且是下层需要最少的硬币个数
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
 		return (cache[remain] = min === Infinity ? -1 : min)
 	}
+	const cache = {}
+	return dfs(coins, amount)
 }
 
 //dp 自底向上
