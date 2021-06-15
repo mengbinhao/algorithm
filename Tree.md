@@ -1,16 +1,46 @@
 # Basic Concept
 
-- node
-- root
+- What is Tree：
+
+  - 仅有唯一一个根节点，没有节点则为空树
+  - 除根节点外，每个节点都有并仅有唯一一个父节点
+  - 节点间不能形成闭环
+
+- node、 root、brother node、leaf node
+
 - branch
+
 - child
-- leaf
+
 - level: 根为第一层,根的孩子为第二层
-- height:节点到叶子节点的最大值就是其高度
+
+- height:节点到叶子节点的最大值就是其高度，根节点的高度为树的高度
+
 - depth:高度和深度是相反的,高度是从下往上数,深度是从上往下.因此根节点的深度和叶子节点的高度是 0
+
 - width
+
 - 二叉树,三叉树... N 叉树,由其子节点最多可以有几个决定,最多有 N 个就是 N 叉树
-  - 完全二叉树、满二叉树、二叉搜索树、平衡二叉树、红黑树...
+
+  - 完全二叉树（深度为 h，除第 h 层外，其它各层 (1 ～ h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边）
+
+  - 满二叉树（除了叶结点外每一个结点都有左右子叶且叶子结点都处在最底层的二叉树）
+
+  - 二叉搜索树(左子节点值小于该节点值、右子节点值大于等于该节点值)
+
+  - 平衡二叉搜索树（AVL）：既满足左右子树高度不大于 1， 又满足任意节点值大于它的左子节点值，小于等于它的右子节点值
+
+  - 红黑树
+
+    - 节点是红色或黑色
+    - 根节点必须是黑色节点
+    - 所有的叶子节点都必须是值为 NULL 的黑节点
+    - 如果一个节点是红色的，则它两个子节点都是黑色的
+    - 从任一节点到达它的每个叶子节点的所有的路径，都有相同数目的黑色节点
+
+    ![](./images/avl.png)
+
+  - Trie(字典树或前缀树，它是用来处理字符串匹配问题的数据结构，以及用来解决集合中查找固定前缀字符串的数据结构，高效的存储和查找字符串)
 
 # 解题要素
 
@@ -63,12 +93,8 @@ var preorderTraversal = function (root) {
 	while (stack.length > 0) {
 		root = stack.pop()
 		ret.push(root.val)
-		if (root.right) {
-			stack.push(root.right)
-		}
-		if (root.left) {
-			stack.push(root.left)
-		}
+		if (root.right) stack.push(root.right)
+		if (root.left) stack.push(root.left)
 	}
 	return ret
 }
@@ -132,7 +158,7 @@ var inorderTraversal = function (root) {
 	const ret = [],
 		stack = []
 
-	while (root || stack.length > 0) {
+	while (root || stack.length) {
 		//一直放左儿子
 		while (root) {
 			stack.push(root)
@@ -289,15 +315,15 @@ var levelOrder = function (root) {
 var levelOrder = function (root) {
 	const ret = []
 
-	const dfs = (root, level, ret) => {
+	const dfs = (root, level) => {
 		if (root == null) return
 		if (!ret[level]) ret[level] = []
 		ret[level].push(root.val)
-		dfs(root.left, level + 1, ret)
-		dfs(root.right, level + 1, ret)
+		dfs(root.left, level + 1)
+		dfs(root.right, level + 1)
 	}
 
-	dfs(root, 0, ret)
+	dfs(root, 0)
 	return ret
 }
 ```
@@ -830,6 +856,24 @@ var sortedListToBST = function (head) {
 	}
 	//左闭右开
 	return buildTree(head, null)
+}
+```
+
+##### [230.二叉搜索树中第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
+
+```javascript {.line-numbers}
+var kthSmallest = function (root, k) {
+	const stack = []
+
+	while (true) {
+		while (root) {
+			stack.push(root)
+			root = root.left
+		}
+		root = stack.pop()
+		if (--k === 0) return root.val
+		root = root.right
+	}
 }
 ```
 

@@ -271,11 +271,11 @@ const heapSort = (arr) => {
 	const buildMaxHeap = (arr) => {
 		//从第一个非叶子节点开始创建
 		for (let i = Math.floor(len / 2) - 1; i >= 0; i--) {
-			heapify(arr, i)
+			sink(arr, i)
 		}
 	}
 	//堆化
-	const heapify = (arr, i) => {
+	const sink = (arr, i) => {
 		const left = 2 * i + 1,
 			right = 2 * i + 2
 		let largest = i
@@ -285,10 +285,10 @@ const heapSort = (arr) => {
 		if (largest !== i) {
 			;[arr[i], arr[largest]] = [arr[largest], arr[i]]
 			//调整后继续看调整后的那个节点的子树是否满足
-			heapify(arr, largest)
+			sink(arr, largest)
 		}
 	}
-	//step1 build MaxHeap,全部都是无序的
+	//step1 build MaxHeap
 	buildMaxHeap(arr)
 
 	//每次堆顶和最后一个元素交换，再堆化，即无序区减1，有序区加1
@@ -297,7 +297,7 @@ const heapSort = (arr) => {
 		;[arr[0], arr[i]] = [arr[i], arr[0]]
 		len--
 		//交换后从顶点开始堆化
-		heapify(arr, 0)
+		sink(arr, 0)
 	}
 	return arr
 }
