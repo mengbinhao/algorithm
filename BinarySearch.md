@@ -1,15 +1,15 @@
 ### 使用二分的条件(整数二分、浮点数二分)
 
 1. 有单调性一定可以二分
-2. 能用二分解的题不一定有单调性
+2. 能用二分解的题不一定具有单调性
 
 ### 解题 3 步骤
 
 1. 预处理：如果集合未排序,则进行排序
 2. 二分查找：使用循环或递归在每次比较后将查找空间二分
-   1. **先定义搜索区间**
+   1. 先定义搜索区间
    2. 根据搜索区间定义循环结束条件
-   3. **取中间元素和目标元素做对比(目标元素可能是需要找的元素或者是数组第一个,最后一个元素等)**
+   3. 取中间元素和目标元素做对比(目标元素可能是需要找的元素或者是数组第一个/最后一个元素等)
    4. 根据比较的结果收缩区间,舍弃非法解
 3. 后处理：在剩余空间中确定可行的候选者
 
@@ -34,7 +34,7 @@
 
 ### some templates
 
-#### basic template
+#### 1 Basic Template
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
@@ -45,7 +45,6 @@ const binarySearch = (arr, target) => {
 		mid
 	//Note!!!
 	while (left <= right) {
-		// mid = left + (right - left) / 2
 		// mid = left + (right - left) >> 1
 		mid = Math.floor(left + (right - left) / 2)
 		if (arr[mid] < target) {
@@ -62,11 +61,11 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 查找第一个值等于给定值的元素
+#### 2 查找第一个值等于给定值的元素
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	if (arr.length === 0) return arr - 1
+	if (arr.length === 0) return -1
 	let left = 0,
 		right = arr.length - 1,
 		mid
@@ -77,7 +76,7 @@ const binarySearch = (arr, target) => {
 		} else if (arr[mid] > target) {
 			left = mid + 1
 		} else {
-			//已经到第一个或者已经找到
+			//已搜到第一个或已找到
 			if (mid === 0 || arr[mid - 1] !== target) {
 				return mid
 				//继续收缩右边界
@@ -90,11 +89,11 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 查找最后一个值等于给定值的元素
+#### 3 查找最后一个值等于给定值的元素
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	if (arr.length === 0) return arr - 1
+	if (arr.length === 0) return -1
 	let left = 0,
 		right = arr.length - 1,
 		mid
@@ -105,6 +104,7 @@ const binarySearch = (arr, target) => {
 		} else if (arr[mid] > target) {
 			left = mid + 1
 		} else {
+             //已搜到最后一个或已找到
 			if (mid === arr.length - 1 || arr[mid + 1] !== target) {
 				return mid
 			} else {
@@ -116,7 +116,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 查找第一个大于等于给定值的元素
+#### 4 查找第一个大于等于给定值的元素
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
@@ -139,7 +139,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 查找最后一个小于等于给定值的元素
+#### 5 查找最后一个小于等于给定值的元素
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
@@ -162,23 +162,19 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 寻找左侧边界的二分搜索
+#### 6 寻找左侧边界的二分搜索
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
 	let left = 0,
 		right = arr.length - 1
-	// 搜索区间为 [left, right]
 	while (left <= right) {
 		let mid = Math.floor(left + (right - left) / 2)
 		if (arr[mid] < target) {
-			// 搜索区间变为 [mid+1, right]
 			left = mid + 1
 		} else if (arr[mid] > target) {
-			// 搜索区间变为 [left, mid-1]
 			right = mid - 1
 		} else if (arr[mid] === target) {
-			// 收缩右侧边界
 			right = mid - 1
 		}
 	}
@@ -188,7 +184,7 @@ const leftBound = (arr, target) => {
 }
 ```
 
-#### 寻找右侧边界的二分搜索
+#### 7 寻找右侧边界的二分搜索
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {

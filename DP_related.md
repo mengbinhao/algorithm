@@ -582,6 +582,25 @@ var lengthOfLIS = function (nums) {
 	}
 	return ret
 }
+
+var lengthOfLIS = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	const dp = new Array(len).fill(0)
+	dp[0] = 1
+	let ret = 1
+	for (let i = 1; i < len; i++) {
+		dp[i] = 1 //只a[i]一个数
+		for (let j = 0; j < i; j++) {
+			if (nums[i] > nums[j]) {
+				dp[i] = Math.max(dp[i], dp[j] + 1)
+			}
+		}
+		//每次check
+		ret = Math.max(ret, dp[i])
+	}
+	return ret
+}
 ```
 
 ### [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
@@ -654,6 +673,8 @@ var longestCommonSubsequence = function (text1, text2) {
 
 	for (let i = 1; i <= n; i++) {
 		for (let j = 1; j <= m; j++) {
+			//dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j])
+			//if (text1[i - 1] === text2[j - 1])dp[i][j] = dp[i - 1][j - 1] + 1
 			if (text1[i - 1] === text2[j - 1]) {
 				dp[i][j] = dp[i - 1][j - 1] + 1
 			} else {

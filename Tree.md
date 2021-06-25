@@ -202,20 +202,21 @@ const postorderTraversal = (root) => {
 			stack.push(root)
 			root = root.left
 		}
+		//出栈
 		root = stack.pop()
 		//root.right === prev 节点访问过一次
 		if (!root.right || root.right === prev) {
 			//因第二次才加入,这里加入即可
 			ret.push(root.val)
+			//更新下 preNode，也就是定位住上一个访问节点
 			prev = root
 			root = null
 		} else {
-			//再次放入
+			//再次入栈
 			stack.push(root)
 			root = root.right
 		}
 	}
-
 	return ret
 }
 
