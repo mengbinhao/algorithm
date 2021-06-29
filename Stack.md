@@ -1,11 +1,11 @@
-### [20.有效括号 E](https://leetcode-cn.com/problems/valid-parentheses/)
+### ==[20.有效括号 E](https://leetcode-cn.com/problems/valid-parentheses/)==
 
 ```javascript {.line-numbers}
 //brute force 一直替换
 var isValid = function (s) {
-	const reg = /\(\)|\[\]|\{\}/g
+	if ((s.length & 1) === 1) return false
 	while (s.includes('()') || s.includes('[]') || s.includes('{}')) {
-		s = s.replace(reg, '')
+		s = s.replace(/\(\)|\[\]|\{\}/g, '')
 	}
 	return s === ''
 }
@@ -13,7 +13,7 @@ var isValid = function (s) {
 //O(n) - O(n)
 var isValid = function (s) {
 	if ((s.length & 1) === 1) return false
-	let map = {
+	const map = {
 			'(': ')',
 			'[': ']',
 			'{': '}',
@@ -142,34 +142,184 @@ var longestValidParentheses = function (s) {
 }
 ```
 
-### [155.最小栈 E](https://leetcode-cn.com/problems/min-stack/)
+### ==[42.接雨水 H](https://leetcode-cn.com/problems/trapping-rain-water/)==
+
+```javascript
+//brute force O(n^2) - O(1)
+var trap = function (height) {
+	let ret = 0
+	const len = height.length
+	//两边无法接雨水
+	for (let i = 1; i < len - 1; i++) {
+		//two pointer
+		let leftMax = 0,
+			rightMax = 0
+		//找到左边的最高柱
+		for (let j = i; j >= 0; j--) {
+			leftMax = Math.max(leftMax, height[j])
+		}
+		//找到右边的最高柱
+		for (let j = i; j < len; j++) {
+			rightMax = Math.max(rightMax, height[j])
+		}
+		//计算每个height[i]能接到的雨水，并加到最终结果
+		ret += Math.min(leftMax, rightMax) - height[i]
+	}
+	return ret
+}
+
+//备忘录优化 dp O(n) - O(n)
+var trap = function (height) {
+	const len = height.length
+	let ret = 0,
+		//提前存储每个height[i]对应的左右最大值
+		leftMax = [],
+		rightMax = []
+
+	leftMax[0] = height[0]
+	for (let i = 1; i < len; i++) {
+		//leftMax会传递
+		leftMax[i] = Math.max(height[i], leftMax[i - 1])
+	}
+	rightMax[len - 1] = height[len - 1]
+	for (let i = len - 2; i >= 0; i--) {
+		rightMax[i] = Math.max(height[i], rightMax[i + 1])
+	}
+	//两边无法接雨水
+	for (let i = 1; i < len - 1; i++) {
+		ret += Math.min(leftMax[i], rightMax[i]) - height[i]
+	}
+	return ret
+}
+
+//two pointer O(n) - O(1)
+var trap = function (height) {
+	const len = height.length
+	if (len === 0) return 0
+	let left = 0,
+		right = len - 1,
+		ret = 0
+
+	let l_max = height[0],
+		r_max = height[len - 1]
+
+	while (left < right) {
+		l_max = Math.max(l_max, height[left])
+		r_max = Math.max(r_max, height[right])
+
+		if (l_max < r_max) {
+			ret += l_max - height[left]
+			left++
+		} else {
+			ret += r_max - height[right]
+			right--
+		}
+	}
+	return ret
+}
+
+//单调递减栈 O(n) - O(n)
+var trap = function (height) {
+	const len = height.length
+	if (len === 0) return 0
+	const stack = []
+	let i = 0,
+		ret = 0
+	while (i < len) {
+		while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
+			const val = stack.pop()
+			if (stack.length === 0) break
+			const distance = i - stack[stack.length - 1] - 1
+			const boundedHeight =
+				Math.min(height[i], height[stack[stack.length - 1]]) - height[val]
+			ret += distance * boundedHeight
+		}
+		stack.push(i++)
+	}
+	return ret
+}
+```
+
+### ==[84.柱状图中最大的矩形 H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)==
 
 ```javascript {.line-numbers}
-//使用辅助栈
-var MinStack = function () {
-	this.stack = []
-	//add a initial value
-	this.minStack = [Infinity]
+//brute force O(n^2)
+//固定宽 两重循环
+//固定高 一重循环，向两边扫求最长底边
+var largestRectangleArea = function (heights) {
+	const len = heights.length
+	if (len === 0) return 0
+	if (len === 1) return heights[0]
+	let ret = 0
+	//枚举高
+	for (let i = 0; i < len; i++) {
+		const height = heights[i]
+		let left = i,
+			right = i
+		// 确定左右边界
+		while (left - 1 >= 0 && heights[left - 1] >= height) left--
+		while (right + 1 < len && heights[right + 1] >= height) right++
+		ret = Math.max(ret, (right - left + 1) * height)
+	}
+	return ret
 }
 
-//sync push
-MinStack.prototype.push = function (x) {
-	this.stack.push(x)
-	//peek always min item
-	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
+//stack  O(n) - O(n)
+//单调递增栈,存的下标
+var largestRectangleArea = function (heights) {
+	const len = heights.length
+	if (len === 0) return 0
+	if (len === 1) return heights[0]
+	//每根柱子即每个i对应的左、右端点坐标
+	const left = new Array(len)
+	const right = new Array(len)
+
+	const stack = new Array()
+	for (let i = 0; i < len; i++) {
+		while (stack.length > 0 && heights[stack[stack.length - 1]] >= heights[i])
+			stack.pop()
+		left[i] = stack.length === 0 ? -1 : stack[stack.length - 1]
+		stack.push(i)
+	}
+
+	stack.length = 0
+	for (let i = len - 1; i >= 0; i--) {
+		while (stack.length > 0 && heights[stack[stack.length - 1]] >= heights[i])
+			stack.pop()
+		right[i] = stack.length === 0 ? len : stack[stack.length - 1]
+		stack.push(i)
+	}
+
+	let ret = 0
+	for (let i = 0; i < len; i++)
+		ret = Math.max(ret, (right[i] - left[i] - 1) * heights[i])
+	return ret
 }
 
-//sync pop
-MinStack.prototype.pop = function () {
-	this.stack.pop()
-	this.minStack.pop()
-}
-
-MinStack.prototype.top = function () {
-	return this.stack[this.stack.length - 1]
-}
-
-MinStack.prototype.getMin = function () {
-	return this.minStack[this.minStack.length - 1]
+//stack  O(n) - O(1)
+//单调递增栈,存的下标
+//求出每一根柱子的左侧且最近的小于其高度的柱子
+//使用哨兵技巧
+var largestRectangleArea = function (heights) {
+	let len = heights.length
+	if (len === 0) return 0
+	if (len === 1) return heights[0]
+	let ret = 0
+	const tmp = new Array(len + 2).fill(0)
+	for (let i = 0; i < len; i++) {
+		tmp[i + 1] = heights[i]
+	}
+	len += 2
+	heights = tmp
+	const stack = [0]
+	for (let i = 1; i < len; i++) {
+		while (heights[stack[stack.length - 1]] > heights[i]) {
+			const height = heights[stack.pop()]
+			const width = i - stack[stack.length - 1] - 1
+			ret = Math.max(ret, height * width)
+		}
+		stack.push(i)
+	}
+	return ret
 }
 ```

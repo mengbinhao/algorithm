@@ -2,7 +2,7 @@
 
 # 1、线性 DP
 
-### [5. ==最长回文子串==](https://leetcode-cn.com/problems/longest-palindromic-substring/)
+### ==[5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)==
 
 ```javascript {.line-numbers}
 //brute force + reverse()
@@ -47,16 +47,16 @@ var longestPalindrome = function (s) {
 	let begin = 0,
 		maxLen = 1
 
-	//在状态转移方程中,是从长度较短的字符串向长度较长的字符串进行转移的,因此要注意动态规划的循环顺序
-	//先升序填列,再升序填行
-	//只需要填dp table上班边
+	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
+	//先升序填列，再升序填行
+	//只需要填dp table上半边
 	//对角线等于true的case未用到
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
 			if (s[i] !== s[j]) {
 				dp[i][j] = false
 			} else {
-				//j - i + 1 < 4,即当子串s[i..j]的长度等于2 or 3的时候,只需要判断一下头尾两个字符是否相等就可以直接下结论
+				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论
 				if (j - i < 3) dp[i][j] = true
 				else dp[i][j] = dp[i + 1][j - 1]
 			}
@@ -71,7 +71,32 @@ var longestPalindrome = function (s) {
 	return s.substring(begin, begin + maxLen)
 }
 
-//中心扩展法 O(n^2) - O(1)
+//中心扩展法 simple version
+var longestPalindrome = function (s) {
+	let res = ''
+	for (let i = 0; i < s.length; i++) {
+		// 以 s[i] 为中心的最长回文子串
+		const s1 = palindrome(s, i, i)
+		// 以 s[i] 和 s[i+1] 为中心的最长回文子串
+		const s2 = palindrome(s, i, i + 1)
+		// res = longest(res, s1, s2)
+		res = res.length > s1.length ? res : s1
+		res = res.length > s2.length ? res : s2
+	}
+	return res
+
+	function palindrome(s, l, r) {
+		// 向两边展开
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			l--
+			r++
+		}
+		// 返回本次的回文串长度，长度不包括最后的l和r
+		return s.substring(l + 1, r)
+	}
+}
+
+//中心扩展法 advanced version
 var longestPalindrome = function (s) {
 	if (!s) return ''
 	const len = s.length
@@ -79,8 +104,8 @@ var longestPalindrome = function (s) {
 	let maxLen = 1,
 		begin = 0
 	for (let i = 0; i < s.length; i++) {
-		const oddLen = palindrome(s, i, i + 1)
-		const evenLen = palindrome(s, i, i)
+		const oddLen = palindrome(s, i, i)
+		const evenLen = palindrome(s, i, i + 1)
 		const curMaxLen = Math.max(oddLen, evenLen)
 		if (curMaxLen > maxLen) {
 			maxLen = curMaxLen
@@ -299,7 +324,7 @@ var maxSubArray = function (nums) {
 }
 ```
 
-### [64. 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
+### ==[64. 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)==
 
 ```javascript {.line-numbers}
 //dp[i][j]表示从(i,j)走到(m-1, n-1)点的最小路径和
@@ -425,6 +450,30 @@ var minDistance = function (word1, word2) {
 		}
 	}
 	return dp[n]
+}
+```
+
+### ==[91. 解码方法](https://leetcode-cn.com/problems/decode-ways/)==
+
+```javascript {.line-numbers}
+var numDecodings = function (s) {
+	if (!s) return 0
+	let len = s.length
+	let dp = Array(len + 1).fill(0)
+	dp[0] = 1
+	dp[1] = s[0] === '0' ? 0 : 1
+	for (let i = 2; i <= len; i++) {
+		if (s[i - 1] !== '0') {
+			dp[i] += dp[i - 1]
+		}
+		if (
+			s[i - 2] === '1' ||
+			(s[i - 2] === '2' && s[i - 1] >= 0 && s[i - 1] <= 6)
+		) {
+			dp[i] += dp[i - 2]
+		}
+	}
+	return dp[len]
 }
 ```
 
@@ -603,7 +652,7 @@ var lengthOfLIS = function (nums) {
 }
 ```
 
-### [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
+### ==[718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)==
 
 ```javascript {.line-numbers}
 /**
@@ -1066,7 +1115,7 @@ var coinChange = function (coins, amount) {
 
 # 7、计数型 DP
 
-### [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
+### ==[62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)==
 
 ```javascript {.line-numbers}
 //DFS O(2^(m + n - 1) - 1)
@@ -1190,7 +1239,7 @@ const numTrees = (n) => {
 
 # 8、递推型 DP
 
-### [70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)
+### ==[70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)==
 
 ```javascript {.line-numbers}
 //recursion O(2^n)
@@ -1225,7 +1274,7 @@ var climbStairs = function (n) {
 }
 ```
 
-### [509. 斐波那契数](https://leetcode-cn.com/problems/fibonacci-number/)
+### ==[509. 斐波那契数](https://leetcode-cn.com/problems/fibonacci-number/)==
 
 ```javascript {.line-numbers}
 var fib = function (n) {

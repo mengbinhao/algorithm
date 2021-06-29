@@ -68,7 +68,7 @@
 
 ### Preorder/Inorder/Postorder
 
-##### [144.二叉树前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+##### ==[144.二叉树前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)==
 
 ```javascript {.line-numbers}
 //recursion, don't need to judge if node is null
@@ -138,7 +138,7 @@ var preorder = function (root) {
 }
 ```
 
-##### [94.二叉树中序遍历](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+##### ==[94.二叉树中序遍历](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)==
 
 ```javascript {.line-numbers}
 //recursion
@@ -173,7 +173,7 @@ var inorderTraversal = function (root) {
 }
 ```
 
-##### [145.二叉树后序遍历](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+##### ==[145.二叉树后序遍历](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)==
 
 ```javascript {.line-numbers}
 //recursion
@@ -284,7 +284,7 @@ var postorder = function (root) {
 
 ### Level Traversal
 
-##### [102.二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+##### ==[102.二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)==
 
 ```javascript {.line-numbers}
 //BFS iteration, use queue
@@ -398,7 +398,7 @@ var zigzagLevelOrder = function (root) {
 }
 ```
 
-##### [515.在每个树行中找最大值](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
+##### ==[515.在每个树行中找最大值](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)==
 
 ```javascript {.line-numbers}
 //bfs
@@ -533,7 +533,7 @@ var verticalTraversal = function (root) {
 
 ### CRUD
 
-##### [98.验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+##### ==[98.验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)==
 
 ```javascript {.line-numbers}
 var isValidBST = function (root) {
@@ -878,7 +878,7 @@ var kthSmallest = function (root, k) {
 }
 ```
 
-##### [235.二叉搜索树的公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+##### ==[235.二叉搜索树的公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)==
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
@@ -972,7 +972,7 @@ var isSymmetric = function (root) {
 }
 ```
 
-##### [226.翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
+##### ==[226.翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)==
 
 ```javascript {.line-numbers}
 //preorder or postorder can work, inorder means no invert
@@ -1000,7 +1000,7 @@ var invertTree = function (root) {
 }
 ```
 
-##### [104.二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+##### ==[104.二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)==
 
 ```javascript {.line-numbers}
 var maxDepth = function (root) {
@@ -1030,7 +1030,7 @@ var maxDepth = function (root) {
 }
 ```
 
-##### [111.二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+##### ==[111.二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)==
 
 ```javascript {.line-numbers}
 //DFS
@@ -1234,7 +1234,7 @@ var binaryTreePaths = function (root) {
 }
 ```
 
-##### [236.二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+##### ==[236.二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)==
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {

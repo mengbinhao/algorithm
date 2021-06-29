@@ -1,4 +1,167 @@
-### [77.组合](https://leetcode-cn.com/problems/combinations/)
+### ==[17.电话号码的字母组合 M](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)==
+
+```javascript
+//recursion
+var letterCombinations = function (digits) {
+	if (!digits) return []
+	let ret = [],
+		map = new Map([
+			[2, 'abc'],
+			[3, 'def'],
+			[4, 'ghi'],
+			[5, 'jkl'],
+			[6, 'mno'],
+			[7, 'pqrs'],
+			[8, 'tuv'],
+			[9, 'wxyz'],
+		])
+
+	let traversal = (s, digits, level, ret, map) => {
+		if (level === digits.length) {
+			ret.push(s)
+			return
+		}
+		let letters = map.get(+digits.charAt(level))
+
+		for (let l of letters) {
+			traversal(s + l, digits, level + 1, ret, map)
+		}
+	}
+
+	traversal('', digits, 0, ret, map)
+
+	return ret
+}
+
+//more simple
+var letterCombinations = function (digits) {
+	if (digits.length === 0) return []
+
+	const map = {
+		2: 'abc',
+		3: 'def',
+		4: 'ghi',
+		5: 'jkl',
+		6: 'mno',
+		7: 'pqrs',
+		8: 'tuv',
+		9: 'wxyz',
+	}
+
+	let res = []
+	function go(i, s) {
+		if (i === digits.length) {
+			res.push(s)
+			return
+		}
+
+		for (let c of map[digits[i]]) {
+			go(i + 1, s + c)
+		}
+	}
+
+	go(0, '')
+	return res
+}
+```
+
+### ==[22.括号生成 M](https://leetcode-cn.com/problems/generate-parentheses/)==
+
+```javascript
+//brute force O(2^3n * n) - O(n)
+var generateParenthesis = function (n) {
+	const ret = []
+
+	const isValid = (s) => {
+		let balance = 0
+		for (let c of s) {
+			if (c === '(') {
+				balance++
+			} else {
+				balance--
+			}
+			if (balance < 0) return false
+		}
+		return balance === 0
+	}
+
+	const dfs = (level, max, s) => {
+		//recursion terminal
+		if (level >= max) {
+			if (isValid(s)) ret.push(s)
+			return
+		}
+
+		//precess login of current level
+		//drill down
+		dfs(level + 1, max, `${s}(`)
+		dfs(level + 1, max, `${s})`)
+
+		//reverse current params if needed
+	}
+
+	dfs(0, 2 * n, '')
+	return ret
+}
+
+//回溯
+var generateParenthesis = function (n) {
+	const ret = []
+
+	const dfs = (left, right, n, ret, s) => {
+		if (left === n && right === n) {
+			ret.push(s)
+			return
+		}
+
+		//回溯的过程中直接剪枝掉无效的组合
+		if (left < n) {
+			dfs(left + 1, right, n, ret, s + '(')
+		}
+
+		//回溯的过程中直接剪枝掉无效的组合
+		if (left > right) {
+			dfs(left, right + 1, n, ret, s + ')')
+		}
+	}
+
+	dfs(0, 0, n, ret, '')
+	return ret
+}
+```
+
+### ==[36.有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)==
+
+```javascript
+var isValidSudoku = function (board) {
+	let rows = {}, //记录每行对应的key
+		columns = {}, //记录每列对应的key
+		boxes = {} //记录每个小数独对应的key
+
+	for (let i = 0; i < 9; i++) {
+		for (let j = 0; j < 9; j++) {
+			let num = board[i][j]
+			if (num !== '.') {
+				//子数独序号
+				let boxIndex = Number.parseInt(i / 3) * 3 + Number.parseInt(j / 3)
+				if (
+					rows[i + '-' + num] ||
+					columns[j + '-' + num] ||
+					boxes[boxIndex + '-' + num]
+				)
+					return false
+
+				rows[i + '-' + num] = true
+				columns[j + '-' + num] = true
+				boxes[boxIndex + '-' + num] = true
+			}
+		}
+	}
+	return true
+}
+```
+
+### ==[77.组合](https://leetcode-cn.com/problems/combinations/)==
 
 ```javascript {.line-numbers}
 //dfs + backtrack 1
@@ -42,7 +205,7 @@ var combine = function (n, k) {
 }
 ```
 
-### [39.组合总和](https://leetcode-cn.com/problems/combination-sum/)
+### ==[39.组合总和](https://leetcode-cn.com/problems/combination-sum/)==
 
 ```javascript {.line-numbers}
 //candidates无重复
@@ -100,7 +263,7 @@ var combinationSum = function (candidates, target) {
 }
 ```
 
-### [40.组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)
+### ==[40.组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)==
 
 ```javascript {.line-numbers}
 //candidates有重复
@@ -134,7 +297,7 @@ var combinationSum2 = function (candidates, target) {
 }
 ```
 
-### [46.全排列 M](https://leetcode-cn.com/problems/permutations/)
+### ==[46.全排列 M](https://leetcode-cn.com/problems/permutations/)==
 
 ```javascript {.line-numbers}
 //nums无重复
@@ -166,7 +329,7 @@ var permute = function (nums) {
 }
 ```
 
-### [47.全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)
+### ==[47.全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)==
 
 ```javascript {.line-numbers}
 //nums有重复
@@ -204,7 +367,7 @@ var permuteUnique = function (nums) {
 }
 ```
 
-### [78.子集 M](https://leetcode-cn.com/problems/subsets/)
+### ==[78.子集 M](https://leetcode-cn.com/problems/subsets/)==
 
 ```javascript {.line-numbers}
 //iteration
@@ -255,7 +418,62 @@ var subsets = function (nums) {
 }
 ```
 
-### [90.子集 II](https://leetcode-cn.com/problems/subsets-ii/)
+### ==[79.单词搜索](https://leetcode-cn.com/problems/word-search/)==
+
+```javascript {.line-numbers}
+var exist = function (board, word) {
+	if (!board || board.length === 0 || !word) return false
+	let row = board.length,
+		col = board[0].length,
+		visited = new Array(row),
+		directions = [
+			[0, -1],
+			[-1, 0],
+			[0, 1],
+			[1, 0],
+		]
+
+	//init visited
+	for (let i = 0; i < visited.length; i++) {
+		visited[i] = Array.from({ length: col }, () => false)
+	}
+
+	for (let i = 0; i < row; i++) {
+		for (let j = 0; i < col; j++) {
+			if (dfs(board, word, 0, i, j, row, col, visited, directions)) return true
+		}
+	}
+
+	return false
+}
+
+function dfs(board, word, level, i, j, row, col, visited, directions) {
+	if (level === word.length - 1) {
+		return board[i][j] === word[level]
+	}
+
+	if (board[i][j] === word[level]) {
+		visited[i][j] = true
+		for (let [deltaX, deltaY] of directions) {
+			let newX = i + deltaX,
+				newY = j + deltaY
+			if (isValid(newX, newY, row, col) && !visited[newX][newY]) {
+				if (
+					dfs(board, word, level + 1, newX, newY, row, col, visited, directions)
+				)
+					return true
+			}
+		}
+		visited[i][j] = false
+	}
+}
+
+function isValid(x, y, row, col) {
+	return x >= 0 && x < row && y >= 0 && y < col
+}
+```
+
+### ==[90.子集 II](https://leetcode-cn.com/problems/subsets-ii/)==
 
 ```javascript {.line-numbers}
 var subsetsWithDup = function (nums) {
@@ -278,7 +496,7 @@ var subsetsWithDup = function (nums) {
 }
 ```
 
-### [51.N 皇后 H](https://leetcode-cn.com/problems/n-queens/)
+### ==[51.N 皇后 H](https://leetcode-cn.com/problems/n-queens/)==
 
 ```javascript {.line-numbers}
 var solveNQueens = function (n) {
@@ -328,7 +546,7 @@ var solveNQueens = function (n) {
 }
 ```
 
-### [52.N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)
+### ==[52.N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)==
 
 ```javascript {.line-numbers}
 var totalNQueens = function (n) {
@@ -392,9 +610,60 @@ var totalNQueens = function (n) {
 }
 ```
 
+### ==[130.被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)==
+
+```javascript {.line-numbers}
+var solve = function (board) {
+	if (!board || !Array.isArray(board) || board.length === 0) return board
+
+	let row = board.length,
+		col = board[0].length
+
+	for (let i = 0; i < row; i++) {
+		for (let j = 0; j < col; j++) {
+			//from edge dfs, to mark O to #
+			let isEdge = i === 0 || j === 0 || i === row - 1 || j === col - 1
+			if (isEdge && board[i][j] === 'O') {
+				dfs(board, i, j, row, col)
+			}
+		}
+	}
+
+	for (let i = 0; i < row; i++) {
+		for (let j = 0; j < col; j++) {
+			//left O change to X
+			if (board[i][j] === 'O') board[i][j] = 'X'
+			//reverse O those can not be changed
+			if (board[i][j] === '#') board[i][j] = 'O'
+		}
+	}
+
+	function dfs(board, i, j, row, col) {
+		if (
+			i < 0 ||
+			j < 0 ||
+			i >= row ||
+			j >= col ||
+			board[i][j] === 'X' ||
+			board[i][j] === '#'
+		)
+			return
+
+		board[i][j] = '#'
+
+		dfs(board, i - 1, j, row, col)
+		dfs(board, i + 1, j, row, col)
+		dfs(board, i, j - 1, row, col)
+		dfs(board, i, j + 1, row, col)
+	}
+
+	return board
+}
+```
+
 ## 小岛问题
 
-### [200.岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)
+### ==[200.岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)==
 
 ```javascript {.line-numbers}
 //DFS
@@ -548,4 +817,34 @@ var maxAreaOfIsland = function (grid) {
 }
 
 //BFS
+```
+
+### ==[547.份数量](https://leetcode-cn.com/problems/number-of-provinces/)==
+
+```javascript {.line-numbers}
+var findCircleNum = function (M) {
+	if (!M || !Array.isArray(M) || M.length === 0) return
+	let len = M.length,
+		visited = Array.from({ length: len }).fill(0),
+		ret = 0
+
+	let dfs = (i, M, len, visited) => {
+		for (let j = 0; j < len; j++) {
+			if (M[i][j] === 1 && visited[j] === 0) {
+				//存在朋友圈即标注
+				visited[j] = 1
+				dfs(j, M, len, visited)
+			}
+		}
+	}
+
+	for (let i = 0; i < len; i++) {
+		if (visited[i] === 0) {
+			//visited[i] = 1
+			dfs(i, M, len, visited)
+			ret++
+		}
+	}
+	return ret
+}
 ```

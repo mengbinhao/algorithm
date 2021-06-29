@@ -134,7 +134,7 @@ var minSubArrayLen = function (s, nums) {
 }
 ```
 
-### [239.滑动窗口最大值 H ](https://leetcode-cn.com/problems/sliding-window-maximum/)
+### ==[239.滑动窗口最大值 H ](https://leetcode-cn.com/problems/sliding-window-maximum/)==
 
 - brute force O(n \* k) - O(n - k +1)
 
@@ -143,12 +143,13 @@ var minSubArrayLen = function (s, nums) {
   	let slideWindow = []
   	const ret = [],
   		len = nums.length
-  	//loop max window value = len - k + 1
+  	//能形成的最大窗口个数
   	for (let i = 0; i < len - k + 1; i++) {
   		for (let j = 0; j < k; j++) {
   			slideWindow.push(nums[i + j])
   		}
   		ret.push(Math.max(...slideWindow))
+  		//需要清
   		slideWindow = []
   	}
   	return ret
@@ -168,7 +169,7 @@ var minSubArrayLen = function (s, nums) {
   		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
   		if (deque.length && deque[0] < i - k + 1) deque.shift()
 
-  		//维护递减队列,第一个第一大的index,依此类推
+  		//维护递减队列
   		while (deque.length && nums[deque[deque.length - 1]] < nums[i])
   			deque.pop()
 
@@ -203,7 +204,7 @@ var minSubArrayLen = function (s, nums) {
   }
   ```
 
-### [438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+### ==[438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)==
 
 ```javascript {.line-numbers}
 var findAnagrams = function (s, p) {

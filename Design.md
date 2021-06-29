@@ -95,7 +95,7 @@ LRUCache.prototype.popTail = function () {
 //使用辅助栈
 var MinStack = function () {
 	this.stack = []
-	//add a initial value
+	//add an initial value
 	this.minStack = [Infinity]
 }
 
@@ -119,7 +119,7 @@ MinStack.prototype.getMin = function () {
 	return val === Infinity ? void 0 : val
 }
 
-//O(n) O(1)
+//O(n) - O(1)
 var MinStack = function () {
 	this.stack = []
 	this.minV = Number.MAX_VALUE

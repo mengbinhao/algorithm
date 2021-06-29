@@ -132,7 +132,7 @@ var singleNumber = function (nums) {
 }
 ```
 
-### [190.颠倒二进制位](https://leetcode-cn.com/problems/reverse-bits/)
+### ==[190.颠倒二进制位](https://leetcode-cn.com/problems/reverse-bits/)==
 
 ```javascript {.line-numbers}
 var reverseBits = function (n) {
@@ -149,7 +149,7 @@ var reverseBits = function (n) {
 }
 ```
 
-### [191.位 1 的个数](https://leetcode-cn.com/problems/number-of-1-bits/)
+### ==[191.位 1 的个数](https://leetcode-cn.com/problems/number-of-1-bits/)==
 
 ```javascript {.line-numbers}
 var hammingWeight = function (n) {
@@ -172,7 +172,7 @@ var hammingWeight = function (n) {
 }
 ```
 
-### [231.2 的幂](https://leetcode-cn.com/problems/power-of-two/)
+### ==[231.2 的幂](https://leetcode-cn.com/problems/power-of-two/)==
 
 ```javascript {.line-numbers}
 var isPowerOfTwo = function (n) {

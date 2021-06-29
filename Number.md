@@ -61,6 +61,117 @@ var isPalindrome = function (x) {
 }
 ```
 
+### ==[50.Pow(x, n)M](https://leetcode-cn.com/problems/powx-n/)==
+
+```javascript
+//brute force
+//tme limit exceeded
+var myPow = function (x, n) {
+	if (n === 0) return 1
+	if (n === 1) return x
+	if (n < 0) return 1 / myPow(x, -n)
+	let ret = 1
+
+	for (let i = 1; i <= n; i++) {
+		ret *= x
+	}
+	return ret
+}
+
+//recursion
+var myPow = function (x, n) {
+	if (n === 0) return 1
+	if (n === 1) return x
+	if (n < 0) return 1 / myPow(x, -n)
+	//even的时候转换成子问题
+	return n % 2 === 1 ? x * myPow(x, n - 1) : myPow(x * x, n / 2)
+}
+
+//divide-and-conquer
+var myPow = function (x, n) {
+	if (n === 0) return 1
+	if (n === 1) return x
+	if (n < 0) return 1 / myPow(x, -n)
+
+	let ret = 1
+	while (n > 1) {
+		if (n % 2 === 1) {
+			//补上当前遍历的x
+			ret *= x
+			n--
+		}
+		x *= x
+		n /= 2
+	}
+	//返回总数
+	return ret * x
+}
+```
+
+### ==[169.多数元素 E](https://leetcode-cn.com/problems/majority-element/)==
+
+```javascript
+//brute force O(n^2)
+var majorityElement = function (nums) {
+	const len = nums.length,
+		count
+	for (let i = 0; i < len; i++) {
+		count = 0
+		for (let j = 0; j < len; j++) {
+			if (nums[i] === nums[j]) {
+				if (++count > Math.floor(len / 2)) return nums[i]
+			}
+		}
+	}
+}
+
+// O(NlogN)
+// sort array then the middle is majority,due to must be have an answer
+var majorityElement = function (nums) {
+	nums.sort((a, b) => a - b)
+	return nums[Math.floor(nums.length / 2)]
+}
+
+//hash O(n)
+var majorityElement = function (nums) {
+	const hash = {}
+
+	for (let num of nums) {
+		hash[num] ? hash[num]++ : (hash[num] = 1)
+	}
+
+	let max = -Infinity,
+		ret
+
+	Object.keys(hash).forEach((key) => {
+		let count = hash[key]
+		if (count > max) {
+			max = count
+			ret = +key
+		}
+	})
+	return ret
+}
+
+//投票算法 O(n) - O(1) best
+var majorityElement = function (nums) {
+	let ret = nums[0],
+		count = 1
+	for (let i = 1; i < nums.length; i++) {
+		//note sequence!
+		if (count === 0) {
+			count++
+			ret = nums[i]
+		} else if (nums[i] === ret) {
+			count++
+		} else {
+			count--
+		}
+	}
+	return ret
+}
+```
+
 ### [172.阶乘后的零](https://leetcode-cn.com/problems/factorial-trailing-zeroes/)
 
 ```javascript {.line-numbers}
