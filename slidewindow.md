@@ -25,7 +25,7 @@
 >
 > 这个思路其实也不难,第 2 步相当于在寻找一个「可行解」,然后第 3 步在优化这个「可行解」,最终找到最优解,也就是最短的覆盖子串.左右指针轮流前进,窗口大小增增减减,窗口不断向右滑动,这就是「滑动窗口」这个名字的来历
 
-### [3.无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
+### ==[3.无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)==
 
 ```javascript {.line-numbers}
 var lengthOfLongestSubstring = function (s) {
@@ -49,7 +49,7 @@ var lengthOfLongestSubstring = function (s) {
 }
 ```
 
-### [76.最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
+### ==[76.最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)==
 
 ```javascript {.line-numbers}
 //labuladuo version
@@ -107,10 +107,29 @@ var minWindow = function (s, t) {
 }
 ```
 
-### [209.长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
+### ==[209.长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)==
 
 ```javascript {.line-numbers}
 // 1 brute force O(n^2) - O(1)
+var minSubArrayLen = function (s, nums) {
+	if (nums.length === 0) return 0
+	let len = nums.length,
+		ret = Infinity
+
+	for (let i = 0; i < len; i++) {
+		let sum = 0
+		for (let j = i; j < len; j++) {
+			sum += nums[j]
+			if (sum >= s) {
+				ret = Math.min(ret, j - i + 1)
+				break
+			}
+		}
+	}
+
+	return ret === Infinity ? 0 : ret
+}
+
 // 2 前缀和 + 二分查找
 // 3 双指针 O(n) - O(1)
 var minSubArrayLen = function (s, nums) {
@@ -249,7 +268,7 @@ var findAnagrams = function (s, p) {
 }
 ```
 
-### [567.字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)
+### ==[567.字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)==
 
 ```javascript {.line-numbers}
 //labuladong version

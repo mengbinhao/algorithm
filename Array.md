@@ -649,6 +649,16 @@ var moveZeroes = function (nums) {
 }
 ```
 
+### ==[349.两个数组的交集](https://leetcode-cn.com/problems/intersection-of-two-arrays/)==
+
+```javascript {.line-numbers}
+var intersection = function (nums1, nums2) {
+	return [...new Set(nums1)].filter((item) =>
+		[...new Set(nums2)].includes(item)
+	)
+}
+```
+
 ### ==[1122.数组的相对排序](https://leetcode-cn.com/problems/relative-sort-array/)==
 
 ```javascript {.line-numbers}
