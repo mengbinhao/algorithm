@@ -71,7 +71,7 @@
 ##### ==[144.二叉树前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)==
 
 ```javascript {.line-numbers}
-//recursion, don't need to judge if node is null
+//recursion
 var preorderTraversal = function (root) {
 	const ret = []
 	const traversal = (root, ret) => {
