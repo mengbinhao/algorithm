@@ -178,9 +178,10 @@ const leftBound = (arr, target) => {
 			right = mid - 1
 		}
 	}
-	// 检查出界情况
+	//检查出界情况
 	if (left >= arr.length || arr[left] !== target) return -1
-	return left
+    return left
+    //return left >= nums.length ? -1 : left
 }
 ```
 
@@ -207,6 +208,7 @@ const rightBound = (arr, target) => {
 	// 检查出界情况
 	if (right < 0 || arr[right] !== target) return -1
 	return right
+    //return right < 0 ? -1 : right
 }
 ```
 
