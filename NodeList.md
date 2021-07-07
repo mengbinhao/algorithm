@@ -43,16 +43,14 @@ var addTwoNumbers = function (l1, l2) {
 		const x = p1 !== null ? p1.val : 0
 		const y = p2 !== null ? p2.val : 0
 		const sum = x + y + carry
-		carry = Math.floor(sum / 10)
+		carry = sum >= 10 ? 1 : 0
 		cur.next = new ListNode(sum % 10)
 		cur = cur.next
 		if (p1 !== null) p1 = p1.next
 		if (p2 !== null) p2 = p2.next
 	}
 	//最后的进位
-	if (carry === 1) {
-		cur.next = new ListNode(carry)
-	}
+	if (carry === 1) cur.next = new ListNode(carry)
 	return dummyNode.next
 }
 ```

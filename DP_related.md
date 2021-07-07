@@ -47,18 +47,25 @@ var longestPalindrome = function (s) {
 	let begin = 0,
 		maxLen = 1
 
+	//对角线等于true的case未用到,下列可以忽略不写
+	for (let i = 0; i < len; i++) {
+		dp[i][i] = true
+	}
 	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
 	//先升序填列，再升序填行
 	//只需要填dp table上半边
-	//对角线等于true的case未用到
+	//先填左下角
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
 			if (s[i] !== s[j]) {
 				dp[i][j] = false
 			} else {
 				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论
-				if (j - i < 3) dp[i][j] = true
-				else dp[i][j] = dp[i + 1][j - 1]
+				if (j - i < 3) {
+					dp[i][j] = true
+				} else {
+					dp[i][j] = dp[i + 1][j - 1]
+				}
 			}
 
 			//每次update result
@@ -71,8 +78,11 @@ var longestPalindrome = function (s) {
 	return s.substring(begin, begin + maxLen)
 }
 
-//中心扩展法 simple version
+//中心扩展法 bad version
 var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
 	let res = ''
 	for (let i = 0; i < s.length; i++) {
 		// 以 s[i] 为中心的最长回文子串
@@ -91,12 +101,12 @@ var longestPalindrome = function (s) {
 			l--
 			r++
 		}
-		// 返回本次的回文串长度，长度不包括最后的l和r
+		//返回本次回文串，长度不包括最后的l和r
 		return s.substring(l + 1, r)
 	}
 }
 
-//中心扩展法 advanced version
+//中心扩展法 advanced version O(n^2) - O(1)
 var longestPalindrome = function (s) {
 	if (!s) return ''
 	const len = s.length
@@ -109,14 +119,13 @@ var longestPalindrome = function (s) {
 		const curMaxLen = Math.max(oddLen, evenLen)
 		if (curMaxLen > maxLen) {
 			maxLen = curMaxLen
-			//奇/偶两种情况向下取整
+			//囊括奇、偶两种情况向下取整
 			begin = i - Math.floor((maxLen - 1) / 2)
 		}
 	}
 	return s.substring(begin, begin + maxLen)
 
 	function palindrome(s, l, r) {
-		// 向两边扩散
 		while (l >= 0 && r < s.length && s[l] === s[r]) {
 			l--
 			r++
