@@ -4,7 +4,7 @@
 //recursion
 var letterCombinations = function (digits) {
 	if (!digits) return []
-	let ret = [],
+	const ret = [],
 		map = new Map([
 			[2, 'abc'],
 			[3, 'def'],
@@ -16,28 +16,24 @@ var letterCombinations = function (digits) {
 			[9, 'wxyz'],
 		])
 
-	let traversal = (s, digits, level, ret, map) => {
+	const traversal = (s, digits, level, ret, map) => {
 		if (level === digits.length) {
 			ret.push(s)
 			return
 		}
-		let letters = map.get(+digits.charAt(level))
-
-		for (let l of letters) {
+		for (let l of map.get(+digits[level])) {
 			traversal(s + l, digits, level + 1, ret, map)
 		}
 	}
-
 	traversal('', digits, 0, ret, map)
-
 	return ret
 }
 
 //more simple
 var letterCombinations = function (digits) {
-	if (digits.length === 0) return []
-
-	const map = {
+	const len = digits.length
+	if (len === 0) return []
+	const hash = {
 		2: 'abc',
 		3: 'def',
 		4: 'ghi',
@@ -47,21 +43,18 @@ var letterCombinations = function (digits) {
 		8: 'tuv',
 		9: 'wxyz',
 	}
-
-	let res = []
-	function go(i, s) {
-		if (i === digits.length) {
-			res.push(s)
+	const ret = []
+	const traversal = (level, s) => {
+		if (level === len) {
+			ret.push(s)
 			return
 		}
-
-		for (let c of map[digits[i]]) {
-			go(i + 1, s + c)
+		for (let c of hash[digits[level]]) {
+			traversal(level + 1, s + c)
 		}
 	}
-
-	go(0, '')
-	return res
+	traversal(0, '')
+	return ret
 }
 ```
 

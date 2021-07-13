@@ -68,7 +68,6 @@ var longestPalindrome = function (s) {
 				}
 			}
 
-			//每次update result
 			if (dp[i][j] && j - i + 1 > maxLen) {
 				maxLen = j - i + 1
 				begin = i
@@ -78,42 +77,14 @@ var longestPalindrome = function (s) {
 	return s.substring(begin, begin + maxLen)
 }
 
-//中心扩展法 bad version
-var longestPalindrome = function (s) {
-	if (!s) return ''
-	const len = s.length
-	if (len < 2) return s
-	let res = ''
-	for (let i = 0; i < s.length; i++) {
-		// 以 s[i] 为中心的最长回文子串
-		const s1 = palindrome(s, i, i)
-		// 以 s[i] 和 s[i+1] 为中心的最长回文子串
-		const s2 = palindrome(s, i, i + 1)
-		// res = longest(res, s1, s2)
-		res = res.length > s1.length ? res : s1
-		res = res.length > s2.length ? res : s2
-	}
-	return res
-
-	function palindrome(s, l, r) {
-		// 向两边展开
-		while (l >= 0 && r < s.length && s[l] === s[r]) {
-			l--
-			r++
-		}
-		//返回本次回文串，长度不包括最后的l和r
-		return s.substring(l + 1, r)
-	}
-}
-
-//中心扩展法 advanced version O(n^2) - O(1)
+//中心扩展法 O(n^2) - O(1)
 var longestPalindrome = function (s) {
 	if (!s) return ''
 	const len = s.length
 	if (len < 2) return s
 	let maxLen = 1,
 		begin = 0
-	for (let i = 0; i < s.length; i++) {
+	for (let i = 0; i < len; i++) {
 		const oddLen = palindrome(s, i, i)
 		const evenLen = palindrome(s, i, i + 1)
 		const curMaxLen = Math.max(oddLen, evenLen)

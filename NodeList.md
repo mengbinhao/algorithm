@@ -61,18 +61,16 @@ var addTwoNumbers = function (l1, l2) {
 //O(n) - O(1)
 var removeNthFromEnd = function (head, n) {
 	const dummyNode = new ListNode(0)
-	;(dummyNode.next = head), (first = dummyNode), (second = dummyNode)
-
-	//move first pointer so that the gap between first and second is n nodes apart
+	;(dummyNode.next = head), (p = q = dummyNode)
 	for (let i = 1; i <= n + 1; i++) {
-		first = first.next
+		p = p.next
 	}
-	//move first to the end, maintaining the gap
-	while (first) {
-		first = first.next
-		second = second.next
+
+	while (p) {
+		p = p.next
+		q = q.next
 	}
-	second.next = second.next.next
+	q.next = q.next.next
 	return dummyNode.next
 }
 ```
