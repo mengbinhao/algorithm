@@ -323,3 +323,35 @@ var largestRectangleArea = function (heights) {
 	return ret
 }
 ```
+
+### ==[150.逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)==
+
+```javascript {.line-numbers}
+var evalRPN = function (tokens) {
+	const stack = []
+	for (let i = 0, len = tokens.length; i < len; i++) {
+		const val = tokens[i]
+		if (isNumber(val)) {
+			stack.push(parseInt(val))
+		} else {
+			const n2 = stack.pop()
+			const n1 = stack.pop()
+			if (val === '+') {
+				stack.push(n1 + n2)
+			} else if (val === '-') {
+				stack.push(n1 - n2)
+			} else if (val === '*') {
+				stack.push(n1 * n2)
+			} else if (val === '/') {
+				stack.push(n1 / n2 > 0 ? Math.floor(n1 / n2) : Math.ceil(n1 / n2))
+			}
+		}
+	}
+
+	return stack.pop()
+
+	function isNumber(val) {
+		return !(val === '+' || val === '-' || val === '*' || val === '/')
+	}
+}
+```

@@ -104,7 +104,7 @@ const binarySearch = (arr, target) => {
 		} else if (arr[mid] > target) {
 			left = mid + 1
 		} else {
-             //已搜到最后一个或已找到
+			//已搜到最后一个或已找到
 			if (mid === arr.length - 1 || arr[mid + 1] !== target) {
 				return mid
 			} else {
@@ -180,8 +180,8 @@ const leftBound = (arr, target) => {
 	}
 	//检查出界情况
 	if (left >= arr.length || arr[left] !== target) return -1
-    return left
-    //return left >= nums.length ? -1 : left
+	return left
+	//return left >= nums.length ? -1 : left
 }
 ```
 
@@ -208,7 +208,7 @@ const rightBound = (arr, target) => {
 	// 检查出界情况
 	if (right < 0 || arr[right] !== target) return -1
 	return right
-    //return right < 0 ? -1 : right
+	//return right < 0 ? -1 : right
 }
 ```
 
@@ -233,12 +233,14 @@ var search = function (nums, target) {
 
 		//l is asc
 		//incase mid === l 坐标相等
+		//[start, mid]有序
 		if (nums[mid] >= nums[l]) {
 			if (target < nums[mid] && target >= nums[l]) {
 				r = mid - 1
 			} else {
 				l = mid + 1
 			}
+			// [mid, end]有序
 		} else {
 			if (target > nums[mid] && target <= nums[r]) {
 				l = mid + 1

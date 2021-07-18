@@ -316,7 +316,6 @@ var permute = function (nums) {
 			visited[i] = false
 		}
 	}
-
 	dfs(nums, 0, [])
 	return ret
 }

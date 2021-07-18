@@ -405,7 +405,7 @@ var plusOne = function (digits) {
 }
 ```
 
-### [73.矩阵置零](https://leetcode-cn.com/problems/set-matrix-zeroes/)
+### [==73.矩阵置零==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
 
 ```javascript {.line-numbers}
 //O(mn) - O(mn) 直接把matrix值放到m*n的数组里面
@@ -526,6 +526,25 @@ var sortColors = function (nums) {
 		}
 	}
 	return nums
+}
+```
+
+### ==[80.删除排序数组重复项 II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/)==
+
+```javascript
+//slow / fast pointer
+var removeDuplicates = function (nums) {
+	const len = nums.length
+	if (len <= 2) return len
+	let slow = 2,
+		fast = 2
+	while (fast < len) {
+		if (nums[slow - 2] != nums[fast]) {
+			nums[slow++] = nums[fast]
+		}
+		fast++
+	}
+	return slow
 }
 ```
 

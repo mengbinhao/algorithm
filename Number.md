@@ -103,7 +103,6 @@ var myPow = function (x, n) {
 		x *= x
 		n /= 2
 	}
-	//返回总数
 	return ret * x
 }
 ```

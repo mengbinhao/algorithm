@@ -438,8 +438,8 @@ var minDistance = function (word1, word2) {
 ```javascript {.line-numbers}
 var numDecodings = function (s) {
 	if (!s) return 0
-	let len = s.length
-	let dp = Array(len + 1).fill(0)
+	const len = s.length
+	const dp = Array(len + 1).fill(0)
 	dp[0] = 1
 	dp[1] = s[0] === '0' ? 0 : 1
 	for (let i = 2; i <= len; i++) {
@@ -1131,7 +1131,7 @@ var uniquePaths = function (m, n) {
 
 //O(mn) - O(n)
 var uniquePaths = function (m, n) {
-	//滚动纵向一列
+	//一行一行滚动
 	const dp = new Array(n).fill(1)
 
 	for (let i = 1; i < m; i++) {

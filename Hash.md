@@ -4,33 +4,29 @@
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
 var groupAnagrams = function (strs) {
 	if (strs.length === 0) return [[]]
-	const hash = {}
-
+	const hash = new Map()
 	for (let str of strs) {
-		const key = str.split('').sort().join('')
-		if (!hash[key]) hash[key] = []
-		hash[key].push(str)
+		const arr = Array.from(str)
+		arr.sort()
+		const key = arr.toString()
+		const list = hash.get(key) ? hash.get(key) : new Array()
+		list.push(str)
+		hash.set(key, list)
 	}
-	return Object.values(hash)
+	return Array.from(hash.values())
 }
 
 //使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
 var groupAnagrams = function (strs) {
-	if (strs.length === 0) return [[]]
-	const array = new Array(26),
-		hash = {}
-
+	if (strs == null) return [[]]
+	const hash = {},
+		count = new Array(26)
 	for (let str of strs) {
-		array.fill(0)
-		for (let i = 0; i < str.split('').length; i++) {
-			array[str.charCodeAt(i) - 97]++
+		count.fill(0)
+		for (let c of str) {
+			count[c.charCodeAt() - 'a'.charCodeAt()]++
 		}
-		let key = ''
-		for (let i = 0; i < 26; i++) {
-			key += `#${array[i]}`
-		}
-		if (!hash[key]) hash[key] = []
-		hash[key].push(str)
+		hash[count] ? hash[count].push(str) : (hash[count] = [str])
 	}
 	return Object.values(hash)
 }

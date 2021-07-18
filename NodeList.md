@@ -55,7 +55,7 @@ var addTwoNumbers = function (l1, l2) {
 }
 ```
 
-### [19. 删除链表的倒数第 N 个节点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+### [==19. 删除链表的倒数第 N 个节点==](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
 
 ```javascript {.line-numbers}
 //O(n) - O(1)
@@ -204,7 +204,7 @@ var mergeKLists = function (lists) {
 }
 ```
 
-### [24. 两两交换链表](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
+### [==24. 两两交换链表==](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
 ```javascript {.line-numbers}
 //iteration, three pointer  O(n) - O(1)
@@ -286,7 +286,7 @@ var reverseKGroup = function (head, k) {
 }
 ```
 
-### [61. 旋转链表](https://leetcode-cn.com/problems/rotate-list/)
+### [==61. 旋转链表==](https://leetcode-cn.com/problems/rotate-list/)
 
 ```javascript {.line-numbers}
 var rotateRight = function (head, k) {
@@ -359,7 +359,7 @@ var deleteDuplicates = function (head) {
 }
 ```
 
-### [86. 分隔链表](https://leetcode-cn.com/problems/partition-list/)
+### [==86. 分隔链表==](https://leetcode-cn.com/problems/partition-list/)
 
 ```javascript {.line-numbers}
 //O(n) - O(1)
@@ -575,6 +575,36 @@ var reorderList = function (head) {
 	}
 	//cut the ring
 	arr[i].next = null
+}
+```
+
+### [==147. 对链表进行插入排序==](https://leetcode-cn.com/problems/insertion-sort-list/)
+
+```javascript {.line-numbers}
+var insertionSortList = function (head) {
+	if (head == null || head.next == null) return head
+
+	const dummyHead = new ListNode(-1)
+	dummyHead.next = head
+	let lastSorted = head,
+		cur = head.next
+
+	while (cur) {
+		if (lastSorted.val <= cur.val) {
+			lastSorted = lastSorted.next
+		} else {
+			let prev = dummyHead
+			while (prev.next.val <= cur.val) {
+				prev = prev.next
+			}
+			//下面三行调整节点
+			lastSorted.next = cur.next
+			cur.next = prev.next
+			prev.next = cur
+		}
+		cur = lastSorted.next
+	}
+	return dummyHead.next
 }
 ```
 
