@@ -248,35 +248,6 @@ var firstUniqChar = function (s) {
 }
 ```
 
-### [394. 字符串解码 M](https://leetcode-cn.com/problems/decode-string/)
-
-```javascript {.line-numbers}
-var decodeString = function (s) {
-	let numStack = [],
-		strStack = [],
-		multiple = 0,
-		ret = ''
-
-	for (let c of s) {
-		if (!isNaN(c)) {
-			multiple = multiple * 10 + Number(c)
-		} else if (c === '[') {
-			//前面的字母和倍数都压入栈，并释放临时变量
-			numStack.push(multiple)
-			multiple = 0
-			strStack.push(ret)
-			ret = ''
-		} else if (c === ']') {
-			//合并两个栈顶
-			ret = strStack.pop() + ret.repeat(numStack.pop())
-		} else {
-			ret += c
-		}
-	}
-	return ret
-}
-```
-
 ### [415. 字符串相加](https://leetcode-cn.com/problems/add-strings/)
 
 ```javascript {.line-numbers}

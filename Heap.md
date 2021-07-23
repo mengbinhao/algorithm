@@ -12,7 +12,7 @@
 - 三种技巧:多路归并、固定堆、事后小诸葛
 - 四大应用:topK、带权最短距离、因子分解、堆排序
 
-### [215.数组中的第 K 个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+### [==215.数组中的第 K 个最大元素==](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 ```javascript {.line-numbers}
 //基于快速排序的选择方法O(n) - O(logN)

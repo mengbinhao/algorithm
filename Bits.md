@@ -172,6 +172,20 @@ var hammingWeight = function (n) {
 }
 ```
 
+## ==[201.数字范围按位与](https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/)==
+
+```javascript {.line-numbers}
+var rangeBitwiseAnd = function (left, right) {
+	let shift = 0
+	while (left !== right) {
+		left >>= 1
+		right >>= 1
+		shift++
+	}
+	return (left <<= shift)
+}
+```
+
 ### ==[231.2 的幂](https://leetcode-cn.com/problems/power-of-two/)==
 
 ```javascript {.line-numbers}

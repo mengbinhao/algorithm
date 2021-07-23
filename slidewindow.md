@@ -144,12 +144,11 @@ var minSubArrayLen = function (s, nums) {
 			}
 		}
 	}
-
 	return ret === Infinity ? 0 : ret
 }
 
 // 2 前缀和 + 二分查找
-// 3 双指针 O(n) - O(1)
+// 3 双指针 O(n) - O(1) 滑动窗口
 var minSubArrayLen = function (s, nums) {
 	const len = nums.length
 	if (len === 0) return 0

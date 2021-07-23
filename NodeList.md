@@ -608,7 +608,7 @@ var insertionSortList = function (head) {
 }
 ```
 
-### [206. 反转链表](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
+### [==206. 反转链表==](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 ```javascript {.line-numbers}
 //iteration
@@ -667,6 +667,59 @@ var isPalindrome = function (head) {
 // 判断是否回文
 // 恢复链表
 // 返回结果
+```
+
+### [328. 奇偶链表](https://leetcode-cn.com/problems/odd-even-linked-list/)
+
+```javascript {.line-numbers}
+var oddEvenList = function (head) {
+	if (!head || !head.next) return head
+
+	const dummyHead1 = new ListNode(-1)
+	dummyHead1.next = head
+	const dummyHead2 = new ListNode(-1)
+	dummyHead2.next = head.next
+
+	let odd = dummyHead1.next
+	let even = dummyHead2.next
+
+	while (odd && odd.next && even && even.next) {
+		const oddNext = odd.next.next
+		const evenNext = even.next.next
+
+		odd.next = oddNext
+		even.next = evenNext
+
+		odd = oddNext
+		even = evenNext
+	}
+	odd.next = dummyHead2.next
+	return dummyHead1.next
+}
+var oddEvenList = function (head) {
+	if (!head || !head.next) return head
+
+	const dummyHead1 = new ListNode(-1)
+	dummyHead1.next = head
+	const dummyHead2 = new ListNode(-1)
+	dummyHead2.next = head.next
+
+	let odd = dummyHead1.next
+	let even = dummyHead2.next
+
+	while (odd && odd.next && even && even.next) {
+		const oddNext = odd.next.next
+		const evenNext = even.next.next
+
+		odd.next = oddNext
+		even.next = evenNext
+
+		odd = oddNext
+		even = evenNext
+	}
+	odd.next = dummyHead2.next
+	return dummyHead1.next
+}
 ```
 
 ### [876. 链表中间节点](https://leetcode-cn.com/problems/middle-of-the-linked-list/)

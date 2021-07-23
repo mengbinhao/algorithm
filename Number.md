@@ -199,3 +199,52 @@ const trailingZeroes = (n) => {
 	return zeroCount
 }
 ```
+
+### ==[229.求众数 II](https://leetcode-cn.com/problems/majority-element-ii/)==
+
+```javascript
+var majorityElement = function (nums) {
+	let candidate1 = nums[0],
+		count1 = 0
+	let candidate2 = nums[0],
+		count2 = 0
+	for (let num of nums) {
+		if (num === candidate1) {
+			count1++
+			continue
+		}
+		if (num === candidate2) {
+			count2++
+			continue
+		}
+		if (count1 === 0) {
+			candidate1 = num
+			count1++
+			continue
+		}
+		if (count2 === 0) {
+			candidate2 = num
+			count2++
+			continue
+		}
+		count1--
+		count2--
+	}
+
+	// 找到了两个候选人之后，需要确定票数是否满足大于 N/3
+	const ret = [],
+		len = nums.length
+	count1 = count2 = 0
+
+	for (let i = 0; i < len; i++) {
+		if (nums[i] === candidate1) {
+			count1++
+		} else if (nums[i] === candidate2) {
+			count2++
+		}
+	}
+	if (count1 > len / 3) ret.push(candidate1)
+	if (count2 > len / 3) ret.push(candidate2)
+	return ret
+}
+```

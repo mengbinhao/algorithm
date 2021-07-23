@@ -479,7 +479,7 @@ var rightSideView = function (root) {
 
 ### Others
 
-##### [987.二叉树的垂序遍历](https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/)
+##### [==987.二叉树的垂序遍历==](https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/)
 
 ```javascript {.line-numbers}
 var verticalTraversal = function (root) {
@@ -696,41 +696,6 @@ var searchBST = function (root, val) {
 }
 ```
 
-##### [230.寻找第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
-
-```javascript {.line-numbers}
-//interview version
-var kthSmallest = function (root, k) {
-	const stack = []
-	while (true) {
-		while (root) {
-			stack.push(root)
-			root = root.left
-		}
-		root = stack.pop()
-		if (--k === 0) return root.val
-		root = root.right
-	}
-}
-
-//bad version
-var kthSmallest = function (root, k) {
-	let rank = k,
-		ret
-	const helper = (root, k) => {
-		if (!root) return
-		helper(root.left, k)
-		if (--rank === 0) {
-			ret = root.val
-			return
-		}
-		helper(root.right, k)
-	}
-	helper(root, k)
-	return ret
-}
-```
-
 ##### [701.二叉搜索树中的插入操作](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
 
 ```javascript {.line-numbers}
@@ -860,7 +825,7 @@ var sortedListToBST = function (head) {
 }
 ```
 
-##### [230.二叉搜索树中第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
+##### [==230.二叉搜索树中第 K 小的元素==](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
 
 ```javascript {.line-numbers}
 var kthSmallest = function (root, k) {
@@ -875,6 +840,23 @@ var kthSmallest = function (root, k) {
 		if (--k === 0) return root.val
 		root = root.right
 	}
+}
+
+//bad version
+var kthSmallest = function (root, k) {
+	let rank = k,
+		ret
+	const helper = (root, k) => {
+		if (!root) return
+		helper(root.left, k)
+		if (--rank === 0) {
+			ret = root.val
+			return
+		}
+		helper(root.right, k)
+	}
+	helper(root, k)
+	return ret
 }
 ```
 

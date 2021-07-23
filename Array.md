@@ -634,7 +634,59 @@ var rotate = function (nums, k) {
 }
 ```
 
-### ==[283.移动零](https://leetcode-cn.com/problems/move-zeroes/)==
+### ==[238.除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)==
+
+```javascript {.line-numbers}
+var productExceptSelf = (nums) => {
+	const len = nums.length
+	// L 和 R 分别表示左右两侧的乘积列表
+	const left = new Array(len)
+	const right = new Array(len)
+	const ret = new Array(len)
+
+	// left[i] 为索引 i 左侧所有元素的乘积
+	// 对于索引为 '0' 的元素，因为左侧没有元素，所以 left[0] = 1
+	left[0] = 1
+	for (let i = 1; i < len; i++) {
+		left[i] = nums[i - 1] * left[i - 1]
+	}
+
+	// right[i] 为索引 i 右侧所有元素的乘积
+	// 对于索引为 'len-1' 的元素，因为右侧没有元素，所以 right[len-1] = 1
+	right[len - 1] = 1
+	for (let i = len - 2; i >= 0; i--) {
+		right[i] = nums[i + 1] * right[i + 1]
+	}
+
+	// 对于索引 i，除 nums[i] 之外其余各元素的乘积就是左侧所有元素的乘积乘以右侧所有元素的乘积
+	for (let i = 0; i < len; i++) {
+		ret[i] = left[i] * right[i]
+	}
+	return ret
+}
+
+//better  O(1)
+var productExceptSelf = function (nums) {
+	const len = nums.length,
+		ret = new Array(len)
+
+	ret[0] = 1
+	for (let i = 1; i < len; i++) {
+		ret[i] = ret[i - 1] * nums[i - 1]
+	}
+
+	let r = 1
+	for (let j = len - 1; j >= 0; j--) {
+		// 对于索引 i，左边的乘积为 ret[i]，右边的乘积为 r
+		ret[j] = ret[j] * r
+		// r需要包含右边所有的乘积，所以计算下一个结果时需要将当前值乘到 r上
+		r *= nums[j]
+	}
+	return ret
+}
+```
+
+### ==[283.移动零==](https://leetcode-cn.com/problems/move-zeroes/)
 
 ```javascript {.line-numbers}
 //循环一整次把非 0 换到前面，第二次循环把 0 填到后面 O(n) - O(1)

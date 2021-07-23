@@ -590,6 +590,48 @@ var maxProduct = function (nums) {
 }
 ```
 
+### [221. ==最大正方形==](https://leetcode-cn.com/problems/maximal-square/)
+
+```javascript {.line-numbers}
+var maximalSquare = (matrix) => {
+	let maxSide = 0
+	if (matrix == null || matrix.length === 0 || matrix[0].length === 0)
+		return maxSide
+	const rows = matrix.length,
+		columns = matrix[0].length
+	const dp = Array.from({ length: rows }, () => new Array(columns).fill(0))
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < columns; j++) {
+			if (matrix[i][j] == '1') {
+				if (i === 0 || j === 0) {
+					dp[i][j] = 1
+				} else {
+					dp[i][j] =
+						Math.min(Math.min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1
+				}
+				maxSide = Math.max(maxSide, dp[i][j])
+			}
+		}
+	}
+	return maxSide * maxSide
+}
+```
+
+### [279. ==完全平方数==](https://leetcode-cn.com/problems/perfect-squares/)
+
+```javascript {.line-numbers}
+var numSquares = function (n) {
+	const dp = [...Array(n + 1)].map((_) => 0) // 数组长度为n+1，值均为0
+	for (let i = 1; i <= n; i++) {
+		dp[i] = i // 最坏的情况就是每次+1
+		for (let j = 1; i - j * j >= 0; j++) {
+			dp[i] = Math.min(dp[i], dp[i - j * j] + 1)
+		}
+	}
+	return dp[n]
+}
+```
+
 ### [300. ==最长递增子序列==](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
 ```javascript {.line-numbers}
@@ -629,6 +671,25 @@ var lengthOfLIS = function (nums) {
 		ret = Math.max(ret, dp[i])
 	}
 	return ret
+}
+```
+
+### [343. ==整数拆分==](https://leetcode-cn.com/problems/integer-break/)
+
+```javascript {.line-numbers}
+var integerBreak = function (n) {
+	const dp = new Array(n + 1).fill(0)
+	//dp[i]：分拆数字i，可以得到的最大乘积为dp[i]
+	//dp[0]、dp[1]没意义
+	dp[2] = 1
+
+	for (let i = 3; i <= n; i++) {
+		//遍历所有可拆分的j
+		for (let j = 1; j < i; j++) {
+			dp[i] = Math.max(dp[i], Math.max(j * (i - j), j * dp[i - j]))
+		}
+	}
+	return dp[n]
 }
 ```
 
@@ -798,6 +859,22 @@ var rob = function (root) {
 	const memo = new Map()
 	return helper(root)
 }
+
+var rob = function (root) {
+	const helper = (root) => {
+		if (root === null) return [0, 0]
+		// 0: rob 1: notRob
+		const l = helper(root.left)
+		const r = helper(root.right)
+
+		const robed = root.val + l[1] + r[1]
+		const notRobed = Math.max(l[0], l[1]) + Math.max(r[0], r[1])
+		//返回当前节点偷还是不偷
+		return [robed, notRobed]
+	}
+	const [robed, notRobed] = helper(root)
+	return Math.max(robed, notRobed)
+}
 ```
 
 ## 股票系列
@@ -943,7 +1020,7 @@ var maxProfit = function (prices) {
 
 # 2、区间 DP
 
-### [516. 最长回文子序列](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
+### [==516. 最长回文子序列==](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
 
 ```javascript {.line-numbers}
 var longestPalindromeSubseq = function (s) {
@@ -1082,6 +1159,21 @@ var coinChange = function (coins, amount) {
 		}
 	}
 	return dp[amount] === max ? -1 : dp[amount]
+}
+```
+
+### ==[518. 零钱兑换 II](https://leetcode-cn.com/problems/coin-change-2/)==
+
+```javascript {.line-numbers}
+var change = function (amount, coins) {
+	const dp = new Array(amount + 1).fill(0)
+	dp[0] = 1
+	for (const coin of coins) {
+		for (let i = coin; i <= amount; i++) {
+			dp[i] += dp[i - coin]
+		}
+	}
+	return dp[amount]
 }
 ```
 
@@ -1308,9 +1400,7 @@ var canWinNim = function (n) {
 ### [877. 石子游戏](https://leetcode-cn.com/problems/stone-game/)
 
 ```javascript {.line-numbers}
-var stoneGame = function (piles) {
-	return true
-}
+var stoneGame = (piles) => true
 
 //DP O(n^2) - O(n^2)
 var stoneGame = function (piles) {

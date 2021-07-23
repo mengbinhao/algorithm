@@ -811,7 +811,7 @@ var maxAreaOfIsland = function (grid) {
 //BFS
 ```
 
-### ==[547.份数量](https://leetcode-cn.com/problems/number-of-provinces/)==
+### [547.省份数量](https://leetcode-cn.com/problems/number-of-provinces/)
 
 ```javascript {.line-numbers}
 var findCircleNum = function (M) {
