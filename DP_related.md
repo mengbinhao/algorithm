@@ -106,7 +106,7 @@ var longestPalindrome = function (s) {
 }
 ```
 
-### [32.最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
+### [==32.最长有效括号==](https://leetcode-cn.com/problems/longest-valid-parentheses/)
 
 ```javascript {.line-numbers}
 //brute force O(n^3)

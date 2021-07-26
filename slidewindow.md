@@ -185,7 +185,6 @@ var minSubArrayLen = function (s, nums) {
   			slideWindow.push(nums[i + j])
   		}
   		ret.push(Math.max(...slideWindow))
-  		//需要清
   		slideWindow = []
   	}
   	return ret
@@ -203,14 +202,11 @@ var minSubArrayLen = function (s, nums) {
   	for (let i = 0, len = nums.length; i < len; i++) {
   		//队列满了移出去一个
   		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
-  		if (deque.length && deque[0] < i - k + 1) deque.shift()
-
+  		while (deque.length && deque[0] < i - k + 1) deque.shift()
   		//维护递减队列
   		while (deque.length && nums[deque[deque.length - 1]] < nums[i])
   			deque.pop()
-
   		deque.push(i)
-
   		//开始检查结果
   		if (i >= k - 1) ret.push(nums[deque[0]])
   	}

@@ -240,7 +240,7 @@ var trap = function (height) {
 }
 ```
 
-### ==[84.柱状图中最大的矩形 H](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)==
+### [==84.柱状图中最大的矩形 H==](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
 
 ```javascript {.line-numbers}
 //brute force O(n^2)

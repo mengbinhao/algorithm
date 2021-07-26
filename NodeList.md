@@ -117,7 +117,7 @@ var mergeTwoLists = function (l1, l2) {
 }
 ```
 
-### [23. 合并 K 个排序链表 H](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+### [==23. 合并 K 个排序链表 H==](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```javascript {.line-numbers}
 var mergeKLists = function (lists) {
@@ -244,7 +244,7 @@ var swapPairs = function (head) {
 }
 ```
 
-### [25. K 个一组翻转链表 H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+### [==25. K 个一组翻转链表 H==](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
 ```javascript {.line-numbers}
 const myReverse = (head, tail) => {
@@ -283,6 +283,39 @@ var reverseKGroup = function (head, k) {
 		head = tail.next
 	}
 	return dummyNode.next
+}
+
+var reverseKGroup = function (head, k) {
+	// 标兵
+	let dummy = new ListNode()
+	dummy.next = head
+	let [start, end] = [dummy, dummy.next]
+	let count = 0
+	while (end) {
+		count++
+		if (count % k === 0) {
+			start = reverseList(start, end.next)
+			end = start.next
+		} else {
+			end = end.next
+		}
+	}
+	return dummy.next
+
+	// 翻转stat -> end的链表
+	function reverseList(start, end) {
+		let [pre, cur] = [start, start.next]
+		const first = cur
+		while (cur !== end) {
+			let next = cur.next
+			cur.next = pre
+			pre = cur
+			cur = next
+		}
+		start.next = pre
+		first.next = cur
+		return first
+	}
 }
 ```
 

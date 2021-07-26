@@ -1,4 +1,4 @@
-### [146.LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
+### [==146.LRU 缓存机制==](https://leetcode-cn.com/problems/lru-cache/)
 
 ```javascript {.line-numbers}
 //头代表最新,尾代表老

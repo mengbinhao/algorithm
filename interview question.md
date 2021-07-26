@@ -1,4 +1,4 @@
-### [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+### [==42. 接雨水==](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript {.line-numbers}
 //brute force O(n^2) O(1)

@@ -32,6 +32,32 @@ var groupAnagrams = function (strs) {
 }
 ```
 
+### ==[128.最长连续序列](https://leetcode-cn.com/problems/longest-consecutive-sequence/)==
+
+```javascript
+var longestConsecutive = function (nums) {
+	const numSet = new Set()
+	for (let num of nums) numSet.add(num)
+
+	let longestStreak = 0
+
+	for (let num of numSet.values()) {
+		if (!numSet.has(num - 1)) {
+			let currentNum = num
+			let currentStreak = 1
+
+			while (numSet.has(currentNum + 1)) {
+				currentNum += 1
+				currentStreak += 1
+			}
+
+			longestStreak = Math.max(longestStreak, currentStreak)
+		}
+	}
+	return longestStreak
+}
+```
+
 ### ==[242.有效的字母异位词 E](https://leetcode-cn.com/problems/valid-anagram/)==
 
 ```javascript
