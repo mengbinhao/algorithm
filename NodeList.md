@@ -1,21 +1,21 @@
-### 心得
+## 1 心得
 
 - 一个原则: 画图
 - 两种题型: 指针的修改、链表的拼接
 - 三个注意: 环、边界、递归
 - 四个技巧:
   - 虚拟头
-    - 若题目的头节点可能被移除，使用虚拟节点，这样头节点就变成了中间节点，就不需要为头节点做特殊判断了
+    - 若题目的头节点可能被移除、会变，使用虚拟节点，这样头节点就变成了中间节点，就不需要为头节点做特殊判断
     - 通过在合适的时候断开链接，返回链表的中间节点
   - 快慢指针
   - 穿针引线
   - 先穿再排后判空
-- other: 如果你想递归和迭代都写, 推荐前序遍历,因为前序遍历很容易改造成迭代,准确的说前序遍历容易改成不需要栈的递归,而后续遍历需要借助栈来完成
-- summary: 如果是单链表,我们无法在`O(1)`的时间拿到前驱节点,这也是为什么我们遍历的时候老是维护一个前驱节点`pre`的原因。但是本质原因其实是链表的增删操作都依赖前驱节点。这是链表的基本操作,是链表的特性天生决定的
+- Other: 若你想递归和迭代都写, 推荐前序遍历,因为前序遍历很容易改成迭代,准确的说前序遍历容易改成不需要栈的递归,而后续遍历则需要借助栈来完成
+- Summary: 如果是单链表,我们无法在`O(1)`的时间拿到前驱节点,这也是为什么我们遍历的时候老是维护一个前驱节点`pre`的原因。但是本质原因其实是链表的增删操作都依赖前驱节点。这是链表的基本操作,是链表的特性天生决定的
 
-==上一行的赋值右边为下一行的赋值左边，赋值的时候从左边思考好理解==
+- ==上一行的赋值右边为下一行的赋值左边，赋值的时候从左边思考好理解==
 
-### insert & delete
+## 2 insert & delete
 
 - 插入
 
@@ -29,6 +29,8 @@ temp = 待插入位置的前驱节点.next
 
 - 删除`待删除位置的前驱节点.next = 待删除位置的前驱节点.next.next`
   ![](./images/NodeList_delete.png)
+
+## 3 questions
 
 ### [2. 两数相加](https://leetcode-cn.com/problems/add-two-numbers/)
 
@@ -45,6 +47,7 @@ var addTwoNumbers = function (l1, l2) {
 		const sum = x + y + carry
 		carry = sum >= 10 ? 1 : 0
 		cur.next = new ListNode(sum % 10)
+         // below move forward
 		cur = cur.next
 		if (p1 !== null) p1 = p1.next
 		if (p2 !== null) p2 = p2.next
@@ -55,27 +58,32 @@ var addTwoNumbers = function (l1, l2) {
 }
 ```
 
-### [==19. 删除链表的倒数第 N 个节点==](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+### [19. ==删除链表的倒数第 N 个节点==](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
 
 ```javascript {.line-numbers}
 //O(n) - O(1)
 var removeNthFromEnd = function (head, n) {
 	const dummyNode = new ListNode(0)
-	;(dummyNode.next = head), (p = q = dummyNode)
-	for (let i = 1; i <= n + 1; i++) {
-		p = p.next
-	}
+	dummyNode.next = head
+	let fast = dummyNode,
+		slow = dummyNode
 
-	while (p) {
-		p = p.next
-		q = q.next
+    //移完后fast和slow的距离是n
+	while (n >= 0) {
+		fast = fast.next
+		n--
 	}
-	q.next = q.next.next
+    //同步走，知道要删除节点的前驱节点
+	while (fast) {
+		fast = fast.next
+		slow = slow.next
+	}
+	slow.next = slow.next.next
 	return dummyNode.next
 }
 ```
 
-### [21. 合并两个有序链表](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+### [21. ==合并两个有序链表==](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 ```javascript {.line-numbers}
 //iteration
@@ -95,7 +103,6 @@ var mergeTwoLists = function (l1, l2) {
 	}
 	//合并后 l1 和 l2 最多只有一个还未被合并完,我们直接将链表末尾指向未合并完的链表即可
 	prev.next = l1 == null ? l2 : l1
-	//返回合并后的头结点
 	return dummyNode.next
 }
 
@@ -117,9 +124,35 @@ var mergeTwoLists = function (l1, l2) {
 }
 ```
 
-### [==23. 合并 K 个排序链表 H==](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+### [23. ==合并 K 个排序链表 H==](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```javascript {.line-numbers}
+//O(KN) - O(n)
+var mergeKLists = function (lists) {
+	const len = lists.length
+	if (len === 0) return null
+
+	const mergeTwoLists = (l1, l2) => {
+		if (!l1) return l2
+		if (!l2) return l1
+
+		if (l1.val < l2.val) {
+			l1.next = mergeTwoLists(l1.next, l2)
+			return l1
+		} else {
+			l2.next = mergeTwoLists(l1, l2.next)
+			return l2
+		}
+	}
+
+	let ret = lists[0]
+	for (let i = 1; i < len; i++) {
+		ret = mergeTwoLists(ret, lists[i])
+	}
+	return ret
+}
+
+//use array
 var mergeKLists = function (lists) {
 	const len = lists.length
 	if (len === 0) return null
@@ -177,34 +210,9 @@ var mergeKLists = function (lists) {
 	}
 	return merge(0, len - 1)
 }
-
-//O(KN) - O(n)
-var mergeKLists = function (lists) {
-	const len = lists.length
-	if (len === 0) return null
-
-	const mergeTwoLists = (l1, l2) => {
-		if (!l1) return l2
-		if (!l2) return l1
-
-		if (l1.val < l2.val) {
-			l1.next = mergeTwoLists(l1.next, l2)
-			return l1
-		} else {
-			l2.next = mergeTwoLists(l1, l2.next)
-			return l2
-		}
-	}
-
-	let ret = lists[0]
-	for (let i = 1; i < len; i++) {
-		ret = mergeTwoLists(ret, lists[i])
-	}
-	return ret
-}
 ```
 
-### [==24. 两两交换链表==](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
+### [24. ==两两交换链表==](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 
 ```javascript {.line-numbers}
 //iteration, three pointer  O(n) - O(1)
@@ -236,15 +244,14 @@ var swapPairs = function (head) {
 		second = head.next
 	// first连接后面交换完成的子链表
 	first.next = swapPairs(second.next)
-	// secondNode 连接 firstNode
+	// second 连接 first
 	second.next = first
-
-	// 返回交换完成的子链表,second变成了头结点
+	// 返回当前层交换完的子链表,second变成了头结点
 	return second
 }
 ```
 
-### [==25. K 个一组翻转链表 H==](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+### [25. K 个一组翻转链表 H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
 ```javascript {.line-numbers}
 const myReverse = (head, tail) => {
@@ -319,11 +326,10 @@ var reverseKGroup = function (head, k) {
 }
 ```
 
-### [==61. 旋转链表==](https://leetcode-cn.com/problems/rotate-list/)
+### [61. ==旋转链表==](https://leetcode-cn.com/problems/rotate-list/)
 
 ```javascript {.line-numbers}
 var rotateRight = function (head, k) {
-	// 避免掉空和只有一个元素的情况
 	if (head == null || head.next == null) return head
 	let length = 1,
 		cur = head
@@ -353,26 +359,22 @@ var rotateRight = function (head, k) {
 ### [82. 删除排序链表中的重复元素 II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)
 
 ```javascript {.line-numbers}
-//two pointer
 var deleteDuplicates = function (head) {
-	if (!head || !head.next) return head
-	const dummyNode = new ListNode(-1)
-	dummyNode.next = head
-	let p1 = dummyNode,
-		p2 = head
-	while (p2 && p2.next) {
-		//初始化的时p1指向的是哑结点,所以比较逻辑应该是p1的下一个节点和p2的下一个节点
-		if (p1.next.val !== p2.next.val) {
-			p1 = p1.next
-			p2 = p2.next
+    if (!head) return head
+    const dummy = new ListNode(0)
+    dummy.next = head
+	let cur = dummy
+	while (cur.next && cur.next.next) {
+		if (cur.next.val === cur.next.next.val) {
+			const x = cur.next.val
+			while (cur.next && cur.next.val === x) {
+				cur.next = cur.next.next
+			}
 		} else {
-			//如果p1、p2指向的节点值相等,就不断移动p2,直到p1、p2指向的值不相等
-			while (p2 && p2.next && p1.next.val === p2.next.val) p2 = p2.next
-			p1.next = p2.next
-			p2 = p2.next
+			cur = cur.next
 		}
 	}
-	return dummyNode.next
+	return dummy.next
 }
 ```
 
@@ -392,7 +394,7 @@ var deleteDuplicates = function (head) {
 }
 ```
 
-### [==86. 分隔链表==](https://leetcode-cn.com/problems/partition-list/)
+### [86. ==分隔链表==](https://leetcode-cn.com/problems/partition-list/)
 
 ```javascript {.line-numbers}
 //O(n) - O(1)
@@ -435,7 +437,7 @@ var reverseBetween = function (head, left, right) {
 	let cur = pre.next
 	for (let i = 0; i < right - left; i++) {
 		const next = cur.next
-		//穿3次，不能乱
+		//按顺序穿
 		cur.next = next.next
 		next.next = pre.next
 		pre.next = next
@@ -538,7 +540,7 @@ var copyRandomList = function (head) {
 }
 ```
 
-### [141. 环形链表](https://leetcode-cn.com/problems/linked-list-cycle/)
+### [141. ==环形链表==](https://leetcode-cn.com/problems/linked-list-cycle/)
 
 ```javascript {.line-numbers}
 //标记法 O(n) - O(1)
@@ -566,22 +568,6 @@ var hasCycle = function (head) {
 }
 ```
 
-### [142. 环形链表](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
-
-```javascript {.line-numbers}
-var detectCycle = function (head) {
-	while (head) {
-		if (head.flag) {
-			return head
-		} else {
-			head.flag = true
-			head = head.next
-		}
-	}
-	return null
-}
-```
-
 ### [143. 重排链表](https://leetcode-cn.com/problems/reorder-list/)
 
 ```javascript {.line-numbers}
@@ -601,7 +587,7 @@ var reorderList = function (head) {
 	while (i < j) {
 		arr[i].next = arr[j]
 		i++
-		//当链表个数偶数
+		//当链表节点是偶数时
 		if (i === j) break
 		arr[j].next = arr[i]
 		j--
@@ -611,7 +597,7 @@ var reorderList = function (head) {
 }
 ```
 
-### [==147. 对链表进行插入排序==](https://leetcode-cn.com/problems/insertion-sort-list/)
+### [147. ==对链表进行插入排序==](https://leetcode-cn.com/problems/insertion-sort-list/)
 
 ```javascript {.line-numbers}
 var insertionSortList = function (head) {
@@ -641,7 +627,7 @@ var insertionSortList = function (head) {
 }
 ```
 
-### [==206. 反转链表==](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
+### [206. ==反转链表==](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 ```javascript {.line-numbers}
 //iteration
@@ -651,13 +637,10 @@ var reverseList = function (head) {
 		next
 
 	while (cur) {
-		//store previous next
 		next = cur.next
 		//change pointer ..3->2->1->null
 		cur.next = pre
-		//move prev forward
 		pre = cur
-		//move cur forward
 		cur = next
 	}
 	//返回反转后的头结点
@@ -665,14 +648,15 @@ var reverseList = function (head) {
 }
 
 //recursion
-//翻转head.next并且返回的是tail节点
+//翻转head.next且返回的是tail节点
 var reverseList = function (head) {
 	if (!head || !head.next) return head
 	const tail = reverseList(head.next)
 	//等同于
-	//const node = head.next
+	//node = head.next
 	//node.next = head
 	head.next.next = head
+    //cut the ring
 	head.next = null
 	return tail
 }
@@ -705,30 +689,6 @@ var isPalindrome = function (head) {
 ### [328. 奇偶链表](https://leetcode-cn.com/problems/odd-even-linked-list/)
 
 ```javascript {.line-numbers}
-var oddEvenList = function (head) {
-	if (!head || !head.next) return head
-
-	const dummyHead1 = new ListNode(-1)
-	dummyHead1.next = head
-	const dummyHead2 = new ListNode(-1)
-	dummyHead2.next = head.next
-
-	let odd = dummyHead1.next
-	let even = dummyHead2.next
-
-	while (odd && odd.next && even && even.next) {
-		const oddNext = odd.next.next
-		const evenNext = even.next.next
-
-		odd.next = oddNext
-		even.next = evenNext
-
-		odd = oddNext
-		even = evenNext
-	}
-	odd.next = dummyHead2.next
-	return dummyHead1.next
-}
 var oddEvenList = function (head) {
 	if (!head || !head.next) return head
 
