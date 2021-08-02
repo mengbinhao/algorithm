@@ -73,7 +73,7 @@ var removeNthFromEnd = function (head, n) {
 		fast = fast.next
 		n--
 	}
-    //同步走，知道要删除节点的前驱节点
+    //同步走，走到要删除节点的前驱节点
 	while (fast) {
 		fast = fast.next
 		slow = slow.next
@@ -124,7 +124,7 @@ var mergeTwoLists = function (l1, l2) {
 }
 ```
 
-### [23. ==合并 K 个排序链表 H==](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+### [23. 合并 K 个排序链表 H](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```javascript {.line-numbers}
 //O(KN) - O(n)
@@ -330,21 +330,21 @@ var reverseKGroup = function (head, k) {
 
 ```javascript {.line-numbers}
 var rotateRight = function (head, k) {
-	if (head == null || head.next == null) return head
-	let length = 1,
+	if (k === 0 || !head || !head.next) return head
+	let len = 1,
 		cur = head
 	while (cur.next) {
 		cur = cur.next
-		length++
+		len++
 	}
 	//form ring
 	cur.next = head
 	// 因为当k大于长度时, 又是一个轮回, 所以对长度取余
-	const num = k % length
+	const num = k % len
 	let index = 1,
 		newTail = head
 	//find new tail
-	while (index < length - num) {
+	while (index < len - num) {
 		newTail = newTail.next
 		index++
 	}
@@ -399,10 +399,10 @@ var deleteDuplicates = function (head) {
 ```javascript {.line-numbers}
 //O(n) - O(1)
 var partition = function (head, x) {
-	const dummy_before = new ListNode(0),
-		dummy_after = new ListNode(0)
-	let before = dummy_before,
-		after = dummy_after
+	const dummyBefore = new ListNode(0),
+		dummyAfter = new ListNode(0)
+	let before = dummyBefore,
+		after = dummyAfter
 	//build before List and after List
 	while (head) {
 		if (head.val < x) {
@@ -416,9 +416,9 @@ var partition = function (head, x) {
 	}
 	after.next = null
 	//link before List and after List
-	before.next = dummy_after.next
+	before.next = dummyAfter.next
 	//返回链接后的头结点
-	return dummy_before.next
+	return dummyBefore.next
 }
 ```
 
@@ -556,6 +556,7 @@ var hasCycle = function (head) {
 	return false
 }
 
+//better
 //fast and slow pointer O(n) - O(1)
 var hasCycle = function (head) {
 	let fast = (slow = head)
@@ -632,19 +633,19 @@ var insertionSortList = function (head) {
 ```javascript {.line-numbers}
 //iteration
 var reverseList = function (head) {
-	let pre = null,
+	let prev = null,
 		cur = head,
 		next
 
 	while (cur) {
 		next = cur.next
-		//change pointer ..3->2->1->null
-		cur.next = pre
-		pre = cur
+        //change pointer ..3->2->1->null
+		cur.next = prev
+		prev = cur
 		cur = next
 	}
-	//返回反转后的头结点
-	return pre
+    //返回反转后的头结点
+	return prev
 }
 
 //recursion

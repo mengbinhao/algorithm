@@ -12,7 +12,7 @@
 
 - child
 
-- level: 根为第一层,根的孩子为第二层
+- level: 根为第一层,根的孩子为第二层,依此类推
 
 - height:节点到叶子节点的最大值就是其高度，根节点的高度为树的高度
 
@@ -22,13 +22,13 @@
 
 - 二叉树,三叉树... N 叉树,由其子节点最多可以有几个决定,最多有 N 个就是 N 叉树
 
-  - 完全二叉树（深度为 h，除第 h 层外，其它各层 (1 ～ h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边）
+  - ==完全二叉树==（深度为`h`，除第`h`层外，其它各层`(1 ～ h-1)`的结点数都达到最大个数，第`h`层所有的结点都连续集中在==最左边==）
 
-  - 满二叉树（除了叶结点外每一个结点都有左右子叶且叶子结点都处在最底层的二叉树）
+  - ==满二叉树==（除了叶结点外每一个结点都有左右孩子且叶子结点都处在最底层的二叉树）
 
-  - 二叉搜索树(左子节点值小于该节点值、右子节点值大于等于该节点值)
+  - ==二叉搜索树==（左孩子节点值均小于该节点值、右孩子节点值均大于该节点值）
 
-  - 平衡二叉搜索树（AVL）：既满足左右子树高度不大于 1， 又满足任意节点值大于它的左子节点值，小于等于它的右子节点值
+  - 平衡二叉搜索树（AVL）：既满足左右子树高度不大于 1， 又满足任意节点值大于它的左孩子节点值，小于它右子节点值
 
   - 红黑树
 
@@ -45,22 +45,22 @@
 # 解题要素
 
 - 一个中心:遍历
-- 两个基本点:DFS/BFS -> preorder/inorder/postorder 的 DFS
-- 三种题型:搜索类,构建类和修改类
-- 四个重要概念:二叉搜索树(中序遍历是有序的)、完全二叉树、路径、距离
+- 两个基本点:DFS/BFS -> `preorder/inorder/postorder`的DFS
+- 三种题型:搜索类、构建类、修改类
+- 四个重要概念:二叉搜索树(==中序遍历是有序的==)、完全二叉树、路径、距离
 - 七个技巧
   - dfs(root)
-  - 单/双递归(如果题目有类似,`任意节点开始 xxxx 或者所有 xxx `这样的说法,就可以考虑使用双递归.但是如果递归中有重复计算,则可以使用双递归 + 记忆化或者直接单递归)
+  - 单/双递归(如果题目有类似,任意节点开始`xxx`或者所有`xxx`这样的说法,就可以考虑使用双递归，但是如果递归中有重复计算,则可以使用双递归 + 记忆化或者直接单递归)
     ![](./images/Tree_1.png)
   - 前后遍历
-    - `自顶向下`:就是在每个递归层级,首先访问节点来计算一些值,并在递归调用函数时将这些值传递到子节点,一般是通过参数传到子树中
-    - `自底向上`是另一种常见的递归方法,首先对所有子节点递归地调用函数,然后根据返回值和根节点本身的值得到答案
+    - `自顶向下`：就是在每个递归层级,首先访问节点来计算一些值,并在递归调用函数时将这些值传递到子节点,一般是通过参数传到子树中
+    - `自底向上`：是另一种常见的递归方法,首先对所有子节点递归地调用函数,然后根据返回值和根节点本身的值得到答案
   - 虚拟节点
   - 边界
   - 参数扩展大法
   - 返回元组/列表
 
-# Binary Tree
+# Binary Tree Problem List
 
 ![](./images/Tree.png)
 
@@ -68,19 +68,19 @@
 
 ### Preorder/Inorder/Postorder
 
-##### ==[144.二叉树前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)==
+##### [144. ==二叉树前序遍历==](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
 ```javascript {.line-numbers}
 //recursion
 var preorderTraversal = function (root) {
 	const ret = []
-	const traversal = (root, ret) => {
+	const traversal = (root) => {
 		if (!root) return
 		ret.push(root.val)
-		traversal(root.left, ret)
-		traversal(root.right, ret)
+		traversal(root.left)
+		traversal(root.right)
 	}
-	traversal(root, ret)
+	traversal(root)
 	return ret
 }
 
@@ -93,6 +93,7 @@ var preorderTraversal = function (root) {
 	while (stack.length > 0) {
 		root = stack.pop()
 		ret.push(root.val)
+        //先放右后放左, 根->左->右
 		if (root.right) stack.push(root.right)
 		if (root.left) stack.push(root.left)
 	}
@@ -138,27 +139,28 @@ var preorder = function (root) {
 }
 ```
 
-##### ==[94.二叉树中序遍历](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)==
+##### [94. ==二叉树中序遍历==](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```javascript {.line-numbers}
 //recursion
 var inorderTraversal = function (root) {
 	let ret = []
-	let traversal = (root, ret) => {
+	let traversal = (root) => {
 		if (!root) return
-		traversal(root.left, ret)
+		traversal(root.left)
 		ret.push(root.val)
-		traversal(root.right, ret)
+		traversal(root.right)
 	}
-	traversal(root, ret)
+	traversal(root)
 	return ret
 }
+
 //iteration
 var inorderTraversal = function (root) {
 	const ret = [],
 		stack = []
 
-	while (root || stack.length) {
+	while (root || stack.length > 0) {
 		//一直放左儿子
 		while (root) {
 			stack.push(root)
@@ -166,14 +168,14 @@ var inorderTraversal = function (root) {
 		}
 		root = stack.pop()
 		ret.push(root.val)
-		//再放入右儿子
+		//再放右儿子
 		root = root.right
 	}
 	return ret
 }
 ```
 
-##### ==[145.二叉树后序遍历](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)==
+##### [145. ==二叉树后序遍历==](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 
 ```javascript {.line-numbers}
 //recursion
@@ -206,9 +208,9 @@ const postorderTraversal = (root) => {
 		root = stack.pop()
 		//root.right === prev 节点访问过一次
 		if (!root.right || root.right === prev) {
-			//因第二次才加入,这里加入即可
+			//第二次才加入结果
 			ret.push(root.val)
-			//更新下 preNode，也就是定位住上一个访问节点
+			//更新prev，也就是定位住上一个访问节点
 			prev = root
 			root = null
 		} else {
@@ -284,7 +286,7 @@ var postorder = function (root) {
 
 ### Level Traversal
 
-##### ==[102.二叉树的层序遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)==
+##### [102. ==二叉树的层序遍历==](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
 ```javascript {.line-numbers}
 //BFS iteration, use queue
