@@ -1,8 +1,19 @@
 ==无论什么语言整数操作都需要考虑溢出==
 
-### [7.整数反转](https://leetcode-cn.com/problems/reverse-integer/)
+### [7.==整数反转==](https://leetcode-cn.com/problems/reverse-integer/)
 
 ```javascript {.line-numbers}
+//simple version
+var reverse = function (x) {
+	let ret = 0
+	while (x) {
+		ret = ret * 10 + (x % 10)
+		if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(-2, 31)) return 0
+		x = (x / 10) | 0
+	}
+	return ret
+}
+
 var reverse = function (x) {
 	let ret = 0
 	while (x !== 0) {
@@ -171,7 +182,7 @@ var majorityElement = function (nums) {
 }
 ```
 
-### [172.阶乘后的零](https://leetcode-cn.com/problems/factorial-trailing-zeroes/)
+### [172.==阶乘后的零==](https://leetcode-cn.com/problems/factorial-trailing-zeroes/)
 
 ```javascript {.line-numbers}
 //O(logN) - O(1) simplest version
@@ -197,6 +208,29 @@ const trailingZeroes = (n) => {
 		}
 	}
 	return zeroCount
+}
+```
+
+### [202.==快乐数==](https://leetcode-cn.com/problems/happy-number/)
+
+```javascript {.line-numbers}
+function getN(n) {
+	if (n == 1 || n == 0) return n
+	let res = 0
+	while (n) {
+		res += (n % 10) * (n % 10)
+		n = parseInt(n / 10)
+	}
+	return res
+}
+
+var isHappy = function (n) {
+	const sumSet = new Set()
+	while (n !== 1 && !sumSet.has(n)) {
+		sumSet.add(n)
+		n = getN(n)
+	}
+	return n == 1
 }
 ```
 
@@ -246,5 +280,19 @@ var majorityElement = function (nums) {
 	if (count1 > len / 3) ret.push(candidate1)
 	if (count2 > len / 3) ret.push(candidate2)
 	return ret
+}
+```
+
+### [268.==丢失的数字==](https://leetcode-cn.com/problems/missing-number/)
+
+```javascript {.line-numbers}
+var missingNumber = function (nums) {
+	const len = nums.length
+	let sum = ((1 + len) * len) / 2
+
+	for (let i = 0; i < len; i++) {
+		sum -= nums[i]
+	}
+	return sum
 }
 ```

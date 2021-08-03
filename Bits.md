@@ -132,6 +132,19 @@ var singleNumber = function (nums) {
 }
 ```
 
+## ==[171.Excel 表列序号](https://leetcode-cn.com/problems/excel-sheet-column-number/)==
+
+```javascript {.line-numbers}
+var titleToNumber = function (columnTitle) {
+	let ret = 0
+	for (let i = 0; i < columnTitle.length; i++) {
+		const num = columnTitle.charCodeAt(i) - 65 + 1
+		ret = ret * 26 + num
+	}
+	return ret
+}
+```
+
 ### ==[190.颠倒二进制位](https://leetcode-cn.com/problems/reverse-bits/)==
 
 ```javascript {.line-numbers}

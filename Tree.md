@@ -99,6 +99,22 @@ var preorderTraversal = function (root) {
 	}
 	return ret
 }
+
+//common template
+var preorderTraversal = function (root) {
+	const res = []
+	const stack = []
+	while (root || stack.length) {
+		while (root) {
+			res.push(root.val)
+			stack.push(root)
+			root = root.left
+		}
+		root = stack.pop()
+		root = root.right
+	}
+	return res
+}
 ```
 
 ##### [589.N 叉树的前序遍历](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
@@ -156,6 +172,7 @@ var inorderTraversal = function (root) {
 }
 
 //iteration
+//common template
 var inorderTraversal = function (root) {
 	const ret = [],
 		stack = []
@@ -242,6 +259,22 @@ const postorderTraversal = (root) => {
 		}
 	}
 	return ret
+}
+
+//common template
+var postorderTraversal = function (root) {
+	const res = []
+	const stack = []
+	while (root || stack.length) {
+		while (root) {
+             res.unshift(root.val)
+			stack.push(root)
+			root = root.right
+		}
+		root = stack.pop()
+		root = root.left
+	}
+	return res
 }
 ```
 
@@ -918,22 +951,18 @@ var isSameTree = function (p, q) {
 }
 ```
 
-##### [101.对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/submissions/)
+##### [101.==对称二叉树==](https://leetcode-cn.com/problems/symmetric-tree/submissions/)
 
 ```javascript {.line-numbers}
 var isSymmetric = function (root) {
 	const helper = (left, right) => {
-		if (left == null && right == null) {
-			return true
-		} else if (left == null || right == null) {
-			return false
-		} else {
-			return (
-				left.val === right.val &&
-				helper(left.left, right.right) &&
-				helper(right.right, left.left)
-			)
-		}
+		if (left == null && right == null) return true
+		if (left == null || right == null) return false
+		return (
+			left.val === right.val &&
+			helper(left.left, right.right) &&
+			helper(right.right, left.left)
+		)
 	}
 	return helper(root, root)
 }

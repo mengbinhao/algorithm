@@ -47,7 +47,7 @@ var addTwoNumbers = function (l1, l2) {
 		const sum = x + y + carry
 		carry = sum >= 10 ? 1 : 0
 		cur.next = new ListNode(sum % 10)
-         // below move forward
+		// below move forward
 		cur = cur.next
 		if (p1 !== null) p1 = p1.next
 		if (p2 !== null) p2 = p2.next
@@ -68,12 +68,12 @@ var removeNthFromEnd = function (head, n) {
 	let fast = dummyNode,
 		slow = dummyNode
 
-    //移完后fast和slow的距离是n
+	//移完后fast和slow的距离是n
 	while (n >= 0) {
 		fast = fast.next
 		n--
 	}
-    //同步走，走到要删除节点的前驱节点
+	//同步走，走到要删除节点的前驱节点
 	while (fast) {
 		fast = fast.next
 		slow = slow.next
@@ -360,9 +360,9 @@ var rotateRight = function (head, k) {
 
 ```javascript {.line-numbers}
 var deleteDuplicates = function (head) {
-    if (!head) return head
-    const dummy = new ListNode(0)
-    dummy.next = head
+	if (!head) return head
+	const dummy = new ListNode(0)
+	dummy.next = head
 	let cur = dummy
 	while (cur.next && cur.next.next) {
 		if (cur.next.val === cur.next.next.val) {
@@ -639,12 +639,12 @@ var reverseList = function (head) {
 
 	while (cur) {
 		next = cur.next
-        //change pointer ..3->2->1->null
+		//change pointer ..3->2->1->null
 		cur.next = prev
 		prev = cur
 		cur = next
 	}
-    //返回反转后的头结点
+	//返回反转后的头结点
 	return prev
 }
 
@@ -657,7 +657,7 @@ var reverseList = function (head) {
 	//node = head.next
 	//node.next = head
 	head.next.next = head
-    //cut the ring
+	//cut the ring
 	head.next = null
 	return tail
 }
