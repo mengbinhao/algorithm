@@ -118,7 +118,7 @@ var myPow = function (x, n) {
 }
 ```
 
-### ==[169.多数元素 E](https://leetcode-cn.com/problems/majority-element/)==
+### [169.==多数元素 E==](https://leetcode-cn.com/problems/majority-element/)
 
 ```javascript
 //brute force O(n^2)
@@ -143,24 +143,14 @@ var majorityElement = function (nums) {
 }
 
 //hash O(n)
-var majorityElement = function (nums) {
-	const hash = {}
-
-	for (let num of nums) {
-		hash[num] ? hash[num]++ : (hash[num] = 1)
-	}
-
-	let max = -Infinity,
-		ret
-
-	Object.keys(hash).forEach((key) => {
-		let count = hash[key]
-		if (count > max) {
-			max = count
-			ret = +key
-		}
-	})
-	return ret
+var majorityElement = function(nums) {
+  const map = {}
+	// >>是右移运算符，意思是除以2
+  const n = nums.length >> 1
+  for(let i = 0; i < nums.length; i++){
+      map[nums[i]] = map[nums[i]] !== undefined ? map[nums[i]] + 1 : 1
+      if(map[nums[i]] > n) return nums[i]
+  }
 }
 
 //投票算法 O(n) - O(1) best

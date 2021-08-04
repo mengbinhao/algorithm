@@ -62,7 +62,7 @@ var myAtoi = function (str) {
 }
 ```
 
-### ==[14. 最长公共前缀](https://leetcode-cn.com/problems/longest-common-prefix/)==
+### [14. ==最长公共前缀==](https://leetcode-cn.com/problems/longest-common-prefix/)
 
 ```javascript {.line-numbers}
 //横向扫描 O(mn) - O(1)
@@ -153,7 +153,7 @@ var lengthOfLastWord = function (s) {
 }
 ```
 
-### ==[125. 验证回文串](https://leetcode-cn.com/problems/valid-palindrome/)==
+### [125. ==验证回文串==](https://leetcode-cn.com/problems/valid-palindrome/)
 
 ```javascript {.line-numbers}
 //O(∣s∣) - O(∣s∣)
@@ -208,7 +208,7 @@ var reverseWords = function (s) {
 //使用deque_2
 ```
 
-### ==[344. 反转字符串 E](https://leetcode-cn.com/problems/reverse-string/)==
+### [344. ==反转字符串 E==](https://leetcode-cn.com/problems/reverse-string/)
 
 ```javascript {.line-numbers}
 //two pointer
@@ -233,7 +233,7 @@ var reverseString = function (s) {
 }
 ```
 
-### ==[387. 字符串中的第一个唯一字符 E](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)==
+### [387. ==字符串中的第一个唯一字符 E==](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
 
 ```javascript {.line-numbers}
 var firstUniqChar = function (s) {

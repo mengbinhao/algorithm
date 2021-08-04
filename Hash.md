@@ -58,7 +58,7 @@ var longestConsecutive = function (nums) {
 }
 ```
 
-### ==[242.有效的字母异位词 E](https://leetcode-cn.com/problems/valid-anagram/)==
+### [242.==有效的字母异位词 E==](https://leetcode-cn.com/problems/valid-anagram/)
 
 ```javascript
 //使用系统内置函数sort O(NlogN) n为字符串长度 - O(1)

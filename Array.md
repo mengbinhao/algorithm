@@ -232,7 +232,7 @@ var fourSum = function (nums, target) {
 }
 ```
 
-### ==[26.删除排序数组重复项 E](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)==
+### [26.==删除排序数组重复项 E==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
 //slow / fast pointer
@@ -548,7 +548,7 @@ var removeDuplicates = function (nums) {
 }
 ```
 
-### ==[88.合并两个有序数组 E](https://leetcode-cn.com/problems/merge-sorted-array/)==
+### [88.==合并两个有序数组 E==](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
 //三指针 / 从前往后 O(n+m) - O(m)
@@ -720,13 +720,30 @@ var moveZeroes = function (nums) {
 }
 ```
 
-### ==[349.两个数组的交集](https://leetcode-cn.com/problems/intersection-of-two-arrays/)==
+### [349.==两个数组的交集==](https://leetcode-cn.com/problems/intersection-of-two-arrays/)
 
 ```javascript {.line-numbers}
+//bad version
 var intersection = function (nums1, nums2) {
 	return [...new Set(nums1)].filter((item) =>
 		[...new Set(nums2)].includes(item)
 	)
+}
+
+//good version
+var intersection = function (nums1, nums2) {
+	const map = {}
+	const ret = []
+	for (let i = 0; i < nums1.length; i++) {
+		map[nums1[i]] = true
+	}
+	for (let i = 0; i < nums2.length; i++) {
+		if (map[nums2[i]]) {
+			ret.push(nums2[i])
+			map[nums2[i]] = false
+		}
+	}
+	return ret
 }
 ```
 

@@ -29,7 +29,7 @@
 - `x ^ y ^ x = y`
 - `x ^ y ^ x = (x ^ y) ^ x = x ^ (y ^ x)`
 
-### [136.只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
+### [136.==只出现一次的数字==](https://leetcode-cn.com/problems/single-number/)
 
 ```javascript {.line-numbers}
 // X ^ 0 = X
@@ -162,7 +162,7 @@ var reverseBits = function (n) {
 }
 ```
 
-### ==[191.位 1 的个数](https://leetcode-cn.com/problems/number-of-1-bits/)==
+### [191.==位 1 的个数==](https://leetcode-cn.com/problems/number-of-1-bits/)
 
 ```javascript {.line-numbers}
 var hammingWeight = function (n) {
