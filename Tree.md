@@ -45,7 +45,7 @@
 # 解题要素
 
 - 一个中心:遍历
-- 两个基本点:DFS/BFS -> `preorder/inorder/postorder`的DFS
+- 两个基本点:DFS/BFS -> `preorder/inorder/postorder`的 DFS
 - 三种题型:搜索类、构建类、修改类
 - 四个重要概念:二叉搜索树(==中序遍历是有序的==)、完全二叉树、路径、距离
 - 七个技巧
@@ -93,7 +93,7 @@ var preorderTraversal = function (root) {
 	while (stack.length > 0) {
 		root = stack.pop()
 		ret.push(root.val)
-        //先放右后放左, 根->左->右
+		//先放右后放左, 根->左->右
 		if (root.right) stack.push(root.right)
 		if (root.left) stack.push(root.left)
 	}
@@ -267,7 +267,7 @@ var postorderTraversal = function (root) {
 	const stack = []
 	while (root || stack.length) {
 		while (root) {
-             res.unshift(root.val)
+			res.unshift(root.val)
 			stack.push(root)
 			root = root.right
 		}
