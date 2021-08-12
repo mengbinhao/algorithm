@@ -22,7 +22,7 @@ const bubbleSort = (arr) => {
 				hasChanged = true
 			}
 		}
-		//当前轮无冒泡则跳出循环
+		//当前轮无冒泡则跳出
 		if (!hasChanged) break
 	}
 	return arr
