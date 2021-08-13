@@ -62,6 +62,7 @@ var addTwoNumbers = function (l1, l2) {
 
 ```javascript {.line-numbers}
 //O(n) - O(1)
+//fast slow pointer
 var removeNthFromEnd = function (head, n) {
 	const dummyNode = new ListNode(0)
 	dummyNode.next = head
@@ -339,7 +340,7 @@ var rotateRight = function (head, k) {
 	}
 	//form ring
 	cur.next = head
-	// 因为当k大于长度时, 又是一个轮回, 所以对长度取余
+	// 当k大于长度时, 又是一个轮回, 所以对长度取余
 	const num = k % len
 	let index = 1,
 		newTail = head

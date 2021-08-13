@@ -93,13 +93,14 @@ var preorderTraversal = function (root) {
 	while (stack.length > 0) {
 		root = stack.pop()
 		ret.push(root.val)
-		//先放右后放左, 根->左->右
+		//先放右后放左, pop顺序是根->左->右
 		if (root.right) stack.push(root.right)
 		if (root.left) stack.push(root.left)
 	}
 	return ret
 }
 
+//common template
 //common template
 var preorderTraversal = function (root) {
 	const res = []
@@ -173,6 +174,8 @@ var inorderTraversal = function (root) {
 
 //iteration
 //common template
+//common template
+//BST inorder is sequential 
 var inorderTraversal = function (root) {
 	const ret = [],
 		stack = []
@@ -262,19 +265,20 @@ const postorderTraversal = (root) => {
 }
 
 //common template
+//common template
 var postorderTraversal = function (root) {
-	const res = []
+	const ret = []
 	const stack = []
 	while (root || stack.length) {
 		while (root) {
-			res.unshift(root.val)
+			ret.unshift(root.val)
 			stack.push(root)
 			root = root.right
 		}
 		root = stack.pop()
 		root = root.left
 	}
-	return res
+	return ret
 }
 ```
 
@@ -327,20 +331,18 @@ var postorder = function (root) {
 //层用queue
 //层用queue
 var levelOrder = function (root) {
-	if (root === null) return []
+	const ret = []
+	const queue = []
 
-	const queue = [root],
-		ret = []
-
+	root && queue.push(root)
 	while (queue.length > 0) {
 		const size = queue.length,
 			curLevel = []
-
 		for (let i = 0; i < size; i++) {
-			const curNode = queue.shift()
-			curLevel.push(curNode.val)
-			if (curNode.left) queue.push(curNode.left)
-			if (curNode.right) queue.push(curNode.right)
+			const cur = queue.shift()
+			curLevel.push(cur.val)
+			if (cur.left) queue.push(cur.left)
+			if (cur.right) queue.push(cur.right)
 		}
 		ret.push(curLevel)
 	}
@@ -350,9 +352,8 @@ var levelOrder = function (root) {
 //DFS
 var levelOrder = function (root) {
 	const ret = []
-
 	const dfs = (root, level) => {
-		if (root == null) return
+		if (!root) return
 		if (!ret[level]) ret[level] = []
 		ret[level].push(root.val)
 		dfs(root.left, level + 1)
@@ -404,7 +405,7 @@ var levelOrder = function (root) {
 }
 ```
 
-##### [==103.二叉树的锯齿形层序遍历==](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)
+##### [103.==二叉树的锯齿形层序遍历==](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)
 
 ```javascript {.line-numbers}
 var zigzagLevelOrder = function (root) {
@@ -412,7 +413,7 @@ var zigzagLevelOrder = function (root) {
 		ret = []
 	root && queue.push(root)
 	let direction = true
-	while (queue.length) {
+	while (queue.length > 0) {
 		const size = queue.length,
 			curLevel = []
 		for (let i = 0; i < size; i++) {
@@ -428,23 +429,21 @@ var zigzagLevelOrder = function (root) {
 		ret.push(curLevel)
 		direction = !direction
 	}
-
 	return ret
 }
 ```
 
-##### ==[515.在每个树行中找最大值](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)==
+##### [515.==在每个树行中找最大值==](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
 
 ```javascript {.line-numbers}
 //bfs
 var largestValues = function (root) {
 	const ret = []
-	if (!root) return ret
-	const queue = [root]
-
+	const queue = []
+	root && queue.push(root)
 	while (queue.length > 0) {
-		const size = queue.length,
-			max = -Infinity
+		const size = queue.length
+		let max = -Infinity
 		for (let i = 0; i < size; i++) {
 			const curNode = queue.shift()
 			if (curNode.left) queue.push(curNode.left)
@@ -514,13 +513,13 @@ var rightSideView = function (root) {
 
 ### Others
 
-##### [==987.二叉树的垂序遍历==](https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/)
+##### [987.==二叉树的垂序遍历==](https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/)
 
 ```javascript {.line-numbers}
 var verticalTraversal = function (root) {
 	if (!root) return []
 
-	// 二维数组 存坐标和值,形式如 [[x, y, val], [...]]
+	// 二维数组,存坐标和值,形式如 [[x, y, val], [...]]
 	let locations = []
 
 	const dfs = function (root, x, y) {
@@ -568,9 +567,10 @@ var verticalTraversal = function (root) {
 
 ### CRUD
 
-##### ==[98.验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)==
+##### [98.==验证二叉搜索树==](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript {.line-numbers}
+//tricky
 var isValidBST = function (root) {
 	let helper = (root, lower, upper) => {
 		if (!root) return true
@@ -599,18 +599,6 @@ var isValidBST = function (root) {
 		root = root.right
 	}
 	return true
-}
-
-//labuladuo version
-var isValidBST = function (root) {
-	function helper(root, min, max) {
-		if (!root) return true
-		if (min !== null && root.val <= min.val) return false
-		if (max !== null && root.val >= max.val) return false
-		//limit左子树最大值node,右子树最小值node
-		return helper(root.left, min, root) && helper(root.right, root, max)
-	}
-	return helper(root, null, null)
 }
 ```
 
@@ -1459,7 +1447,7 @@ var sumNumbers = function (root, preSum) {
 
 ## Serialize/Deserialize
 
-##### [105.从前序与中序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+##### [105.==从前序与中序遍历序列构造二叉树==](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
 ```javascript {.line-numbers}
 var buildTree = function (preorder, inorder) {
