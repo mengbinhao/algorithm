@@ -175,7 +175,7 @@ var inorderTraversal = function (root) {
 //iteration
 //common template
 //common template
-//BST inorder is sequential 
+//BST inorder is sequential
 var inorderTraversal = function (root) {
 	const ret = [],
 		stack = []
@@ -1495,7 +1495,7 @@ var buildTree = function (preorder, inorder) {
 }
 ```
 
-##### [106.从中序与后序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
+##### [106.==从中序与后序遍历序列构造二叉树==](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
 ```javascript {.line-numbers}
 var buildTree = function (inorder, postorder) {
