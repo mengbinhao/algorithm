@@ -1,64 +1,34 @@
-### ==[17.电话号码的字母组合 M](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)==
+### ==[17.电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)==
 
 ```javascript
-//recursion
 var letterCombinations = function (digits) {
+	const ret = []
 	if (!digits) return []
-	const ret = [],
-		map = new Map([
-			[2, 'abc'],
-			[3, 'def'],
-			[4, 'ghi'],
-			[5, 'jkl'],
-			[6, 'mno'],
-			[7, 'pqrs'],
-			[8, 'tuv'],
-			[9, 'wxyz'],
-		])
+	const map = new Map([
+		['2', 'abc'],
+		['3', 'def'],
+		['4', 'ghi'],
+		['5', 'jkl'],
+		['6', 'mno'],
+		['7', 'pqrs'],
+		['8', 'tuv'],
+		['9', 'wxyz'],
+	])
 
-	const traversal = (s, digits, level, ret, map) => {
+	const dfs = (s, level) => {
 		if (level === digits.length) {
 			ret.push(s)
 			return
 		}
-		for (let l of map.get(+digits[level])) {
-			traversal(s + l, digits, level + 1, ret, map)
-		}
+		for (let c of map.get(digits[level])) dfs(s + c, level + 1)
 	}
-	traversal('', digits, 0, ret, map)
-	return ret
-}
-
-//more simple
-var letterCombinations = function (digits) {
-	const len = digits.length
-	if (len === 0) return []
-	const hash = {
-		2: 'abc',
-		3: 'def',
-		4: 'ghi',
-		5: 'jkl',
-		6: 'mno',
-		7: 'pqrs',
-		8: 'tuv',
-		9: 'wxyz',
-	}
-	const ret = []
-	const traversal = (level, s) => {
-		if (level === len) {
-			ret.push(s)
-			return
-		}
-		for (let c of hash[digits[level]]) {
-			traversal(level + 1, s + c)
-		}
-	}
-	traversal(0, '')
+	//can pass more params if u want, like ret、map、digits
+	dfs('', 0)
 	return ret
 }
 ```
 
-### ==[22.括号生成 M](https://leetcode-cn.com/problems/generate-parentheses/)==
+### ==[22.括号生成](https://leetcode-cn.com/problems/generate-parentheses/)==
 
 ```javascript
 //brute force O(2^3n * n) - O(n)
@@ -79,47 +49,42 @@ var generateParenthesis = function (n) {
 	}
 
 	const dfs = (level, max, s) => {
-		//recursion terminal
+		//1 recursion terminal
 		if (level >= max) {
 			if (isValid(s)) ret.push(s)
 			return
 		}
 
-		//precess login of current level
-		//drill down
+		//2 precess login of current level
+		//3 drill down
 		dfs(level + 1, max, `${s}(`)
 		dfs(level + 1, max, `${s})`)
 
-		//reverse current params if needed
+		//4 reverse current params if needed
 	}
-
+	//level, maxCount, s
 	dfs(0, 2 * n, '')
 	return ret
 }
 
-//回溯
+//回溯 better
 var generateParenthesis = function (n) {
 	const ret = []
 
-	const dfs = (left, right, n, ret, s) => {
-		if (left === n && right === n) {
-			ret.push(s)
-			return
-		}
+  const dfs = (left, right, max, s) => {
+    if (left === max && right === max) {
+      ret.push(s)
+      return
+    }
 
-		//回溯的过程中直接剪枝掉无效的组合
-		if (left < n) {
-			dfs(left + 1, right, n, ret, s + '(')
-		}
-
-		//回溯的过程中直接剪枝掉无效的组合
-		if (left > right) {
-			dfs(left, right + 1, n, ret, s + ')')
-		}
-	}
-
-	dfs(0, 0, n, ret, '')
-	return ret
+    //回溯的过程中直接剪枝掉无效的组合
+    if (left < n) dfs(left + 1, right, max, s + '(')
+	  //回溯的过程中直接剪枝掉无效的组合
+    if (left > right) dfs(left, right + 1, max, s + ')')
+  }
+	//can pass ret if u want
+  dfs(0, 0, n, '')
+  return ret
 }
 ```
 
@@ -127,7 +92,7 @@ var generateParenthesis = function (n) {
 
 ```javascript
 var isValidSudoku = function (board) {
-	let rows = {}, //记录每行对应的key
+	const rows = {}, //记录每行对应的key
 		columns = {}, //记录每列对应的key
 		boxes = {} //记录每个小数独对应的key
 
@@ -135,18 +100,18 @@ var isValidSudoku = function (board) {
 		for (let j = 0; j < 9; j++) {
 			let num = board[i][j]
 			if (num !== '.') {
-				//子数独序号
-				let boxIndex = Number.parseInt(i / 3) * 3 + Number.parseInt(j / 3)
+				//计算子数独序号
+				const boxIdx = Number.parseInt(i / 3) * 3 + Number.parseInt(j / 3)
 				if (
 					rows[i + '-' + num] ||
 					columns[j + '-' + num] ||
-					boxes[boxIndex + '-' + num]
+					boxes[boxIdx + '-' + num]
 				)
 					return false
-
+				//标记
 				rows[i + '-' + num] = true
 				columns[j + '-' + num] = true
-				boxes[boxIndex + '-' + num] = true
+				boxes[boxIdx + '-' + num] = true
 			}
 		}
 	}
@@ -165,10 +130,11 @@ var combine = function (n, k) {
 			ret.push([...path])
 			return
 		}
-		//剪枝n - k + 1
+		//剪枝n - k + 1，待组成的数不够k个了
 		for (let i = start; i <= n - k + 1; i++) {
 			path.push(i)
 			dfs(n, k - 1, i + 1, path)
+			//backtrack [1,2...] ->  [1,3...] -> [2...]
 			path.pop()
 		}
 	}
@@ -180,7 +146,7 @@ var combine = function (n, k) {
 var combine = function (n, k) {
 	const ret = []
 	const dfs = (cur, n, k, path) => {
-		//剪枝
+		//剪枝,当前选择个数 + 剩下的待选数不够k个
 		if (path.length + (n - cur + 1) < k) return
 
 		if (path.length === k) {
