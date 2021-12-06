@@ -22,7 +22,7 @@ var letterCombinations = function (digits) {
 		}
 		for (let c of map.get(digits[level])) dfs(s + c, level + 1)
 	}
-	//can pass more params if u want, like ret、map、digits
+	//can pass more params if you want, like ret、map、digits
 	dfs('', 0)
 	return ret
 }
@@ -55,7 +55,7 @@ var generateParenthesis = function (n) {
 			return
 		}
 
-		//2 precess login of current level
+		//2 process logic of current level
 		//3 drill down
 		dfs(level + 1, max, `${s}(`)
 		dfs(level + 1, max, `${s})`)
@@ -82,7 +82,7 @@ var generateParenthesis = function (n) {
 	  //回溯的过程中直接剪枝掉无效的组合
     if (left > right) dfs(left, right + 1, max, s + ')')
   }
-	//can pass ret if u want
+	//can pass ret if you want
   dfs(0, 0, n, '')
   return ret
 }
