@@ -62,7 +62,7 @@
 
 ![](./images/Tree.png)
 
-## Binary Tree Traversal
+## 1 Binary Tree Traversal
 
 ### Preorder/Inorder/Postorder
 
@@ -82,6 +82,22 @@ var preorderTraversal = function (root) {
 	return ret
 }
 
+//common template
+var preorderTraversal = function (root) {
+	const res = []
+	const stack = []
+	while (root || stack.length > 0) {
+		while (root) {
+			res.push(root.val)
+			stack.push(root)
+			root = root.left
+		}
+		root = stack.pop()
+		root = root.right
+	}
+	return res
+}
+
 //iteration. use stack
 var preorderTraversal = function (root) {
 	const ret = [],
@@ -96,23 +112,6 @@ var preorderTraversal = function (root) {
 		if (root.left) stack.push(root.left)
 	}
 	return ret
-}
-
-//common template
-//common template
-var preorderTraversal = function (root) {
-	const res = []
-	const stack = []
-	while (root || stack.length) {
-		while (root) {
-			res.push(root.val)
-			stack.push(root)
-			root = root.left
-		}
-		root = stack.pop()
-		root = root.right
-	}
-	return res
 }
 ```
 
@@ -172,21 +171,18 @@ var inorderTraversal = function (root) {
 
 //iteration
 //common template
-//common template
 //BST inorder is sequential
 var inorderTraversal = function (root) {
 	const ret = [],
 		stack = []
 
 	while (root || stack.length > 0) {
-		//一直放左儿子
 		while (root) {
 			stack.push(root)
 			root = root.left
 		}
 		root = stack.pop()
 		ret.push(root.val)
-		//再放右儿子
 		root = root.right
 	}
 	return ret
@@ -206,6 +202,44 @@ var postorderTraversal = function (root) {
 		ret.push(root.val)
 	}
 	traversal(root)
+	return ret
+}
+
+//common template
+var postorderTraversal = function (root) {
+	const ret = []
+	const stack = []
+	while (root || stack.length > 0) {
+		while (root) {
+			ret.unshift(root.val)
+			stack.push(root)
+			root = root.right
+		}
+		root = stack.pop()
+		root = root.left
+	}
+	return ret
+}
+
+//逆序输出
+const postorderTraversal = (root) => {
+	const ret = [],
+		stack = []
+
+	root && stack.push(root)
+	while (stack.length > 0) {
+		root = stack.pop()
+		//unshift顺序从根左右 => 右左根
+		ret.unshift(root.val)
+
+		//右左根 => 左右根
+		if (root.left !== null) {
+			stack.push(root.left)
+		}
+		if (root.right !== null) {
+			stack.push(root.right)
+		}
+	}
 	return ret
 }
 
@@ -236,45 +270,6 @@ const postorderTraversal = (root) => {
 			stack.push(root)
 			root = root.right
 		}
-	}
-	return ret
-}
-
-//逆序输出
-const postorderTraversal = (root) => {
-	const ret = [],
-		stack = []
-
-	root && stack.push(root)
-	while (stack.length > 0) {
-		root = stack.pop()
-		//unshift顺序从根左右 => 右左根
-		ret.unshift(root.val)
-
-		//右左根 => 左右根
-		if (root.left !== null) {
-			stack.push(root.left)
-		}
-		if (root.right !== null) {
-			stack.push(root.right)
-		}
-	}
-	return ret
-}
-
-//common template
-//common template
-var postorderTraversal = function (root) {
-	const ret = []
-	const stack = []
-	while (root || stack.length) {
-		while (root) {
-			ret.unshift(root.val)
-			stack.push(root)
-			root = root.right
-		}
-		root = stack.pop()
-		root = root.left
 	}
 	return ret
 }
@@ -326,8 +321,6 @@ var postorder = function (root) {
 ```javascript {.line-numbers}
 //BFS iteration, use queue
 //层用queue
-//层用queue
-//层用queue
 var levelOrder = function (root) {
 	const ret = []
 	const queue = []
@@ -357,7 +350,6 @@ var levelOrder = function (root) {
 		dfs(root.left, level + 1)
 		dfs(root.right, level + 1)
 	}
-
 	dfs(root, 0)
 	return ret
 }
@@ -511,7 +503,7 @@ var rightSideView = function (root) {
 
 ### Others
 
-##### [987.==二叉树的垂序遍历==](https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/)
+##### [987.二叉树的垂序遍历](https://leetcode-cn.com/problems/vertical-order-traversal-of-a-binary-tree/)
 
 ```javascript {.line-numbers}
 var verticalTraversal = function (root) {
@@ -561,7 +553,7 @@ var verticalTraversal = function (root) {
 }
 ```
 
-## BST
+## 2 BST
 
 ### CRUD
 
@@ -577,7 +569,7 @@ var isValidBST = function (root) {
 			helper(root.left, lower, root.val) && helper(root.right, root.val, upper)
 		)
 	}
-	//增加参数,向下传递
+	//扩展参数，向下传递
 	return helper(root, -Infinity, Infinity)
 }
 
@@ -603,7 +595,7 @@ var isValidBST = function (root) {
 ##### [99.恢复二叉搜索树](https://leetcode-cn.com/problems/recover-binary-search-tree/)
 
 ```javascript {.line-numbers}
-//use array
+// use array
 // interview version
 // O(n) - O(h)
 var recoverTree = function (root) {
@@ -802,7 +794,7 @@ var generateTrees = function (n) {
 }
 ```
 
-##### ==[108.将有序数组转换为二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)==
+##### [108.==将有序数组转换为二叉搜索树==](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
 
 ```javascript {.line-numbers}
 var sortedArrayToBST = function (nums) {
@@ -846,7 +838,7 @@ var sortedListToBST = function (head) {
 }
 ```
 
-##### [==230.二叉搜索树中第 K 小的元素==](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
+##### [230.==二叉搜索树中第 K 小的元素==](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
 
 ```javascript {.line-numbers}
 var kthSmallest = function (root, k) {
@@ -862,26 +854,9 @@ var kthSmallest = function (root, k) {
 		root = root.right
 	}
 }
-
-//bad version
-var kthSmallest = function (root, k) {
-	let rank = k,
-		ret
-	const helper = (root, k) => {
-		if (!root) return
-		helper(root.left, k)
-		if (--rank === 0) {
-			ret = root.val
-			return
-		}
-		helper(root.right, k)
-	}
-	helper(root, k)
-	return ret
-}
 ```
 
-##### ==[235.二叉搜索树的公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)==
+##### [235.==二叉搜索树的公共祖先==](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
@@ -917,7 +892,7 @@ var convertBST = function (root) {
 }
 ```
 
-## DFS/BFS
+## 3 DFS/BFS
 
 ##### [100.相同的树](https://leetcode-cn.com/problems/same-tree/)
 
@@ -937,7 +912,7 @@ var isSameTree = function (p, q) {
 }
 ```
 
-##### [101.==对称二叉树==](https://leetcode-cn.com/problems/symmetric-tree/submissions/)
+##### [101.==对称二叉树==](https://leetcode-cn.com/problems/symmetric-tree/)
 
 ```javascript {.line-numbers}
 var isSymmetric = function (root) {
@@ -953,6 +928,7 @@ var isSymmetric = function (root) {
 	return helper(root, root)
 }
 
+//bfs
 var isSymmetric = function (root) {
 	if (!root) return true
 	const queue = [root, root]
@@ -971,7 +947,7 @@ var isSymmetric = function (root) {
 }
 ```
 
-##### ==[226.翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)==
+##### [226.==翻转二叉树==](https://leetcode-cn.com/problems/invert-binary-tree/)
 
 ```javascript {.line-numbers}
 //preorder or postorder can work, inorder means no invert
@@ -999,7 +975,7 @@ var invertTree = function (root) {
 }
 ```
 
-##### ==[104.二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)==
+##### [104.==二叉树的最大深度==](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```javascript {.line-numbers}
 var maxDepth = function (root) {
@@ -1015,7 +991,7 @@ var maxDepth = function (root) {
 	const queue = [root]
 	let ret = 0
 	while (queue.length > 0) {
-		let size = queue.length
+		const size = queue.length
 		//添加当前层的所有子节点
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
@@ -1029,7 +1005,7 @@ var maxDepth = function (root) {
 }
 ```
 
-##### ==[111.二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)==
+##### [111.==二叉树的最小深度==](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
 ```javascript {.line-numbers}
 //DFS
@@ -1233,7 +1209,7 @@ var binaryTreePaths = function (root) {
 }
 ```
 
-##### ==[236.二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)==
+##### [236.==二叉树的最近公共祖先==](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
@@ -1332,7 +1308,7 @@ var findDuplicateSubtrees = function (root) {
 }
 ```
 
-## Path Sum
+## 4 Path Sum
 
 ##### [404.左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
 
@@ -1369,7 +1345,7 @@ var hasPathSum = function (root, sum) {
 }
 ```
 
-##### [==113.路径总和 II==](https://leetcode-cn.com/problems/path-sum-ii/)
+##### [113.==路径总和 II==](https://leetcode-cn.com/problems/path-sum-ii/)
 
 ```javascript {.line-numbers}
 //backtrack
@@ -1429,7 +1405,7 @@ var maxPathSum = function (root) {
 }
 ```
 
-##### [==129.求根到叶子节点数字之和==](https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/)
+##### [129.==求根到叶子节点数字之和==](https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/)
 
 ```javascript {.line-numbers}
 var sumNumbers = function (root, preSum) {
@@ -1443,7 +1419,7 @@ var sumNumbers = function (root, preSum) {
 }
 ```
 
-## Serialize/Deserialize
+## 5 Serialize/Deserialize
 
 ##### [105.==从前序与中序遍历序列构造二叉树==](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
