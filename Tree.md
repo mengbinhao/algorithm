@@ -886,7 +886,6 @@ var convertBST = function (root) {
 		root.val = sum
 		dfs(root.left)
 	}
-
 	dfs(root)
 	return root
 }
@@ -898,17 +897,13 @@ var convertBST = function (root) {
 
 ```javascript {.line-numbers}
 var isSameTree = function (p, q) {
-	if (p == null && q == null) {
-		return true
-	} else if (p == null || q == null) {
-		return false
-	} else {
-		return (
-			p.val === q.val &&
-			isSameTree(p.left, q.left) &&
-			isSameTree(p.right, q.right)
-		)
-	}
+	if (p == null && q == null) return true
+	if (p == null || q == null) return false
+	return (
+		p.val === q.val &&
+		isSameTree(p.left, q.left) &&
+		isSameTree(p.right, q.right)
+	)
 }
 ```
 
