@@ -920,6 +920,7 @@ var isSymmetric = function (root) {
 			helper(right.right, left.left)
 		)
 	}
+  //扩展参数
 	return helper(root, root)
 }
 
@@ -928,10 +929,12 @@ var isSymmetric = function (root) {
 	if (!root) return true
 	const queue = [root, root]
 	while (queue.length) {
+    //每次两个两个对比
 		const left = queue.shift()
 		const right = queue.shift()
 		if (left && right) {
 			if (left.val !== right.val) return false
+      //放的时候也是两个两个放
 			queue.push(left.left, right.right)
 			queue.push(left.right, right.left)
 		} else if (left || right) {
@@ -987,13 +990,12 @@ var maxDepth = function (root) {
 	let ret = 0
 	while (queue.length > 0) {
 		const size = queue.length
-		//添加当前层的所有子节点
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
-		//一层处理完深度+1
+		//处理完一层深度+1
 		ret++
 	}
 	return ret
@@ -1020,7 +1022,7 @@ var minDepth = function (root) {
 	const queue = [root]
 	let depth = 1
 
-	while (queue.length) {
+	while (queue.length > 0) {
 		const size = queue.length
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
@@ -1211,16 +1213,10 @@ var lowestCommonAncestor = function (root, p, q) {
 	if (root === null || root === p || root === q) return root
 	const left = lowestCommonAncestor(root.left, p, q)
 	const right = lowestCommonAncestor(root.right, p, q)
+  //下面两句合二为一
+  //if (left !== null && right !== null) return root
+	//return left === null ? right : left
 	return left === null ? right : right === null ? left : root
-}
-
-//normal version
-var lowestCommonAncestor = function (root, p, q) {
-	if (root === null || root === p || root === q) return root
-	const left = lowestCommonAncestor(root.left, p, q)
-	const right = lowestCommonAncestor(root.right, p, q)
-	if (left !== null && right !== null) return root
-	return left === null ? right : left
 }
 
 var lowestCommonAncestor = function (root, p, q) {
@@ -1327,7 +1323,7 @@ var sumOfLeftLeaves = function (root) {
 }
 ```
 
-##### [112.路径总和](https://leetcode-cn.com/problems/path-sum/)
+##### [112.==路径总和==](https://leetcode-cn.com/problems/path-sum/)
 
 ```javascript {.line-numbers}
 var hasPathSum = function (root, sum) {
@@ -1352,7 +1348,7 @@ var pathSum = function (root, sum) {
 		if (!root.left && !root.right && sum === root.val) ret.push([...path])
 		dfs(root.left, sum - root.val, path)
 		dfs(root.right, sum - root.val, path)
-		//backtrack
+		//backtrack current node
 		path.pop()
 	}
 	const ret = []
@@ -1391,7 +1387,7 @@ var maxPathSum = function (root) {
 		const left = Math.max(dfs(root.left), 0)
 		const right = Math.max(dfs(root.right), 0)
 
-		//update innerSum = left + right + node.val
+		//update innerSum = left + right + root.val
 		retMax = Math.max(retMax, left + right + root.val)
 		return Math.max(left, right) + root.val
 	}
@@ -1538,7 +1534,7 @@ const serialize = (root) => {
 	if (root == null) return 'X'
 	const left = serialize(root.left)
 	const right = serialize(root.right)
-	return root.val + ',' + left + ',' + right // 按  根,左,右  拼接字符串
+	return root.val + ',' + left + ',' + right // 按根,左,右  拼接字符串
 }
 
 const deserialize = (data) => {
