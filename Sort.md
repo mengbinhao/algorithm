@@ -250,31 +250,29 @@ const heap = (arr) => {
 	if (len < 2) return arr
 
 	//堆化,查找3个点中的最大点
-	const down = (arr, idx) => {
-		const lSon = 2 * idx,
-			rSon = 2 * idx + 1
+	const down = (arr, i) => {
+		const lSon = 2 * i,
+			rSon = 2 * i + 1
 		let largest = idx
 		if (lSon < len && arr[lSon] > arr[largest]) largest = lSon
 		if (rSon < len && arr[rSon] > arr[largest]) largest = rSon
-		if (largest !== idx) {
-			;[arr[largest], arr[idx]] = [arr[idx], arr[largest]]
+		if (largest !== i) {
+			;[arr[largest], arr[i]] = [arr[i], arr[largest]]
 			//交换后继续看调整后的那个节点的子树是否满足条件
 			down(arr, largest)
 		}
 	}
 
 	const buildMaxHeap = (arr) => {
-		//从第一个非叶子节点开始创建
-		for (let i = Math.ceil(len / 2) + 1; i >= 0; i--) {
-			down(arr, i)
-		}
+		//从第一个非叶子节点开始创建,堆从节点1开始算，所以初始化到1
+		for (let i = Math.ceil(len / 2) + 1; i; i--) down(arr, i)
 	}
 
 	buildMaxHeap(arr)
 
 	//每次堆顶和最后一个元素交换，再堆化，即无序区减1，有序区加1
 	//循环到倒数第二个节点即可
-	for (let i = len - 1; i > 0; i--) {
+	for (let i = len - 1; i; i--) {
 		;[arr[0], arr[i]] = [arr[i], arr[0]]
 		len--
 		//交换后从顶点开始down
@@ -291,4 +289,3 @@ const heap = (arr) => {
 > 3. 删除最小值                   heap[1] = heap[size]; size--; down(1)
 > 4. 删除任意一个元素        heap[k] = heap[size]; size--; down(k); up(k)
 > 5. 修改任意一个元素        heap[k] = x; size--; down(k); up(k)
->

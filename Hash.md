@@ -1,6 +1,19 @@
-### ==[49.字母异位词分组 M](https://leetcode-cn.com/problems/group-anagrams/)==
+### [49.==字母异位词分组 M==](https://leetcode-cn.com/problems/group-anagrams/)
 
 ```javascript
+//obj version
+var groupAnagrams = function (strs) {
+	if (strs.length === 0) return [[]]
+	const hash = {}
+	for (let str of strs) {
+		const arr = Array.from(str)
+		arr.sort()
+		const key = arr.toString()
+		hash[key] ? hash[key].push(str) : (hash[key] = [str])
+	}
+	return Object.values(hash)
+}
+
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
 var groupAnagrams = function (strs) {
 	if (strs.length === 0) return [[]]
@@ -17,14 +30,15 @@ var groupAnagrams = function (strs) {
 }
 
 //使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
+//best version
 var groupAnagrams = function (strs) {
 	if (strs == null) return [[]]
 	const hash = {},
 		count = new Array(26)
 	for (let str of strs) {
 		count.fill(0)
-		for (let c of str) {
-			count[c.charCodeAt() - 'a'.charCodeAt()]++
+		for (let i = 0, len = str.length; i < len; i++) {
+			count[str.charCodeAt(i) - 'a'.charCodeAt(0)]++
 		}
 		hash[count] ? hash[count].push(str) : (hash[count] = [str])
 	}
@@ -32,29 +46,26 @@ var groupAnagrams = function (strs) {
 }
 ```
 
-### ==[128.最长连续序列](https://leetcode-cn.com/problems/longest-consecutive-sequence/)==
+### [128.==最长连续序列==](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 
 ```javascript
 var longestConsecutive = function (nums) {
-	const numSet = new Set()
-	for (let num of nums) numSet.add(num)
+	const set = new Set(nums)
 
-	let longestStreak = 0
-
-	for (let num of numSet.values()) {
-		if (!numSet.has(num - 1)) {
-			let currentNum = num
-			let currentStreak = 1
-
-			while (numSet.has(currentNum + 1)) {
-				currentNum += 1
-				currentStreak += 1
+	let ret = 0
+	for (let num of nums) {
+    //thinking
+		if (!set.has(num - 1)) {
+			let cur = num,
+				curMaxLen = 1
+			while (set.has(cur + 1)) {
+				cur += 1
+				curMaxLen += 1
 			}
-
-			longestStreak = Math.max(longestStreak, currentStreak)
+			ret = Math.max(ret, curMaxLen)
 		}
 	}
-	return longestStreak
+	return ret
 }
 ```
 
@@ -68,21 +79,8 @@ var isAnagram = function (s, t) {
 	)
 }
 
-//hash 统计每个字符出现的频次,枚s增加，枚t减小，最后检查全部hash值是否为0
-//O(n) - O(1)
-var isAnagram = function (s, t) {
-	if (s.length !== t.length) return false
-	const hash = {}
-	for (let c of s) {
-		hash[c] ? hash[c]++ : (hash[c] = 1)
-	}
-	for (let c of t) {
-		hash[c] ? hash[c]-- : (hash[c] = -1)
-	}
-	return Object.values(hash).every((val) => val === 0)
-}
-
 //hash optimal
+//good version
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
 
@@ -105,22 +103,32 @@ var isAnagram = function (s, t) {
 //use array store each letter
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
-
-	const letterArr = Array.from({ length: 26 }, () => 0),
-		len = s.length
-
-	for (let i = 0; i < len; i++) {
-		letterArr[s.codePointAt(i) - 'a'.codePointAt(0)]++
-	}
+	const arr = Array.from({ length: 26 }, () => 0)
+	len = s.length
+	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - 'a'.charCodeAt(0)]++
 
 	for (let i = 0; i < len; i++) {
-		if (--letterArr[t.codePointAt(i) - 'a'.codePointAt(0)] < 0) return false
+		if (--arr[t.charCodeAt(i) - 'a'.charCodeAt(0)] < 0) return false
 	}
 	return true
 }
+
+//hash 统计每个字符出现的频次,枚s增加，枚t减小，最后检查全部hash值是否为0
+//O(n) - O(1)
+var isAnagram = function (s, t) {
+	if (s.length !== t.length) return false
+	const hash = {}
+	for (let c of s) {
+		hash[c] ? hash[c]++ : (hash[c] = 1)
+	}
+	for (let c of t) {
+		hash[c] ? hash[c]-- : (hash[c] = -1)
+	}
+	return Object.values(hash).every((val) => val === 0)
+}
 ```
 
-### ==[771.宝石与石头](https://leetcode-cn.com/problems/jewels-and-stones/)==
+### [771.==宝石与石头==](https://leetcode-cn.com/problems/jewels-and-stones/)
 
 ```javascript
 //brute force
