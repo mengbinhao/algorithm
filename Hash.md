@@ -54,7 +54,7 @@ var longestConsecutive = function (nums) {
 
 	let ret = 0
 	for (let num of nums) {
-    //thinking
+    //当不存在num - 1时才从num开始枚举可以跳过重复枚举的情况
 		if (!set.has(num - 1)) {
 			let cur = num,
 				curMaxLen = 1

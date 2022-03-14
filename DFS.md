@@ -123,6 +123,7 @@ var isValidSudoku = function (board) {
 
 ```javascript {.line-numbers}
 //dfs + backtrack 1
+//best version
 var combine = function (n, k) {
 	const ret = []
 	const dfs = (n, k, start, path) => {
@@ -328,21 +329,11 @@ var permuteUnique = function (nums) {
 ### ==[78.子集 M](https://leetcode-cn.com/problems/subsets/)==
 
 ```javascript {.line-numbers}
-//iteration
-var subsets = function (nums) {
-	const res = [[]]
-	for (let i = 0; i < nums.length; i++) {
-		//动态增加res
-		res.forEach((item) => {
-			res.push([...item, nums[i]])
-		})
-	}
-	return res
-}
-
 //backtrack 1
+//best version
 var subsets = function (nums) {
 	const ret = []
+  //start控制下层树枝的个数
 	const dfs = (nums, start, path) => {
 		//在递归压栈前做事情
 		ret.push([...path])
@@ -373,6 +364,18 @@ var subsets = function (nums) {
 	}
 	dfs(nums, 0, [])
 	return ret
+}
+
+//iteration
+var subsets = function (nums) {
+	const res = [[]]
+	for (let i = 0; i < nums.length; i++) {
+		//动态增加res
+		res.forEach((item) => {
+			res.push([...item, nums[i]])
+		})
+	}
+	return res
 }
 ```
 
@@ -436,7 +439,7 @@ function isValid(x, y, row, col) {
 ```javascript {.line-numbers}
 var subsetsWithDup = function (nums) {
 	const ret = []
-	//重复需要排序!
+	//重复需要排序
 	nums.sort((a, b) => a - b)
 	const dfs = (nums, start, path) => {
 		ret.push([...path])
@@ -444,7 +447,6 @@ var subsetsWithDup = function (nums) {
 			//剪枝
 			if (i > start && nums[i] === nums[i - 1]) continue
 			path.push(nums[i])
-			//i + 1不是start + 1
 			dfs(nums, i + 1, path)
 			path.pop()
 		}

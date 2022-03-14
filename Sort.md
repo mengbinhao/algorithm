@@ -53,10 +53,10 @@ const insert = (arr) => {
 			arr[j + 1] = arr[j]
 			j--
 		}
-		//cur放在该放的有序区位置上
+		//cur放在该放的有序区位置上picvo
 		arr[j + 1] = cur
 	}
-  return arr
+	return arr
 }
 ```
 
@@ -75,21 +75,21 @@ const select = (arr) => {
 	if (len < 2) return arr
 
 	//双循环不重复
-  //有序区
+	//有序区
 	for (let i = 0; i < len - 1; i++) {
 		//存放当前循环中最小index,默认循环初始值
 		//有序区的末尾坐标
 		let minIdx = i
-		//无序区找minIdx
+		//无序区找最小值
 		for (let j = i + 1; j < len; j++) {
 			if (arr[j] < arr[minIdx]) minIdx = j
 		}
-		//minIdx有更新的话，将最小值放到有序序列的最后(去掉这一行不稳定)
+		//将最小值放到有序序列的最后(去掉这一行不稳定)
 		if (minIdx !== i) {
 			;[arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]
 		}
 	}
-  return arr
+	return arr
 }
 ```
 
@@ -113,7 +113,7 @@ const quick = (arr) => {
 
 	const helper = (arr, l, r) => {
 		if (l >= r) return
-    //x = arr[r] or arr[(l + r) / 2]
+		//x = arr[r] or arr[(l + r) / 2]
 		const pivot = arr[l]
 		let i = l - 1,
 			j = r + 1
@@ -124,8 +124,8 @@ const quick = (arr) => {
 			if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]]
 		}
 		//两边对称的
-    //helper(arr, l, i - 1)
-    //helper(arr, i, r)
+		//helper(arr, l, i - 1)
+		//helper(arr, i, r)
 		helper(arr, l, j)
 		helper(arr, j + 1, r)
 		return arr
@@ -217,6 +217,7 @@ const merge = (arr) => {
 		//再归
 		let k = 0,
 			i = l,
+			//当前层后部分数组的开始坐标
 			j = mid + 1
 		while (i <= mid && j <= r) {
 			tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
@@ -253,27 +254,26 @@ const heap = (arr) => {
 	const down = (arr, i) => {
 		const lSon = 2 * i,
 			rSon = 2 * i + 1
-		let largest = idx
+		let largest = i
 		if (lSon < len && arr[lSon] > arr[largest]) largest = lSon
 		if (rSon < len && arr[rSon] > arr[largest]) largest = rSon
-		if (largest !== i) {
+		if (largest != i) {
 			;[arr[largest], arr[i]] = [arr[i], arr[largest]]
-			//交换后继续看调整后的那个节点的子树是否满足条件
+			//交换后继续看交换后的那个节点的子树3节点是否满足条件
 			down(arr, largest)
 		}
 	}
 
 	const buildMaxHeap = (arr) => {
-		//从第一个非叶子节点开始创建,堆从节点1开始算，所以初始化到1
-		for (let i = Math.ceil(len / 2) + 1; i; i--) down(arr, i)
+		//从第一个非叶子节点开始创建
+		for (let i = Math.floor(arr.length / 2) - 1; i >= 0; i--) down(arr, i)
 	}
 
 	buildMaxHeap(arr)
 
 	//每次堆顶和最后一个元素交换，再堆化，即无序区减1，有序区加1
-	//循环到倒数第二个节点即可
-	for (let i = len - 1; i; i--) {
-		;[arr[0], arr[i]] = [arr[i], arr[0]]
+	for (let i = len - 1; i > 0; i--) {
+		;[arr[i], arr[0]] = [arr[0], arr[i]]
 		len--
 		//交换后从顶点开始down
 		down(arr, 0)
@@ -282,10 +282,10 @@ const heap = (arr) => {
 }
 ```
 
-> 如何手写一个小根堆（完全二叉树,坐标从1开始）
+> 如何手写一个小根堆（完全二叉树,坐标从 1 开始）
 >
-> 1. 插入一个元素               heap[++size] = x;  up(size)
-> 2. 求集合当中的最小值    heap[1]
-> 3. 删除最小值                   heap[1] = heap[size]; size--; down(1)
-> 4. 删除任意一个元素        heap[k] = heap[size]; size--; down(k); up(k)
-> 5. 修改任意一个元素        heap[k] = x; size--; down(k); up(k)
+> 1. 插入一个元素 heap[++size] = x; up(size)
+> 2. 求集合当中的最小值 heap[1]
+> 3. 删除最小值 heap[1] = heap[size]; size--; down(1)
+> 4. 删除任意一个元素 heap[k] = heap[size]; size--; down(k); up(k)
+> 5. 修改任意一个元素 heap[k] = x; size--; down(k); up(k)

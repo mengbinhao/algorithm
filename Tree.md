@@ -14,7 +14,7 @@
 
 - height of node：叶子节点到该节点的最长路径，根节点的高度为树的高度
 
-- depth of node：从根节点到该节点所经历的边的个数（高度和深度是相反的，高度是从下往上数，深度是从上往下，因此根节点的深度和叶子节点的高度都是0）
+- depth of node：从根节点到该节点所经历的边的个数（高度和深度是相反的，高度是从下往上数，深度是从上往下，因此根节点的深度和叶子节点的高度都是 0）
 
 - width
 
@@ -280,8 +280,7 @@ const postorderTraversal = (root) => {
 ```javascript {.line-numbers}
 //recursion
 var postorder = function (root) {
-	const ret = [],
-		stack = []
+	const ret = []
 
 	const postorderNode = (root, ret) => {
 		if (!root) return
@@ -920,7 +919,7 @@ var isSymmetric = function (root) {
 			helper(right.right, left.left)
 		)
 	}
-  //扩展参数
+	//扩展参数
 	return helper(root, root)
 }
 
@@ -929,12 +928,12 @@ var isSymmetric = function (root) {
 	if (!root) return true
 	const queue = [root, root]
 	while (queue.length) {
-    //每次两个两个对比
+		//每次两个两个对比
 		const left = queue.shift()
 		const right = queue.shift()
 		if (left && right) {
 			if (left.val !== right.val) return false
-      //放的时候也是两个两个放
+			//放的时候也是两个两个放
 			queue.push(left.left, right.right)
 			queue.push(left.right, right.left)
 		} else if (left || right) {
@@ -1213,8 +1212,8 @@ var lowestCommonAncestor = function (root, p, q) {
 	if (root === null || root === p || root === q) return root
 	const left = lowestCommonAncestor(root.left, p, q)
 	const right = lowestCommonAncestor(root.right, p, q)
-  //下面两句合二为一
-  //if (left !== null && right !== null) return root
+	//下面两句合二为一
+	//if (left !== null && right !== null) return root
 	//return left === null ? right : left
 	return left === null ? right : right === null ? left : root
 }

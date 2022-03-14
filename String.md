@@ -1,78 +1,57 @@
-### [6. Z 字形变换](https://leetcode-cn.com/problems/zigzag-conversion/)
-
-```javascript {.line-numbers}
-var convert = function (s, numRows) {
-	if (numRows === 1) return s
-	const rows = []
-	for (let i = 0; i < Math.min(numRows, s.length); i++) {
-		rows[i] = ''
-	}
-
-	let curRow = 0,
-		goDown = false
-
-	for (let c of s) {
-		rows[curRow] += c
-		//第0行或最后一行变换方向
-		if (curRow === 0 || curRow === numRows - 1) goDown = !goDown
-		curRow += goDown ? 1 : -1
-	}
-
-	let ret = ''
-	for (let row of rows) {
-		ret += row
-	}
-	return ret
-}
-```
-
-### ==[8. 字符串转换整数(atoi)M](https://leetcode-cn.com/problems/string-to-integer-atoi/)==
+### [8. ==字符串转换整数(atoi)M==](https://leetcode-cn.com/problems/string-to-integer-atoi/)
 
 ```javascript {.line-numbers}
 var myAtoi = function (str) {
-	let len = str.length,
-		ret = 0,
+	const len = str.length,
+		max = 2 ** 31 - 1,
+		min = -(2 ** 31)
+
+	let ret = 0,
 		i = 0,
-		flag = 1,
-		max = Math.pow(2, 31) - 1,
-		min = -Math.pow(2, 31)
-	//handle blank space
+		flag = 1
+
 	while (str[i] === ' ' && i < len) i++
-	//handle sign bit
 	if (str[i] === '+' || str[i] === '-') {
 		flag = str[i] === '+' ? 1 : -1
 		i++
 	}
-
-	while (i < len && isDigit(str[i])) {
-		let val = +str[i]
-		ret = ret * 10 + val
+	while (i < len && !Number.isNaN(parseInt(str[i], 10))) {
+		ret = ret * 10 + +str[i]
 		i++
 	}
-	//check range
-	if (ret > max || ret < min) {
-		return flag > 0 ? max : min
-	}
-
-	return ret * flag
-
-	function isDigit(val) {
-		return !Number.isNaN(Number.parseInt(val))
-	}
+	if (ret > max || ret < min) return flag === 1 ? max : min
+	return flag * ret
 }
 ```
 
 ### [14. ==最长公共前缀==](https://leetcode-cn.com/problems/longest-common-prefix/)
 
 ```javascript {.line-numbers}
+//纵向扫描 O(mn) - O(1)
+//best version
+var longestCommonPrefix = function (strs) {
+	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
+	//枚strs[0]每个char
+	for (let i = 0, s0Len = strs[0].length; i < s0Len; i++) {
+		for (let j = 1, strsLen = strs.length; j < strsLen; j++) {
+      //某个strs[j]扫完了或扫到不一样的char了
+			if (i === strs[j].length || strs[j].charAt(i) !== strs[0].charAt(i)) {
+				return strs[0].substring(0, i)
+			}
+		}
+	}
+	return strs[0]
+}
+
 //横向扫描 O(mn) - O(1)
 var longestCommonPrefix = function (strs) {
-	if (strs == null || strs.length === 0) return ''
+	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
 
 	let prefix = strs[0]
 	for (let i = 1, len = strs.length; i < len; i++) {
 		//依次得到每个str的prefix
 		prefix = getLCP(prefix, strs[i])
+		//若有找不到公共前缀的直接退出
 		if (prefix.length === 0) break
 	}
 	return prefix
@@ -85,32 +64,13 @@ var longestCommonPrefix = function (strs) {
 	}
 }
 
-//纵向扫描
+//二分 O(mnlogm) - O(1)
 var longestCommonPrefix = function (strs) {
-	if (strs == null || strs.length === 0) return ''
-	const length = strs[0].length,
-		count = strs.length
-	//枚strs[0]每个char
-	for (let i = 0; i < length; i++) {
-		for (let j = 1; j < count; j++) {
-			if (i === strs[j].length || strs[j].charAt(i) !== strs[0].charAt(i)) {
-				return strs[0].substring(0, i)
-			}
-		}
-	}
-	return strs[0]
-}
+	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
 
-//二分
-var longestCommonPrefix = function (strs) {
-	if (!strs || !Array.isArray(strs) || !strs.length) return ''
-
-	let minLength = Number.MAX_SAFE_INTEGER
-
+	let minLen = Number.MAX_SAFE_INTEGER
 	//取最短的字符串
-	for (let str of strs) {
-		minLength = Math.min(minLength, str.length)
-	}
+	for (let str of strs) minLen = Math.min(minLen, str.length)
 
 	const isCommonPrefix = (strs, len) => {
 		const curPrefix = strs[0].substring(0, len)
@@ -123,7 +83,7 @@ var longestCommonPrefix = function (strs) {
 	}
 
 	let left = 0,
-		right = minLength,
+		right = minLen,
 		mid
 
 	while (left < right) {
@@ -138,18 +98,21 @@ var longestCommonPrefix = function (strs) {
 }
 ```
 
-### ==[58. 最后一个单词的长度](https://leetcode-cn.com/problems/length-of-last-word/)==
+### [58. ==最后一个单词的长度==](https://leetcode-cn.com/problems/length-of-last-word/)
 
 ```javascript {.line-numbers}
 var lengthOfLastWord = function (s) {
 	const len = s.length
 	if (len === 0) return 0
-	let end = len - 1
-	while (end >= 0 && s.charAt(end) === ' ') end--
-	if (end < 0) return 0
-	let start = end
-	while (start >= 0 && s.charAt(start) !== ' ') start--
-	return end - start
+	let idx = len - 1
+	while (idx >= 0 && s[idx] === ' ') idx--
+	if (idx < 0) return 0
+  let ret = 0
+	while (idx >= 0 && s[idx] !== ' ') {
+    ret++
+    idx--
+  }
+	return ret
 }
 ```
 
@@ -157,7 +120,7 @@ var lengthOfLastWord = function (s) {
 
 ```javascript {.line-numbers}
 //O(∣s∣) - O(∣s∣)
-//loop once, filter letter and digit, compare if target str === reverse target string
+//loop once, filter letter and digit, then compare if target str === reverse target string
 
 //O(∣s∣)，其中 |s| 是字符串s的长度 - O(1)
 var isPalindrome = function (s) {
@@ -175,7 +138,7 @@ var isPalindrome = function (s) {
 }
 ```
 
-### ==[151. 翻转字符串里的单词 M](https://leetcode-cn.com/problems/reverse-words-in-a-string/)==
+### [151. ==翻转字符串里的单词 M==](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
 
 ```javascript {.line-numbers}
 //使用系统函数
@@ -183,29 +146,29 @@ var reverseWords = function (s) {
 	return s.trim().replace(/ {2,}/g, ' ').split(' ').reverse().join(' ')
 }
 
-//使用deque_1
+//deque
 var reverseWords = function (s) {
-	let left = 0
-	let right = s.length - 1
-	let queue = []
-	let word = ''
-	while (s.charAt(left) === ' ') left++
-	while (s.charAt(right) === ' ') right--
-	while (left <= right) {
-		let char = s.charAt(left)
+	let l = 0,
+		r = s.length - 1,
+		word = ''
+	const queue = []
+
+	while (s[l] === ' ') l++
+	while (s[r] === ' ') r--
+	while (l <= r) {
+		const char = s[l]
 		if (char === ' ' && word) {
 			queue.unshift(word)
 			word = ''
 		} else if (char !== ' ') {
 			word += char
 		}
-		left++
+		l++
 	}
+	//add last word
 	queue.unshift(word)
 	return queue.join(' ')
 }
-
-//使用deque_2
 ```
 
 ### [344. ==反转字符串 E==](https://leetcode-cn.com/problems/reverse-string/)
@@ -347,13 +310,14 @@ var repeatedSubstringPattern = function (s) {
 }
 ```
 
-### ==[541. 反转字符串 II](https://leetcode-cn.com/problems/reverse-string-ii/)==
+### [541. ==反转字符串 II==](https://leetcode-cn.com/problems/reverse-string-ii/)
 
 ```javascript {.line-numbers}
 var reverseStr = function (s, k) {
-	let arr = s.split('')
+	const arr = s.split('')
 	for (let start = 0; start < arr.length; start += 2 * k) {
 		let i = start,
+       //
 			j = Math.min(start + k - 1, arr.length)
 		while (i < j) {
 			;[arr[i++], arr[j--]] = [arr[j], arr[i]]
@@ -363,7 +327,7 @@ var reverseStr = function (s, k) {
 }
 ```
 
-### ==[557. 反转字符串中的单词 III](https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/)==
+### [557. ==反转字符串中的单词 III==](https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/)
 
 ```javascript {.line-numbers}
 //自己写split和reverse
@@ -483,7 +447,7 @@ var countSubstrings = function (s) {
 }
 ```
 
-### ==[709. 转换成小写字母](https://leetcode-cn.com/problems/to-lower-case/)==
+### [709. ==转换成小写字母==](https://leetcode-cn.com/problems/to-lower-case/)
 
 ```javascript {.line-numbers}
 var toLowerCase = function (str) {
@@ -493,7 +457,7 @@ var toLowerCase = function (str) {
 }
 ```
 
-### ==[917. 仅仅反转字母](https://leetcode-cn.com/problems/reverse-only-letters/)==
+### [917. ==仅仅反转字母==](https://leetcode-cn.com/problems/reverse-only-letters/)
 
 ```javascript {.line-numbers}
 //use stack
