@@ -53,7 +53,7 @@ const insert = (arr) => {
 			arr[j + 1] = arr[j]
 			j--
 		}
-		//cur放在该放的有序区位置上picvo
+		//cur放在该放的有序区位置上
 		arr[j + 1] = cur
 	}
 	return arr
@@ -114,6 +114,7 @@ const quick = (arr) => {
 	const helper = (arr, l, r) => {
 		if (l >= r) return
 		//x = arr[r] or arr[(l + r) / 2]
+    //使得 nums[l..p-1] <= nums[p] < nums[p+1..r]
 		const pivot = arr[l]
 		let i = l - 1,
 			j = r + 1

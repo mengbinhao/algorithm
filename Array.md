@@ -74,7 +74,7 @@ var twoSum = function (nums, target) {
   	let left = 0,
   		right = height.length - 1,
   		maxArea = 0
-
+  
   	while (left < right) {
   		maxArea = Math.max(
   			maxArea,
@@ -562,12 +562,8 @@ var merge = (nums1, m, nums2, n) => {
 	}
 
 	//handle p1 < m or p2 < n
-	while (p1 < m) {
-		nums1[p++] = nums1Copy[p1++]
-	}
-	while (p2 < n) {
-		nums1[p++] = nums2[p2++]
-	}
+	while (p1 < m) nums1[p++] = nums1Copy[p1++]
+	while (p2 < n) nums1[p++] = nums2[p2++]
 }
 
 //三指针 / 从后往前 O(n+m) - O(1)

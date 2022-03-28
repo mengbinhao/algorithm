@@ -10,7 +10,7 @@ var myAtoi = function (str) {
 		i = 0,
 		flag = 1
 
-	while (str[i] === ' ' && i < len) i++
+	while (i < len && str[i] === ' ') i++
 	if (str[i] === '+' || str[i] === '-') {
 		flag = str[i] === '+' ? 1 : -1
 		i++
@@ -34,7 +34,6 @@ var longestCommonPrefix = function (strs) {
 	//枚strs[0]每个char
 	for (let i = 0, s0Len = strs[0].length; i < s0Len; i++) {
 		for (let j = 1, strsLen = strs.length; j < strsLen; j++) {
-      //某个strs[j]扫完了或扫到不一样的char了
 			if (i === strs[j].length || strs[j].charAt(i) !== strs[0].charAt(i)) {
 				return strs[0].substring(0, i)
 			}
@@ -51,7 +50,7 @@ var longestCommonPrefix = function (strs) {
 	for (let i = 1, len = strs.length; i < len; i++) {
 		//依次得到每个str的prefix
 		prefix = getLCP(prefix, strs[i])
-		//若有找不到公共前缀的直接退出
+		//有找不到公共前缀则直接退出
 		if (prefix.length === 0) break
 	}
 	return prefix
@@ -63,39 +62,6 @@ var longestCommonPrefix = function (strs) {
 		return s1.substring(0, idx)
 	}
 }
-
-//二分 O(mnlogm) - O(1)
-var longestCommonPrefix = function (strs) {
-	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
-
-	let minLen = Number.MAX_SAFE_INTEGER
-	//取最短的字符串
-	for (let str of strs) minLen = Math.min(minLen, str.length)
-
-	const isCommonPrefix = (strs, len) => {
-		const curPrefix = strs[0].substring(0, len)
-		for (let i = 1, count = strs.length; i < count; i++) {
-			for (let j = 0; j < len; j++) {
-				if (curPrefix.charAt(j) !== strs[i].charAt(j)) return false
-			}
-		}
-		return true
-	}
-
-	let left = 0,
-		right = minLen,
-		mid
-
-	while (left < right) {
-		mid = Math.floor(left + (right - left + 1) / 2)
-		if (isCommonPrefix(strs, mid)) {
-			left = mid
-		} else {
-			right = mid - 1
-		}
-	}
-	return strs[0].substring(0, left)
-}
 ```
 
 ### [58. ==最后一个单词的长度==](https://leetcode-cn.com/problems/length-of-last-word/)
@@ -104,13 +70,13 @@ var longestCommonPrefix = function (strs) {
 var lengthOfLastWord = function (s) {
 	const len = s.length
 	if (len === 0) return 0
-	let idx = len - 1
-	while (idx >= 0 && s[idx] === ' ') idx--
-	if (idx < 0) return 0
+	let i = len - 1
+	while (i >= 0 && s[i] === ' ') i--
+	if (i < 0) return 0
   let ret = 0
-	while (idx >= 0 && s[idx] !== ' ') {
+	while (i >= 0 && s[i] !== ' ') {
     ret++
-    idx--
+    i--
   }
 	return ret
 }
@@ -179,7 +145,9 @@ var reverseString = function (s) {
 	let l = 0,
 		r = s.length - 1
 	while (l < r) {
-		;[s[l++], s[r--]] = [s[r], s[l]]
+		;[s[l], s[r]] = [s[r], s[l]]
+    l++
+    r--
 	}
 	return s
 }
@@ -314,11 +282,11 @@ var repeatedSubstringPattern = function (s) {
 
 ```javascript {.line-numbers}
 var reverseStr = function (s, k) {
-	const arr = s.split('')
-	for (let start = 0; start < arr.length; start += 2 * k) {
+	const arr = s.split(''),
+		len = arr.length
+	for (let start = 0; start < len; start += 2 * k) {
 		let i = start,
-       //
-			j = Math.min(start + k - 1, arr.length)
+			j = Math.min(start + k - 1, len)
 		while (i < j) {
 			;[arr[i++], arr[j--]] = [arr[j], arr[i]]
 		}
@@ -327,7 +295,7 @@ var reverseStr = function (s, k) {
 }
 ```
 
-### [557. ==反转字符串中的单词 III==](https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/)
+### [557. 反转字符串中的单词 III](https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/)
 
 ```javascript {.line-numbers}
 //自己写split和reverse
@@ -359,7 +327,6 @@ var reverseWords = function (s) {
 	for (let word of words) {
 		ret += myReverse(word) + ' '
 	}
-
 	return ret.substring(0, ret.length - 1)
 }
 
@@ -460,14 +427,27 @@ var toLowerCase = function (str) {
 ### [917. ==仅仅反转字母==](https://leetcode-cn.com/problems/reverse-only-letters/)
 
 ```javascript {.line-numbers}
+//two point
+var reverseOnlyLetters = function (s) {
+	const len = s.length
+	const arr = [...s]
+	let left = 0,
+		right = len - 1
+	while (true) {
+		while (left < right && !/^[a-zA-Z]+$/.test(s[left])) left++
+		while (right > left && !/^[a-zA-Z]+$/.test(s[right])) right--
+		if (left >= right) break
+		;[arr[left++], arr[right--]] = [arr[right], arr[left]]
+	}
+	return arr.join('')
+}
+
 //use stack
 var reverseOnlyLetters = function (S) {
-	let stack = []
+	const stack = []
 
 	for (let c of S) {
-		if (/[a-zA-Z]/.test(c)) {
-			stack.push(c)
-		}
+		if (/[a-zA-Z]/.test(c)) stack.push(c)
 	}
 
 	let ret = ''
@@ -476,25 +456,6 @@ var reverseOnlyLetters = function (S) {
 			ret += stack.pop()
 		} else {
 			ret += c
-		}
-	}
-	return ret
-}
-
-//反向指针
-var reverseOnlyLetters = function (S) {
-	function isLetter(letter) {
-		return /[a-zA-Z]/.test(letter)
-	}
-	let ret = '',
-		end = S.length - 1
-
-	for (let i = 0; i < S.length; i++) {
-		if (isLetter(S[i])) {
-			while (!isLetter(S[end])) end--
-			ret += S[end--]
-		} else {
-			ret += S[i]
 		}
 	}
 	return ret

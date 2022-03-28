@@ -14,7 +14,7 @@
 
 - height of node：叶子节点到该节点的最长路径，根节点的高度为树的高度
 
-- depth of node：从根节点到该节点所经历的边的个数（高度和深度是相反的，高度是从下往上数，深度是从上往下，因此根节点的深度和叶子节点的高度都是 0）
+- depth of node：从根节点到该节点所经历的边的个数（根节点的深度和叶子节点的高度都是 0）
 
 - width
 
@@ -62,7 +62,7 @@
 
 ![](./images/Tree.png)
 
-## 1 Binary Tree Traversal
+## Binary Tree Traversal
 
 ### Preorder/Inorder/Postorder
 
@@ -83,20 +83,21 @@ var preorderTraversal = function (root) {
 }
 
 //common template
-var preorderTraversal = function (root) {
-	const res = []
-	const stack = []
+const preorderTraversal = (root) => {
+	const ret = [],
+		stack = []
 	while (root || stack.length > 0) {
 		while (root) {
-			res.push(root.val)
+			ret.push(root.val)
 			stack.push(root)
 			root = root.left
 		}
 		root = stack.pop()
 		root = root.right
 	}
-	return res
+	return ret
 }
+
 
 //iteration. use stack
 var preorderTraversal = function (root) {
@@ -321,8 +322,8 @@ var postorder = function (root) {
 //BFS iteration, use queue
 //层用queue
 var levelOrder = function (root) {
-	const ret = []
-	const queue = []
+	const ret = [],
+		queue = []
 
 	root && queue.push(root)
 	while (queue.length > 0) {
@@ -398,28 +399,26 @@ var levelOrder = function (root) {
 
 ```javascript {.line-numbers}
 var zigzagLevelOrder = function (root) {
-	const queue = [],
-		ret = []
+	const ret = [],
+		queue = []
+
 	root && queue.push(root)
 	let direction = true
 	while (queue.length > 0) {
 		const size = queue.length,
 			curLevel = []
 		for (let i = 0; i < size; i++) {
-			const curNode = queue.shift()
-			if (direction) {
-				curLevel.push(curNode.val)
-			} else {
-				curLevel.unshift(curNode.val)
-			}
-			if (curNode.left) queue.push(curNode.left)
-			if (curNode.right) queue.push(curNode.right)
+			const cur = queue.shift()
+			direction ? curLevel.push(cur.val) : curLevel.unshift(cur.val)
+			if (cur.left) queue.push(cur.left)
+			if (cur.right) queue.push(cur.right)
 		}
-		ret.push(curLevel)
 		direction = !direction
+		ret.push(curLevel)
 	}
 	return ret
 }
+
 ```
 
 ##### [515.==在每个树行中找最大值==](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
@@ -427,8 +426,8 @@ var zigzagLevelOrder = function (root) {
 ```javascript {.line-numbers}
 //bfs
 var largestValues = function (root) {
-	const ret = []
-	const queue = []
+	const ret = [],
+		queue = []
 	root && queue.push(root)
 	while (queue.length > 0) {
 		const size = queue.length
@@ -449,9 +448,7 @@ var largestValues = function (root) {
 	const ret = []
 	const dfs = (root, level, ret) => {
 		if (!root) return
-		//hole!!! node's value maybe null
-		//hole!!! node's value maybe null
-		//hole!!! node's value maybe null
+		//hole!!! node's value maybe null, so can not code like if (!ret[level])
 		if (ret[level] === undefined) ret[level] = root.val
 		ret[level] = Math.max(ret[level], root.val)
 		dfs(root.left, level + 1, ret)
@@ -552,7 +549,7 @@ var verticalTraversal = function (root) {
 }
 ```
 
-## 2 BST
+## BST
 
 ### CRUD
 
@@ -561,7 +558,7 @@ var verticalTraversal = function (root) {
 ```javascript {.line-numbers}
 //tricky
 var isValidBST = function (root) {
-	let helper = (root, lower, upper) => {
+	const helper = (root, lower, upper) => {
 		if (!root) return true
 		if (root.val <= lower || root.val >= upper) return false
 		return (
@@ -584,6 +581,8 @@ var isValidBST = function (root) {
 		}
 		root = stack.pop()
 		if (root.val <= prev) return false
+    //update prev
+    //if store root, prev.val maybe throw error
 		prev = root.val
 		root = root.right
 	}
@@ -594,8 +593,8 @@ var isValidBST = function (root) {
 ##### [99.恢复二叉搜索树](https://leetcode-cn.com/problems/recover-binary-search-tree/)
 
 ```javascript {.line-numbers}
-// use array
 // interview version
+// use array
 // O(n) - O(h)
 var recoverTree = function (root) {
 	const stack = []
@@ -842,7 +841,6 @@ var sortedListToBST = function (head) {
 ```javascript {.line-numbers}
 var kthSmallest = function (root, k) {
 	const stack = []
-
 	while (true) {
 		while (root) {
 			stack.push(root)
@@ -890,7 +888,7 @@ var convertBST = function (root) {
 }
 ```
 
-## 3 DFS/BFS
+## DFS/BFS
 
 ##### [100.相同的树](https://leetcode-cn.com/problems/same-tree/)
 
@@ -928,12 +926,12 @@ var isSymmetric = function (root) {
 	if (!root) return true
 	const queue = [root, root]
 	while (queue.length) {
-		//每次两个两个对比
+		//每次两两对比
 		const left = queue.shift()
 		const right = queue.shift()
 		if (left && right) {
 			if (left.val !== right.val) return false
-			//放的时候也是两个两个放
+			//放的时候也是两两放
 			queue.push(left.left, right.right)
 			queue.push(left.right, right.left)
 		} else if (left || right) {
@@ -957,7 +955,7 @@ var invertTree = function (root) {
 	return root
 }
 
-//bfs自上往下
+//bfs 自上往下
 var invertTree = function (root) {
 	if (root == null) return root
 	const queue = [root]
@@ -1009,7 +1007,8 @@ var minDepth = function (root) {
 	if (!root) return 0
 	const minLeftDepth = minDepth(root.left)
 	const minRightDepth = minDepth(root.right)
-
+  // if (minLeftDepth && minRightDepth) return Math.min(minLeftDepth, minRightDepth) + 1
+  // return minLeftDepth === 0 ? minRightDepth : minLeftDepth
 	return minLeftDepth === 0 || minRightDepth === 0
 		? minLeftDepth + minRightDepth + 1
 		: Math.min(minLeftDepth, minRightDepth) + 1
@@ -1217,36 +1216,6 @@ var lowestCommonAncestor = function (root, p, q) {
 	//return left === null ? right : left
 	return left === null ? right : right === null ? left : root
 }
-
-var lowestCommonAncestor = function (root, p, q) {
-	//store left/right son map root
-	const parent = new Map()
-	const visited = new Set()
-
-	const dfs = (root) => {
-		if (root.left) {
-			parent.set(root.left.val, root)
-			dfs(root.left)
-		}
-		if (root.right) {
-			parent.set(root.right.val, root)
-			dfs(root.right)
-		}
-	}
-
-	dfs(root)
-	while (p != null) {
-		visited.add(p.val)
-		p = parent.get(p.val)
-	}
-	while (q != null) {
-		if (visited.has(q.val)) {
-			return q
-		}
-		q = parent.get(q.val)
-	}
-	return null
-}
 ```
 
 ##### [1123.最深叶节点的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-deepest-leaves/)
@@ -1298,7 +1267,7 @@ var findDuplicateSubtrees = function (root) {
 }
 ```
 
-## 4 Path Sum
+## Path Sum
 
 ##### [404.左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
 
@@ -1327,6 +1296,7 @@ var sumOfLeftLeaves = function (root) {
 ```javascript {.line-numbers}
 var hasPathSum = function (root, sum) {
 	if (!root) return false
+  //走到底
 	if (!root.left && !root.right) return root.val === sum
 	return (
 		hasPathSum(root.left, sum - root.val) ||
@@ -1340,6 +1310,7 @@ var hasPathSum = function (root, sum) {
 ```javascript {.line-numbers}
 //backtrack
 var pathSum = function (root, sum) {
+  const ret = []
 	const dfs = (root, sum, path) => {
 		if (!root) return
 		path.push(root.val)
@@ -1347,10 +1318,9 @@ var pathSum = function (root, sum) {
 		if (!root.left && !root.right && sum === root.val) ret.push([...path])
 		dfs(root.left, sum - root.val, path)
 		dfs(root.right, sum - root.val, path)
-		//backtrack current node
+		//backtrack
 		path.pop()
 	}
-	const ret = []
 	dfs(root, sum, [])
 	return ret
 }
@@ -1409,7 +1379,7 @@ var sumNumbers = function (root, preSum) {
 }
 ```
 
-## 5 Serialize/Deserialize
+## Serialize/Deserialize
 
 ##### [105.==从前序与中序遍历序列构造二叉树==](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
@@ -1417,17 +1387,13 @@ var sumNumbers = function (root, preSum) {
 var buildTree = function (preorder, inorder) {
 	const preLen = preorder.length,
 		inLen = inorder.length
-
 	if (preLen !== inLen) throw new TypeError('invalid params')
-
 	const map = new Map()
-
+  
 	//space for time
 	//get inorder idx from pre value
-	//note question: no same value Node, which means can form a specific tree
-	for (let i = 0; i < inLen; i++) {
-		map.set(inorder[i], i)
-	}
+	//note question: no same value Node, which means can form just one specific tree
+	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
 
 	return dfs(preorder, 0, preLen - 1, map, 0, inLen - 1)
 
@@ -1465,17 +1431,13 @@ var buildTree = function (preorder, inorder) {
 var buildTree = function (inorder, postorder) {
 	const inLen = inorder.length,
 		postLen = postorder.length
-
 	if (inLen !== postLen) throw new TypeError('invalid params')
-
 	const map = new Map()
 
 	//space for time
 	//get root idx in inorder
 	//note question: no same value Node, which means can form a specific tree
-	for (let i = 0; i < inLen; i++) {
-		map.set(inorder[i], i)
-	}
+	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
 
 	return helper(postorder, 0, postLen - 1, map, 0, inLen - 1)
 

@@ -12,23 +12,24 @@ var isValid = function (s) {
 
 //O(n) - O(n)
 var isValid = function (s) {
-	if ((s.length & 1) === 1) return false
+	if (s.length % 2 === 1) return false
 	const map = {
 			'(': ')',
 			'[': ']',
 			'{': '}',
 		},
 		stack = []
+
 	for (let c of s) {
 		if (map[c]) {
 			stack.push(map[c])
 		} else {
-			//included empty condition
 			if (c !== stack.pop()) return false
 		}
 	}
 	return stack.length === 0
 }
+
 ```
 
 ### [32.最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
@@ -152,8 +153,8 @@ var trap = function (height) {
 	//两边无法接雨水
 	for (let i = 1; i < len - 1; i++) {
 		//two pointer
-		let leftMax = 0,
-			rightMax = 0
+		let leftMax = -Infinity,
+			rightMax = -Infinity
 		//找到左边的最高柱
 		for (let j = i; j >= 0; j--) {
 			leftMax = Math.max(leftMax, height[j])
@@ -192,33 +193,30 @@ var trap = function (height) {
 	return ret
 }
 
-//two pointer O(n) - O(1)
+// two pointer O(n) - O(1)
+// best version
 var trap = function (height) {
 	const len = height.length
 	if (len === 0) return 0
-	let left = 0,
-		right = len - 1,
-		ret = 0
-
-	let l_max = height[0],
-		r_max = height[len - 1]
-
-	while (left < right) {
-		l_max = Math.max(l_max, height[left])
-		r_max = Math.max(r_max, height[right])
-
-		if (l_max < r_max) {
-			ret += l_max - height[left]
-			left++
+	let l = 0,
+		r = len - 1,
+		ret = 0,
+		lMax = -Infinity,
+		rMax = -Infinity
+	while (l < r) {
+		lMax = Math.max(lMax, height[l])
+		rMax = Math.max(rMax, height[r])
+		if (lMax < rMax) {
+			ret += lMax - height[l++]
 		} else {
-			ret += r_max - height[right]
-			right--
+			ret += rMax - height[r--]
 		}
 	}
 	return ret
 }
 
 //单调递减栈 O(n) - O(n)
+//积水职能在低洼处形成，当后面的柱子高度比前面的低时是无法接雨水的，所以使用单调递减栈存储可能储水的柱子，当找到一根比前面高的柱子时就可以计算出接到的雨水
 var trap = function (height) {
 	const len = height.length
 	if (len === 0) return 0
@@ -228,7 +226,9 @@ var trap = function (height) {
 	while (i < len) {
 		while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
 			const val = stack.pop()
+      //没有左边界则退出
 			if (stack.length === 0) break
+      //计算右边与“当前”栈顶左边界的距离
 			const distance = i - stack[stack.length - 1] - 1
 			const boundedHeight =
 				Math.min(height[i], height[stack[stack.length - 1]]) - height[val]
@@ -245,18 +245,18 @@ var trap = function (height) {
 ```javascript {.line-numbers}
 //brute force O(n^2)
 //固定宽 两重循环
+
 //固定高 一重循环，向两边扫求最长底边
 var largestRectangleArea = function (heights) {
 	const len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
 	let ret = 0
-	//枚举高
+	//枚高
 	for (let i = 0; i < len; i++) {
 		const height = heights[i]
-		let left = i,
-			right = i
-		// 确定左右边界
+		let left = i, right = i
+		// 从当前柱子高往两边确定左右边界
 		while (left - 1 >= 0 && heights[left - 1] >= height) left--
 		while (right + 1 < len && heights[right + 1] >= height) right++
 		ret = Math.max(ret, (right - left + 1) * height)
@@ -270,11 +270,10 @@ var largestRectangleArea = function (heights) {
 	const len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
-	//每根柱子即每个i对应的左、右端点坐标
-	const left = new Array(len)
-	const right = new Array(len)
-
-	const stack = new Array()
+	//每根柱子即每个i对应的左右端点坐标
+	const left = new Array(len),
+		right = new Array(len),
+		stack = new Array()
 	for (let i = 0; i < len; i++) {
 		while (stack.length > 0 && heights[stack[stack.length - 1]] >= heights[i])
 			stack.pop()
@@ -368,13 +367,12 @@ var decodeString = function (s) {
 		if (c === ']') {
 			let repeatStr = '',
 				repeatCount = ''
-			while (stack.length > 0 && stack[stack.length - 1] !== '[') {
+			while (stack.length > 0 && stack[stack.length - 1] !== '[')
 				repeatStr = stack.pop() + repeatStr
-			}
+			//pop [
 			stack.pop()
-			while (stack.length > 0 && isNumber(stack[stack.length - 1])) {
+			while (stack.length > 0 && isNumber(stack[stack.length - 1]))
 				repeatCount = stack.pop() + repeatCount
-			}
 			stack.push(repeatStr.repeat(+repeatCount))
 		} else {
 			stack.push(c)

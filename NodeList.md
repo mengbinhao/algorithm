@@ -36,7 +36,7 @@ temp = 待插入位置的前驱节点.next
 
 ```javascript {.line-numbers}
 var addTwoNumbers = function (l1, l2) {
-	const dummyNode = new ListNode(0)
+	const dummyNode = new ListNode(-1)
 	let p1 = l1,
 		p2 = l2,
 		cur = dummyNode,
@@ -47,7 +47,7 @@ var addTwoNumbers = function (l1, l2) {
 		const sum = x + y + carry
 		carry = sum >= 10 ? 1 : 0
 		cur.next = new ListNode(sum % 10)
-		// below move forward
+		// update cur
 		cur = cur.next
 		if (p1 !== null) p1 = p1.next
 		if (p2 !== null) p2 = p2.next
@@ -64,7 +64,7 @@ var addTwoNumbers = function (l1, l2) {
 //O(n) - O(1)
 //fast slow pointer
 var removeNthFromEnd = function (head, n) {
-	const dummyNode = new ListNode(0)
+	const dummyNode = new ListNode(-1)
 	dummyNode.next = head
 	let fast = dummyNode,
 		slow = dummyNode
@@ -88,39 +88,39 @@ var removeNthFromEnd = function (head, n) {
 
 ```javascript {.line-numbers}
 //iteration
-var mergeTwoLists = function (l1, l2) {
+var mergeTwoLists = function (list1, list2) {
 	const dummyNode = new ListNode(-1)
 	let prev = dummyNode
-	while (l1 && l2) {
-		if (l1.val < l2.val) {
-			prev.next = l1
-			l1 = l1.next
+	while (list1 && list2) {
+		if (list1.val < list2.val) {
+			prev.next = list1
+			list1 = list1.next
 		} else {
-			prev.next = l2
-			l2 = l2.next
+			prev.next = list2
+			list2 = list2.next
 		}
-		//move prev
+    //update prev
 		prev = prev.next
 	}
-	//合并后 l1 和 l2 最多只有一个还未被合并完,我们直接将链表末尾指向未合并完的链表即可
-	prev.next = l1 || l2
+  //合并后 l1 和 l2 最多只有一个还未被合并完,我们直接将链表末尾指向未合并完的链表即可
+	prev.next = list1 || list2
 	return dummyNode.next
 }
 
 //recursion
-var mergeTwoLists = function (l1, l2) {
-	if (l1 == null) {
-		return l2
-	} else if (l2 == null) {
-		return l1
-	} else if (l1.val < l2.val) {
-		l1.next = mergeTwoLists(l1.next, l2)
+var mergeTwoLists = function (list1, list2) {
+	if (list1 == null) {
+		return list2
+	} else if (list2 == null) {
+		return list1
+	} else if (list1.val < list2.val) {
+		list1.next = mergeTwoLists(list1.next, list2)
 		//返回当前递归的头结点
-		return l1
+		return list1
 	} else {
-		l2.next = mergeTwoLists(l1, l2.next)
+		list2.next = mergeTwoLists(list1, list2.next)
 		//返回当前递归的头结点
-		return l2
+		return list2
 	}
 }
 ```
@@ -170,7 +170,7 @@ var mergeKLists = function (lists) {
 		}
 	})
 
-	const dummyNode = new ListNode(0)
+	const dummyNode = new ListNode(-1)
 	cur = dummyNode
 	let node
 
@@ -218,7 +218,7 @@ var mergeKLists = function (lists) {
 ```javascript {.line-numbers}
 //iteration, three pointer  O(n) - O(1)
 var swapPairs = function (head) {
-	const dummyNode = new ListNode(0)
+	const dummyNode = new ListNode(-1)
 	;(dummyNode.next = head), (cur = dummyNode)
 
 	//够2个才换
@@ -269,7 +269,7 @@ const myReverse = (head, tail) => {
 }
 
 var reverseKGroup = function (head, k) {
-	const dummyNode = new ListNode(0)
+	const dummyNode = new ListNode(-1)
 	dummyNode.next = head
 	let pre = dummyNode
 
@@ -295,7 +295,7 @@ var reverseKGroup = function (head, k) {
 
 var reverseKGroup = function (head, k) {
 	// 标兵
-	let dummy = new ListNode()
+	let dummy = new ListNode(-1)
 	dummy.next = head
 	let [start, end] = [dummy, dummy.next]
 	let count = 0
@@ -362,7 +362,7 @@ var rotateRight = function (head, k) {
 ```javascript {.line-numbers}
 var deleteDuplicates = function (head) {
 	if (!head) return head
-	const dummy = new ListNode(0)
+	const dummy = new ListNode(-1)
 	dummy.next = head
 	let cur = dummy
 	while (cur.next && cur.next.next) {
@@ -400,8 +400,8 @@ var deleteDuplicates = function (head) {
 ```javascript {.line-numbers}
 //O(n) - O(1)
 var partition = function (head, x) {
-	const dummyBefore = new ListNode(0),
-		dummyAfter = new ListNode(0)
+	const dummyBefore = new ListNode(-1),
+		dummyAfter = new ListNode(-1)
 	let before = dummyBefore,
 		after = dummyAfter
 	//build before List and after List
