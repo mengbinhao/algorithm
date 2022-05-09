@@ -13,23 +13,22 @@ var isValid = function (s) {
 //O(n) - O(n)
 var isValid = function (s) {
 	if (s.length % 2 === 1) return false
-	const map = {
+	const stack = [],
+		hash = {
 			'(': ')',
 			'[': ']',
 			'{': '}',
-		},
-		stack = []
+		}
 
 	for (let c of s) {
-		if (map[c]) {
-			stack.push(map[c])
+		if (hash[c]) {
+			stack.push(hash[c])
 		} else {
 			if (c !== stack.pop()) return false
 		}
 	}
 	return stack.length === 0
 }
-
 ```
 
 ### [32.最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
@@ -148,23 +147,20 @@ var longestValidParentheses = function (s) {
 ```javascript
 //brute force O(n^2) - O(1)
 var trap = function (height) {
-	let ret = 0
 	const len = height.length
+	if (len === 0) return 0
+	let ret = 0
 	//两边无法接雨水
 	for (let i = 1; i < len - 1; i++) {
-		//two pointer
-		let leftMax = -Infinity,
-			rightMax = -Infinity
-		//找到左边的最高柱
+		let lMax = -Infinity,
+			rMax = -Infinity
 		for (let j = i; j >= 0; j--) {
-			leftMax = Math.max(leftMax, height[j])
+			lMax = Math.max(lMax, height[j])
 		}
-		//找到右边的最高柱
 		for (let j = i; j < len; j++) {
-			rightMax = Math.max(rightMax, height[j])
+			rMax = Math.max(rMax, height[j])
 		}
-		//计算每个height[i]能接到的雨水，并加到最终结果
-		ret += Math.min(leftMax, rightMax) - height[i]
+		ret += Math.min(lMax, rMax) - height[i]
 	}
 	return ret
 }
@@ -172,6 +168,7 @@ var trap = function (height) {
 //备忘录优化 dp O(n) - O(n)
 var trap = function (height) {
 	const len = height.length
+	if (len === 0) return 0
 	let ret = 0,
 		//提前存储每个height[i]对应的左右最大值
 		leftMax = [],
@@ -182,6 +179,7 @@ var trap = function (height) {
 		//leftMax会传递
 		leftMax[i] = Math.max(height[i], leftMax[i - 1])
 	}
+
 	rightMax[len - 1] = height[len - 1]
 	for (let i = len - 2; i >= 0; i--) {
 		rightMax[i] = Math.max(height[i], rightMax[i + 1])
@@ -204,6 +202,7 @@ var trap = function (height) {
 		lMax = -Infinity,
 		rMax = -Infinity
 	while (l < r) {
+		//会传递
 		lMax = Math.max(lMax, height[l])
 		rMax = Math.max(rMax, height[r])
 		if (lMax < rMax) {
@@ -216,7 +215,7 @@ var trap = function (height) {
 }
 
 //单调递减栈 O(n) - O(n)
-//积水职能在低洼处形成，当后面的柱子高度比前面的低时是无法接雨水的，所以使用单调递减栈存储可能储水的柱子，当找到一根比前面高的柱子时就可以计算出接到的雨水
+//积水只能在低洼处形成，当后面的柱子高度比前面的低时是无法接雨水的，所以使用单调递减栈存储可能储水的柱子，当找到一根比前面高的柱子时就可以计算出能接到的雨水
 var trap = function (height) {
 	const len = height.length
 	if (len === 0) return 0
@@ -226,9 +225,9 @@ var trap = function (height) {
 	while (i < len) {
 		while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
 			const val = stack.pop()
-      //没有左边界则退出
+			//没有左边界则退出
 			if (stack.length === 0) break
-      //计算右边与“当前”栈顶左边界的距离
+			//计算右边与当前栈顶左边界的距离,即弹出上面那个val后的栈顶
 			const distance = i - stack[stack.length - 1] - 1
 			const boundedHeight =
 				Math.min(height[i], height[stack[stack.length - 1]]) - height[val]
@@ -255,7 +254,8 @@ var largestRectangleArea = function (heights) {
 	//枚高
 	for (let i = 0; i < len; i++) {
 		const height = heights[i]
-		let left = i, right = i
+		let left = i,
+			right = i
 		// 从当前柱子高往两边确定左右边界
 		while (left - 1 >= 0 && heights[left - 1] >= height) left--
 		while (right + 1 < len && heights[right + 1] >= height) right++
@@ -328,30 +328,27 @@ var largestRectangleArea = function (heights) {
 ```javascript {.line-numbers}
 var evalRPN = function (tokens) {
 	const stack = []
-	for (let i = 0, len = tokens.length; i < len; i++) {
-		const val = tokens[i]
-		if (isNumber(val)) {
-			stack.push(parseInt(val))
+	const isOperator = (token) => ['+', '-', '*', '/'].includes(token)
+	let ret
+	for (let token of tokens) {
+		if (!isOperator(token)) {
+			stack.push(token)
 		} else {
-			const n2 = stack.pop()
-			const n1 = stack.pop()
-			if (val === '+') {
-				stack.push(n1 + n2)
-			} else if (val === '-') {
-				stack.push(n1 - n2)
-			} else if (val === '*') {
-				stack.push(n1 * n2)
-			} else if (val === '/') {
-				stack.push(n1 / n2 > 0 ? Math.floor(n1 / n2) : Math.ceil(n1 / n2))
+			const r = +stack.pop()
+			const l = +stack.pop()
+			if (token === '+') {
+				ret = l + r
+			} else if (token === '-') {
+				ret = l - r
+			} else if (token === '*') {
+				ret = l * r
+			} else if (token === '/') {
+				ret = l / r
 			}
+			stack.push(parseInt(ret))
 		}
 	}
-
 	return stack.pop()
-
-	function isNumber(val) {
-		return !(val === '+' || val === '-' || val === '*' || val === '/')
-	}
 }
 ```
 
