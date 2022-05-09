@@ -1,11 +1,26 @@
-var findTheWinner = function (n, k) {
-	const queue = []
-	for (let i = 1; i <= n; i++) queue.push(i)
-	while (queue.length > 1) {
-		for (let i = 1; i < k; i++) queue.push(queue.shift())
-		queue.shift()
+var rotateRight = function (head, k) {
+	if (k === 0 || !head || !head.next) return head
+	let len = 1,
+		cur = head
+	//get lenth
+	while (cur.next) {
+		cur = cur.next
+		len++
 	}
-	return queue[0]
+	// 当k大于长度时, 又是一个轮回, 所以对长度取余
+	const num = k % len
+	if (num === 0) return head
+	//form ring
+	cur.next = head
+	let index = 1,
+		newTail = head
+	//find new tail
+	while (index < len - num) {
+		newTail = newTail.next
+		index++
+	}
+	const newHead = newTail.next
+	//break ring
+	newTail.next = null
+	return newHead
 }
-
-findTheWinner(5, 2)

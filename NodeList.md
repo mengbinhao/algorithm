@@ -61,27 +61,52 @@ var addTwoNumbers = function (l1, l2) {
 ### [19. ==删除链表的倒数第 N 个节点==](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
 
 ```javascript {.line-numbers}
-//O(n) - O(1)
-//fast slow pointer
+//basic version
 var removeNthFromEnd = function (head, n) {
 	const dummyNode = new ListNode(-1)
 	dummyNode.next = head
-	let fast = dummyNode,
-		slow = dummyNode
-
-	//移完后fast和slow的距离是n
-	while (n >= 0) {
-		fast = fast.next
-		n--
+	const len = getLength(head)
+	let cur = dummyNode
+	for (let i = 1; i < len - n + 1; i++) {
+		cur = cur.next
 	}
-	//同步走，走到要删除节点的前驱节点
-	while (fast) {
-		fast = fast.next
-		slow = slow.next
-	}
-	slow.next = slow.next.next
+	cur.next = cur.next.next
 	return dummyNode.next
+
+	function getLength(head) {
+		let len = 0
+		while (head) {
+			head = head.next
+			len++
+		}
+		return len
+	}
 }
+
+//O(n) - O(1)
+//fast slow pointer
+var removeNthFromEnd = function(head, n) {
+  const dummyNode = new ListNode(-1)
+  dummyNode.next = head
+  let fast = dummyNode
+  //移完后fast和slow的距离是n
+  while (n >= 0) {
+    fast = fast.next
+    n--
+  }
+
+  //说明要删除的是头结点
+  if (!fast) return head.next
+
+  let slow = dummyNode
+  //同步走，slow走到要删除节点的前驱节点
+  while (fast) {
+    fast = fast.next
+    slow = slow.next
+  }
+  slow.next = slow.next.next
+  return dummyNode.next
+};
 ```
 
 ### [21. ==合并两个有序链表==](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
@@ -222,7 +247,7 @@ var swapPairs = function (head) {
 	;(dummyNode.next = head), (cur = dummyNode)
 
 	//够2个才换
-	while (cur.next !== null && cur.next.next !== null) {
+	while (cur.next && cur.next.next) {
 		const first = cur.next
 		const second = cur.next.next
 
@@ -245,7 +270,6 @@ var swapPairs = function (head) {
 		second = head.next
 	// first连接后面交换完成的子链表
 	first.next = swapPairs(second.next)
-	// second 连接 first
 	second.next = first
 	// 返回当前层交换完的子链表,second变成了头结点
 	return second
@@ -334,14 +358,17 @@ var rotateRight = function (head, k) {
 	if (k === 0 || !head || !head.next) return head
 	let len = 1,
 		cur = head
+	//get lenth
 	while (cur.next) {
 		cur = cur.next
 		len++
 	}
-	//form ring
-	cur.next = head
 	// 当k大于长度时, 又是一个轮回, 所以对长度取余
 	const num = k % len
+  // 不需要旋转
+	if (num === 0) return head
+	//form ring
+	cur.next = head
 	let index = 1,
 		newTail = head
 	//find new tail
@@ -349,12 +376,12 @@ var rotateRight = function (head, k) {
 		newTail = newTail.next
 		index++
 	}
-	//new head
 	const newHead = newTail.next
 	//break ring
 	newTail.next = null
 	return newHead
 }
+
 ```
 
 ### [82. 删除排序链表中的重复元素 II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)
@@ -630,14 +657,14 @@ var insertionSortList = function (head) {
 			lastSorted = lastSorted.next
 		} else {
 			let prev = dummyHead
-			while (prev.next.val <= cur.val) {
-				prev = prev.next
-			}
-			//下面三行调整节点
+      //从前找prev
+			while (prev.next.val <= cur.val) prev = prev.next
+			//插入到该插入的位置
 			lastSorted.next = cur.next
 			cur.next = prev.next
 			prev.next = cur
 		}
+    //update cur
 		cur = lastSorted.next
 	}
 	return dummyHead.next
@@ -653,7 +680,7 @@ var reverseList = function (head) {
 		cur = head,
 		next
 
-	while (cur) {
+	while (cur) {+
 		next = cur.next
 		//change pointer ..3->2->1->null
 		cur.next = prev
@@ -675,6 +702,7 @@ var reverseList = function (head) {
 	head.next.next = head
 	//cut the ring
 	head.next = null
+  //原本的tail变成了head，一直返回tail就是要求输出的head
 	return tail
 }
 ```
