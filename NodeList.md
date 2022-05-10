@@ -63,21 +63,18 @@ var addTwoNumbers = function (l1, l2) {
 ```javascript {.line-numbers}
 //basic version
 var removeNthFromEnd = function (head, n) {
-	const dummyNode = new ListNode(-1)
-	dummyNode.next = head
-	const len = getLength(head)
+	const dummyNode = new ListNode(-1, head)
+	const len = getLen(head)
 	let cur = dummyNode
-	for (let i = 1; i < len - n + 1; i++) {
-		cur = cur.next
-	}
+	for (let i = 0; i < len - n; i++) cur = cur.next
 	cur.next = cur.next.next
 	return dummyNode.next
 
-	function getLength(head) {
+	function getLen(head) {
 		let len = 0
 		while (head) {
-			head = head.next
 			len++
+			head = head.next
 		}
 		return len
 	}
@@ -85,28 +82,24 @@ var removeNthFromEnd = function (head, n) {
 
 //O(n) - O(1)
 //fast slow pointer
-var removeNthFromEnd = function(head, n) {
-  const dummyNode = new ListNode(-1)
-  dummyNode.next = head
-  let fast = dummyNode
-  //移完后fast和slow的距离是n
-  while (n >= 0) {
-    fast = fast.next
-    n--
-  }
-
-  //说明要删除的是头结点
-  if (!fast) return head.next
-
-  let slow = dummyNode
-  //同步走，slow走到要删除节点的前驱节点
-  while (fast) {
-    fast = fast.next
-    slow = slow.next
-  }
-  slow.next = slow.next.next
-  return dummyNode.next
-};
+var removeNthFromEnd = function (head, n) {
+	const dummyNode = new ListNode(-1, head)
+	let fast = (slow = dummyNode)
+	//移完后fast和slow的距离是n
+	while (n >= 0) {
+		fast = fast.next
+		n--
+	}
+	//说明要删除的是头结点
+	if (!fast) return head.next
+	//同步走，slow走到要删除节点的前驱节点
+	while (fast) {
+		fast = fast.next
+		slow = slow.next
+	}
+	slow.next = slow.next.next
+	return dummyNode.next
+}
 ```
 
 ### [21. ==合并两个有序链表==](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
@@ -243,8 +236,8 @@ var mergeKLists = function (lists) {
 ```javascript {.line-numbers}
 //iteration, three pointer  O(n) - O(1)
 var swapPairs = function (head) {
-	const dummyNode = new ListNode(-1)
-	;(dummyNode.next = head), (cur = dummyNode)
+	const dummyNode = new ListNode(-1, head)
+	let cur = dummyNode
 
 	//够2个才换
 	while (cur.next && cur.next.next) {
@@ -359,6 +352,7 @@ var rotateRight = function (head, k) {
 	let len = 1,
 		cur = head
 	//get lenth
+  //len initial is 1, so from cur.next begin loop
 	while (cur.next) {
 		cur = cur.next
 		len++
