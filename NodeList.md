@@ -36,12 +36,12 @@ temp = 待插入位置的前驱节点.next
 
 ```javascript {.line-numbers}
 var addTwoNumbers = function (l1, l2) {
-	const dummyNode = new ListNode(-1)
+	const dummyHead = new ListNode(-1)
 	let p1 = l1,
 		p2 = l2,
-		cur = dummyNode,
+		cur = dummyHead,
 		carry = 0
-	while (p1 !== null || p2 !== null) {
+	while (p1 || p2) {
 		const x = p1 !== null ? p1.val : 0
 		const y = p2 !== null ? p2.val : 0
 		const sum = x + y + carry
@@ -54,7 +54,7 @@ var addTwoNumbers = function (l1, l2) {
 	}
 	//最后的进位
 	if (carry === 1) cur.next = new ListNode(carry)
-	return dummyNode.next
+	return dummyHead.next
 }
 ```
 
@@ -63,12 +63,12 @@ var addTwoNumbers = function (l1, l2) {
 ```javascript {.line-numbers}
 //basic version
 var removeNthFromEnd = function (head, n) {
-	const dummyNode = new ListNode(-1, head)
+	const dummyHead = new ListNode(-1, head)
 	const len = getLen(head)
-	let cur = dummyNode
+	let cur = dummyHead
 	for (let i = 0; i < len - n; i++) cur = cur.next
 	cur.next = cur.next.next
-	return dummyNode.next
+	return dummyHead.next
 
 	function getLen(head) {
 		let len = 0
@@ -83,8 +83,8 @@ var removeNthFromEnd = function (head, n) {
 //O(n) - O(1)
 //fast slow pointer
 var removeNthFromEnd = function (head, n) {
-	const dummyNode = new ListNode(-1, head)
-	let fast = (slow = dummyNode)
+	const dummyHead = new ListNode(-1, head)
+	let fast = (slow = dummyHead)
 	//移完后fast和slow的距离是n
 	while (n >= 0) {
 		fast = fast.next
@@ -98,7 +98,7 @@ var removeNthFromEnd = function (head, n) {
 		slow = slow.next
 	}
 	slow.next = slow.next.next
-	return dummyNode.next
+	return dummyHead.next
 }
 ```
 
@@ -107,8 +107,8 @@ var removeNthFromEnd = function (head, n) {
 ```javascript {.line-numbers}
 //iteration
 var mergeTwoLists = function (list1, list2) {
-	const dummyNode = new ListNode(-1)
-	let prev = dummyNode
+	const dummyHead = new ListNode(-1)
+	let prev = dummyHead
 	while (list1 && list2) {
 		if (list1.val < list2.val) {
 			prev.next = list1
@@ -117,12 +117,12 @@ var mergeTwoLists = function (list1, list2) {
 			prev.next = list2
 			list2 = list2.next
 		}
-    //update prev
+		//update prev
 		prev = prev.next
 	}
-  //合并后 l1 和 l2 最多只有一个还未被合并完,我们直接将链表末尾指向未合并完的链表即可
+	//合并后 l1 和 l2 最多只有一个还未被合并完,我们直接将链表末尾指向未合并完的链表即可
 	prev.next = list1 || list2
-	return dummyNode.next
+	return dummyHead.next
 }
 
 //recursion
@@ -188,8 +188,8 @@ var mergeKLists = function (lists) {
 		}
 	})
 
-	const dummyNode = new ListNode(-1)
-	cur = dummyNode
+	const dummyHead = new ListNode(-1)
+	cur = dummyHead
 	let node
 
 	arr
@@ -199,7 +199,7 @@ var mergeKLists = function (lists) {
 			cur.next = node
 			cur = cur.next
 		})
-	return dummyNode.next
+	return dummyHead.next
 }
 
 //O(NlogK) - O(n) 分治
@@ -236,8 +236,8 @@ var mergeKLists = function (lists) {
 ```javascript {.line-numbers}
 //iteration, three pointer  O(n) - O(1)
 var swapPairs = function (head) {
-	const dummyNode = new ListNode(-1, head)
-	let cur = dummyNode
+	const dummyHead = new ListNode(-1, head)
+	let cur = dummyHead
 
 	//够2个才换
 	while (cur.next && cur.next.next) {
@@ -250,7 +250,7 @@ var swapPairs = function (head) {
 		//update cur
 		cur = cur.next.next
 	}
-	return dummyNode.next
+	return dummyHead.next
 }
 
 //recursion
@@ -261,7 +261,7 @@ var swapPairs = function (head) {
 	// 需要交换的两个节点是 head 和 head.next
 	const first = head,
 		second = head.next
-	// first连接后面交换完成的子链表
+	// first连接后面交换完成的子链表的头节点
 	first.next = swapPairs(second.next)
 	second.next = first
 	// 返回当前层交换完的子链表,second变成了头结点
@@ -286,9 +286,9 @@ const myReverse = (head, tail) => {
 }
 
 var reverseKGroup = function (head, k) {
-	const dummyNode = new ListNode(-1)
-	dummyNode.next = head
-	let pre = dummyNode
+	const dummyHead = new ListNode(-1)
+	dummyHead.next = head
+	let pre = dummyHead
 
 	while (head) {
 		let tail = pre
@@ -296,7 +296,7 @@ var reverseKGroup = function (head, k) {
 		for (let i = 0; i < k; ++i) {
 			tail = tail.next
 			if (!tail) {
-				return dummyNode.next
+				return dummyHead.next
 			}
 		}
 		const nex = tail.next
@@ -307,7 +307,7 @@ var reverseKGroup = function (head, k) {
 		pre = tail
 		head = tail.next
 	}
-	return dummyNode.next
+	return dummyHead.next
 }
 
 var reverseKGroup = function (head, k) {
@@ -352,14 +352,14 @@ var rotateRight = function (head, k) {
 	let len = 1,
 		cur = head
 	//get lenth
-  //len initial is 1, so from cur.next begin loop
+	//len initial is 1, so from cur.next begin loop， or cur.next = head throw null error
 	while (cur.next) {
 		cur = cur.next
 		len++
 	}
 	// 当k大于长度时, 又是一个轮回, 所以对长度取余
 	const num = k % len
-  // 不需要旋转
+	// 不需要旋转
 	if (num === 0) return head
 	//form ring
 	cur.next = head
@@ -375,7 +375,6 @@ var rotateRight = function (head, k) {
 	newTail.next = null
 	return newHead
 }
-
 ```
 
 ### [82. 删除排序链表中的重复元素 II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)
@@ -449,9 +448,9 @@ var partition = function (head, x) {
 ```javascript {.line-numbers}
 //loop once
 var reverseBetween = function (head, left, right) {
-	const dummyNode = new ListNode(-1)
-	dummyNode.next = head
-	let pre = dummyNode
+	const dummyHead = new ListNode(-1)
+	dummyHead.next = head
+	let pre = dummyHead
 	for (let i = 0; i < left - 1; i++) {
 		pre = pre.next
 	}
@@ -464,7 +463,7 @@ var reverseBetween = function (head, left, right) {
 		next.next = pre.next
 		pre.next = next
 	}
-	return dummyNode.next
+	return dummyHead.next
 }
 ```
 
@@ -600,6 +599,7 @@ var hasCycle = function (head) {
 	while (fast && fast.next) {
 		fast = fast.next.next
 		slow = slow.next
+		//先走再判断
 		if (fast === slow) return true
 	}
 	return false
@@ -639,10 +639,10 @@ var reorderList = function (head) {
 
 ```javascript {.line-numbers}
 var insertionSortList = function (head) {
-	if (head == null || head.next == null) return head
-
+	if (!head || !head.next) return head
 	const dummyHead = new ListNode(-1)
 	dummyHead.next = head
+  //默认第一个已经排序，从第二个结点开始比
 	let lastSorted = head,
 		cur = head.next
 
@@ -651,14 +651,14 @@ var insertionSortList = function (head) {
 			lastSorted = lastSorted.next
 		} else {
 			let prev = dummyHead
-      //从前找prev
+			//从前找prev
 			while (prev.next.val <= cur.val) prev = prev.next
 			//插入到该插入的位置
 			lastSorted.next = cur.next
 			cur.next = prev.next
 			prev.next = cur
 		}
-    //update cur
+		//update cur
 		cur = lastSorted.next
 	}
 	return dummyHead.next
