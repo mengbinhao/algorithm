@@ -558,11 +558,11 @@ var verticalTraversal = function (root) {
 ```javascript {.line-numbers}
 //tricky
 var isValidBST = function (root) {
-	const helper = (root, lower, upper) => {
+	const helper = (root, low, high) => {
 		if (!root) return true
-		if (root.val <= lower || root.val >= upper) return false
+		if (root.val <= low || root.val >= high) return false
 		return (
-			helper(root.left, lower, root.val) && helper(root.right, root.val, upper)
+			helper(root.left, low, root.val) && helper(root.right, root.val, high)
 		)
 	}
 	//扩展参数，向下传递

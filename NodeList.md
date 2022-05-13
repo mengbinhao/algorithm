@@ -84,7 +84,7 @@ var removeNthFromEnd = function (head, n) {
 //fast slow pointer
 var removeNthFromEnd = function (head, n) {
 	const dummyHead = new ListNode(-1, head)
-	let fast = (slow = dummyHead)
+	let fast = dummyHead, slow = dummyHead
 	//移完后fast和slow的距离是n
 	while (n >= 0) {
 		fast = fast.next
@@ -247,7 +247,6 @@ var swapPairs = function (head) {
 		first.next = second.next
 		second.next = first
 		cur.next = second
-		//update cur
 		cur = cur.next.next
 	}
 	return dummyHead.next
