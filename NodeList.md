@@ -639,8 +639,7 @@ var reorderList = function (head) {
 ```javascript {.line-numbers}
 var insertionSortList = function (head) {
 	if (!head || !head.next) return head
-	const dummyHead = new ListNode(-1)
-	dummyHead.next = head
+	const dummyHead = new ListNode(-1, head)
   //默认第一个已经排序，从第二个结点开始比
 	let lastSorted = head,
 		cur = head.next

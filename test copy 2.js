@@ -1,5 +1,5 @@
 var mergeTwoLists = function (list1, list2) {
-	const dummyHead = new ListNode(-1)
+	const dummyHead = ListNode(-1)
 	let prev = dummyHead
 	while (list1 && list2) {
 		if (list1.val < list2.val) {
