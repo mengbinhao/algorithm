@@ -649,7 +649,7 @@ var insertionSortList = function (head) {
 			lastSorted = lastSorted.next
 		} else {
 			let prev = dummyHead
-			//从前找prev
+			//从开始找prev
 			while (prev.next.val <= cur.val) prev = prev.next
 			//插入到该插入的位置
 			lastSorted.next = cur.next
