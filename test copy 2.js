@@ -1,16 +1,20 @@
-var mergeTwoLists = function (list1, list2) {
-	const dummyHead = ListNode(-1)
-	let prev = dummyHead
-	while (list1 && list2) {
-		if (list1.val < list2.val) {
-			prev.next = list1
-			list1 = list1.next
-		} else {
-			prev.next = list2
-			list2 = list2.next
+var zigzagLevelOrder = function (root) {
+	const ret = [],
+		queue = []
+	let direction = true
+	root && queue.push(root)
+
+	while (queue.length) {
+		const size = queue.length
+		const curLevel = []
+		for (let i = 0; i < size; i++) {
+			const cur = queue.shift()
+			direction ? curLevel.push(cur.val) : curLevel.unshift(cur.val)
+			if (cur.left) queue.push(cur.left)
+			if (cur.right) queue.push(cur.right)
 		}
-		prev = prev.next
+		ret.push(curLevel)
+		direction = !direction
 	}
-	prev.next = list1 || list2
-	return dummyHead.next
+	return ret
 }

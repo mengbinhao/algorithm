@@ -649,7 +649,7 @@ var insertionSortList = function (head) {
 			lastSorted = lastSorted.next
 		} else {
 			let prev = dummyHead
-			//从开始找prev
+			//从头开始找prev
 			while (prev.next.val <= cur.val) prev = prev.next
 			//插入到该插入的位置
 			lastSorted.next = cur.next
@@ -672,7 +672,7 @@ var reverseList = function (head) {
 		cur = head,
 		next
 
-	while (cur) {+
+	while (cur) {
 		next = cur.next
 		//change pointer ..3->2->1->null
 		cur.next = prev
