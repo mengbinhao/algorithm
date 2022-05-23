@@ -434,9 +434,9 @@ var largestValues = function (root) {
 		let max = -Infinity
 		for (let i = 0; i < size; i++) {
 			const curNode = queue.shift()
-			if (curNode.left) queue.push(curNode.left)
-			if (curNode.right) queue.push(curNode.right)
 			max = Math.max(max, curNode.val)
+      if (curNode.left) queue.push(curNode.left)
+		 if (curNode.right) queue.push(curNode.right)
 		}
 		ret.push(max)
 	}
@@ -795,13 +795,13 @@ var generateTrees = function (n) {
 
 ```javascript {.line-numbers}
 var sortedArrayToBST = function (nums) {
-	const helper = (nums, left, right) => {
-		if (left > right) return null
+	const helper = (nums, l, r) => {
+		if (l > r) return null
+		const mid = Math.floor((l + r) / 2)
 		//因高度平衡则需从中点创建根节点开始
-		const mid = Math.floor((right + left) / 2)
 		const root = new TreeNode(nums[mid])
-		root.left = helper(nums, left, mid - 1)
-		root.right = helper(nums, mid + 1, right)
+		root.left = helper(nums, l, mid - 1)
+		root.right = helper(nums, mid + 1, r)
 		return root
 	}
 	return helper(nums, 0, nums.length - 1)
@@ -920,20 +920,22 @@ var isSymmetric = function (root) {
 	return helper(root, root)
 }
 
-//bfs
+//BFS
 var isSymmetric = function (root) {
 	if (!root) return true
 	const queue = [root, root]
+
 	while (queue.length) {
 		//每次两两对比
-		const left = queue.shift()
-		const right = queue.shift()
-		if (left && right) {
-			if (left.val !== right.val) return false
+		const l = queue.shift()
+		const r = queue.shift()
+		if (l && r) {
+			if (l.val !== r.val) return false
 			//放的时候也是两两放
-			queue.push(left.left, right.right)
-			queue.push(left.right, right.left)
-		} else if (left || right) {
+			queue.push(l.left, r.right)
+			queue.push(r.right, l.left)
+    //exists one node
+		} else if (l || r) {
 			return false
 		}
 	}
@@ -946,19 +948,18 @@ var isSymmetric = function (root) {
 ```javascript {.line-numbers}
 //preorder or postorder can work, inorder means no invert
 var invertTree = function (root) {
-	if (root == null) return root
-	const left = invertTree(root.left)
-	const right = invertTree(root.right)
-	root.left = right
-	root.right = left
+	if (!root) return root
+	const l = invertTree(root.left)
+	const r = invertTree(root.right)
+	root.left = r
+	root.right = l
 	return root
 }
 
-//bfs 自上往下
+//BFS 自上往下
 var invertTree = function (root) {
-	if (root == null) return root
+	if (!root) return root
 	const queue = [root]
-
 	while (queue.length > 0) {
 		const cur = queue.shift()
 		;[cur.left, cur.right] = [cur.right, cur.left]
@@ -979,7 +980,7 @@ var maxDepth = function (root) {
 		: Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
 }
 
-//bfs
+//BFS
 var maxDepth = function (root) {
 	if (!root) return 0
 	const queue = [root]
@@ -1207,13 +1208,15 @@ var binaryTreePaths = function (root) {
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
-	if (root === null || root === p || root === q) return root
+	if (!root || root === p || root === q) return root
+	//f_lson
 	const left = lowestCommonAncestor(root.left, p, q)
+	//f_rson
 	const right = lowestCommonAncestor(root.right, p, q)
 	//下面两句合二为一
-	//if (left !== null && right !== null) return root
-	//return left === null ? right : left
-	return left === null ? right : right === null ? left : root
+	//return left === null ? right : right === null ? left : root
+	if (left && right) return root
+	return left === null ? right : left
 }
 ```
 
@@ -1302,6 +1305,31 @@ var hasPathSum = function (root, sum) {
 		hasPathSum(root.right, sum - root.val)
 	)
 }
+
+var hasPathSum = function (root, targetSum) {
+	if (!root) {
+		return false
+	}
+	const queNode = [root],
+		queVal = [root.val]
+
+	while (queNode.length) {
+		const now = queNode.shift()
+		const temp = queVal.shift()
+		if (!now.left && !now.right) {
+			if (temp == targetSum) return true
+		}
+		if (now.left) {
+			queNode.push(now.left)
+			queVal.push(now.left.val + temp)
+		}
+		if (now.right) {
+			queNode.push(now.right)
+			queVal.push(now.right.val + temp)
+		}
+	}
+	return false
+}
 ```
 
 ##### [113.==路径总和 II==](https://leetcode-cn.com/problems/path-sum-ii/)
@@ -1350,7 +1378,7 @@ var maxPathSum = function (root) {
 	let retMax = Number.MIN_SAFE_INTEGER
 
 	const dfs = (root) => {
-		if (root == null) return 0
+		if (!root) return 0
 		//if negative, then return 0 to outerSum
 		const left = Math.max(dfs(root.left), 0)
 		const right = Math.max(dfs(root.right), 0)
@@ -1390,7 +1418,7 @@ var buildTree = function (preorder, inorder) {
 	const map = new Map()
   
 	//space for time
-	//get inorder idx from pre value
+	//get inorder idx from preorder value
 	//note question: no same value Node, which means can form just one specific tree
 	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
 
@@ -1491,7 +1519,7 @@ var bstFromPreorder = function (preorder) {
 
 ```javascript {.line-numbers}
 const serialize = (root) => {
-	if (root == null) return 'X'
+	if (!root) return 'X'
 	const left = serialize(root.left)
 	const right = serialize(root.right)
 	return root.val + ',' + left + ',' + right // 按根,左,右  拼接字符串
