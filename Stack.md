@@ -1,15 +1,6 @@
 ### ==[20.有效括号 E](https://leetcode-cn.com/problems/valid-parentheses/)==
 
 ```javascript {.line-numbers}
-//brute force 一直替换
-var isValid = function (s) {
-	if ((s.length & 1) === 1) return false
-	while (s.includes('()') || s.includes('[]') || s.includes('{}')) {
-		s = s.replace(/\(\)|\[\]|\{\}/g, '')
-	}
-	return s === ''
-}
-
 //O(n) - O(n)
 var isValid = function (s) {
 	if (s.length % 2 === 1) return false
@@ -28,6 +19,15 @@ var isValid = function (s) {
 		}
 	}
 	return stack.length === 0
+}
+
+//brute force 一直替换
+var isValid = function (s) {
+	if ((s.length & 1) === 1) return false
+	while (s.includes('()') || s.includes('[]') || s.includes('{}')) {
+		s = s.replace(/\(\)|\[\]|\{\}/g, '')
+	}
+	return s === ''
 }
 ```
 

@@ -1008,7 +1008,7 @@ var minDepth = function (root) {
 	const minLeftDepth = minDepth(root.left)
 	const minRightDepth = minDepth(root.right)
   // if (minLeftDepth && minRightDepth) return Math.min(minLeftDepth, minRightDepth) + 1
-  // return minLeftDepth === 0 ? minRightDepth : minLeftDepth
+  // return minLeftDepth === 0 ? minRightDepth + 1: minLeftDepth + 1
 	return minLeftDepth === 0 || minRightDepth === 0
 		? minLeftDepth + minRightDepth + 1
 		: Math.min(minLeftDepth, minRightDepth) + 1
@@ -1307,25 +1307,24 @@ var hasPathSum = function (root, sum) {
 }
 
 var hasPathSum = function (root, targetSum) {
-	if (!root) {
-		return false
-	}
+	if (!root) return false
 	const queNode = [root],
 		queVal = [root.val]
 
 	while (queNode.length) {
-		const now = queNode.shift()
-		const temp = queVal.shift()
-		if (!now.left && !now.right) {
-			if (temp == targetSum) return true
+		const cur = queNode.shift()
+		const acc = queVal.shift()
+		//bottom
+		if (!cur.left && !cur.right) {
+			if (acc == targetSum) return true
 		}
-		if (now.left) {
-			queNode.push(now.left)
-			queVal.push(now.left.val + temp)
+		if (cur.left) {
+			queNode.push(cur.left)
+			queVal.push(cur.left.val + acc)
 		}
-		if (now.right) {
-			queNode.push(now.right)
-			queVal.push(now.right.val + temp)
+		if (cur.right) {
+			queNode.push(cur.right)
+			queVal.push(cur.right.val + acc)
 		}
 	}
 	return false
@@ -1422,9 +1421,9 @@ var buildTree = function (preorder, inorder) {
 	//note question: no same value Node, which means can form just one specific tree
 	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
 
-	return dfs(preorder, 0, preLen - 1, map, 0, inLen - 1)
+	return helper(preorder, 0, preLen - 1, map, 0, inLen - 1)
 
-	function dfs(preorder, preLeft, preRight, map, inLeft, inRight) {
+	function helper(preorder, preLeft, preRight, map, inLeft, inRight) {
 		if (preLeft > preRight || inLeft > inRight) return null
 
 		const rootVal = preorder[preLeft],
