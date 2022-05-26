@@ -1,27 +1,21 @@
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	//有效括号肯定是偶数
-	const end = len % 2 === 0 ? len : len - 1
-	//从最长开始偶数递减loop
-	for (let i = end; i >= 0; i -= 2) {
-		for (let j = 0; j < len - i + 1; j++) {
-			//找到即是最长的
-			if (isValid(s.substring(j, j + i))) return i
-		}
-	}
 
-	function isValid(s) {
-		const stack = []
-		for (let c of s) {
-			if (c === '(') {
-				stack.push(')')
+	//始终保持栈底元素为遍历过的最后一个没有匹配的右括号的下标
+	const stack = [-1]
+	let maxLen = 0
+	for (let i = 0; i < len; i++) {
+		if (s[i] === '(') {
+			stack.push()
+		} else {
+			stack.pop()
+			if (stack.length === 0) {
+				stack.push(i)
 			} else {
-				if (c !== stack.pop()) return false
+				maxLen = Math.max(maxLen, i - stack[stack.length - 1])
 			}
 		}
-		return stack.length === 0
 	}
+	return maxLen
 }
-
-console.log(longestValidParentheses(')()())'))

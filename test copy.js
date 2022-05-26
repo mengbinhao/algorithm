@@ -1,18 +1,37 @@
-var levelOrder = function (root) {
-	const ret = [],
-		queue = []
-
-	root && queue.push(root)
-	while (queue.length > 0) {
-		const size = queue.length,
-			curLevel = []
-		for (let i = 0; i < size; i++) {
-			const cur = queue.shift()
-			curLevel.push(cur.val)
-			if (cur.left) queue.push(cur.left)
-			if (cur.right) queue.push(cur.right)
+var longestValidParentheses = function (s) {
+	const len = s.length
+	if (len < 2) return 0
+	//最长子串只能从0开始
+	let l = (r = 0),
+		ret = 0
+	for (let i = 0; i < len; i++) {
+		if (s[i] === '(') {
+			l++
+		} else {
+			r++
 		}
-		ret.push(curLevel)
+		if (l === r) {
+			ret = Math.max(ret, 2 * l)
+		}
+		if (r > l) {
+			l = r = 0
+		}
+	}
+	l = r = 0
+	for (let i = len - 1; i >= 0; i--) {
+		if (s[i] === '(') {
+			l++
+		} else {
+			r++
+		}
+		if (l === r) {
+			ret = Math.max(ret, 2 * l)
+		}
+		if (l > r) {
+			l = r = 0
+		}
 	}
 	return ret
 }
+
+longestValidParentheses(')()())')

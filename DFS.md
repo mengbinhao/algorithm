@@ -71,20 +71,20 @@ var generateParenthesis = function (n) {
 var generateParenthesis = function (n) {
 	const ret = []
 
-  const dfs = (left, right, max, s) => {
-    if (left === max && right === max) {
-      ret.push(s)
-      return
-    }
+	const dfs = (left, right, max, s) => {
+		if (left === max && right === max) {
+			ret.push(s)
+			return
+		}
 
-    //回溯的过程中直接剪枝掉无效的组合
-    if (left < n) dfs(left + 1, right, max, s + '(')
-	  //回溯的过程中直接剪枝掉无效的组合
-    if (left > right) dfs(left, right + 1, max, s + ')')
-  }
-	//can pass ret if you want
-  dfs(0, 0, n, '')
-  return ret
+		//回溯的过程中直接剪枝掉无效的组合
+		if (left < n) dfs(left + 1, right, max, s + '(')
+		//回溯的过程中直接剪枝掉无效的组合
+		if (left > right) dfs(left, right + 1, max, s + ')')
+	}
+	//pass ret if you want
+	dfs(0, 0, n, '')
+	return ret
 }
 ```
 
@@ -333,7 +333,7 @@ var permuteUnique = function (nums) {
 //best version
 var subsets = function (nums) {
 	const ret = []
-  //start控制下层树枝的个数
+	//start控制下层树枝的个数
 	const dfs = (nums, start, path) => {
 		//在递归压栈前做事情
 		ret.push([...path])

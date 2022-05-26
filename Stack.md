@@ -52,11 +52,9 @@ var longestValidParentheses = function (s) {
 		const stack = []
 		for (let c of s) {
 			if (c === '(') {
-				stack.push('(')
-			} else if (stack.length > 0 && stack[stack.length - 1] === '(') {
-				stack.pop()
+				stack.push(')')
 			} else {
-				return false
+				if (c !== stack.pop()) return false
 			}
 		}
 		return stack.length === 0
@@ -69,13 +67,17 @@ var longestValidParentheses = function (s) {
 	if (len < 2) return 0
 	let ret = 0
 	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
+  //初始化成0也符合base case
 	const dp = new Array(len).fill(0)
+  //dp[0] = 0
 	for (let i = 1; i < len; i++) {
 		//只有右括号结尾的字符才合法
 		if (s[i] === ')') {
 			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串形如 '……()'
 				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
+       //第一个条件表示前面还有括号
+       //第二个条件前面的括号跟当前循环的)可以匹配，即+2
 			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
 				//内部的有效长度 + 前面的有效长度 + 2
@@ -88,21 +90,22 @@ var longestValidParentheses = function (s) {
 }
 
 //stack O(n) - O(n)
-//始终保持栈底元素为当前已经遍历过的元素中「最后一个没有被匹配的右括号的下标」
+//始终保持栈底元素为当前已经遍历过的元素中“最后一个没有被匹配的右括号的下标”
 //对于遇到的每个(，将它下标放入栈中
-//对于遇到的每个)，先弹出栈顶元素表示匹配了当前右括号：
-//  如果栈为空，说明当前的右括号为没有被匹配的左括号，将其下标放入栈中来更新「最后一个没有被匹配的右括号的下标」
-//  如果栈不为空，当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
+//对于遇到的每个)，先弹出栈顶元素表示匹配了当前右括号
+//如果栈为空，说明当前的右括号为没有被匹配的左括号，将其下标放入栈中来更新“最后一个没有被匹配的右括号的下标”
+//如果栈不为空，当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	//最长子串只能从0开始
+	//note inital value:最长子串只能从0开始
 	const stack = [-1]
 	let maxLen = 0
 	for (let i = 0; i < len; i++) {
 		if (s[i] === '(') {
 			stack.push(i)
 		} else {
+       //弹出匹配的左括号
 			stack.pop()
 			if (stack.length === 0) {
 				stack.push(i)
@@ -119,7 +122,7 @@ var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
 	let left = 0,
-		right = 0
+		right = 0,
 	maxLen = 0
 	for (let i = 0; i < len; i++) {
 		s[i] === '(' ? left++ : right++
@@ -225,7 +228,7 @@ var trap = function (height) {
 	while (i < len) {
 		while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
 			const val = stack.pop()
-			//没有左边界则退出
+			//左边没有柱子或更高的柱子了
 			if (stack.length === 0) break
 			//计算右边与当前栈顶左边界的距离,即弹出上面那个val后的栈顶
 			const distance = i - stack[stack.length - 1] - 1
