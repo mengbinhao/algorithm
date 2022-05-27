@@ -76,7 +76,7 @@ var longestValidParentheses = function (s) {
 			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串形如 '……()'
 				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
-       //第一个条件表示前面还有括号
+       //第一个条件表示前面还有括号(可省略)
        //第二个条件前面的括号跟当前循环的)可以匹配，即+2
 			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
@@ -168,7 +168,7 @@ var trap = function (height) {
 	return ret
 }
 
-//备忘录优化 dp O(n) - O(n)
+//DP O(n) - O(n)
 var trap = function (height) {
 	const len = height.length
 	if (len === 0) return 0
@@ -226,6 +226,7 @@ var trap = function (height) {
 	let i = 0,
 		ret = 0
 	while (i < len) {
+    //当前柱子比栈顶的柱子高
 		while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
 			const val = stack.pop()
 			//左边没有柱子或更高的柱子了

@@ -220,9 +220,7 @@ const merge = (arr) => {
 			i = l,
 			//当前层后部分数组的开始坐标
 			j = mid + 1
-		while (i <= mid && j <= r) {
-			tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
-		}
+		while (i <= mid && j <= r) tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
 		while (i <= mid) tmp[k++] = arr[i++]
 		while (j <= r) tmp[k++] = arr[j++]
 		//复制回arr

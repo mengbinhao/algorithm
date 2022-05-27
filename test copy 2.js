@@ -1,21 +1,22 @@
-var longestValidParentheses = function (s) {
-	const len = s.length
-	if (len < 2) return 0
-
-	//始终保持栈底元素为遍历过的最后一个没有匹配的右括号的下标
-	const stack = [-1]
-	let maxLen = 0
-	for (let i = 0; i < len; i++) {
-		if (s[i] === '(') {
-			stack.push()
-		} else {
+var decodeString = function (s) {
+	const isNumber = (val) => {
+		return typeof +val === 'number' && +val === +val
+	}
+	const stack = []
+	for (c of s) {
+		if (c === ']') {
+			let repeatStr = '',
+				repeatCount = ''
+			while (stack.length > 0 && stack[stack.length - 1] !== '[')
+				repeatStr = stack.pop() + repeatStr
+			//pop [
 			stack.pop()
-			if (stack.length === 0) {
-				stack.push(i)
-			} else {
-				maxLen = Math.max(maxLen, i - stack[stack.length - 1])
-			}
+			while (stack.length > 0 && isNumber(stack[stack.length - 1]))
+				repeatCount = stack.pop() + repeatCount
+			stack.push(repeatStr.repeat(+repeatCount))
+		} else {
+			stack.push(c)
 		}
 	}
-	return maxLen
+	return stack.join('')
 }

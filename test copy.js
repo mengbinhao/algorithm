@@ -1,37 +1,42 @@
-var longestValidParentheses = function (s) {
-	const len = s.length
-	if (len < 2) return 0
-	//最长子串只能从0开始
-	let l = (r = 0),
-		ret = 0
-	for (let i = 0; i < len; i++) {
-		if (s[i] === '(') {
-			l++
-		} else {
-			r++
+const quick = (arr) => {
+	const helper = (arr, l, r) => {
+		if (l >= r) return
+		const pivot = arr[l]
+		let i = l - 1,
+			j = r + 1
+		while (i < j) {
+			while (arr[++i] < pivot);
+			while (arr[--j] > pivot);
+			if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]]
 		}
-		if (l === r) {
-			ret = Math.max(ret, 2 * l)
-		}
-		if (r > l) {
-			l = r = 0
-		}
+		helper(arr, l, j)
+		helper(arr, j + 1, r)
+		return arr
 	}
-	l = r = 0
-	for (let i = len - 1; i >= 0; i--) {
-		if (s[i] === '(') {
-			l++
-		} else {
-			r++
-		}
-		if (l === r) {
-			ret = Math.max(ret, 2 * l)
-		}
-		if (l > r) {
-			l = r = 0
-		}
-	}
-	return ret
+	return helper(arr, 0, arr.length - 1)
 }
 
-longestValidParentheses(')()())')
+const merge = (arr) => {
+	const helper = (arr, l, r, tmp) => {
+		if (l >= r) return
+
+		const mid = Math.floor((l + r) / 2)
+
+		helper(arr, l, mid, tmp)
+		helper(arr, mid + 1, r, tmp)
+
+		let k = 0,
+			i = l,
+			j = mid + 1
+		while (i <= mid && j <= r) tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
+		while (i <= mid) tmp[k++] = arr[i++]
+		while (j <= r) tmp[k++] = arr[j++]
+		for (let i = l, j = 0; i <= r; i++, j++) arr[i] = tmp[j]
+		return arr
+	}
+
+	return helper(arr, 0, arr.length - 1, [])
+}
+
+console.log(quick([5, 1, 3, 2, 4]))
+console.log(merge([5, 1, 3, 2, 4]))
