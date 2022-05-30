@@ -260,7 +260,7 @@ var largestRectangleArea = function (heights) {
 		const height = heights[i]
 		let left = i,
 			right = i
-		// 从当前柱子高往两边确定左右边界
+		// 从当前柱子高往两边确定左右边界，越长越好
 		while (left - 1 >= 0 && heights[left - 1] >= height) left--
 		while (right + 1 < len && heights[right + 1] >= height) right++
 		ret = Math.max(ret, (right - left + 1) * height)
@@ -316,7 +316,7 @@ var largestRectangleArea = function (heights) {
 	heights = tmp
 	const stack = [0]
 	for (let i = 1; i < len; i++) {
-		while (heights[stack[stack.length - 1]] > heights[i]) {
+		while (stack.length > 0 && heights[stack[stack.length - 1]] > heights[i]) {
 			const height = heights[stack.pop()]
 			const width = i - stack[stack.length - 1] - 1
 			ret = Math.max(ret, height * width)

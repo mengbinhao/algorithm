@@ -72,6 +72,7 @@ var lengthOfLastWord = function (s) {
 	if (len === 0) return 0
 	let i = len - 1
 	while (i >= 0 && s[i] === ' ') i--
+  //若扫完了直接提前返回
 	if (i < 0) return 0
   let ret = 0
 	while (i >= 0 && s[i] !== ' ') {
@@ -123,6 +124,7 @@ var reverseWords = function (s) {
 	while (s[r] === ' ') r--
 	while (l <= r) {
 		const char = s[l]
+    //排除单词间有多个空格的情况,否则返回如example    good a    
 		if (char === ' ' && word) {
 			queue.unshift(word)
 			word = ''
@@ -167,6 +169,7 @@ var reverseString = function (s) {
 ### [387. ==字符串中的第一个唯一字符 E==](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
 
 ```javascript {.line-numbers}
+//hash
 var firstUniqChar = function (s) {
 	const obj = {}
 	for (let c of s) {
@@ -446,9 +449,7 @@ var reverseOnlyLetters = function (s) {
 var reverseOnlyLetters = function (S) {
 	const stack = []
 
-	for (let c of S) {
-		if (/[a-zA-Z]/.test(c)) stack.push(c)
-	}
+	for (let c of S) if (/[a-zA-Z]/.test(c)) stack.push(c)
 
 	let ret = ''
 	for (let c of S) {
