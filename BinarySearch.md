@@ -2,6 +2,7 @@
 
 1. 有单调性一定可以二分
 2. 能用二分解的题不一定具有单调性
+2. 有上下界
 
 ### 解题 3 步骤
 
@@ -72,9 +73,9 @@ const binarySearch = (arr, target) => {
 	while (left <= right) {
 		mid = Math.floor(left + (right - left) / 2)
 		if (arr[mid] < target) {
-			right = mid - 1
-		} else if (arr[mid] > target) {
 			left = mid + 1
+		} else if (arr[mid] > target) {
+			right = mid - 1
 		} else {
 			//已搜到第一个或已找到
 			if (mid === 0 || arr[mid - 1] !== target) {
@@ -92,7 +93,7 @@ const binarySearch = (arr, target) => {
 #### 3 查找最后一个值等于给定值的元素
 
 ```javascript {.line-numbers}
-const binarySearch = (arr, target) => {
+const binarySearch2 = (arr, target) => {
 	if (arr.length === 0) return -1
 	let left = 0,
 		right = arr.length - 1,
@@ -100,9 +101,9 @@ const binarySearch = (arr, target) => {
 	while (left <= right) {
 		mid = Math.floor(left + (right - left) / 2)
 		if (arr[mid] < target) {
-			right = mid - 1
-		} else if (arr[mid] > target) {
 			left = mid + 1
+		} else if (arr[mid] > target) {
+			right = mid - 1
 		} else {
 			//已搜到最后一个或已找到
 			if (mid === arr.length - 1 || arr[mid + 1] !== target) {
@@ -212,9 +213,9 @@ const rightBound = (arr, target) => {
 }
 ```
 
-### leetcode
+### questions
 
-#### ==[33.搜索旋转排序数组](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)==
+#### [33.==搜索旋转排序数组==](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
 
 ```javascript {.line-numbers}
 var search = function (nums, target) {
@@ -227,9 +228,7 @@ var search = function (nums, target) {
 
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
-		if (nums[mid] === target) {
-			return mid
-		}
+		if (nums[mid] === target) return mid
 
 		//l is asc
 		//incase mid === l 坐标相等
@@ -288,7 +287,7 @@ var searchRange = function (nums, target) {
 }
 ```
 
-#### ==[69. x 的平方根](https://leetcode-cn.com/problems/sqrtx/)==
+#### [69. ==x 的平方根==](https://leetcode-cn.com/problems/sqrtx/)
 
 ```javascript {.line-numbers}
 var mySqrt = function (x) {
@@ -311,7 +310,7 @@ var mySqrt = function (x) {
 }
 ```
 
-#### ==[81.搜索旋转排序数组 II](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)==
+#### [81.==搜索旋转排序数组 II==](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
 
 ```javascript {.line-numbers}
 var search = function (nums, target) {
@@ -324,9 +323,7 @@ var search = function (nums, target) {
 
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
-		if (nums[mid] === target) {
-			return true
-		}
+		if (nums[mid] === target) return true
 
 		//move left pointer to exclude repeat item, or we can not define the monotonic section
 		if (nums[l] === nums[mid]) {
@@ -352,7 +349,7 @@ var search = function (nums, target) {
 }
 ```
 
-#### ==[153.寻找旋转排序数组中的最小值](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)==
+#### [153.==寻找旋转排序数组中的最小值==](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 ```javascript {.line-numbers}
 var findMin = function (nums) {
@@ -369,13 +366,8 @@ var findMin = function (nums) {
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		//judge according to nums[mid]
-		if (nums[mid] < nums[mid - 1]) {
-			return nums[mid]
-		}
-
-		if (nums[mid] > nums[mid + 1]) {
-			return nums[mid + 1]
-		}
+		if (nums[mid] < nums[mid - 1]) return nums[mid]
+		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]
 
 		//binary search
 		if (nums[mid] > nums[0]) {
@@ -388,7 +380,7 @@ var findMin = function (nums) {
 }
 ```
 
-#### ==[367.有效的完全平方数](https://leetcode-cn.com/problems/valid-perfect-square/)==
+#### [367.==有效的完全平方数==](https://leetcode-cn.com/problems/valid-perfect-square/)
 
 ```javascript {.line-numbers}
 var isPerfectSquare = function (num) {

@@ -51,137 +51,126 @@ var twoSum = function (nums, target) {
 }
 ```
 
-### ==[11.装最多水的容器 M](https://leetcode-cn.com/problems/container-with-most-water/)==
+### [11.==装最多水的容器 M==](https://leetcode-cn.com/problems/container-with-most-water/)
 
-- brute force O(n^2) - O(1)
+```javascript
+//brute force O(n^2) - O(1)
+var maxArea = function (height) {
+	let maxArea = 0
+	for (let l = 0; l < height.length - 1; l++) {
+		for (let r = l + 1; r < height.length; r++) {
+			maxArea = Math.max(maxArea, Math.min(height[l], height[r]) * (r - l))
+		}
+	}
+	return maxArea
+}
 
-  ```javascript
-  var maxArea = function (height) {
-  	let maxArea = 0
-  	for (let l = 0; l < height.length - 1; l++) {
-  		for (let r = l + 1; r < height.length; r++) {
-  			maxArea = Math.max(maxArea, Math.min(height[l], height[r]) * (r - l))
-  		}
-  	}
-  	return maxArea
-  }
-  ```
+//two pointer夹逼 O(n) - O(1)
+var maxArea = function (height) {
+	let left = 0,
+		right = height.length - 1,
+		maxArea = 0
 
-- two pointer **夹逼** O(n) - O(1)
+	while (left < right) {
+		maxArea = Math.max(
+			maxArea,
+			Math.min(height[left], height[right]) * (right - left)
+		)
+		height[left] < height[right] ? left++ : right--
+	}
+	return maxArea
+}
+```
 
-  ```javascript
-  var maxArea = function (height) {
-  	let left = 0,
-  		right = height.length - 1,
-  		maxArea = 0
-  
-  	while (left < right) {
-  		maxArea = Math.max(
-  			maxArea,
-  			Math.min(height[left], height[right]) * (right - left)
-  		)
-  		height[left] < height[right] ? left++ : right--
-  	}
-  	return maxArea
-  }
-  ```
+### [15.==三数之和 M==](https://leetcode-cn.com/problems/3sum/)
 
-### ==[15.三数之和 M](https://leetcode-cn.com/problems/3sum/)==
+```javascript
+//brute force O(n^3) O(1) //Time limit exceeded
+var threeSum = function (nums) {
+	const ret = []
+	if (nums == null || nums.length < 3) return ret
+	const len = nums.length,
+		map = {}
+	for (let i = 0; i < len - 2; i++) {
+		for (let j = i + 1; j < len - 1; j++) {
+			for (let k = j + 1; k < len; k++) {
+				if (nums[i] + nums[j] + nums[k] === 0) {
+					//duplicate-removal
+					const key = [nums[i], nums[j], nums[k]].sort()
+					//point is not repeat
+					if (map[key] === undefined) {
+						map[key] = true
+						ret.push([nums[i], nums[j], nums[k]])
+					}
+				}
+			}
+		}
+	}
+	return ret
+}
 
-- brute force O(n^3) O(1) //Time limit exceeded
+//Hash O(n^2) O(n)
+var threeSum = function (nums) {
+	const arr = []
+	if (nums == null || nums.length < 3) return arr
+	//precondition!!!!!!
+	nums.sort((a, b) => a - b)
+	for (var i = 0; i < nums.length - 2; i++) {
+		if (nums[i] > 0) break
+		if (i > 0 && nums[i] == nums[i - 1]) continue
+		const hash = new Map()
+		for (var j = i + 1; j < nums.length; j++) {
+			const val = -(nums[i] + nums[j])
+			// 前三个数组成的结果肯定不重且防越界，所以j > i + 2
+			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2])
+				continue
+			//hash是首次记录第二次才会push到数组
+			if (hash.has(val)) {
+				arr.push([nums[i], nums[hash.get(val)], nums[j]])
+				//使用完删除防止重复[-2, 0, 0, 2, 2]
+				hash.delete(val)
+			}
+			//第一次直接加,加的是结果中的第二个数
+			hash.set(nums[j], j)
+		}
+	}
+	return arr
+}
 
-  ```javascript
-  var threeSum = function (nums) {
-  	const ret = []
-  	if (nums == null || nums.length < 3) return ret
-  	const len = nums.length,
-  		map = {}
-  	for (let i = 0; i < len - 2; i++) {
-  		for (let j = i + 1; j < len - 1; j++) {
-  			for (let k = j + 1; k < len; k++) {
-  				if (nums[i] + nums[j] + nums[k] === 0) {
-  					//duplicate-removal
-  					const key = [nums[i], nums[j], nums[k]].sort()
-  					//point is not repeat
-  					if (map[key] === undefined) {
-  						map[key] = true
-  						ret.push([nums[i], nums[j], nums[k]])
-  					}
-  				}
-  			}
-  		}
-  	}
-  	return ret
-  }
-  ```
-
-- Hash O(n^2) O(n)
-
-  ```javascript
-  var threeSum = function (nums) {
-  	const arr = []
-  	if (nums == null || nums.length < 3) return arr
-  	//precondition!!!!!!
-  	nums.sort((a, b) => a - b)
-  	for (var i = 0; i < nums.length - 2; i++) {
-  		if (nums[i] > 0) break
-  		if (i > 0 && nums[i] == nums[i - 1]) continue
-  		const hash = new Map()
-  		for (var j = i + 1; j < nums.length; j++) {
-  			const val = -(nums[i] + nums[j])
-  			// 前三个数组成的结果肯定不重且防越界，所以j > i + 2
-  			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2])
-  				continue
-  			//hash是首次记录第二次才会push到数组
-  			if (hash.has(val)) {
-  				arr.push([nums[i], nums[hash.get(val)], nums[j]])
-  				//使用完删除防止重复[-2, 0, 0, 2, 2]
-  				hash.delete(val)
-  			}
-  			//第一次直接加,加的是结果中的第二个数
-  			hash.set(nums[j], j)
-  		}
-  	}
-  	return arr
-  }
-  ```
-
-- 夹逼（大部分情况需已排序） O(n^2) - O(1)
-
-  ```javascript
-  var threeSum = function (nums) {
-  	let ret = []
-  	if (nums == null || nums.length < 3) return ret
-  	//precondition!!!!!!
-  	nums.sort((a, b) => a - b)
-  	//至少留k那一位和2个pointer
-  	for (let k = 0; k < nums.length - 2; k++) {
-  		//nums is sorted,so it's impossible to have a sum = 0
-  		if (nums[k] > 0) break
-  		//skip duplicated nums[k]
-  		if (k > 0 && nums[k] === nums[k - 1]) continue
-  		let left = k + 1,
-  			right = nums.length - 1
-  		while (left < right) {
-  			const sum = nums[k] + nums[left] + nums[right]
-  			if (sum === 0) {
-  				ret.push([nums[k], nums[left], nums[right]])
-  				//skip duplicated nums[left]
-  				while (nums[left] === nums[left + 1]) left++
-  				left++
-  				//skip duplicated nums[right]
-  				while (nums[right] === nums[right - 1]) right--
-  				right--
-  			} else if (sum > 0) {
-  				right--
-  			} else {
-  				left++
-  			}
-  		}
-  	}
-  	return ret
-  }
-  ```
+//夹逼（大部分情况需已排序） O(n^2) - O(1)
+var threeSum = function (nums) {
+	let ret = []
+	if (nums == null || nums.length < 3) return ret
+	//precondition!!!!!!
+	nums.sort((a, b) => a - b)
+	//至少留k那一位和2个pointer
+	for (let k = 0; k < nums.length - 2; k++) {
+		//nums is sorted,so it's impossible to have a sum = 0
+		if (nums[k] > 0) break
+		//skip duplicated nums[k]
+		if (k > 0 && nums[k] === nums[k - 1]) continue
+		let left = k + 1,
+			right = nums.length - 1
+		while (left < right) {
+			const sum = nums[k] + nums[left] + nums[right]
+			if (sum === 0) {
+				ret.push([nums[k], nums[left], nums[right]])
+				//skip duplicated nums[left]
+				while (nums[left] === nums[left + 1]) left++
+				left++
+				//skip duplicated nums[right]
+				while (nums[right] === nums[right - 1]) right--
+				right--
+			} else if (sum > 0) {
+				right--
+			} else {
+				left++
+			}
+		}
+	}
+	return ret
+}
+```
 
 ### [18.四数之和 M](https://leetcode-cn.com/problems/4sum/)
 
@@ -249,7 +238,7 @@ var removeDuplicates = function (nums) {
 }
 ```
 
-### ==[45.跳跃游戏 II M](https://leetcode-cn.com/problems/jump-game-ii/)==
+### [45.==跳跃游戏 II M==](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```javascript
 var jump = function (nums) {
@@ -369,7 +358,7 @@ var generateMatrix = function (n) {
 }
 ```
 
-### ==[55.跳跃游戏 M](https://leetcode-cn.com/problems/jump-game/)==
+### [55.==跳跃游戏 M==](https://leetcode-cn.com/problems/jump-game/)
 
 ```javascript
 var canJump = function (nums) {
@@ -386,7 +375,7 @@ var canJump = function (nums) {
 }
 ```
 
-### ==[66.加一 E](https://leetcode-cn.com/problems/plus-one/)==
+### [66.==加一 E==](https://leetcode-cn.com/problems/plus-one/)
 
 ```javascript
 var plusOne = function (digits) {
@@ -405,7 +394,7 @@ var plusOne = function (digits) {
 }
 ```
 
-### [==73.矩阵置零==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
+### [73.==矩阵置零==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
 
 ```javascript {.line-numbers}
 //O(mn) - O(mn) 直接把matrix值放到m*n的数组里面
@@ -508,7 +497,7 @@ var setZeroes = function (matrix) {
 }
 ```
 
-### ==[75.颜色分类 M](https://leetcode-cn.com/problems/sort-colors/)==
+### [75.==颜色分类 M==](https://leetcode-cn.com/problems/sort-colors/)
 
 ```javascript
 var sortColors = function (nums) {
@@ -529,7 +518,7 @@ var sortColors = function (nums) {
 }
 ```
 
-### ==[80.删除排序数组重复项 II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/)==
+### [80.==删除排序数组重复项 II==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/)
 
 ```javascript
 //slow / fast pointer
@@ -578,7 +567,7 @@ var merge = (nums1, m, nums2, n) => {
 }
 ```
 
-### ==[189.旋转数组 E](https://leetcode-cn.com/problems/rotate-array/)==
+### [189.==旋转数组 E==](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript {.line-numbers}
 //brute force O(n*k) - O(1)
@@ -630,7 +619,7 @@ var rotate = function (nums, k) {
 }
 ```
 
-### ==[238.除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)==
+### [238.==除自身以外数组的乘积==](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 ```javascript {.line-numbers}
 var productExceptSelf = (nums) => {
@@ -682,7 +671,7 @@ var productExceptSelf = function (nums) {
 }
 ```
 
-### ==[283.移动零==](https://leetcode-cn.com/problems/move-zeroes/)
+### [283.==移动零==](https://leetcode-cn.com/problems/move-zeroes/)
 
 ```javascript {.line-numbers}
 //循环一整次把非 0 换到前面，第二次循环把 0 填到后面 O(n) - O(1)
@@ -743,7 +732,7 @@ var intersection = function (nums1, nums2) {
 }
 ```
 
-### ==[1122.数组的相对排序](https://leetcode-cn.com/problems/relative-sort-array/)==
+### [1122.==数组的相对排序==](https://leetcode-cn.com/problems/relative-sort-array/)
 
 ```javascript {.line-numbers}
 var relativeSortArray = function (arr1, arr2) {

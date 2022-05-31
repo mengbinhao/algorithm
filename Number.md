@@ -1,4 +1,4 @@
-==无论什么语言整数操作都需要考虑溢出==
+>  ==无论什么语言整数操作都需要考虑溢出==
 
 ### [7.==整数反转==](https://leetcode-cn.com/problems/reverse-integer/)
 
@@ -8,8 +8,8 @@ var reverse = function (x) {
 	let ret = 0
 	while (x) {
 		ret = ret * 10 + (x % 10)
+    x = (x / 10) | 0
 		if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(-2, 31)) return 0
-		x = (x / 10) | 0
 	}
 	return ret
 }
@@ -72,7 +72,7 @@ var isPalindrome = function (x) {
 }
 ```
 
-### ==[50.Pow(x, n)M](https://leetcode-cn.com/problems/powx-n/)==
+### [50.==Pow(x, n) M==](https://leetcode-cn.com/problems/powx-n/)
 
 ```javascript
 //brute force
@@ -83,9 +83,7 @@ var myPow = function (x, n) {
 	if (n < 0) return 1 / myPow(x, -n)
 	let ret = 1
 
-	for (let i = 1; i <= n; i++) {
-		ret *= x
-	}
+	for (let i = 1; i <= n; i++) ret *= x
 	return ret
 }
 
@@ -158,7 +156,7 @@ var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
-		//note sequence!
+		//note sequence
 		if (count === 0) {
 			count++
 			ret = nums[i]
@@ -179,7 +177,6 @@ var majorityElement = function (nums) {
 var trailingZeroes = function (n) {
 	let ret = 0
 	while (n > 0) {
-		//|转为整数
 		n = (n / 5) | 0
 		ret += n
 	}
@@ -224,7 +221,7 @@ var isHappy = function (n) {
 }
 ```
 
-### ==[229.求众数 II](https://leetcode-cn.com/problems/majority-element-ii/)==
+### [229.==求众数 II==](https://leetcode-cn.com/problems/majority-element-ii/)
 
 ```javascript
 var majorityElement = function (nums) {

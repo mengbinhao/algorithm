@@ -20,14 +20,49 @@
 
 # 解题知识点
 
-- `x & 1 === 1` or `x & 1 === 0` 判断奇偶 `x % 2 === 1`
 - ==求 n 的第 k 位数字: n >> k & 1==
+
 - ==`x = x & (x - 1)` 打掉最低位的 1==
+
 - ==`x & -x` lowbit(n),得到最低位的 1, `-x`得到反码再加 1==
-- `x ^ 0 = x`
-- `x ^ x = 0`
-- `x ^ y ^ x = y`
-- `x ^ y ^ x = (x ^ y) ^ x = x ^ (y ^ x)`
+
+- 异或
+
+  - `x ^ 0 = x`
+  - `x ^ x = 0`
+  - `x ^ y ^ x = y`
+  - `x ^ y ^ x = (x ^ y) ^ x = x ^ (y ^ x)`
+
+- 去除小数
+
+  - ~~12.22
+  - 12.22 >> 0
+  - 12.22 | 0
+
+- 位运算代替乘除法
+
+  - 24 >> 1
+  - 24 << 1
+
+- 判断奇数偶数
+
+  - `x & 1 === 1` or `x & 1 === 0` 判断奇偶 `x % 2 === 1`
+
+- 不增加变量实现两数交换
+
+  ```javascript
+  [a, b] = [b, a]
+  
+  a = a + b
+  b = a - b
+  a = a - b
+  
+  a = a ^ b
+  b = a ^ b
+  a = a ^ b
+  ```
+
+# questions
 
 ### [136.==只出现一次的数字==](https://leetcode-cn.com/problems/single-number/)
 
@@ -132,7 +167,7 @@ var singleNumber = function (nums) {
 }
 ```
 
-## ==[171.Excel 表列序号](https://leetcode-cn.com/problems/excel-sheet-column-number/)==
+### [171.==Excel 表列序号==](https://leetcode-cn.com/problems/excel-sheet-column-number/)
 
 ```javascript {.line-numbers}
 var titleToNumber = function (columnTitle) {
@@ -145,7 +180,7 @@ var titleToNumber = function (columnTitle) {
 }
 ```
 
-### ==[190.颠倒二进制位](https://leetcode-cn.com/problems/reverse-bits/)==
+### [190.==颠倒二进制位==](https://leetcode-cn.com/problems/reverse-bits/)
 
 ```javascript {.line-numbers}
 var reverseBits = function (n) {
@@ -185,7 +220,7 @@ var hammingWeight = function (n) {
 }
 ```
 
-## ==[201.数字范围按位与](https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/)==
+### [201.==数字范围按位与==](https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/)
 
 ```javascript {.line-numbers}
 var rangeBitwiseAnd = function (left, right) {
@@ -199,7 +234,7 @@ var rangeBitwiseAnd = function (left, right) {
 }
 ```
 
-### ==[231.2 的幂](https://leetcode-cn.com/problems/power-of-two/)==
+### [231.==2 的幂==](https://leetcode-cn.com/problems/power-of-two/)
 
 ```javascript {.line-numbers}
 var isPowerOfTwo = function (n) {
