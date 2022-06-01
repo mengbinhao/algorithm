@@ -1,4 +1,4 @@
-### [==42. 接雨水==](https://leetcode-cn.com/problems/trapping-rain-water/)
+### [42. ==接雨水==](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript {.line-numbers}
 //brute force O(n^2) O(1)
@@ -94,7 +94,7 @@ var countPrimes = function (n) {
 }
 ```
 
-### [==227. 基本计算器 II==](https://leetcode-cn.com/problems/basic-calculator-ii/)
+### [227. ==基本计算器 II==](https://leetcode-cn.com/problems/basic-calculator-ii/)
 
 ```javascript {.line-numbers}
 var calculate = function (s) {

@@ -1,4 +1,4 @@
-### ==[1.两数之和 E](https://leetcode-cn.com/problems/two-sum/)==
+### [1.==两数之和 E==](https://leetcode-cn.com/problems/two-sum/)
 
 ```javascript
 //brute force O(n^2) - O(1)

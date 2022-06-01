@@ -1,4 +1,4 @@
-### ==[20.有效括号 E](https://leetcode-cn.com/problems/valid-parentheses/)==
+### [20.==有效括号 E==](https://leetcode-cn.com/problems/valid-parentheses/)
 
 ```javascript {.line-numbers}
 //O(n) - O(n)
@@ -145,7 +145,7 @@ var longestValidParentheses = function (s) {
 }
 ```
 
-### ==[42.接雨水 H](https://leetcode-cn.com/problems/trapping-rain-water/)==
+### [42.==接雨水 H==](https://leetcode-cn.com/problems/trapping-rain-water/)
 
 ```javascript
 //brute force O(n^2) - O(1)
@@ -243,7 +243,7 @@ var trap = function (height) {
 }
 ```
 
-### [==84.柱状图中最大的矩形 H==](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
+### [84.==柱状图中最大的矩形 H==](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
 
 ```javascript {.line-numbers}
 //brute force O(n^2)
@@ -327,7 +327,7 @@ var largestRectangleArea = function (heights) {
 }
 ```
 
-### ==[150.逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)==
+### [150.==逆波兰表达式求值==](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 
 ```javascript {.line-numbers}
 var evalRPN = function (tokens) {
@@ -356,7 +356,7 @@ var evalRPN = function (tokens) {
 }
 ```
 
-### [==394. 字符串解码 M==](https://leetcode-cn.com/problems/decode-string/)
+### [394. ==字符串解码 M==](https://leetcode-cn.com/problems/decode-string/)
 
 ```javascript {.line-numbers}
 var decodeString = function (s) {

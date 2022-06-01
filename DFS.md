@@ -1,34 +1,33 @@
-### ==[17.电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)==
+### [17.==电话号码的字母组合==](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
 ```javascript
-var letterCombinations = function (digits) {
-	const ret = []
-	if (!digits) return []
-	const map = new Map([
-		['2', 'abc'],
-		['3', 'def'],
-		['4', 'ghi'],
-		['5', 'jkl'],
-		['6', 'mno'],
-		['7', 'pqrs'],
-		['8', 'tuv'],
-		['9', 'wxyz'],
-	])
-
-	const dfs = (s, level) => {
-		if (level === digits.length) {
-			ret.push(s)
-			return
-		}
-		for (let c of map.get(digits[level])) dfs(s + c, level + 1)
-	}
-	//can pass more params if you want, like ret、map、digits
-	dfs('', 0)
-	return ret
-}
+var letterCombinations = function(digits) {
+  const ret = []
+  if (!digits) return ret
+  const hash = {
+    '2': 'abc',
+		'3': 'def',
+		'4': 'ghi',
+		'5': 'jkl',
+		'6': 'mno',
+		'7': 'pqrs',
+		'8': 'tuv',
+		'9': 'wxyz',
+  }
+  const dfs = (s, level) => {
+    if (level === digits.length) {
+      ret.push(s)
+      return
+    }
+    for (let c of hash[digits[level]]) dfs(s + c, level + 1)
+  }
+  //can pass more params if you want, like ret、map、digits
+  dfs('', 0)
+  return ret
+};
 ```
 
-### ==[22.括号生成](https://leetcode-cn.com/problems/generate-parentheses/)==
+### [22.==括号生成==](https://leetcode-cn.com/problems/generate-parentheses/)
 
 ```javascript
 //brute force O(2^3n * n) - O(n)
@@ -76,7 +75,6 @@ var generateParenthesis = function (n) {
 			ret.push(s)
 			return
 		}
-
 		//回溯的过程中直接剪枝掉无效的组合
 		if (left < n) dfs(left + 1, right, max, s + '(')
 		//回溯的过程中直接剪枝掉无效的组合
@@ -88,7 +86,7 @@ var generateParenthesis = function (n) {
 }
 ```
 
-### ==[36.有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)==
+### [36.==有效的数独==](https://leetcode-cn.com/problems/valid-sudoku/)
 
 ```javascript
 var isValidSudoku = function (board) {
@@ -119,7 +117,7 @@ var isValidSudoku = function (board) {
 }
 ```
 
-### ==[77.组合](https://leetcode-cn.com/problems/combinations/)==
+### [77.==组合==](https://leetcode-cn.com/problems/combinations/)
 
 ```javascript {.line-numbers}
 //dfs + backtrack 1
@@ -165,7 +163,7 @@ var combine = function (n, k) {
 }
 ```
 
-### ==[39.组合总和](https://leetcode-cn.com/problems/combination-sum/)==
+### [39.==组合总和==](https://leetcode-cn.com/problems/combination-sum/)
 
 ```javascript {.line-numbers}
 //candidates无重复
@@ -223,7 +221,7 @@ var combinationSum = function (candidates, target) {
 }
 ```
 
-### ==[40.组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)==
+### [40.==组合总和 II==](https://leetcode-cn.com/problems/combination-sum-ii/)
 
 ```javascript {.line-numbers}
 //candidates有重复
@@ -257,7 +255,7 @@ var combinationSum2 = function (candidates, target) {
 }
 ```
 
-### ==[46.全排列 M](https://leetcode-cn.com/problems/permutations/)==
+### [46.==全排列 M==](https://leetcode-cn.com/problems/permutations/)
 
 ```javascript {.line-numbers}
 //nums无重复
@@ -288,7 +286,7 @@ var permute = function (nums) {
 }
 ```
 
-### ==[47.全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)==
+### [47.==全排列 2M==](https://leetcode-cn.com/problems/permutations-ii/)
 
 ```javascript {.line-numbers}
 //nums有重复
@@ -326,7 +324,7 @@ var permuteUnique = function (nums) {
 }
 ```
 
-### ==[78.子集 M](https://leetcode-cn.com/problems/subsets/)==
+### [78.==子集 M==](https://leetcode-cn.com/problems/subsets/)
 
 ```javascript {.line-numbers}
 //backtrack 1
@@ -379,7 +377,7 @@ var subsets = function (nums) {
 }
 ```
 
-### ==[79.单词搜索](https://leetcode-cn.com/problems/word-search/)==
+### [79.==单词搜索==](https://leetcode-cn.com/problems/word-search/)
 
 ```javascript {.line-numbers}
 var exist = function (board, word) {
@@ -434,7 +432,7 @@ function isValid(x, y, row, col) {
 }
 ```
 
-### ==[90.子集 II](https://leetcode-cn.com/problems/subsets-ii/)==
+### [90.==子集 II==](https://leetcode-cn.com/problems/subsets-ii/)
 
 ```javascript {.line-numbers}
 var subsetsWithDup = function (nums) {
@@ -456,7 +454,7 @@ var subsetsWithDup = function (nums) {
 }
 ```
 
-### ==[51.N 皇后 H](https://leetcode-cn.com/problems/n-queens/)==
+### [51.==N 皇后 H==](https://leetcode-cn.com/problems/n-queens/)
 
 ```javascript {.line-numbers}
 var solveNQueens = function (n) {
@@ -506,7 +504,7 @@ var solveNQueens = function (n) {
 }
 ```
 
-### ==[52.N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)==
+### [52.==N 皇后 2H==](https://leetcode-cn.com/problems/n-queens-ii/)
 
 ```javascript {.line-numbers}
 var totalNQueens = function (n) {
@@ -570,7 +568,7 @@ var totalNQueens = function (n) {
 }
 ```
 
-### ==[130.被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)==
+### [130.==被围绕的区域==](https://leetcode-cn.com/problems/surrounded-regions/)
 
 ```javascript {.line-numbers}
 var solve = function (board) {
@@ -623,7 +621,7 @@ var solve = function (board) {
 
 ## 小岛问题
 
-### ==[200.岛屿数量](https://leetcode-cn.com/problems/number-of-islands/)==
+### [200.==岛屿数量==](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```javascript {.line-numbers}
 //DFS

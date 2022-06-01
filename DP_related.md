@@ -2,7 +2,7 @@
 
 # 1、线性 DP
 
-### ==[5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)==
+### [5. ==最长回文子串==](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
 ```javascript {.line-numbers}
 //brute force + reverse()
@@ -106,7 +106,7 @@ var longestPalindrome = function (s) {
 }
 ```
 
-### [==32.最长有效括号==](https://leetcode-cn.com/problems/longest-valid-parentheses/)
+### [32.==最长有效括号==](https://leetcode-cn.com/problems/longest-valid-parentheses/)
 
 ```javascript {.line-numbers}
 //brute force O(n^3)
@@ -304,7 +304,7 @@ var maxSubArray = function (nums) {
 }
 ```
 
-### ==[64. 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)==
+### [64. ==最小路径和==](https://leetcode-cn.com/problems/minimum-path-sum/)
 
 ```javascript {.line-numbers}
 //dp[i][j]表示从(i,j)走到(m-1, n-1)点的最小路径和
@@ -433,7 +433,7 @@ var minDistance = function (word1, word2) {
 }
 ```
 
-### ==[91. 解码方法](https://leetcode-cn.com/problems/decode-ways/)==
+### [91. ==解码方法==](https://leetcode-cn.com/problems/decode-ways/)
 
 ```javascript {.line-numbers}
 var numDecodings = function (s) {
@@ -693,7 +693,7 @@ var integerBreak = function (n) {
 }
 ```
 
-### ==[718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)==
+### [718. ==最长重复子数组==](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
 
 ```javascript {.line-numbers}
 /**
@@ -1020,7 +1020,7 @@ var maxProfit = function (prices) {
 
 # 2、区间 DP
 
-### [==516. 最长回文子序列==](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
+### [516. ==最长回文子序列==](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
 
 ```javascript {.line-numbers}
 var longestPalindromeSubseq = function (s) {
@@ -1061,7 +1061,7 @@ var longestPalindromeSubseq = function (s) {
 
 4. 优化：注意遍历方向
 
-### ==[322. 零钱兑换](https://leetcode-cn.com/problems/coin-change/)==
+### [322. ==零钱兑换==](https://leetcode-cn.com/problems/coin-change/)
 
 ```javascript {.line-numbers}
 var coinChange = function (coins, amount) {
@@ -1162,7 +1162,7 @@ var coinChange = function (coins, amount) {
 }
 ```
 
-### ==[518. 零钱兑换 II](https://leetcode-cn.com/problems/coin-change-2/)==
+### [518. ==零钱兑换 II==](https://leetcode-cn.com/problems/coin-change-2/)
 
 ```javascript {.line-numbers}
 var change = function (amount, coins) {
@@ -1187,7 +1187,7 @@ var change = function (amount, coins) {
 
 # 7、计数型 DP
 
-### ==[62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)==
+### [62. ==不同路径==](https://leetcode-cn.com/problems/unique-paths/)
 
 ```javascript {.line-numbers}
 //DFS O(2^(m + n - 1) - 1)
@@ -1311,7 +1311,7 @@ const numTrees = (n) => {
 
 # 8、递推型 DP
 
-### ==[70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)==
+### [70. ==爬楼梯==](https://leetcode-cn.com/problems/climbing-stairs/)
 
 ```javascript {.line-numbers}
 //recursion O(2^n)
@@ -1346,7 +1346,7 @@ var climbStairs = function (n) {
 }
 ```
 
-### ==[509. 斐波那契数](https://leetcode-cn.com/problems/fibonacci-number/)==
+### [509. ==斐波那契数==](https://leetcode-cn.com/problems/fibonacci-number/)
 
 ```javascript {.line-numbers}
 var fib = function (n) {

@@ -25,7 +25,7 @@
 >
 > 这个思路其实也不难,第 2 步相当于在寻找一个「可行解」,然后第 3 步在优化这个「可行解」,最终找到最优解,也就是最短的覆盖子串.左右指针轮流前进,窗口大小增增减减,窗口不断向右滑动,这就是「滑动窗口」这个名字的来历
 
-### ==[3.无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)==
+### [3.==无重复字符的最长子串==](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
 ```javascript {.line-numbers}
 //more simple version
@@ -67,7 +67,7 @@ var lengthOfLongestSubstring = function (s) {
 }
 ```
 
-### ==[76.最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)==
+### [76.==最小覆盖子串==](https://leetcode-cn.com/problems/minimum-window-substring/)
 
 ```javascript {.line-numbers}
 //labuladuo version
@@ -125,7 +125,7 @@ var minWindow = function (s, t) {
 }
 ```
 
-### ==[209.长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)==
+### [209.==长度最小的子数组==](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
 
 ```javascript {.line-numbers}
 // 1 brute force O(n^2) - O(1)
@@ -170,7 +170,7 @@ var minSubArrayLen = function (s, nums) {
 }
 ```
 
-### ==[239.滑动窗口最大值 H ](https://leetcode-cn.com/problems/sliding-window-maximum/)==
+### [239.==滑动窗口最大值 H==](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 - brute force O(n \* k) - O(n - k +1)
 
@@ -223,7 +223,7 @@ var minSubArrayLen = function (s, nums) {
   	//单调递减
   	const stack = [],
   		ans = []
-
+  
   	for (let i = 0, len = nums.length; i < len; i++) {
   		if (i - k + 1 > stack[l]) l++
   		//缩小右边界直到满足条件
@@ -236,7 +236,7 @@ var minSubArrayLen = function (s, nums) {
   }
   ```
 
-### ==[438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)==
+### [438.==找到字符串中所有字母异位词==](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 ```javascript {.line-numbers}
 var findAnagrams = function (s, p) {
@@ -281,7 +281,7 @@ var findAnagrams = function (s, p) {
 }
 ```
 
-### ==[567.字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)==
+### [567.==字符串的排列 M==](https://leetcode-cn.com/problems/permutation-in-string/)
 
 ```javascript {.line-numbers}
 //labuladong version

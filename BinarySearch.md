@@ -35,7 +35,7 @@
 
 ### some templates
 
-#### 1 Basic Template
+#### 1 ==Basic Template==
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
@@ -93,7 +93,7 @@ const binarySearch = (arr, target) => {
 #### 3 查找最后一个值等于给定值的元素
 
 ```javascript {.line-numbers}
-const binarySearch2 = (arr, target) => {
+const binarySearch = (arr, target) => {
 	if (arr.length === 0) return -1
 	let left = 0,
 		right = arr.length - 1,
@@ -163,53 +163,52 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 6 寻找左侧边界的二分搜索
+#### 6 ==寻找左侧边界的二分搜索==
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
 	let left = 0,
+     //Note 1
 		right = arr.length - 1
+  //Note 2
 	while (left <= right) {
 		let mid = Math.floor(left + (right - left) / 2)
 		if (arr[mid] < target) {
+      //Note 3
 			left = mid + 1
 		} else if (arr[mid] > target) {
+      //Note 3
 			right = mid - 1
 		} else if (arr[mid] === target) {
+      //Note 3
 			right = mid - 1
 		}
 	}
-	//检查出界情况
+	//Note 4
+  //检查出界情况
 	if (left >= arr.length || arr[left] !== target) return -1
 	return left
-	//return left >= nums.length ? -1 : left
 }
 ```
 
-#### 7 寻找右侧边界的二分搜索
+#### 7 ==寻找右侧边界的二分搜索==
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
 	let left = 0,
 		right = arr.length - 1
-	// 搜索区间为 [left, right]
 	while (left <= right) {
 		let mid = Math.floor(left + (right - left) / 2)
 		if (arr[mid] < target) {
-			// 搜索区间变为 [mid+1, right]
 			left = mid + 1
 		} else if (arr[mid] > target) {
-			// 搜索区间变为 [left, mid-1]
 			right = mid - 1
 		} else if (arr[mid] === target) {
-			// 收缩右侧边界
 			left = mid + 1
 		}
 	}
-	// 检查出界情况
 	if (right < 0 || arr[right] !== target) return -1
 	return right
-	//return right < 0 ? -1 : right
 }
 ```
 
@@ -230,8 +229,7 @@ var search = function (nums, target) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return mid
 
-		//l is asc
-		//incase mid === l 坐标相等
+		//in case mid === l 下标相等
 		//[start, mid]有序
 		if (nums[mid] >= nums[l]) {
 			if (target < nums[mid] && target >= nums[l]) {
@@ -306,11 +304,12 @@ var mySqrt = function (x) {
 			return mid
 		}
 	}
+  //l > r
 	return r
 }
 ```
 
-#### [81.==搜索旋转排序数组 II==](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
+#### [81.搜索旋转排序数组 II](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
 
 ```javascript {.line-numbers}
 var search = function (nums, target) {
