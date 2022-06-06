@@ -1,39 +1,18 @@
-var isValidSudoku = function (board) {
-	const rows = {}, //记录每行对应的key
-		columns = {}, //记录每列对应的key
-		boxes = {} //记录每个小数独对应的key
+var maxSlidingWindow = function (nums, k) {
+	let l = 0,
+		r = -1
+	//单调递减
+	const stack = [],
+		ans = []
 
-	for (let i = 0; i < 9; i++) {
-		for (let j = 0; j < 9; j++) {
-			let num = board[i][j]
-			if (num !== '.') {
-				//计算子数独序号
-				const boxIdx = Number.parseInt(i / 3) * 3 + Number.parseInt(j / 3)
-				if (
-					rows[i + '-' + num] ||
-					columns[j + '-' + num] ||
-					boxes[boxIdx + '-' + num]
-				)
-					return false
-				//标记
-				rows[i + '-' + num] = true
-				columns[j + '-' + num] = true
-				boxes[boxIdx + '-' + num] = true
-			}
-		}
+	for (let i = 0, len = nums.length; i < len; i++) {
+		if (i - k + 1 > stack[l]) l++
+		//缩小右边界直到满足条件
+		while (l <= r && nums[stack[r]] < nums[i]) r--
+		stack[++r] = i
+		//满足条件才放答案
+		if (i >= k - 1) ans.push(nums[stack[l]])
 	}
-	console.log(boxes)
-	return true
+	return ans
 }
-
-isValidSudoku([
-	['5', '3', '.', '.', '7', '.', '.', '.', '.'],
-	['6', '.', '.', '1', '9', '5', '.', '.', '.'],
-	['.', '9', '8', '.', '.', '.', '.', '6', '.'],
-	['8', '.', '.', '.', '6', '.', '.', '.', '3'],
-	['4', '.', '.', '8', '.', '3', '.', '.', '1'],
-	['7', '.', '.', '.', '2', '.', '.', '.', '6'],
-	['.', '6', '.', '.', '.', '.', '2', '8', '.'],
-	['.', '.', '.', '4', '1', '9', '.', '.', '5'],
-	['.', '.', '.', '.', '8', '.', '.', '7', '9'],
-])
+maxSlidingWindow([1, 3, -1, -3, 5, 3, 6, 7], 3)

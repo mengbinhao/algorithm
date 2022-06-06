@@ -1,30 +1,30 @@
 ### [17.==电话号码的字母组合==](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
 ```javascript
-var letterCombinations = function(digits) {
-  const ret = []
-  if (!digits) return ret
-  const hash = {
-    '2': 'abc',
-		'3': 'def',
-		'4': 'ghi',
-		'5': 'jkl',
-		'6': 'mno',
-		'7': 'pqrs',
-		'8': 'tuv',
-		'9': 'wxyz',
-  }
-  const dfs = (s, level) => {
-    if (level === digits.length) {
-      ret.push(s)
-      return
-    }
-    for (let c of hash[digits[level]]) dfs(s + c, level + 1)
-  }
-  //can pass more params if you want, like ret、map、digits
-  dfs('', 0)
-  return ret
-};
+var letterCombinations = function (digits) {
+	const ret = []
+	if (!digits) return ret
+	const hash = {
+		2: 'abc',
+		3: 'def',
+		4: 'ghi',
+		5: 'jkl',
+		6: 'mno',
+		7: 'pqrs',
+		8: 'tuv',
+		9: 'wxyz',
+	}
+	const dfs = (s, level) => {
+		if (level === digits.length) {
+			ret.push(s)
+			return
+		}
+		for (let c of hash[digits[level]]) dfs(s + c, level + 1)
+	}
+	//can pass more params if you want, like ret、map、digits
+	dfs('', 0)
+	return ret
+}
 ```
 
 ### [22.==括号生成==](https://leetcode-cn.com/problems/generate-parentheses/)
@@ -96,7 +96,7 @@ var isValidSudoku = function (board) {
 
 	for (let i = 0; i < 9; i++) {
 		for (let j = 0; j < 9; j++) {
-			let num = board[i][j]
+			const num = board[i][j]
 			if (num !== '.') {
 				//计算子数独序号
 				const boxIdx = Number.parseInt(i / 3) * 3 + Number.parseInt(j / 3)
@@ -198,6 +198,7 @@ var combinationSum = function (candidates, target) {
 		ret = []
 	if (len === 0) return ret
 	const dfs = (candidates, remain, start, path) => {
+    //[2,3,6,7], 7,已选[2,2,2]
 		if (remain < 0 || start >= candidates.length) return
 		if (remain === 0) {
 			ret.push(path)
@@ -206,7 +207,7 @@ var combinationSum = function (candidates, target) {
 
 		//choice
 		//剪枝
-		if (remain - candidates[index] >= 0) {
+		if (remain - candidates[start] >= 0) {
 			dfs(candidates, remain - candidates[start], start, [
 				...path,
 				candidates[start],
@@ -239,9 +240,9 @@ var combinationSum2 = function (candidates, target) {
 		}
 
 		for (let i = begin, len = candidates.length; i < len; i++) {
-			//大剪枝：减去 candidates[i] 小于 0，减去后面的 candidates[i + 1]、candidates[i + 2] 肯定也小于 0，因此用 break
+			//大剪枝：减去 candidates[i] 小于 0，减去后面的 candidates[i + 1]、candidates[i + 2] 肯定也小于 0
 			if (remain - candidates[i] < 0) break
-			// 小剪枝：同一层相同数值的结点，从第 2 个开始，候选数更少，结果一定发生重复，因此跳过，用 continue
+			// 小剪枝：同一层相同数值的结点，从第 2 个开始，候选数更少，结果一定发生重复，因此跳过
 			if (i > begin && candidates[i - 1] === candidates[i]) continue
 
 			path.push(candidates[i])

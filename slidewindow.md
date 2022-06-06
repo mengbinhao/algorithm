@@ -1,5 +1,7 @@
 # 类型
 
+## Concept
+
 - 固定窗口大小
   - l 初始化为 0
   - 初始化 r,使得 r - l + 1 等于窗口大小
@@ -25,6 +27,8 @@
 >
 > 这个思路其实也不难,第 2 步相当于在寻找一个「可行解」,然后第 3 步在优化这个「可行解」,最终找到最优解,也就是最短的覆盖子串.左右指针轮流前进,窗口大小增增减减,窗口不断向右滑动,这就是「滑动窗口」这个名字的来历
 
+## Questions
+
 ### [3.==无重复字符的最长子串==](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
 ```javascript {.line-numbers}
@@ -46,28 +50,20 @@ var lengthOfLongestSubstring = function (s) {
 }
 
 var lengthOfLongestSubstring = function (s) {
-	const window = {},
-		len = s.length
-	let left = 0,
-		right = 0,
-		ret = 0
-	while (right < len) {
-		const rightChar = s[right]
-		right++
-		window[rightChar] ? window[rightChar]++ : (window[rightChar] = 1)
-
-		//左边界一直缩到rightChar不重复
-		while (window[rightChar] > 1) {
-			left++
-			window[s[left]]--
-		}
-		ret = Math.max(ret, right - left)
-	}
-	return ret
+	const window = {}, len = s.length
+  let l = 0, r = 0, ret = 0
+  while (r < len) {
+    const rChar = s[r++]
+    window[rChar] ? window[rChar]++ : window[rChar] = 1
+    //left一直缩到widnow里当前rightChar不重复
+    while (window[rChar] > 1) window[s[l++]]--
+    ret = Math.max(ret, r - l)
+  }
+  return ret
 }
 ```
 
-### [76.==最小覆盖子串==](https://leetcode-cn.com/problems/minimum-window-substring/)
+### [76.最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
 
 ```javascript {.line-numbers}
 //labuladuo version
@@ -86,23 +82,19 @@ var minWindow = function (s, t) {
 		//表示窗口中满足 need 条件的字符个数,如果 valid 和 need.size 的大小相同,则说明窗口已满足条件,已经完全覆盖了串t
 		valid = 0
 
-	for (let c of t) {
-		need[c] ? need[c]++ : (need[c] = 1)
-	}
+	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
 
 	while (right < sLen) {
-		//移入字符
-		let rightChar = s[right]
-		//右移
+		const rightChar = s[right]
 		right++
 
 		//进行窗口内数据一系列更新
 		if (need[rightChar]) {
-			!window[rightChar] ? (window[rightChar] = 1) : window[rightChar]++
+			window[rightChar] ? window[rightChar]++ : (window[rightChar] = 1)
 			if (window[rightChar] === need[rightChar]) valid++
 		}
 
-		//t中的所有字符是否已经覆盖,则判断是否要收缩
+		//t中所有字符是否已全覆盖,则判断是否要收缩
 		while (valid === Object.keys(need).length) {
 			//更新最小覆盖子串
 			if (right - left < minLen) {
@@ -148,6 +140,7 @@ var minSubArrayLen = function (s, nums) {
 }
 
 // 2 前缀和 + 二分查找
+
 // 3 双指针 O(n) - O(1) 滑动窗口
 var minSubArrayLen = function (s, nums) {
 	const len = nums.length
@@ -236,7 +229,7 @@ var minSubArrayLen = function (s, nums) {
   }
   ```
 
-### [438.==找到字符串中所有字母异位词==](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+### [438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 ```javascript {.line-numbers}
 var findAnagrams = function (s, p) {
@@ -298,28 +291,23 @@ var checkInclusion = function (s, t) {
 		//表示窗口中满足 need 条件的字符个数,如果 valid 和 need.size 的大小相同,则说明窗口已满足条件,已经完全覆盖了串t
 		valid = 0
 
-	for (let c of s) {
-		need[c] ? need[c]++ : (need[c] = 1)
-	}
+	for (let c of s) need[c] ? need[c]++ : (need[c] = 1)
 
 	while (right < tLen) {
-		//移入字符
-		let rightChar = t[right]
+		const rightChar = t[right]
 		//右移
 		right++
 
 		//进行窗口内数据一系列更新
 		if (need[rightChar]) {
-			!window[rightChar] ? (window[rightChar] = 1) : window[rightChar]++
+			window[rightChar] ? window[rightChar]++ : (window[rightChar] = 1)
 			if (window[rightChar] === need[rightChar]) valid++
 		}
 
 		//t中的所有字符是否已经覆盖,则判断是否要收缩
 		while (right - left >= sLen) {
 			//更新最小覆盖子串
-			if (valid === Object.keys(need).length) {
-				return true
-			}
+			if (valid === Object.keys(need).length) return true
 			//移出字符
 			let leftChar = t[left]
 			//左移
