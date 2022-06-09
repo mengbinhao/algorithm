@@ -48,9 +48,7 @@ var longestPalindrome = function (s) {
 		maxLen = 1
 
 	//对角线等于true的case未用到,下列可以忽略不写
-	for (let i = 0; i < len; i++) {
-		dp[i][i] = true
-	}
+	for (let i = 0; i < len; i++) dp[i][i] = true
 	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
 	//先升序填列，再升序填行
 	//只需要填dp table上半边
@@ -1078,7 +1076,7 @@ var coinChange = function (coins, amount) {
 
 		//直接拿最大币值的最大个数找解
 		//coins递减
-		//k + count < ret剪枝非最小count解，不加则time exceeded
+		//i + count < ret剪枝非最小count解，不加则time exceeded
 		for (
 			let i = Math.floor(remain / coins[coinsIdx]);
 			i >= 0 && i + count < ret;
@@ -1096,7 +1094,7 @@ var coinChange = function (coins, amount) {
 //dfs time exceeded
 //O(S^n) - O(n)  S总金额
 var coinChange = function (coins, amount) {
-	if (coins.length === 0) -1
+	if (coins.length === 0) return -1
 	if (amount < 1) return 0
 
 	const dfs = (coins, remain, count) => {
@@ -1119,7 +1117,7 @@ var coinChange = function (coins, amount) {
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) -1
 	if (amount < 1) return 0
-
+	const cache = {}
 	const dfs = (coins, remain) => {
 		if (remain < 0) return -1
 		if (remain === 0) return 0
@@ -1134,7 +1132,6 @@ var coinChange = function (coins, amount) {
 		}
 		return (cache[remain] = min === Infinity ? -1 : min)
 	}
-	const cache = {}
 	return dfs(coins, amount)
 }
 
