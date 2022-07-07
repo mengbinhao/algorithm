@@ -433,10 +433,10 @@ var largestValues = function (root) {
 		const size = queue.length
 		let max = -Infinity
 		for (let i = 0; i < size; i++) {
-			const curNode = queue.shift()
+			const cur = queue.shift()
 			max = Math.max(max, curNode.val)
-      if (curNode.left) queue.push(curNode.left)
-		 if (curNode.right) queue.push(curNode.right)
+      if (cur.left) queue.push(cur.left)
+      if (cur.right) queue.push(cur.right)
 		}
 		ret.push(max)
 	}
@@ -581,7 +581,7 @@ var isValidBST = function (root) {
 		root = stack.pop()
 		if (root.val <= prev) return false
     //update prev
-    //if store root, prev.val maybe throw error
+    //if store node, prev.val maybe throw error
 		prev = root.val
 		root = root.right
 	}
@@ -1013,7 +1013,7 @@ var minDepth = function (root) {
 		? minLeftDepth + minRightDepth + 1
 		: Math.min(minLeftDepth, minRightDepth) + 1
 }
-
+.
 //BFS
 var minDepth = function (root) {
 	if (!root) return 0
@@ -1298,7 +1298,7 @@ var sumOfLeftLeaves = function (root) {
 ```javascript {.line-numbers}
 var hasPathSum = function (root, sum) {
 	if (!root) return false
-  //走到底
+  //bottom
 	if (!root.left && !root.right) return root.val === sum
 	return (
 		hasPathSum(root.left, sum - root.val) ||
@@ -1308,6 +1308,7 @@ var hasPathSum = function (root, sum) {
 
 var hasPathSum = function (root, targetSum) {
 	if (!root) return false
+  //双queue，一个统计节点，一个统计节点值
 	const queNode = [root],
 		queVal = [root.val]
 
@@ -1340,11 +1341,10 @@ var pathSum = function (root, sum) {
 	const dfs = (root, sum, path) => {
 		if (!root) return
 		path.push(root.val)
-		//due to pass reference so add a copy
+		//due to array pass reference so add a copy
 		if (!root.left && !root.right && sum === root.val) ret.push([...path])
 		dfs(root.left, sum - root.val, path)
 		dfs(root.right, sum - root.val, path)
-		//backtrack
 		path.pop()
 	}
 	dfs(root, sum, [])

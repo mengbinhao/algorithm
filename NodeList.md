@@ -20,9 +20,9 @@
 - 插入
 
 ```practice
-temp = 待插入位置的前驱节点.next
+next = 待插入位置的前驱节点.next
 待插入位置的前驱节点.next = 待插入指针
-待插入指针.next = temp
+待插入指针.next = next
 ```
 
 ![](./images/NodeList_insert.png)
@@ -256,7 +256,6 @@ var swapPairs = function (head) {
 var swapPairs = function (head) {
 	//当前没有节点或者只有一个节点,不需要交换
 	if (!head || !head.next) return head
-
 	// 需要交换的两个节点是 head 和 head.next
 	const first = head,
 		second = head.next
@@ -381,8 +380,7 @@ var rotateRight = function (head, k) {
 ```javascript {.line-numbers}
 var deleteDuplicates = function (head) {
 	if (!head) return head
-	const dummy = new ListNode(-1)
-	dummy.next = head
+	const dummy = new ListNode(-1, head)
 	let cur = dummy
 	while (cur.next && cur.next.next) {
 		if (cur.next.val === cur.next.next.val) {
@@ -437,7 +435,6 @@ var partition = function (head, x) {
 	after.next = null
 	//link before List and after List
 	before.next = dummyAfter.next
-	//返回链接后的头结点
 	return dummyBefore.next
 }
 ```
@@ -594,7 +591,7 @@ var hasCycle = function (head) {
 //better
 //fast and slow pointer O(n) - O(1)
 var hasCycle = function (head) {
-	let fast = (slow = head)
+	let fast = head, slow = head
 	while (fast && fast.next) {
 		fast = fast.next.next
 		slow = slow.next
@@ -688,9 +685,6 @@ var reverseList = function (head) {
 var reverseList = function (head) {
 	if (!head || !head.next) return head
 	const tail = reverseList(head.next)
-	//等同于
-	//node = head.next
-	//node.next = head
 	head.next.next = head
 	//cut the ring
 	head.next = null

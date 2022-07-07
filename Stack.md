@@ -22,13 +22,6 @@ var isValid = function (s) {
 }
 
 //brute force 一直替换
-var isValid = function (s) {
-	if ((s.length & 1) === 1) return false
-	while (s.includes('()') || s.includes('[]') || s.includes('{}')) {
-		s = s.replace(/\(\)|\[\]|\{\}/g, '')
-	}
-	return s === ''
-}
 ```
 
 ### [32.最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
@@ -47,7 +40,21 @@ var longestValidParentheses = function (s) {
 			if (isValid(s.substring(j, j + i))) return i
 		}
 	}
+  
+  function isValid(str) {
+    let balance = 0
+    for (let c of str) {
+      if (c === '(') {
+        balance++
+      } else {
+        balance--
+        if (balance < 0) return false
+      }
+    }
+    return balance === 0
+  }
 
+  /*
 	function isValid(s) {
 		const stack = []
 		for (let c of s) {
@@ -59,6 +66,7 @@ var longestValidParentheses = function (s) {
 		}
 		return stack.length === 0
 	}
+	*/
 }
 
 //DP O(n) - O(n)
@@ -92,9 +100,9 @@ var longestValidParentheses = function (s) {
 //stack O(n) - O(n)
 //始终保持栈底元素为当前已经遍历过的元素中“最后一个没有被匹配的右括号的下标”
 //对于遇到的每个(，将它下标放入栈中
-//对于遇到的每个)，先弹出栈顶元素表示匹配了当前右括号
+//对于遇到的每个)，先弹出栈顶元素与之匹配的左括号
 //如果栈为空，说明当前的右括号为没有被匹配的左括号，将其下标放入栈中来更新“最后一个没有被匹配的右括号的下标”
-//如果栈不为空，当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
+//如果栈不为空，当前右括号的下标减去栈顶元素即为“以该右括号为结尾的最长有效括号的长度”
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
