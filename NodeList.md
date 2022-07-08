@@ -84,7 +84,8 @@ var removeNthFromEnd = function (head, n) {
 //fast slow pointer
 var removeNthFromEnd = function (head, n) {
 	const dummyHead = new ListNode(-1, head)
-	let fast = dummyHead, slow = dummyHead
+	let fast = dummyHead,
+		slow = dummyHead
 	//移完后fast和slow的距离是n
 	while (n >= 0) {
 		fast = fast.next
@@ -591,7 +592,8 @@ var hasCycle = function (head) {
 //better
 //fast and slow pointer O(n) - O(1)
 var hasCycle = function (head) {
-	let fast = head, slow = head
+	let fast = head,
+		slow = head
 	while (fast && fast.next) {
 		fast = fast.next.next
 		slow = slow.next
@@ -637,7 +639,7 @@ var reorderList = function (head) {
 var insertionSortList = function (head) {
 	if (!head || !head.next) return head
 	const dummyHead = new ListNode(-1, head)
-  //默认第一个已经排序，从第二个结点开始比
+	//默认第一个已经排序，从第二个结点开始比
 	let lastSorted = head,
 		cur = head.next
 
@@ -673,6 +675,7 @@ var reverseList = function (head) {
 		next = cur.next
 		//change pointer ..3->2->1->null
 		cur.next = prev
+		//先后移pre再后提cur
 		prev = cur
 		cur = next
 	}
@@ -688,7 +691,7 @@ var reverseList = function (head) {
 	head.next.next = head
 	//cut the ring
 	head.next = null
-  //原本的tail变成了head，一直返回tail就是要求输出的head
+	//原本的tail变成了head，一直返回tail就是要求输出的head
 	return tail
 }
 ```
