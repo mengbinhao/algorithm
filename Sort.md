@@ -249,7 +249,7 @@ const heap = (arr) => {
 	let len = arr.length
 	if (len < 2) return arr
 
-	//堆化,查找3个点中的最大点
+	//堆化,查找三个点中的最大点
 	const down = (arr, i) => {
 		const lSon = 2 * i,
 			rSon = 2 * i + 1
@@ -258,7 +258,7 @@ const heap = (arr) => {
 		if (rSon < len && arr[rSon] > arr[largest]) largest = rSon
 		if (largest != i) {
 			;[arr[largest], arr[i]] = [arr[i], arr[largest]]
-			//交换后继续看交换后的那个节点的子树3节点是否满足条件
+			//交换后继续看交换后的那个节点的子树三个节点是否满足条件
 			down(arr, largest)
 		}
 	}

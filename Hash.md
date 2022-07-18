@@ -4,13 +4,12 @@
 //obj version
 var groupAnagrams = function (strs) {
 	const hash = {}
-	for (let str of strs) {
-		const arr = Array.from(str)
-		arr.sort()
-		const key = arr.toString()
-		hash[key] ? hash[key].push(str) : (hash[key] = [str])
-	}
-	return Object.values(hash)
+  for (let str of strs) {
+    //sort后相同的字母组成的不同的字符串肯定是相同的
+    const key = [...str].sort().toString()
+    hash[key] ? hash[key].push(str) :  hash[key] = [str]
+  }
+  return Object.values(hash)
 }
 
 //sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
@@ -130,10 +129,7 @@ var numJewelsInStones = function (J, S) {
 var numJewelsInStones = function (J, S) {
 	let ret = 0,
 		set = new Set()
-	for (let j of J) {
-		set.add(j)
-	}
-
+	for (let j of J) set.add(j)
 	for (let s of S) {
 		if (set.has(s)) ret++
 	}

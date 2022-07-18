@@ -9,7 +9,7 @@
 
 &、|、^、~、<<、>>
 
-## 异或`^`(两位相同为 0,不同为 1)
+## 异或`^`(两位相同为0,不同为 1)
 
 - x ^ 0 = x
 - x ^ 1s = ~x // 1s = ~0
@@ -200,16 +200,6 @@ var reverseBits = function (n) {
 ### [191.==位 1 的个数==](https://leetcode-cn.com/problems/number-of-1-bits/)
 
 ```javascript {.line-numbers}
-var hammingWeight = function (n) {
-	let ret = 0
-	for (let i = 0; i < 32; i++) {
-		if (n & 1) ret++
-		n = n >> 1
-	}
-	return ret
-}
-
-//good version
 var hammingWeight = function (n) {
 	let count = 0
 	while (n !== 0) {
