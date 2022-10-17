@@ -78,7 +78,7 @@ const select = (arr) => {
 	//有序区
 	for (let i = 0; i < len - 1; i++) {
 		//存放当前循环中最小index,默认循环初始值
-		//有序区的末尾坐标
+		//有序区的末尾坐标,此处应放下面找到的无序区的最小值
 		let minIdx = i
 		//无序区找最小值
 		for (let j = i + 1; j < len; j++) {
@@ -119,7 +119,7 @@ const quick = (arr) => {
 		let i = l - 1,
 			j = r + 1
 		while (i < j) {
-			//不管三七二十一先移动，所以上面定义的时候外移1位
+			//上面外扩，这里直接先移动，所以上面定义的时候外移1位
 			while (arr[++i] < pivot);
 			while (arr[--j] > pivot);
 			if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]]

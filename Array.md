@@ -15,9 +15,7 @@ var twoSum = function (nums, target) {
 	}
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
 		for (let j = i + 1; j < len; j++) {
-			if (nums[i] + nums[j] === target) {
-				return [i, j]
-			}
+			if (nums[i] + nums[j] === target) return [i, j]
 		}
 	}
 }
@@ -39,12 +37,12 @@ var twoSum = function (nums, target) {
 	}
 }
 
-//一次哈希 optimal,先放再回头找，不需要后续判重
+//一次哈希 optimal,先放再回头找则不需要判重
 //obj or map
 var twoSum = function (nums, target) {
 	const hash = {}
 	for (let i = 0, len = nums.length; i < len; i++) {
-		//the index in array should be zero
+		//maybe the index in array is zero
 		if (hash[nums[i]] !== undefined) return [hash[nums[i]], i]
 		hash[target - nums[i]] = i
 	}
@@ -67,16 +65,12 @@ var maxArea = function (height) {
 
 //two pointer夹逼 O(n) - O(1)
 var maxArea = function (height) {
-	let left = 0,
-		right = height.length - 1,
+	let l = 0,
+		r = height.length - 1,
 		maxArea = 0
-
-	while (left < right) {
-		maxArea = Math.max(
-			maxArea,
-			Math.min(height[left], height[right]) * (right - left)
-		)
-		height[left] < height[right] ? left++ : right--
+	while (l < r) {
+		maxArea = Math.max(maxArea, Math.min(height[l], height[r]) * (r - l))
+		height[l] < height[r] ? l++ : r--
 	}
 	return maxArea
 }
@@ -95,9 +89,7 @@ var threeSum = function (nums) {
 		for (let j = i + 1; j < len - 1; j++) {
 			for (let k = j + 1; k < len; k++) {
 				if (nums[i] + nums[j] + nums[k] === 0) {
-					//duplicate-removal
 					const key = [nums[i], nums[j], nums[k]].sort()
-					//point is not repeat
 					if (map[key] === undefined) {
 						map[key] = true
 						ret.push([nums[i], nums[j], nums[k]])
@@ -138,38 +130,33 @@ var threeSum = function (nums) {
 }
 
 //夹逼（大部分情况需已排序） O(n^2) - O(1)
-var threeSum = function (nums) {
-	let ret = []
-	if (nums == null || nums.length < 3) return ret
-	//precondition!!!!!!
-	nums.sort((a, b) => a - b)
-	//至少留k那一位和2个pointer
-	for (let k = 0; k < nums.length - 2; k++) {
-		//nums is sorted,so it's impossible to have a sum = 0
-		if (nums[k] > 0) break
-		//skip duplicated nums[k]
-		if (k > 0 && nums[k] === nums[k - 1]) continue
-		let left = k + 1,
-			right = nums.length - 1
-		while (left < right) {
-			const sum = nums[k] + nums[left] + nums[right]
-			if (sum === 0) {
-				ret.push([nums[k], nums[left], nums[right]])
-				//skip duplicated nums[left]
-				while (nums[left] === nums[left + 1]) left++
-				left++
-				//skip duplicated nums[right]
-				while (nums[right] === nums[right - 1]) right--
-				right--
-			} else if (sum > 0) {
-				right--
-			} else {
-				left++
-			}
-		}
-	}
-	return ret
-}
+var threeSum = function(nums) {
+  const len = nums.length
+  //precondition!!!!!!
+  nums.sort((a, b) => a - b)
+  const ret = []
+  //不重复的三个数
+  for (let i = 0; i < len - 2; i++) {
+    if (nums[i] > 0) break
+    if (i > 0 && nums[i] === nums[i - 1]) continue
+    let l = i + 1, r = len - 1
+    while (l < r) {
+      const sum = nums[i] + nums[l] + nums[r]
+      if (sum === 0) {
+        ret.push([nums[i], nums[l], nums[r]])
+        while (nums[l] === nums[l + 1]) l++
+        l++
+        while (nums[r] === nums[r - 1]) r--
+        r--
+      } else if (sum > 0) {
+        r--
+      } else {
+        l++
+      }
+    }
+  }
+  return ret
+};
 ```
 
 ### [18.四数之和 M](https://leetcode-cn.com/problems/4sum/)
@@ -224,15 +211,13 @@ var fourSum = function (nums, target) {
 ### [26.==删除排序数组重复项 E==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
-//slow / fast pointer
+//slow - fast pointer
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	let slow = 0
 	for (let fast = 1; fast < len; fast++) {
-		if (nums[slow] !== nums[fast]) {
-			nums[++slow] = nums[fast]
-		}
+		if (nums[slow] !== nums[fast]) nums[++slow] = nums[fast]
 	}
 	return slow + 1
 }
@@ -243,12 +228,14 @@ var removeDuplicates = function (nums) {
 ```javascript
 var jump = function (nums) {
 	let steps = 0,
+     //边界
 		end = 0,
 		maxPosition = 0
+  //如果访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
 		//当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
-		//跳到上次能跳到的最远位置后update
+		//跳到上次能跳到的最远位置后更新边界
 		if (i === end) {
 			end = maxPosition
 			steps++
@@ -258,10 +245,47 @@ var jump = function (nums) {
 }
 ```
 
-### [54.螺旋矩阵](https://leetcode-cn.com/problems/spiral-matrix/)
+### [54.==螺旋矩阵==](https://leetcode-cn.com/problems/spiral-matrix/)
 
 ```javascript {.line-numbers}
-//O(n) - O(n) 没写 directionIndex = (directionIndex + 1) % 4;
+//O(n) - O(n)
+//偏移量解法
+var spiralOrder = function (matrix) {
+	if (!matrix.length || !matrix[0].length) return []
+	const rows = matrix.length
+	const columns = matrix[0].length
+	const total = rows * columns
+	const visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
+	const ret = new Array(total)
+	const directions = [
+		[0, 1],
+		[1, 0],
+		[0, -1],
+		[-1, 0],
+	]
+
+	let directionIdx = 0,
+		row = 0,
+		column = 0
+	for (let i = 0; i < total; i++) {
+		ret[i] = matrix[row][column]
+		visited[row][column] = true
+		const nextRow = row + directions[directionIdx][0]
+		const nexColumn = column + directions[directionIdx][1]
+		if (
+			nextRow < 0 ||
+			nextRow >= rows ||
+			nexColumn < 0 ||
+			nexColumn >= columns ||
+			visited[nextRow][nexColumn]
+		) {
+			directionIdx = (directionIdx + 1) % 4
+		}
+		row += directions[directionIdx][0]
+		column += directions[directionIdx][1]
+	}
+	return ret
+}
 
 //O(mn) - O(1)
 var spiralOrder = function (matrix) {
@@ -287,46 +311,6 @@ var spiralOrder = function (matrix) {
 	}
 	return ret
 }
-
-//O(mn) - O(1)
-var spiralOrder = function (matrix) {
-	const ret = []
-	if (matrix == null || matrix.length === 0 || matrix[0].length === 0) return
-
-	const rows = matrix.length,
-		cols = matrix[0].length
-	let left = 0,
-		right = cols - 1,
-		top = 0,
-		bottom = rows - 1
-
-	while (left <= right && top <= bottom) {
-		//上(top,left)...(top,right)
-		for (let column = left; column <= right; column++) {
-			ret.push(matrix[top][column])
-		}
-		//右(top + 1,right)...(bottom,right)
-		for (let row = top + 1; row <= bottom; row++) {
-			ret.push(matrix[row][right])
-		}
-		//下(bottom,right - 1)...(bottom,left + 1)
-		//坐(bottom,left)...(top + 1,left)
-		//handle one row or one column
-		if (left < right && top < bottom) {
-			for (let column = right - 1; column > left; column--) {
-				ret.push(matrix[bottom][column])
-			}
-			for (let row = bottom; row > top; row--) {
-				ret.push(matrix[row][left])
-			}
-		}
-		left++
-		right--
-		top++
-		bottom--
-	}
-	return ret
-}
 ```
 
 ### [52.螺旋矩阵 II](https://leetcode-cn.com/problems/spiral-matrix-ii/)
@@ -337,10 +321,10 @@ var generateMatrix = function (n) {
 		right = n - 1,
 		top = 0,
 		bottom = n - 1
+  //new Array(n).fill(0).map(() => new Array(n)),直接new Array(n)空数组map跳过
 	const ret = Array.from({ length: n }, () => new Array(n))
-	const total = n * n
 	let num = 1
-	while (num <= total) {
+	while (num <= n * n) {
 		// left to right
 		for (let i = left; i <= right; i++) ret[top][i] = num++
 		top++
@@ -362,16 +346,17 @@ var generateMatrix = function (n) {
 
 ```javascript
 var canJump = function (nums) {
-	//能够走到的数组下标
+  const len = nums.length
+	//能够跳到的最远位置
 	let maxPosition = 0
-	for (let i = 0; i < nums.length; i++) {
-		//若当前这一步都走不到,后面就更走不到了
+	for (let i = 0; i < len; i++) {
+		//若当前位置都跳不到,后面就更跳不到了
 		if (maxPosition < i) return false
 		//更新max为当前能走到的最远位置
 		maxPosition = Math.max(nums[i] + i, maxPosition)
 	}
-	//判断是否能跳完
-	return maxPosition >= nums.length - 1
+	//当前位置跳跃距离是否能跳到数组末尾或超过数组长度
+	return maxPosition >= len - 1
 }
 ```
 
@@ -387,9 +372,11 @@ var plusOne = function (digits) {
 		//检查是否还需要进位，若不需要直接返回
 		if (digits[i] !== 0) return digits
 	}
-	//全部加完还需要进位的情况
-	digits = [...Array(len + 1)].map(() => 0)
-	digits[0] = 1
+	//全部加完还需要进位
+	digits = Array.from({ length: len + 1 }, (_, idx) => {
+		if (idx === 0) return 1
+		return 0
+	})
 	return digits
 }
 ```
@@ -402,98 +389,74 @@ var plusOne = function (digits) {
 //O(mn) - O(m + n) direct version
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
-		cols = matrix[0].length
-	const impactedRows = new Set(),
-		impactedCols = new Set()
-	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) {
-			if (matrix[i][j] === 0) {
-				impactedRows.add(i)
-				impactedCols.add(j)
-			}
-		}
-	}
-
-	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) {
-			if (impactedRows.has(i) || impactedCols.has(j)) {
-				matrix[i][j] = 0
-			}
-		}
-	}
+		cols = matrix[0].length,
+	  mardedRow = new Array(rows).fill(false),
+    markedCol = new Array(cols).fill(false)
+  //先循环记录需要待转换的行或列
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (matrix[i][j] === 0) mardedRow[i] =  markedCol[j] = true
+    }
+  }
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (mardedRow[i] || markedCol[j]) matrix[i][j] = 0
+    }
+  }
 }
 
-//O((MN)×(M+N)) - O(1)
+//O(mn) - O(1)
 //advanced version
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length,
+     //使用mark标记
 		marked = -1000001
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (matrix[i][j] === 0) {
 				for (let m = 0; m < rows; m++) {
-					//不能影响到原本的0
-					if (matrix[m][j] !== 0) {
-						matrix[m][j] = marked
-					}
+					//要先标记下次遍历再转换
+					if (matrix[m][j] !== 0) matrix[m][j] = marked
 				}
 				for (let n = 0; n < cols; n++) {
-					//不能影响到原本的0
-					if (matrix[i][n] !== 0) {
-						matrix[i][n] = marked
-					}
+					//同上
+					if (matrix[i][n] !== 0) matrix[i][n] = marked
 				}
 			}
 		}
 	}
-
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
-			if (matrix[i][j] === marked) {
-				matrix[i][j] = 0
-			}
+			if (matrix[i][j] === marked) matrix[i][j] = 0
 		}
 	}
 }
 
-//best version
+//使用两个标记变量,使用matrix的第一行和列代替上面的两个数组
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length
-	let isCol = false
-	for (let i = 0; i < rows; i++) {
-		//handle one col
-		if (matrix[i][0] === 0) {
-			isCol = true
-		}
-		for (let j = 1; j < cols; j++) {
-			if (matrix[i][j] === 0) {
-				matrix[i][0] = 0
-				matrix[0][j] = 0
-			}
-		}
-	}
-
-	for (let i = 1; i < rows; i++) {
-		for (let j = 1; j < cols; j++) {
-			if (matrix[i][0] === 0 || matrix[0][j] === 0) {
-				matrix[i][j] = 0
-			}
-		}
-	}
-
-	if (matrix[0][0] === 0) {
-		for (let j = 0; j < cols; j++) {
-			matrix[0][j] = 0
-		}
-	}
-
-	if (isCol) {
-		for (let i = 0; i < rows; i++) {
-			matrix[i][0] = 0
-		}
-	}
+	let rowZero = false, colZero = false
+  //更新第一行与第一列并记录两个变量
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (matrix[i][j] === 0) {
+        matrix[0][j] = matrix[i][0] = 0
+        if (i === 0) rowZero = true
+        if (j === 0) colZero = true
+      }
+    }
+  }
+  //使用第一行与第一列更新其他区域
+  for (let i = 1; i < rows; i++) {
+    for (let j = 1; j < cols; j++) {
+      if (matrix[0][j] === 0 || matrix[i][0] === 0) matrix[i][j] = 0
+    }
+  }
+  //最后根据两个变量处理第一行与第一列
+  for (let i = 0; rowZero && i < cols; i++) matrix[0][i] = 0
+  for (let i = 0; colZero && i < rows; i++) matrix[i][0] = 0
 }
 ```
 
@@ -504,7 +467,6 @@ var sortColors = function (nums) {
 	let cur = 0,
 		p1 = 0,
 		p2 = nums.length - 1
-
 	while (cur <= p2) {
 		if (nums[cur] === 2) {
 			;[nums[cur], nums[p2--]] = [nums[p2], nums[cur]]
@@ -521,16 +483,14 @@ var sortColors = function (nums) {
 ### [80.==删除排序数组重复项 II==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/)
 
 ```javascript
-//slow / fast pointer
+//slow - fast pointer
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len <= 2) return len
 	let slow = 2,
 		fast = 2
 	while (fast < len) {
-		if (nums[slow - 2] != nums[fast]) {
-			nums[slow++] = nums[fast]
-		}
+		if (nums[slow - 2] !== nums[fast]) nums[slow++] = nums[fast]
 		fast++
 	}
 	return slow
@@ -540,8 +500,15 @@ var removeDuplicates = function (nums) {
 ### [88.==合并两个有序数组 E==](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
+//最直观的方法是先将数组合并再排序
+var merge = function (nums1, m, nums2, n) {
+	nums1.splice(m, nums1.length - m, ...nums2)
+	nums1.sort((a, b) => a - b)
+}
+
 //三指针 / 从前往后 O(n+m) - O(m)
 var merge = (nums1, m, nums2, n) => {
+  //原数组前面会被覆盖所以copy一份
 	const nums1Copy = nums1.slice(0, m)
 	let p1 = 0,
 		p2 = 0,
@@ -549,8 +516,6 @@ var merge = (nums1, m, nums2, n) => {
 	while (p1 < m && p2 < n) {
 		nums1[p++] = nums1Copy[p1] < nums2[p2] ? nums1Copy[p1++] : nums2[p2++]
 	}
-
-	//handle p1 < m or p2 < n
 	while (p1 < m) nums1[p++] = nums1Copy[p1++]
 	while (p2 < n) nums1[p++] = nums2[p2++]
 }
@@ -560,10 +525,9 @@ var merge = (nums1, m, nums2, n) => {
 	let p = m - 1,
 		q = n - 1,
 		k = m + n - 1
-	//loop nums1, nums2没完复制就是
-	while (q >= 0) {
-		nums1[k--] = nums1[p] > nums2[q] ? nums1[p--] : nums2[q--]
-	}
+	//nums2全部复制完
+  //不能写成nums1[p] < nums2[q] ? nums2[q--] : nums1[p--]死循环
+	while (q >= 0) nums1[k--] = nums1[p] > nums2[q] ? nums1[p--] : nums2[q--]
 }
 ```
 
@@ -573,15 +537,11 @@ var merge = (nums1, m, nums2, n) => {
 //brute force O(n*k) - O(1)
 var rotate = function (nums, k) {
 	const len = nums.length
-	let previous, temp
-	//loop k次
-	for (let i = 0; i < k; i++) {
-		previous = nums[len - 1]
-		//每次向前滚动一下
+	for (let i = 0; i < k % len; i++) {
+		let previous = nums[len - 1]
+		//每次向前滚一下
 		for (let j = 0; j < len; j++) {
-			temp = nums[j]
-			nums[j] = previous
-			previous = temp
+      [nums[j], previous] = [previous, nums[j]]
 		}
 	}
 }
@@ -591,13 +551,11 @@ var rotate = (nums, k) => {
 	const len = nums.length,
 		tmp = new Array(len)
 	for (let i = 0; i < len; i++) {
-		//旋转后的数值位置
+		//旋转后的位置
 		tmp[(i + k) % len] = nums[i]
 	}
 	//复制回去
-	for (let i = 0; i < len; i++) {
-		nums[i] = tmp[i]
-	}
+	for (let i = 0; i < len; i++) nums[i] = tmp[i]
 }
 
 //数组翻转 O(n) - O(1)
@@ -622,33 +580,38 @@ var rotate = function (nums, k) {
 ### [238.==除自身以外数组的乘积==](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 ```javascript {.line-numbers}
+//使用两个数组
 var productExceptSelf = (nums) => {
 	const len = nums.length
 	// L 和 R 分别表示左右两侧的乘积列表
 	const left = new Array(len)
 	const right = new Array(len)
 	const ret = new Array(len)
-
 	// left[i] 为索引 i 左侧所有元素的乘积
 	// 对于索引为 '0' 的元素，因为左侧没有元素，所以 left[0] = 1
 	left[0] = 1
-	for (let i = 1; i < len; i++) {
-		left[i] = nums[i - 1] * left[i - 1]
-	}
-
+	for (let i = 1; i < len; i++) left[i] = nums[i - 1] * left[i - 1]
 	// right[i] 为索引 i 右侧所有元素的乘积
 	// 对于索引为 'len-1' 的元素，因为右侧没有元素，所以 right[len-1] = 1
 	right[len - 1] = 1
-	for (let i = len - 2; i >= 0; i--) {
-		right[i] = nums[i + 1] * right[i + 1]
-	}
-
+	for (let i = len - 2; i >= 0; i--) right[i] = nums[i + 1] * right[i + 1]
 	// 对于索引 i，除 nums[i] 之外其余各元素的乘积就是左侧所有元素的乘积乘以右侧所有元素的乘积
-	for (let i = 0; i < len; i++) {
-		ret[i] = left[i] * right[i]
-	}
+	for (let i = 0; i < len; i++) ret[i] = left[i] * right[i]
 	return ret
 }
+
+//使用一个数组
+var productExceptSelf = function(nums) {
+  const len = nums.length,
+    r = new Array(len),
+    ret = new Array(len)
+  ret[0] = 1
+  for (let i = 1; i < len; i++) ret[i] = nums[i - 1] * ret[i - 1]
+  r[len - 1] = 1
+  for (let i = len - 2; i >= 0; i--) r[i] = nums[i + 1] * r[i + 1]
+  for (let i = 0; i < len; i++) ret[i] = ret[i] * r[i]
+  return ret
+};
 
 //better  O(1)
 var productExceptSelf = function (nums) {
@@ -656,16 +619,13 @@ var productExceptSelf = function (nums) {
 		ret = new Array(len)
 
 	ret[0] = 1
-	for (let i = 1; i < len; i++) {
-		ret[i] = ret[i - 1] * nums[i - 1]
-	}
+	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]
 
 	let r = 1
-	for (let j = len - 1; j >= 0; j--) {
-		// 对于索引 i，左边的乘积为 ret[i]，右边的乘积为 r
-		ret[j] = ret[j] * r
-		// r需要包含右边所有的乘积，所以计算下一个结果时需要将当前值乘到 r上
-		r *= nums[j]
+  //从最后一个更新开始更新答案
+	for (let i = len - 1; i >= 0; i--) {
+		ret[i] = ret[i] * r
+		r *= nums[i]
 	}
 	return ret
 }
@@ -674,30 +634,24 @@ var productExceptSelf = function (nums) {
 ### [283.==移动零==](https://leetcode-cn.com/problems/move-zeroes/)
 
 ```javascript {.line-numbers}
-//循环一整次把非 0 换到前面，第二次循环把 0 填到后面 O(n) - O(1)
+//循环一整次把非0换到前面，第二次循环把0填到后面 O(n) - O(1)
 var moveZeroes = function (nums) {
 	let lastFoundZeroIndex = 0
 	const len = nums.length
 	for (let i = 0; i < len; i++) {
-		//move non-zero to front
-		if (nums[i] !== 0) {
-			nums[lastFoundZeroIndex++] = nums[i]
-		}
+		if (nums[i] !== 0) nums[lastFoundZeroIndex++] = nums[i]
 	}
-	//update behind item to zero
-	for (let i = lastFoundZeroIndex; i < len; i++) {
-		nums[i] = 0
-	}
+	for (let i = lastFoundZeroIndex; i < len; i++) nums[i] = 0
 	return nums
 }
 
-//循环一次，快慢指针，慢指针当前第一个 0 的位置，数组解构快速交换 0 与非 0 O(n)- O(1)
+//循环一次，快慢指针，慢指针当前第一个 0 的位置 O(n)- O(1)
 var moveZeroes = function (nums) {
 	let lastFoundZeroIndex = 0
-	for (let cur = 0, len = nums.length; cur < len; cur++) {
-		if (nums[cur] !== 0) {
-			;[nums[lastFoundZeroIndex++], nums[cur]] = [
-				nums[cur],
+	for (let fast = 0, len = nums.length; fast < len; fast++) {
+		if (nums[fast] !== 0) {
+			;[nums[lastFoundZeroIndex++], nums[fast]] = [
+				nums[fast],
 				nums[lastFoundZeroIndex],
 			]
 		}
@@ -732,7 +686,7 @@ var intersection = function (nums1, nums2) {
 }
 ```
 
-### [1122.==数组的相对排序==](https://leetcode-cn.com/problems/relative-sort-array/)
+### [1122.数组的相对排序](https://leetcode-cn.com/problems/relative-sort-array/)
 
 ```javascript {.line-numbers}
 var relativeSortArray = function (arr1, arr2) {

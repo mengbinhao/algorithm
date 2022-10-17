@@ -34,6 +34,7 @@ var longestCommonPrefix = function (strs) {
 	//枚strs[0]每个char
 	for (let i = 0, s0Len = strs[0].length; i < s0Len; i++) {
 		for (let j = 1, strsLen = strs.length; j < strsLen; j++) {
+      //strs[j]已经到头了
 			if (i === strs[j].length || strs[j].charAt(i) !== strs[0].charAt(i)) {
 				return strs[0].substring(0, i)
 			}
@@ -45,7 +46,6 @@ var longestCommonPrefix = function (strs) {
 //横向扫描 O(mn) - O(1)
 var longestCommonPrefix = function (strs) {
 	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
-
 	let prefix = strs[0]
 	for (let i = 1, len = strs.length; i < len; i++) {
 		//依次得到每个str的prefix
@@ -72,7 +72,7 @@ var lengthOfLastWord = function (s) {
 	if (len === 0) return 0
 	let i = len - 1
 	while (i >= 0 && s[i] === ' ') i--
-  //若扫完了直接提前返回
+  //扫完了直接返回
 	if (i < 0) return 0
   let ret = 0
 	while (i >= 0 && s[i] !== ' ') {
@@ -95,11 +95,9 @@ var isPalindrome = function (s) {
 	s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
 	let l = 0,
 		r = s.length - 1
-	//two pointer， 向中间夹逼
+	//two pointer夹逼
 	while (l < r) {
-		if (s[l] !== s[r]) return false
-		l++
-		r--
+		if (s[l++] !== s[r--]) return false
 	}
 	return true
 }
@@ -118,38 +116,36 @@ var reverseWords = function (s) {
 	let l = 0,
 		r = s.length - 1,
 		word = ''
-	const queue = []
-
+    queue = []
 	while (s[l] === ' ') l++
-	while (s[r] === ' ') r--
-	while (l <= r) {
-		const char = s[l]
+  while (s[r] === ' ') r--
+  //左往右扫
+  while (l <= r) {
+    let c = s[l]
+    if (c !== ' ') {
+      word += c
     //排除单词间有多个空格的情况,否则返回如example    good a    
-		if (char === ' ' && word) {
-			queue.unshift(word)
-			word = ''
-		} else if (char !== ' ') {
-			word += char
-		}
-		l++
-	}
-	//add last word
-	queue.unshift(word)
-	return queue.join(' ')
+    } else if (c === ' ' && word) {
+      queue.unshift(word)
+      word = ''
+    }
+    l++
+  }
+  //add last word
+  queue.unshift(word)
+  return queue.join(' ')
 }
 ```
 
 ### [344. ==反转字符串 E==](https://leetcode-cn.com/problems/reverse-string/)
 
 ```javascript {.line-numbers}
-//two pointer
+//two pointer夹逼
 var reverseString = function (s) {
 	let l = 0,
 		r = s.length - 1
 	while (l < r) {
-		;[s[l], s[r]] = [s[r], s[l]]
-    l++
-    r--
+		;[s[l++], s[r--]] = [s[r], s[l]]
 	}
 	return s
 }
@@ -157,7 +153,6 @@ var reverseString = function (s) {
 //recursion
 var reverseString = function (s) {
 	helper(s, 0, s.length - 1)
-
 	function helper(s, left, right) {
 		if (left >= right) return
 		;[s[left++], s[right--]] = [s[right], s[left]]
@@ -173,7 +168,7 @@ var reverseString = function (s) {
 var firstUniqChar = function (s) {
 	const obj = {}
 	for (let c of s) {
-		obj[c] ? ++obj[c] : (obj[c] = 1)
+		obj[c] ? obj[c]++ : (obj[c] = 1)
 	}
 	for (let i = 0; i < s.length; i++) {
 		if (obj[s[i]] === 1) return i
@@ -421,8 +416,8 @@ var countSubstrings = function (s) {
 
 ```javascript {.line-numbers}
 var toLowerCase = function (str) {
-	return str.replace(/[A-Z]/g, (item) => {
-		return String.fromCharCode(item.charCodeAt() + 32)
+	return str.replace(/[A-Z]/g, (c)) => {
+		return String.fromCharCode(c.charCodeAt() + 32)
 	})
 }
 ```
@@ -430,30 +425,14 @@ var toLowerCase = function (str) {
 ### [917. ==仅仅反转字母==](https://leetcode-cn.com/problems/reverse-only-letters/)
 
 ```javascript {.line-numbers}
-//two point
-var reverseOnlyLetters = function (s) {
-	const len = s.length
-	const arr = [...s]
-	let left = 0,
-		right = len - 1
-	while (true) {
-		while (left < right && !/^[a-zA-Z]+$/.test(s[left])) left++
-		while (right > left && !/^[a-zA-Z]+$/.test(s[right])) right--
-		if (left >= right) break
-		;[arr[left++], arr[right--]] = [arr[right], arr[left]]
-	}
-	return arr.join('')
-}
-
 //use stack
 var reverseOnlyLetters = function (S) {
 	const stack = []
-
-	for (let c of S) if (/[a-zA-Z]/.test(c)) stack.push(c)
-
+  const reg = /[a-zA-Z]/
+	for (let c of S) if (reg.test(c)) stack.push(c)
 	let ret = ''
 	for (let c of S) {
-		if (/[a-zA-Z]/.test(c)) {
+		if (reg.test(c)) {
 			ret += stack.pop()
 		} else {
 			ret += c
@@ -461,4 +440,20 @@ var reverseOnlyLetters = function (S) {
 	}
 	return ret
 }
+
+//two point
+var reverseOnlyLetters = function(s) {
+	const len = s.length
+	const arr = [...s]
+	let l = 0,
+		r = len - 1
+	while (true) {
+    // 判断左边是否扫描到字母
+		while (l < r && !/^[a-zA-Z]+$/.test(s[l])) l++
+		while (l < r && !/^[a-zA-Z]+$/.test(s[r])) r--
+		if (l >= r) break
+		;[arr[l++], arr[r--]] = [arr[r], arr[l]]
+	}
+	return arr.join('')
+};
 ```

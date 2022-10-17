@@ -12,20 +12,6 @@ var groupAnagrams = function (strs) {
   return Object.values(hash)
 }
 
-//sort数组放到hash里面，根据不同的key，放对应的异位词 O(NKlogK) - O(NK)
-var groupAnagrams = function (strs) {
-	const hash = new Map()
-	for (let str of strs) {
-		const arr = Array.from(str)
-		arr.sort()
-		const key = arr.toString()
-		const list = hash.get(key) ? hash.get(key) : []
-		list.push(str)
-		hash.set(key, list)
-	}
-	return Array.from(hash.values())
-}
-
 //使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
 //best version
 var groupAnagrams = function (strs) {
@@ -42,7 +28,7 @@ var groupAnagrams = function (strs) {
 }
 ```
 
-### [128.==最长连续序列==](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
+### [128.最长连续序列](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 
 ```javascript
 var longestConsecutive = function (nums) {
@@ -78,13 +64,12 @@ var isAnagram = function (s, t) {
 //good version
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
-
 	const hash = {}
 	for (let c of s) {
 		hash[c] ? hash[c]++ : (hash[c] = 1)
 	}
-
 	for (let c of t) {
+    
 		if (hash[c]) {
 			hash[c]--
 			//meet return immediately
@@ -101,7 +86,6 @@ var isAnagram = function (s, t) {
 	const arr = Array.from({ length: 26 }, () => 0),
 		len = s.length
 	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - 'a'.charCodeAt(0)]++
-
 	for (let i = 0; i < len; i++) {
 		if (--arr[t.charCodeAt(i) - 'a'.charCodeAt(0)] < 0) return false
 	}
@@ -109,7 +93,7 @@ var isAnagram = function (s, t) {
 }
 ```
 
-### [771.==宝石与石头==](https://leetcode-cn.com/problems/jewels-and-stones/)
+### [771.宝石与石头](https://leetcode-cn.com/problems/jewels-and-stones/)
 
 ```javascript
 //brute force

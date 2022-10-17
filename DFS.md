@@ -198,7 +198,7 @@ var combinationSum = function (candidates, target) {
 		ret = []
 	if (len === 0) return ret
 	const dfs = (candidates, remain, start, path) => {
-    //[2,3,6,7], 7,已选[2,2,2]
+		//[2,3,6,7], 7,已选[2,2,2]
 		if (remain < 0 || start >= candidates.length) return
 		if (remain === 0) {
 			ret.push(path)
@@ -278,7 +278,7 @@ var permute = function (nums) {
 			if (visited[i]) continue
 			visited[i] = true
 			dfs(nums, depth + 1, [...path, nums[i]])
-			//backtrack
+			//backtrack, 这里上面的数组是传递的引用则无需回溯
 			visited[i] = false
 		}
 	}

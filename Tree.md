@@ -548,26 +548,13 @@ var verticalTraversal = function (root) {
 }
 ```
 
-## BST
+## Binary Search Tree
 
 ### CRUD
 
 ##### [98.==验证二叉搜索树==](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript {.line-numbers}
-//tricky
-var isValidBST = function (root) {
-	const helper = (root, low, high) => {
-		if (!root) return true
-		if (root.val <= low || root.val >= high) return false
-		return (
-			helper(root.left, low, root.val) && helper(root.right, root.val, high)
-		)
-	}
-	//扩展参数，向下传递
-	return helper(root, -Infinity, Infinity)
-}
-
 //In-order
 var isValidBST = function (root) {
 	const stack = []
@@ -586,6 +573,19 @@ var isValidBST = function (root) {
 		root = root.right
 	}
 	return true
+}
+
+//tricky
+var isValidBST = function (root) {
+	const helper = (root, low, high) => {
+		if (!root) return true
+		if (root.val <= low || root.val >= high) return false
+		return (
+			helper(root.left, low, root.val) && helper(root.right, root.val, high)
+		)
+	}
+	//扩展参数，向下传递
+	return helper(root, -Infinity, Infinity)
 }
 ```
 
@@ -796,6 +796,7 @@ var generateTrees = function (n) {
 ```javascript {.line-numbers}
 var sortedArrayToBST = function (nums) {
 	const helper = (nums, l, r) => {
+   	//函数参数区间是左闭右闭,所以结束条件如下
 		if (l > r) return null
 		const mid = Math.floor((l + r) / 2)
 		//因高度平衡则需从中点创建根节点开始
@@ -840,15 +841,16 @@ var sortedListToBST = function (head) {
 ```javascript {.line-numbers}
 var kthSmallest = function (root, k) {
 	const stack = []
-	while (true) {
+	while (root || stack.length) {
 		while (root) {
 			stack.push(root)
 			root = root.left
 		}
 		root = stack.pop()
-		if (--k === 0) return root.val
+		if (--k === 0) break
 		root = root.right
 	}
+  return root.val
 }
 ```
 
@@ -974,10 +976,12 @@ var invertTree = function (root) {
 
 ```javascript {.line-numbers}
 var maxDepth = function (root) {
-	//+1是加上当前node的深度
-	return root == null
-		? 0
-		: Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
+  //return root == null ? 0 : Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
+  if (!root) return 0
+	const lMax = maxDepth(root.left)
+	const rMax = maxDepth(root.right)
+  //+1是加上当前node的深度
+	return Math.max(lMax, rMax) + 1
 }
 
 //BFS
@@ -1007,11 +1011,9 @@ var minDepth = function (root) {
 	if (!root) return 0
 	const minLeftDepth = minDepth(root.left)
 	const minRightDepth = minDepth(root.right)
-  // if (minLeftDepth && minRightDepth) return Math.min(minLeftDepth, minRightDepth) + 1
-  // return minLeftDepth === 0 ? minRightDepth + 1: minLeftDepth + 1
-	return minLeftDepth === 0 || minRightDepth === 0
-		? minLeftDepth + minRightDepth + 1
-		: Math.min(minLeftDepth, minRightDepth) + 1
+  //return minLeftDepth === 0 || minRightDepth === 0 ? ? minLeftDepth + minRightDepth + 1 : : Math.min(minLeftDepth, minRightDepth) + 1
+  if (minLeftDepth && minRightDepth) return Math.min(minLeftDepth, minRightDepth) + 1
+  return minLeftDepth === 0 ? minRightDepth + 1: minLeftDepth + 1
 }
 .
 //BFS
@@ -1208,7 +1210,9 @@ var binaryTreePaths = function (root) {
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
-	if (!root || root === p || root === q) return root
+  //if (!root || root === p || root === q) return root
+  if (!root) return root
+	if (root === p || root === q) return root
 	//f_lson
 	const left = lowestCommonAncestor(root.left, p, q)
 	//f_rson
@@ -1216,7 +1220,7 @@ var lowestCommonAncestor = function (root, p, q) {
 	//下面两句合二为一
 	//return left === null ? right : right === null ? left : root
 	if (left && right) return root
-	return left === null ? right : left
+	return !left ? right : left
 }
 ```
 
@@ -1298,7 +1302,6 @@ var sumOfLeftLeaves = function (root) {
 ```javascript {.line-numbers}
 var hasPathSum = function (root, sum) {
 	if (!root) return false
-  //bottom
 	if (!root.left && !root.right) return root.val === sum
 	return (
 		hasPathSum(root.left, sum - root.val) ||
@@ -1315,10 +1318,7 @@ var hasPathSum = function (root, targetSum) {
 	while (queNode.length) {
 		const cur = queNode.shift()
 		const acc = queVal.shift()
-		//bottom
-		if (!cur.left && !cur.right) {
-			if (acc == targetSum) return true
-		}
+		if (!cur.left && !cur.right) if (acc === targetSum) return true
 		if (cur.left) {
 			queNode.push(cur.left)
 			queVal.push(cur.left.val + acc)
@@ -1335,7 +1335,6 @@ var hasPathSum = function (root, targetSum) {
 ##### [113.==路径总和 II==](https://leetcode-cn.com/problems/path-sum-ii/)
 
 ```javascript {.line-numbers}
-//backtrack
 var pathSum = function (root, sum) {
   const ret = []
 	const dfs = (root, sum, path) => {
@@ -1345,6 +1344,7 @@ var pathSum = function (root, sum) {
 		if (!root.left && !root.right && sum === root.val) ret.push([...path])
 		dfs(root.left, sum - root.val, path)
 		dfs(root.right, sum - root.val, path)
+    //backtrack
 		path.pop()
 	}
 	dfs(root, sum, [])
