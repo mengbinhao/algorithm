@@ -40,20 +40,19 @@
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
 	if (arr.length === 0) return arr
-	let left = 0,
+	let l = 0,
 		//Note!!!
-		right = arr.length - 1,
+		r = arr.length - 1,
 		mid
 	//Note!!!
-	while (left <= right) {
-		// mid = left + (right - left) >> 1
-		mid = Math.floor(left + (right - left) / 2)
+	while (l <= r) {
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			//Note!!!
-			left = mid + 1
+			l = mid + 1
 		} else if (arr[mid] > target) {
 			//Note!!!
-			right = mid - 1
+			r = mid - 1
 		} else if (arr[mid] === target) {
 			return mid
 		}
@@ -67,22 +66,22 @@ const binarySearch = (arr, target) => {
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
 	if (arr.length === 0) return -1
-	let left = 0,
-		right = arr.length - 1,
+	let l = 0,
+		r = arr.length - 1,
 		mid
-	while (left <= right) {
-		mid = Math.floor(left + (right - left) / 2)
+	while (l <= r) {
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
-			left = mid + 1
+			l = mid + 1
 		} else if (arr[mid] > target) {
-			right = mid - 1
+			r = mid - 1
 		} else {
 			//已搜到第一个或已找到
 			if (mid === 0 || arr[mid - 1] !== target) {
 				return mid
 				//继续收缩右边界
 			} else {
-				right = mid - 1
+				r = mid - 1
 			}
 		}
 	}
@@ -95,21 +94,21 @@ const binarySearch = (arr, target) => {
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
 	if (arr.length === 0) return -1
-	let left = 0,
-		right = arr.length - 1,
+	let l = 0,
+		r = arr.length - 1,
 		mid
-	while (left <= right) {
-		mid = Math.floor(left + (right - left) / 2)
+	while (l <= r) {
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
-			left = mid + 1
+			l = mid + 1
 		} else if (arr[mid] > target) {
-			right = mid - 1
+			r = mid - 1
 		} else {
 			//已搜到最后一个或已找到
 			if (mid === arr.length - 1 || arr[mid + 1] !== target) {
 				return mid
 			} else {
-				left = mid + 1
+				l = mid + 1
 			}
 		}
 	}
@@ -121,19 +120,19 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	let left = 0,
-		right = arr.length - 1,
+	let l = 0,
+		r = arr.length - 1,
 		mid
-	while (left <= right) {
-		mid = Math.floor(left + (right - left) / 2)
+	while (l <= r) {
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] >= target) {
 			if (mid === 0 || arr[mid - 1] < target) {
 				return mid
 			} else {
-				right = mid - 1
+				r = mid - 1
 			}
 		} else {
-			left = mid + 1
+			l = mid + 1
 		}
 	}
 	return -1
@@ -144,71 +143,71 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	let left = 0,
-		right = arr.length - 1,
+	let l = 0,
+		r = arr.length - 1,
 		mid
-	while (left <= right) {
-		mid = Math.floor(left + (right - left) / 2)
+	while (l <= r) {
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] <= target) {
 			if (mid === arr.length - 1 || arr[mid + 1] > target) {
 				return mid
 			} else {
-				left = mid + 1
+				l = mid + 1
 			}
 		} else {
-			right = mid - 1
+			r = mid - 1
 		}
 	}
 	return -1
 }
 ```
 
-#### 6 ==寻找左侧边界的二分搜索==
+#### 6 寻找左侧边界的二分搜索
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
-	let left = 0,
-     //Note 1
-		right = arr.length - 1
-  //Note 2
-	while (left <= right) {
-		let mid = Math.floor(left + (right - left) / 2)
+	let l = 0,
+		//Note 1
+		r = arr.length - 1
+	//Note 2
+	while (l <= r) {
+		let mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
-      //Note 3
-			left = mid + 1
+			//Note 3
+			l = mid + 1
 		} else if (arr[mid] > target) {
-      //Note 3
-			right = mid - 1
+			//Note 3
+			r = mid - 1
 		} else if (arr[mid] === target) {
-      //Note 3
-			right = mid - 1
+			//Note 3
+			r = mid - 1
 		}
 	}
 	//Note 4
-  //检查出界情况
-	if (left >= arr.length || arr[left] !== target) return -1
-	return left
+	//检查出界情况
+	if (l >= arr.length || arr[l] !== target) return -1
+	return l
 }
 ```
 
-#### 7 ==寻找右侧边界的二分搜索==
+#### 7 寻找右侧边界的二分搜索
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
-	let left = 0,
-		right = arr.length - 1
-	while (left <= right) {
-		let mid = Math.floor(left + (right - left) / 2)
+	let l = 0,
+		r = arr.length - 1
+	while (l <= r) {
+		let mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
-			left = mid + 1
+			l = mid + 1
 		} else if (arr[mid] > target) {
-			right = mid - 1
+			r = mid - 1
 		} else if (arr[mid] === target) {
-			left = mid + 1
+			l = mid + 1
 		}
 	}
-	if (right < 0 || arr[right] !== target) return -1
-	return right
+	if (r < 0 || arr[r] !== target) return -1
+	return r
 }
 ```
 
@@ -254,16 +253,16 @@ var search = function (nums, target) {
 
 ```javascript {.line-numbers}
 const binarySearch = (nums, target, lower) => {
-	let left = 0,
-		right = nums.length - 1,
+	let l = 0,
+		r = nums.length - 1,
 		ans = nums.length
-	while (left <= right) {
-		const mid = Math.floor((left + right) / 2)
+	while (l <= r) {
+		const mid = Math.floor((l + r) / 2)
 		if (nums[mid] > target || (lower && nums[mid] >= target)) {
-			right = mid - 1
+			r = mid - 1
 			ans = mid
 		} else {
-			left = mid + 1
+			l = mid + 1
 		}
 	}
 	return ans

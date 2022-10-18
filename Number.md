@@ -14,22 +14,6 @@ var reverse = function (x) {
 	return ret
 }
 
-var reverse = function (x) {
-	let ret = 0
-	while (x !== 0) {
-		const pop = x % 10
-		if (ret > 214748364 || (ret === 214748364 / 10 && pop > 7)) return 0
-		if (ret < -214748364 || (ret === -214748364 && pop < -8)) return 0
-		ret = ret * 10 + pop
-		if (x > 0) {
-			x = Math.floor(x / 10)
-		} else {
-			x = Math.ceil(x / 10)
-		}
-	}
-	return ret
-}
-
 //advanced version
 var reverse = function (x) {
 	let result = 0
@@ -76,13 +60,11 @@ var isPalindrome = function (x) {
 
 ```javascript
 //brute force
-//tme limit exceeded
 var myPow = function (x, n) {
 	if (n === 0) return 1
 	if (n === 1) return x
 	if (n < 0) return 1 / myPow(x, -n)
 	let ret = 1
-
 	for (let i = 1; i <= n; i++) ret *= x
 	return ret
 }
@@ -134,7 +116,7 @@ var majorityElement = function (nums) {
 }
 
 // O(NlogN)
-// sort array then the middle is majority,due to must be have an answer
+// sort array then the middle is majority,due to must have an answer
 var majorityElement = function (nums) {
 	nums.sort((a, b) => a - b)
 	return nums[Math.floor(nums.length / 2)]

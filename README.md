@@ -1,3 +1,49 @@
 # algorithm
 
 Some frequent Leetcode questions implement by JavaScrip
+
+### 最长系列
+
+#### 最长公共前缀
+
+- 纵向扫描
+- 横向扫描
+
+#### 最长连续递增序列
+
+- 贪心
+
+#### 无重复字符的最长子串
+
+- slidewindow
+
+#### 最长连续序列
+
+- hash
+
+#### 最长连续递增序列
+
+- greedy
+
+#### 最长有效括号
+
+- brute force
+- stack
+- 正逆向
+- DP
+
+#### 最长回文子串
+
+- brute force
+- DP
+- 中心扩展法
+
+#### DP
+
+- 最长回文子序列
+- 最长递增子序列
+- 最长重复子数组
+- 最长公共子序列
+- 连续子数组的最大和
+- 最长重复子数组
+- 最长递增子序列

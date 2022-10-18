@@ -19,15 +19,16 @@
 
 - 插入
 
-```practice
-next = 待插入位置的前驱节点.next
-待插入位置的前驱节点.next = 待插入指针
-待插入指针.next = next
+```javascript
+//pre待插入位置的前驱节点
+next = pre.next
+pre.next = targetInsertNode
+targetInsertNode.next = next
 ```
 
 ![](./images/NodeList_insert.png)
 
-- 删除`待删除位置的前驱节点.next = 待删除位置的前驱节点.next.next`
+- 删除`pre.next = 待删除位置的前驱节点.next.next`
   ![](./images/NodeList_delete.png)
 
 ## 3 questions
@@ -121,7 +122,7 @@ var mergeTwoLists = function (list1, list2) {
 		//update prev
 		prev = prev.next
 	}
-	//合并后 l1 和 l2 最多只有一个还未被合并完,我们直接将链表末尾指向未合并完的链表即可
+	//合并后 l1 和 l2 最多只有一个还未被合并完,将链表末尾指向未合并完的链表
 	prev.next = list1 || list2
 	return dummyHead.next
 }
@@ -595,9 +596,9 @@ var hasCycle = function (head) {
 	let fast = head,
 		slow = head
 	while (fast && fast.next) {
+    //先走再判断
 		fast = fast.next.next
 		slow = slow.next
-		//先走再判断
 		if (fast === slow) return true
 	}
 	return false
@@ -675,7 +676,7 @@ var reverseList = function (head) {
 		next = cur.next
 		//change pointer ..3->2->1->null
 		cur.next = prev
-		//先后移pre再后提cur
+		//先移pre再移cur
 		prev = cur
 		cur = next
 	}

@@ -37,7 +37,6 @@ var lengthOfLongestSubstring = function (s) {
 	let ret = 0,
 		left = 0
 	const map = new Map()
-
 	for (let right = 0, len = s.length; right < len; right++) {
 		const char = s[right]
 		//更新滑动窗口的left
@@ -55,7 +54,7 @@ var lengthOfLongestSubstring = function (s) {
   while (r < len) {
     const rChar = s[r++]
     window[rChar] ? window[rChar]++ : window[rChar] = 1
-    //left一直缩到widnow里当前rightChar不重复
+    //left一直缩到widnow里当前rChar不重复的位置
     while (window[rChar] > 1) window[s[l++]]--
     ret = Math.max(ret, r - l)
   }
@@ -117,7 +116,7 @@ var minWindow = function (s, t) {
 }
 ```
 
-### [209.==长度最小的子数组==](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
+### [209.长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
 
 ```javascript {.line-numbers}
 // 1 brute force O(n^2) - O(1)
@@ -165,69 +164,62 @@ var minSubArrayLen = function (s, nums) {
 
 ### [239.==滑动窗口最大值 H==](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
-- brute force O(n \* k) - O(n - k +1)
+```javascript
+//brute force O(n \* k) - O(n - k +1)
+var maxSlidingWindow = function (nums, k) {
+	let slideWindow = []
+	const ret = [],
+		len = nums.length
+	//能形成的最大窗口个数
+	for (let i = 0; i < len - k + 1; i++) {
+		for (let j = 0; j < k; j++) slideWindow.push(nums[i + j])
+		ret.push(Math.max(...slideWindow))
+		slideWindow.length = 0
+	}
+	return ret
+}
 
-  ```javascript {.line-numbers}
-  var maxSlidingWindow = function (nums, k) {
-  	let slideWindow = []
-  	const ret = [],
-  		len = nums.length
-  	//能形成的最大窗口个数
-  	for (let i = 0; i < len - k + 1; i++) {
-  		for (let j = 0; j < k; j++) {
-  			slideWindow.push(nums[i + j])
-  		}
-  		ret.push(Math.max(...slideWindow))
-  		slideWindow = []
-  	}
-  	return ret
-  }
-  ```
 
-- deque O(n) - O(n)
+//deque O(n) - O(n)
+var maxSlidingWindow = function (nums, k) {
+	//放的下标,递减队列,第一个第一大的index,依此类推
+	const deque = [],
+		ret = []
+	//头尾尾头
+	for (let i = 0, len = nums.length; i < len; i++) {
+		//队列满了移出去一个
+		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
+		if (deque.length && deque[0] < i - k + 1) deque.shift()
+		//维护递减队列
+		while (deque.length && nums[deque[deque.length - 1]] < nums[i])
+			deque.pop()
+		deque.push(i)
+		//开始检查结果
+		if (i >= k - 1) ret.push(nums[deque[0]])
+	}
+	return ret
+}
 
-  ```javascript {.line-numbers}
-  var maxSlidingWindow = function (nums, k) {
-  	//放的下标,递减队列,第一个第一大的index,依此类推
-  	const deque = [],
-  		ret = []
-  	//头尾尾头
-  	for (let i = 0, len = nums.length; i < len; i++) {
-  		//队列满了移出去一个
-  		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
-  		while (deque.length && deque[0] < i - k + 1) deque.shift()
-  		//维护递减队列
-  		while (deque.length && nums[deque[deque.length - 1]] < nums[i])
-  			deque.pop()
-  		deque.push(i)
-  		//开始检查结果
-  		if (i >= k - 1) ret.push(nums[deque[0]])
-  	}
-  	return ret
-  }
-  ```
 
-- stack
+//stack O(n) - O(n)
+var maxSlidingWindow = function (nums, k) {
+	let l = 0,
+		r = -1
+	//单调递减栈,存的是下标
+	const stack = [],
+		ans = []
 
-  ```javascript {.line-numbers}
-  var maxSlidingWindow = function (nums, k) {
-  	let l = 0,
-  		r = -1
-  	//单调递减
-  	const stack = [],
-  		ans = []
-  
-  	for (let i = 0, len = nums.length; i < len; i++) {
-  		if (i - k + 1 > stack[l]) l++
-  		//缩小右边界直到满足条件
-  		while (l <= r && nums[stack[r]] < nums[i]) r--
-  		stack[++r] = i
-  		//满足条件才放答案
-  		if (i >= k - 1) ans.push(nums[stack[l]])
-  	}
-  	return ans
-  }
-  ```
+	for (let i = 0, len = nums.length; i < len; i++) {
+		if (stack.length && i - k + 1 > stack[l]) l++
+		//缩小右边界直到满足条件
+		while (stack.length && l <= r && nums[stack[r]] < nums[i]) r--
+		stack[++r] = i
+		//满足条件才放答案
+		if (i >= k - 1) ans.push(nums[stack[l]])
+	}
+	return ans
+}
+```
 
 ### [438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
@@ -274,7 +266,7 @@ var findAnagrams = function (s, p) {
 }
 ```
 
-### [567.==字符串的排列 M==](https://leetcode-cn.com/problems/permutation-in-string/)
+### [567.字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)
 
 ```javascript {.line-numbers}
 //labuladong version
