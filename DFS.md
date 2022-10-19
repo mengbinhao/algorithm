@@ -19,7 +19,10 @@ var letterCombinations = function (digits) {
 			ret.push(s)
 			return
 		}
-		for (let c of hash[digits[level]]) dfs(s + c, level + 1)
+		for (let c of hash[digits[level]]) {
+      //该问题可省略回溯的过程
+      dfs(s + c, level + 1)
+    }
 	}
 	//can pass more params if you want, like ret、map、digits
 	dfs('', 0)
@@ -70,15 +73,15 @@ var generateParenthesis = function (n) {
 var generateParenthesis = function (n) {
 	const ret = []
 
-	const dfs = (left, right, max, s) => {
-		if (left === max && right === max) {
+	const dfs = (l, r, max, s) => {
+		if (l === max && r === max) {
 			ret.push(s)
 			return
 		}
 		//回溯的过程中直接剪枝掉无效的组合
-		if (left < n) dfs(left + 1, right, max, s + '(')
+		if (l < n) dfs(l + 1, r, max, s + '(')
 		//回溯的过程中直接剪枝掉无效的组合
-		if (left > right) dfs(left, right + 1, max, s + ')')
+		if (l > r) dfs(l, r + 1, max, s + ')')
 	}
 	//pass ret if you want
 	dfs(0, 0, n, '')
@@ -98,7 +101,7 @@ var isValidSudoku = function (board) {
 		for (let j = 0; j < 9; j++) {
 			const num = board[i][j]
 			if (num !== '.') {
-				//计算子数独序号
+				//计算子数独序号0 - 8
 				const boxIdx = Number.parseInt(i / 3) * 3 + Number.parseInt(j / 3)
 				if (
 					rows[i + '-' + num] ||
@@ -157,7 +160,6 @@ var combine = function (n, k) {
 		//不选当前数字
 		dfs(cur + 1, n, k, path)
 	}
-
 	dfs(1, n, k, [])
 	return ret
 }
@@ -181,13 +183,12 @@ var combinationSum = function (candidates, target) {
 
 		for (let i = start; i < candidates.length; i++) {
 			path.push(candidates[i])
-			//传递的是i可以重复选
+			//可选重复元素
 			dfs(candidates, remain - candidates[i], i, path)
 			//backtrack
 			path.pop()
 		}
 	}
-
 	dfs(candidates, target, 0, [])
 	return ret
 }
@@ -222,7 +223,7 @@ var combinationSum = function (candidates, target) {
 }
 ```
 
-### [40.==组合总和 II==](https://leetcode-cn.com/problems/combination-sum-ii/)
+### [40.组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)
 
 ```javascript {.line-numbers}
 //candidates有重复
@@ -230,27 +231,23 @@ var combinationSum2 = function (candidates, target) {
 	const len = candidates.length,
 		ret = []
 	if (len === 0) return ret
-	//剪枝前提
+	//preconditon!!!!!!!
 	candidates.sort((a, b) => a - b)
-
 	const dfs = (candidates, remain, begin, path) => {
 		if (remain === 0) {
 			ret.push([...path])
 			return
 		}
-
 		for (let i = begin, len = candidates.length; i < len; i++) {
-			//大剪枝：减去 candidates[i] 小于 0，减去后面的 candidates[i + 1]、candidates[i + 2] 肯定也小于 0
+			//大剪枝:减去candidates[i]小于 0，减去后面的candidates[i + 1]、candidates[i + 2]肯定也小于 0
 			if (remain - candidates[i] < 0) break
-			// 小剪枝：同一层相同数值的结点，从第 2 个开始，候选数更少，结果一定发生重复，因此跳过
+			//小剪枝:同一层相同数值的结点，从第 2 个开始，候选数更少，结果一定发生重复，因此跳过
 			if (i > begin && candidates[i - 1] === candidates[i]) continue
-
 			path.push(candidates[i])
 			dfs(candidates, remain - candidates[i], i + 1, path)
 			path.pop()
 		}
 	}
-
 	dfs(candidates, target, 0, [])
 	return ret
 }
@@ -287,7 +284,7 @@ var permute = function (nums) {
 }
 ```
 
-### [47.==全排列 2M==](https://leetcode-cn.com/problems/permutations-ii/)
+### [47.全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)
 
 ```javascript {.line-numbers}
 //nums有重复
@@ -311,7 +308,6 @@ var permuteUnique = function (nums) {
 			//剪枝
 			//和前一个元素值相同并且前一个元素还没有被使用过,否则其在下层遍历肯定会出现
 			if (i > 0 && nums[i] === nums[i - 1] && !visited[i - 1]) continue
-
 			path.push(nums[i])
 			visited[i] = true
 			dfs(nums, depth + 1, path, visited)
@@ -378,7 +374,7 @@ var subsets = function (nums) {
 }
 ```
 
-### [79.==单词搜索==](https://leetcode-cn.com/problems/word-search/)
+### [79.单词搜索](https://leetcode-cn.com/problems/word-search/)
 
 ```javascript {.line-numbers}
 var exist = function (board, word) {
@@ -397,13 +393,11 @@ var exist = function (board, word) {
 	for (let i = 0; i < visited.length; i++) {
 		visited[i] = Array.from({ length: col }, () => false)
 	}
-
 	for (let i = 0; i < row; i++) {
 		for (let j = 0; i < col; j++) {
 			if (dfs(board, word, 0, i, j, row, col, visited, directions)) return true
 		}
 	}
-
 	return false
 }
 
@@ -635,7 +629,6 @@ var numIslands = function (grid) {
 
 	const dfs = (grid, i, j, row, col) => {
 		if (i < 0 || j < 0 || i >= row || j >= col || grid[i][j] === '0') return
-
 		//marked as zero
 		grid[i][j] = '0'
 
@@ -678,22 +671,22 @@ var numIslands = function (grid) {
 						x = cur[0],
 						y = cur[1]
 					//往左
-					if (x - 1 >= 0 && grid[x - 1][y] == 1) {
+					if (x - 1 >= 0 && grid[x - 1][y] === 1) {
 						queue.push([x - 1, y])
 						grid[x - 1][y] = 0
 					}
 					//往右
-					if (x + 1 < m && grid[x + 1][y] == 1) {
+					if (x + 1 < m && grid[x + 1][y] === 1) {
 						queue.push([x + 1, y])
 						grid[x + 1][y] = 0
 					}
 					//往上
-					if (y - 1 >= 0 && grid[x][y - 1] == 1) {
+					if (y - 1 >= 0 && grid[x][y - 1] === 1) {
 						queue.push([x, y - 1])
 						grid[x][y - 1] = 0
 					}
 					//往下
-					if (y + 1 < n && grid[x][y + 1] == 1) {
+					if (y + 1 < n && grid[x][y + 1] === 1) {
 						queue.push([x, y + 1])
 						grid[x][y + 1] = 0
 					}

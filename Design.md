@@ -1,4 +1,4 @@
-### [146.==LRU 缓存机制==](https://leetcode-cn.com/problems/lru-cache/)
+### [146.LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
 
 ```javascript {.line-numbers}
 //头代表最新,尾代表老
@@ -119,6 +119,7 @@ MinStack.prototype.getMin = function () {
 	return val === Infinity ? void 0 : val
 }
 
+
 //O(n) - O(1)
 var MinStack = function () {
 	this.stack = []
@@ -166,7 +167,7 @@ MinStack.prototype.min = function () {
 }
 ```
 
-### [208.==实现 Trie==](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+### [208.实现 Trie](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```javascript {.line-numbers}
 var TrieNode = function () {
@@ -225,7 +226,7 @@ Trie.prototype.startsWith = function (prefix) {
 }
 ```
 
-### [225.用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
+### [225.==用队列实现栈==](https://leetcode-cn.com/problems/implement-stack-using-queues/)
 
 ```javascript {.line-numbers}
 var MyStack = function () {
@@ -250,18 +251,9 @@ MyStack.prototype.top = function () {
 MyStack.prototype.empty = function () {
 	return this.stack.length === 0 ? true : false
 }
-
-/**
- * Your MyStack object will be instantiated and called as such:
- * var obj = new MyStack()
- * obj.push(x)
- * var param_2 = obj.pop()
- * var param_3 = obj.top()
- * var param_4 = obj.empty()
- */
 ```
 
-### [232.用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
+### [232.==用栈实现队列==](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 
 ```javascript {.line-numbers}
 //use two stacks
@@ -285,26 +277,15 @@ MyQueue.prototype.peek = function () {
 }
 
 MyQueue.prototype.empty = function () {
-	return !this.input.length && !this.output.length
+	return this.input.length === 0 && this.output.length === 0
 }
 
-//当output没有数据时input全部放入output
+//output反向装入input的数据
 MyQueue.prototype.addToOutput = function () {
-	if (!this.output.length) {
-		while (this.input.length) {
-			this.output.push(this.input.pop())
-		}
+	if (this.output.length === 0) {
+		while (this.input.length > 0) this.output.push(this.input.pop())
 	}
 }
-
-/**
- * Your MyQueue object will be instantiated and called as such:
- * var obj = new MyQueue()
- * obj.push(x)
- * var param_2 = obj.pop()
- * var param_3 = obj.peek()
- * var param_4 = obj.empty()
- */
 ```
 
 ### [641.设计循环双端队列](https://leetcode-cn.com/problems/design-circular-deque/)
