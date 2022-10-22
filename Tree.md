@@ -22,28 +22,32 @@
 
   - ==完全二叉树==：深度为`h`，除第`h`层外，其它各层`(1 ～ h-1)`的结点数都达到最大个数，第`h`层所有的结点都连续集中在最左边
 
+    ![](images/Tree_2.png)
+
   - ==满二叉树==：除了叶结点外每一个结点都有左右孩子且叶子结点都处在最底层的二叉树
 
-  - ==二叉搜索树==：左孩子节点值均小于该节点值、右孩子节点值均大于该节点值
+  - ==二叉搜索树==：左孩子节点值均小于该节点值、右孩子节点值均大于该节点值，该节点的左、右子树也分别为二叉搜索树
 
   - 平衡二叉搜索树(AVL)：既满足左右子树高度差不大于 1， 又满足任意节点值大于它的左孩子节点值，小于它右孩子节点值
 
+    ![](images/Tree_3.png)
+  
   - 红黑树
-
+  
     - 节点是红色或黑色
     - 根节点必须是黑色节点
     - 所有的叶子节点都必须是值为 NULL 的黑节点
     - 如果一个节点是红色的，则它两个子节点都是黑色的
     - 从任一节点到达它的每个叶子节点的所有的路径，都有相同数目的黑色节点
-
+  
     ![](./images/avl.png)
-
+  
   - Trie(字典树或前缀树，它是用来处理字符串匹配问题的数据结构，以及用来解决集合中查找固定前缀字符串的数据结构，高效的存储和查找字符串)
 
 # 解题要素
 
 - 一个中心:遍历
-- 两个基本点:DFS/BFS -> `preorder/inorder/postorder`
+- 两个基本点:DFS(`preorder/inorder/postorder ` 使用stack)、BFS(迭代，使用queue)
 - 三种题型:搜索类、构建类、修改类
 - 四个重要概念:二叉搜索树(==中序遍历是有序的==)、完全二叉树、路径、距离
 - 七个技巧
@@ -683,7 +687,6 @@ var trimBST = function (root, low, high) {
 	if (!root) return null
 	if (root.val > high) return trimBST(root.left, low, high)
 	if (root.val < low) return trimBST(root.right, low, high)
-
 	//需要连接,所以需要返回递归的头结点
 	root.left = trimBST(root.left, low, high)
 	root.right = trimBST(root.right, low, high)
@@ -703,6 +706,19 @@ var searchBST = function (root, val) {
 	} else {
 		return searchBST(root.right, val)
 	}
+}
+
+var searchBST = function (root, val) {
+  while (root !== null) {
+    if (root.val > val) {
+      root = root.left
+    } else if (root.val < val) {
+      root = root.right
+    } else {
+      return root
+    } 
+  }
+  return null
 }
 ```
 
@@ -891,7 +907,7 @@ var convertBST = function (root) {
 
 ## DFS/BFS
 
-##### [100.相同的树](https://leetcode-cn.com/problems/same-tree/)
+##### [100.==相同的树==](https://leetcode-cn.com/problems/same-tree/)
 
 ```javascript {.line-numbers}
 var isSameTree = function (p, q) {
@@ -988,16 +1004,15 @@ var maxDepth = function (root) {
 var maxDepth = function (root) {
 	if (!root) return 0
 	const queue = [root]
-	let ret = 0
+	let heitght = 0
 	while (queue.length > 0) {
 		const size = queue.length
+    heitght++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
-		//处理完一层深度+1
-		ret++
 	}
 	return ret
 }
@@ -1015,23 +1030,22 @@ var minDepth = function (root) {
   if (minLeftDepth && minRightDepth) return Math.min(minLeftDepth, minRightDepth) + 1
   return minLeftDepth === 0 ? minRightDepth + 1: minLeftDepth + 1
 }
-.
+
 //BFS
 var minDepth = function (root) {
 	if (!root) return 0
 	const queue = [root]
-	let depth = 1
-
+	let depth = 0
 	while (queue.length > 0) {
 		const size = queue.length
+    depth++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
-			//find it
+			//如果左右节点都是null(在遇见的第一个leaf节点上)，则该节点深度最小
 			if (cur.left == null && cur.right == null) return depth
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
-		depth++
 	}
 	return depth
 }
@@ -1041,10 +1055,32 @@ var minDepth = function (root) {
 
 ```javascript {.line-numbers}
 var isBalanced = function (root) {
+	//后序遍历
+	// 1. 确定递归函数参数以及返回值
+	const getDepth = function (node) {
+		// 2. 确定递归函数终止条件
+		if (node === null) return 0
+		// 3. 确定单层递归逻辑
+		let leftDepth = getDepth(node.left) //左子树高度
+		// 当判定左子树不为平衡二叉树时,即可直接返回-1
+		if (leftDepth === -1) return -1
+		let rightDepth = getDepth(node.right) //右子树高度
+		// 当判定右子树不为平衡二叉树时,即可直接返回-1
+		if (rightDepth === -1) return -1
+		if (Math.abs(leftDepth - rightDepth) > 1) {
+			return -1
+		} else {
+			return 1 + Math.max(leftDepth, rightDepth)
+		}
+	}
+	return !(getDepth(root) === -1)
+}
+
+
+var isBalanced = function (root) {
 	const depth = (root) => {
 		return !root ? 0 : Math.max(depth(root.left), depth(root.right)) + 1
 	}
-
 	return !root
 		? true
 		: Math.abs(depth(root.left) - depth(root.right)) <= 1 &&
@@ -1170,39 +1206,24 @@ var findTilt = function (root) {
 }
 ```
 
-##### [257.二叉树的所有路径](https://leetcode-cn.com/problems/binary-tree-paths/)
+##### [257.==二叉树的所有路径==](https://leetcode-cn.com/problems/binary-tree-paths/)
 
 ```javascript {.line-numbers}
 var binaryTreePaths = function (root) {
-	const paths = []
-	const dfs = (root, paths, path) => {
+	const ret = []
+	const dfs = (root, curPath) => {
 		if (!root) return
 		if (!root.left && !root.right) {
-			paths.push(path + root.val)
+			ret.push(curPath + root.val)
 			return
 		}
-		dfs(root.left, paths, path + root.val + '->')
-		dfs(root.right, paths, path + root.val + '->')
-	}
-	dfs(root, paths, '')
-	return paths
-}
-
-var binaryTreePaths = function (root) {
-	const paths = []
-	const dfs = (root, path) => {
-		if (root) {
-			path += root.val
-			if (!root.left && !root.right) {
-				paths.push(path)
-			} else {
-				dfs(root.left, path + '->')
-				dfs(root.right, path + '->')
-			}
-		}
+		curPath += root.val + '->'
+    //这里隐藏了回溯
+		dfs(root.left, curPath)
+		dfs(root.right, curPath)
 	}
 	dfs(root, '')
-	return paths
+	return ret
 }
 ```
 
@@ -1283,11 +1304,11 @@ var sumOfLeftLeaves = function (root) {
 		const isLeaf = (root) => {
 			return !root.left && !root.right
 		}
+    //当前层的左叶子之和为左子树+右子树+当前节点的值
 		let ret = 0
 		if (root.left) {
 			ret += isLeaf(root.left) ? root.left.val : dfs(root.left)
 		}
-
 		if (root.right && !isLeaf(root.right)) {
 			ret += dfs(root.right)
 		}
@@ -1542,6 +1563,7 @@ const deserialize = (data) => {
 
 ```javascript {.line-numbers}
 var constructMaximumBinaryTree = function (nums) {
+  if (!nums || nums.length === 0) return nums
 	const build = (nums, low, high) => {
 		if (low > high) return null
 		let index = -1,
@@ -1557,7 +1579,6 @@ var constructMaximumBinaryTree = function (nums) {
 		root.right = build(nums, index + 1, high)
 		return root
 	}
-	if (!nums || nums.length === 0) return nums
 	return build(nums, 0, nums.length - 1)
 }
 ```

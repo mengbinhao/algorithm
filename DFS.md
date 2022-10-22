@@ -1,3 +1,17 @@
+## concept
+
+- **回溯法解决的问题都可以抽象为树形结构**
+
+- **集合的大小就构成了树的宽度，递归的深度，都构成的树的深度**
+
+  ![](images/dfs_2.png)
+
+- **一般来说：组合问题和排列问题是在树形结构的叶子节点上收集结果，而子集问题就是取树上所有节点的结果**
+
+## questions
+
+![](images/dfs_1.png)
+
 ### [17.==电话号码的字母组合==](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
 
 ```javascript
@@ -20,7 +34,7 @@ var letterCombinations = function (digits) {
 			return
 		}
 		for (let c of hash[digits[level]]) {
-      //该问题可省略回溯的过程
+      //该问题传递的是字符串则可省略回溯的过程
       dfs(s + c, level + 1)
     }
 	}
@@ -127,22 +141,23 @@ var isValidSudoku = function (board) {
 //best version
 var combine = function (n, k) {
 	const ret = []
-	const dfs = (n, k, start, path) => {
-		if (k === 0) {
+	const dfs = (n, k, startIdx, path) => {
+		if (path.length === k) {
 			ret.push([...path])
 			return
 		}
-		//剪枝n - k + 1，待组成的数不够k个了
-		for (let i = start; i <= n - k + 1; i++) {
+    //剪枝n - k + 1，待组成的数凑不够k个
+		for (let i = startIdx; i <= n - (k - path.length) + 1; i++) {
 			path.push(i)
-			dfs(n, k - 1, i + 1, path)
-			//backtrack [1,2...] ->  [1,3...] -> [2...]
+			dfs(n, k, i + 1, path)
+      //backtrack [1,2...] ->  [1,3...] -> [2...]
 			path.pop()
 		}
 	}
 	dfs(n, k, 1, [])
 	return ret
 }
+
 
 //dfs + backtrack 2
 var combine = function (n, k) {
@@ -174,14 +189,14 @@ var combinationSum = function (candidates, target) {
 	const len = candidates.length,
 		ret = []
 	if (len === 0) return ret
-	const dfs = (candidates, remain, start, path) => {
+	const dfs = (candidates, remain, startIdx, path) => {
 		if (remain < 0) return
 		if (remain === 0) {
 			ret.push([...path])
 			return
 		}
 
-		for (let i = start; i < candidates.length; i++) {
+		for (let i = startIdx; i < candidates.length; i++) {
 			path.push(candidates[i])
 			//可选重复元素
 			dfs(candidates, remain - candidates[i], i, path)
@@ -241,7 +256,7 @@ var combinationSum2 = function (candidates, target) {
 		for (let i = begin, len = candidates.length; i < len; i++) {
 			//大剪枝:减去candidates[i]小于 0，减去后面的candidates[i + 1]、candidates[i + 2]肯定也小于 0
 			if (remain - candidates[i] < 0) break
-			//小剪枝:同一层相同数值的结点，从第 2 个开始，候选数更少，结果一定发生重复，因此跳过
+			//小剪枝:对同一层使用过相同数值的元素跳过
 			if (i > begin && candidates[i - 1] === candidates[i]) continue
 			path.push(candidates[i])
 			dfs(candidates, remain - candidates[i], i + 1, path)
@@ -329,10 +344,13 @@ var permuteUnique = function (nums) {
 var subsets = function (nums) {
 	const ret = []
 	//start控制下层树枝的个数
-	const dfs = (nums, start, path) => {
-		//在递归压栈前做事情
+	const dfs = (nums, startIdx, path) => {
+		//在递归压栈前做事情,取的是所有树上的叶子节点
+    
+    //该题不需要结束条件，全部遍历完即可
+    //if (startIdx >= path.length) return 
 		ret.push([...path])
-		for (let i = start, len = nums.length; i < len; i++) {
+		for (let i = startIdx, len = nums.length; i < len; i++) {
 			path.push(nums[i])
 			dfs(nums, i + 1, path)
 			path.pop()
@@ -374,65 +392,14 @@ var subsets = function (nums) {
 }
 ```
 
-### [79.单词搜索](https://leetcode-cn.com/problems/word-search/)
 
-```javascript {.line-numbers}
-var exist = function (board, word) {
-	if (!board || board.length === 0 || !word) return false
-	let row = board.length,
-		col = board[0].length,
-		visited = new Array(row),
-		directions = [
-			[0, -1],
-			[-1, 0],
-			[0, 1],
-			[1, 0],
-		]
 
-	//init visited
-	for (let i = 0; i < visited.length; i++) {
-		visited[i] = Array.from({ length: col }, () => false)
-	}
-	for (let i = 0; i < row; i++) {
-		for (let j = 0; i < col; j++) {
-			if (dfs(board, word, 0, i, j, row, col, visited, directions)) return true
-		}
-	}
-	return false
-}
-
-function dfs(board, word, level, i, j, row, col, visited, directions) {
-	if (level === word.length - 1) {
-		return board[i][j] === word[level]
-	}
-
-	if (board[i][j] === word[level]) {
-		visited[i][j] = true
-		for (let [deltaX, deltaY] of directions) {
-			let newX = i + deltaX,
-				newY = j + deltaY
-			if (isValid(newX, newY, row, col) && !visited[newX][newY]) {
-				if (
-					dfs(board, word, level + 1, newX, newY, row, col, visited, directions)
-				)
-					return true
-			}
-		}
-		visited[i][j] = false
-	}
-}
-
-function isValid(x, y, row, col) {
-	return x >= 0 && x < row && y >= 0 && y < col
-}
-```
-
-### [90.==子集 II==](https://leetcode-cn.com/problems/subsets-ii/)
+### [90.子集 II](https://leetcode-cn.com/problems/subsets-ii/)
 
 ```javascript {.line-numbers}
 var subsetsWithDup = function (nums) {
 	const ret = []
-	//重复需要排序
+	//precondition!!!
 	nums.sort((a, b) => a - b)
 	const dfs = (nums, start, path) => {
 		ret.push([...path])
@@ -499,7 +466,7 @@ var solveNQueens = function (n) {
 }
 ```
 
-### [52.==N 皇后 2H==](https://leetcode-cn.com/problems/n-queens-ii/)
+### [52.N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)
 
 ```javascript {.line-numbers}
 var totalNQueens = function (n) {
@@ -601,15 +568,12 @@ var solve = function (board) {
 			board[i][j] === '#'
 		)
 			return
-
 		board[i][j] = '#'
-
 		dfs(board, i - 1, j, row, col)
 		dfs(board, i + 1, j, row, col)
 		dfs(board, i, j - 1, row, col)
 		dfs(board, i, j + 1, row, col)
 	}
-
 	return board
 }
 ```
@@ -631,7 +595,7 @@ var numIslands = function (grid) {
 		if (i < 0 || j < 0 || i >= row || j >= col || grid[i][j] === '0') return
 		//marked as zero
 		grid[i][j] = '0'
-
+		//四周外扩一格
 		dfs(grid, i + 1, j, row, col)
 		dfs(grid, i, j + 1, row, col)
 		dfs(grid, i - 1, j, row, col)
