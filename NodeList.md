@@ -663,6 +663,23 @@ var insertionSortList = function (head) {
 }
 ```
 
+### [203. ==移除链表元素==](https://leetcode.cn/problems/remove-linked-list-elements/)
+
+```javascript {.line-numbers}
+var removeElements = function (head, val) {
+	const dummyNode = new ListNode(-1, head)
+	let cur = dummyNode
+	while (cur.next) {
+		if (cur.next.val === val) {
+			cur.next = cur.next.next
+			continue
+		}
+		cur = cur.next
+	}
+	return dummyNode.next
+}
+```
+
 ### [206. ==反转链表==](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 ```javascript {.line-numbers}

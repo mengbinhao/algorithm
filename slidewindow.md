@@ -49,16 +49,19 @@ var lengthOfLongestSubstring = function (s) {
 }
 
 var lengthOfLongestSubstring = function (s) {
-	const window = {}, len = s.length
-  let l = 0, r = 0, ret = 0
-  while (r < len) {
-    const rChar = s[r++]
-    window[rChar] ? window[rChar]++ : window[rChar] = 1
-    //left一直缩到widnow里当前rChar不重复的位置
-    while (window[rChar] > 1) window[s[l++]]--
-    ret = Math.max(ret, r - l)
-  }
-  return ret
+	const window = {},
+		len = s.length
+	let l = 0,
+		r = 0,
+		ret = 0
+	while (r < len) {
+		const rChar = s[r++]
+		window[rChar] ? window[rChar]++ : (window[rChar] = 1)
+		//left一直缩到widnow里当前rChar不重复的位置
+		while (window[rChar] > 1) window[s[l++]]--
+		ret = Math.max(ret, r - l)
+	}
+	return ret
 }
 ```
 
@@ -131,6 +134,7 @@ var minSubArrayLen = function (s, nums) {
 			sum += nums[j]
 			if (sum >= s) {
 				ret = Math.min(ret, j - i + 1)
+				//因要求找最短,找到即返回
 				break
 			}
 		}
@@ -146,17 +150,17 @@ var minSubArrayLen = function (s, nums) {
 	if (len === 0) return 0
 
 	let ret = Number.MAX_SAFE_INTEGER,
-		left = 0,
-		right = 0,
+		start = 0, //表示滑动窗口的起始位置
+		end = 0, //表示滑动窗口的结束位置
 		sum = 0
-	while (right < len) {
-		sum += nums[right]
+	while (end < len) {
+		sum += nums[end]
+		//update start
 		while (sum >= s) {
-			ret = Math.min(ret, right - left + 1)
-			sum -= nums[left]
-			left++
+			ret = Math.min(ret, end - start + 1)
+			sum -= nums[start++]
 		}
-		right++
+		end++
 	}
 	return ret === Number.MAX_SAFE_INTEGER ? 0 : ret
 }
@@ -179,7 +183,6 @@ var maxSlidingWindow = function (nums, k) {
 	return ret
 }
 
-
 //deque O(n) - O(n)
 var maxSlidingWindow = function (nums, k) {
 	//放的下标,递减队列,第一个第一大的index,依此类推
@@ -191,15 +194,13 @@ var maxSlidingWindow = function (nums, k) {
 		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
 		if (deque.length && deque[0] < i - k + 1) deque.shift()
 		//维护递减队列
-		while (deque.length && nums[deque[deque.length - 1]] < nums[i])
-			deque.pop()
+		while (deque.length && nums[deque[deque.length - 1]] < nums[i]) deque.pop()
 		deque.push(i)
 		//开始检查结果
 		if (i >= k - 1) ret.push(nums[deque[0]])
 	}
 	return ret
 }
-
 
 //stack O(n) - O(n)
 var maxSlidingWindow = function (nums, k) {

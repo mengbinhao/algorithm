@@ -34,7 +34,7 @@ var longestCommonPrefix = function (strs) {
 	//枚strs[0]每个char
 	for (let i = 0, s0Len = strs[0].length; i < s0Len; i++) {
 		for (let j = 1, strsLen = strs.length; j < strsLen; j++) {
-      //strs[j]已经到头了
+			//strs[j]已经到头了
 			if (i === strs[j].length || strs[j].charAt(i) !== strs[0].charAt(i)) {
 				return strs[0].substring(0, i)
 			}
@@ -72,13 +72,13 @@ var lengthOfLastWord = function (s) {
 	if (len === 0) return 0
 	let i = len - 1
 	while (i >= 0 && s[i] === ' ') i--
-  //扫完了直接返回
+	//扫完了直接返回
 	if (i < 0) return 0
-  let ret = 0
+	let ret = 0
 	while (i >= 0 && s[i] !== ' ') {
-    ret++
-    i--
-  }
+		ret++
+		i--
+	}
 	return ret
 }
 ```
@@ -116,24 +116,24 @@ var reverseWords = function (s) {
 	let l = 0,
 		r = s.length - 1,
 		word = ''
-    queue = []
+	queue = []
 	while (s[l] === ' ') l++
-  while (s[r] === ' ') r--
-  //左往右扫
-  while (l <= r) {
-    let c = s[l]
-    if (c !== ' ') {
-      word += c
-    //排除单词间有多个空格的情况,否则返回如example    good a    
-    } else if (c === ' ' && word) {
-      queue.unshift(word)
-      word = ''
-    }
-    l++
-  }
-  //add last word
-  queue.unshift(word)
-  return queue.join(' ')
+	while (s[r] === ' ') r--
+	//左往右扫
+	while (l <= r) {
+		let c = s[l]
+		if (c !== ' ') {
+			word += c
+			//排除单词间有多个空格的情况,否则返回如example    good a
+		} else if (c === ' ' && word) {
+			queue.unshift(word)
+			word = ''
+		}
+		l++
+	}
+	//add last word
+	queue.unshift(word)
+	return queue.join(' ')
 }
 ```
 
@@ -255,8 +255,7 @@ function addStrings(num1, num2) {
 var repeatedSubstringPattern = function (s) {
 	if (!s || s.length === 0) return false
 	let len = s.length
-
-	//子串不可能大于总长度一半
+	//子串长度不可能大于总长度的一半
 	for (let i = 1; i * 2 <= len; i++) {
 		//不超过长度一半
 		if (len % i === 0) {
@@ -271,7 +270,6 @@ var repeatedSubstringPattern = function (s) {
 			if (match) return true
 		}
 	}
-
 	return false
 }
 ```
@@ -428,7 +426,7 @@ var toLowerCase = function (str) {
 //use stack
 var reverseOnlyLetters = function (S) {
 	const stack = []
-  const reg = /[a-zA-Z]/
+	const reg = /[a-zA-Z]/
 	for (let c of S) if (reg.test(c)) stack.push(c)
 	let ret = ''
 	for (let c of S) {
@@ -442,18 +440,61 @@ var reverseOnlyLetters = function (S) {
 }
 
 //two point
-var reverseOnlyLetters = function(s) {
+var reverseOnlyLetters = function (s) {
 	const len = s.length
 	const arr = [...s]
 	let l = 0,
 		r = len - 1
 	while (true) {
-    // 判断左边是否扫描到字母
+		// 判断左边是否扫描到字母
 		while (l < r && !/^[a-zA-Z]+$/.test(s[l])) l++
 		while (l < r && !/^[a-zA-Z]+$/.test(s[r])) r--
 		if (l >= r) break
 		;[arr[l++], arr[r--]] = [arr[r], arr[l]]
 	}
 	return arr.join('')
-};
+}
+```
+
+### [剑指 Offer 05. ==替换空格==](https://leetcode.cn/problems/ti-huan-kong-ge-lcof/description/)
+
+```javascript {.line-numbers}
+var replaceSpace = function (s) {
+	let count = 0
+	for (let c of s) if (c === ' ') count++
+	const len = s.length
+	const arr = new Array(len + 2 * count)
+  //从后往前赋值
+	for (let i = len - 1, j = arr.length - 1; i >= 0; i--, j--) {
+		if (s[i] !== ' ') {
+			arr[j] = s[i]
+		} else {
+			arr[j--] = '0'
+			arr[j--] = '2'
+			arr[j] = '%'
+		}
+	}
+	return arr.join('')
+}
+```
+
+### [剑指 Offer 58 - II. ==左旋转字符串==](https://leetcode.cn/problems/ti-huan-kong-ge-lcof/description/)
+
+```javascript {.line-numbers}
+var reverseLeftWords = function (s, n) {
+	function swap(arr, l, r) {
+		while (l < r) {
+			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
+		}
+	}
+	let arr = s.split('')
+	let len = arr.length
+	//先翻转前n个
+	swap(arr, 0, n - 1)
+	//再翻转n后面的
+	swap(arr, n, len - 1)
+	//再全翻一下
+	swap(arr, 0, len - 1)
+	return arr.join('')
+}
 ```

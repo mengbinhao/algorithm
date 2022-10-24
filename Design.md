@@ -230,26 +230,26 @@ Trie.prototype.startsWith = function (prefix) {
 
 ```javascript {.line-numbers}
 var MyStack = function () {
-	this.stack = []
+	this.queue = []
 }
 
 MyStack.prototype.push = function (x) {
-	this.stack[this.stack.length] = x
+	this.queue[this.queue.length] = x
 }
 
 MyStack.prototype.pop = function () {
 	if (this.empty()) return undefined
-	const popItem = this.stack[this.stack.length - 1]
-	this.stack.length = this.stack.length - 1
+	const popItem = this.queue[this.queue.length - 1]
+	this.queue.length = this.queue.length - 1
 	return popItem
 }
 
 MyStack.prototype.top = function () {
-	return this.stack[this.stack.length - 1]
+	return this.queue[this.queue.length - 1]
 }
 
 MyStack.prototype.empty = function () {
-	return this.stack.length === 0 ? true : false
+	return this.queue.length === 0
 }
 ```
 
@@ -258,33 +258,30 @@ MyStack.prototype.empty = function () {
 ```javascript {.line-numbers}
 //use two stacks
 var MyQueue = function () {
-	this.input = []
-	this.output = []
+	this.stackIn = []
+	this.stackOut = []
 }
 
 MyQueue.prototype.push = function (x) {
-	this.input.push(x)
+	this.stackIn.push(x)
 }
 
 MyQueue.prototype.pop = function () {
-	this.addToOutput()
-	return this.output.pop()
+	if (this.stackOut.length > 0) return this.stackOut.pop()
+  //stackOut反向装入stackIn数据
+  while (this.stackIn.length > 0) this.stackOut.push(this.stackIn.pop())
+	return this.stackOut.pop()
 }
 
 MyQueue.prototype.peek = function () {
-	this.addToOutput()
-	return this.output[this.output.length - 1]
+  const x = this.pop()
+  //上局弹出来了,这里再放进去
+  this.stackOut.push(x)
+  return x
 }
 
 MyQueue.prototype.empty = function () {
-	return this.input.length === 0 && this.output.length === 0
-}
-
-//output反向装入input的数据
-MyQueue.prototype.addToOutput = function () {
-	if (this.output.length === 0) {
-		while (this.input.length > 0) this.output.push(this.input.pop())
-	}
+	return this.stackIn.length === 0 && this.stackOut.length === 0
 }
 ```
 
@@ -370,4 +367,47 @@ MyCircularDeque.prototype.isFull = function () {
  * var param_7 = obj.isEmpty()
  * var param_8 = obj.isFull()
  */
+```
+
+### [707.设计链表](https://leetcode.cn/problems/design-linked-list/)
+
+```javascript {.line-numbers}
+var MyLinkedList = function () {
+	this.size = 0
+	this.head = new ListNode(0)
+}
+
+MyLinkedList.prototype.get = function (index) {
+	if (index < 0 || index >= this.size) return -1
+	let cur = this.head
+	while (index-- >= 0) cur = cur.next
+	return cur.val
+}
+
+MyLinkedList.prototype.addAtHead = function (val) {
+	this.addAtIndex(0, val)
+}
+
+MyLinkedList.prototype.addAtTail = function (val) {
+	this.addAtIndex(this.size, val)
+}
+
+MyLinkedList.prototype.addAtIndex = function (index, val) {
+	if (index > this.size) return
+	index = Math.max(0, index)
+	this.size++
+	let prev = this.head
+  while (index-- > 0) prev = prev.next
+	let newAdd = new ListNode(val)
+	newAdd.next = prev.next
+	prev.next = newAdd
+}
+
+MyLinkedList.prototype.deleteAtIndex = function (index) {
+	if (index < 0 || index >= this.size) return
+	this.size--
+	let prev = this.head
+	while (index-- > 0) prev = prev.next
+	prev.next = prev.next.next
+}
 ```

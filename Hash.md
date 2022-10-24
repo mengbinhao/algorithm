@@ -69,7 +69,6 @@ var isAnagram = function (s, t) {
 		hash[c] ? hash[c]++ : (hash[c] = 1)
 	}
 	for (let c of t) {
-    
 		if (hash[c]) {
 			hash[c]--
 			//meet return immediately
@@ -85,9 +84,10 @@ var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
 	const arr = Array.from({ length: 26 }, () => 0),
 		len = s.length
-	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - 'a'.charCodeAt(0)]++
+  const base = 'a'.charCodeAt(0)
+	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - base]++
 	for (let i = 0; i < len; i++) {
-		if (--arr[t.charCodeAt(i) - 'a'.charCodeAt(0)] < 0) return false
+		if (--arr[t.charCodeAt(i) - base] < 0) return false
 	}
 	return true
 }

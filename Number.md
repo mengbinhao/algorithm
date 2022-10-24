@@ -1,4 +1,4 @@
->  ==无论什么语言整数操作都需要考虑溢出==
+> ==无论什么语言整数操作都需要考虑溢出==
 
 ### [7.==整数反转==](https://leetcode-cn.com/problems/reverse-integer/)
 
@@ -8,7 +8,7 @@ var reverse = function (x) {
 	let ret = 0
 	while (x) {
 		ret = ret * 10 + (x % 10)
-    x = (x / 10) | 0
+		x = (x / 10) | 0
 		if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(-2, 31)) return 0
 	}
 	return ret
@@ -194,12 +194,27 @@ function getN(n) {
 }
 
 var isHappy = function (n) {
-	const sumSet = new Set()
-	while (n !== 1 && !sumSet.has(n)) {
-		sumSet.add(n)
+	const set = new Set()
+	while (n !== 1 && !set.has(n)) {
+		set.add(n)
 		n = getN(n)
 	}
-	return n == 1
+	return n === 1
+}
+
+//solution 2
+var isHappy = function (n) {
+	let set = new Set()
+	let totalCount
+	while (totalCount !== 1) {
+		let arr = ('' + (totalCount || n)).split('')
+		totalCount = arr.reduce((total, num) => {
+			return total + num * num
+		}, 0)
+		if (set.has(totalCount)) return false
+		set.add(totalCount)
+	}
+	return true
 }
 ```
 

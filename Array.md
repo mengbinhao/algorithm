@@ -130,33 +130,34 @@ var threeSum = function (nums) {
 }
 
 //夹逼（大部分情况需已排序） O(n^2) - O(1)
-var threeSum = function(nums) {
-  const len = nums.length
-  //precondition!!!!!!
-  nums.sort((a, b) => a - b)
-  const ret = []
-  //不重复的三个数
-  for (let i = 0; i < len - 2; i++) {
-    if (nums[i] > 0) break
-    if (i > 0 && nums[i] === nums[i - 1]) continue
-    let l = i + 1, r = len - 1
-    while (l < r) {
-      const sum = nums[i] + nums[l] + nums[r]
-      if (sum === 0) {
-        ret.push([nums[i], nums[l], nums[r]])
-        while (nums[l] === nums[l + 1]) l++
-        l++
-        while (nums[r] === nums[r - 1]) r--
-        r--
-      } else if (sum > 0) {
-        r--
-      } else {
-        l++
-      }
-    }
-  }
-  return ret
-};
+var threeSum = function (nums) {
+	const len = nums.length
+	//precondition!!!!!!
+	nums.sort((a, b) => a - b)
+	const ret = []
+	//不重复的三个数
+	for (let i = 0; i < len - 2; i++) {
+		if (nums[i] > 0) break
+		if (i > 0 && nums[i] === nums[i - 1]) continue
+		let l = i + 1,
+			r = len - 1
+		while (l < r) {
+			const sum = nums[i] + nums[l] + nums[r]
+			if (sum === 0) {
+				ret.push([nums[i], nums[l], nums[r]])
+				while (nums[l] === nums[l + 1]) l++
+				l++
+				while (nums[r] === nums[r - 1]) r--
+				r--
+			} else if (sum > 0) {
+				r--
+			} else {
+				l++
+			}
+		}
+	}
+	return ret
+}
 ```
 
 ### [18.四数之和 M](https://leetcode-cn.com/problems/4sum/)
@@ -223,15 +224,30 @@ var removeDuplicates = function (nums) {
 }
 ```
 
+### [27.==移除元素==](https://leetcode.cn/problems/remove-element/)
+
+```javascript
+//slow - fast pointer
+var removeElement = (nums, val) => {
+	let slow = 0
+	for (let fast = 0; fast < nums.length; fast++) {
+		if (nums[fast] !== val) {
+			nums[slow++] = nums[fast]
+		}
+	}
+	return slow
+}
+```
+
 ### [45.==跳跃游戏 II M==](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```javascript
 var jump = function (nums) {
 	let steps = 0,
-     //边界
+		//边界
 		end = 0,
 		maxPosition = 0
-  //如果访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
+	//如果访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
 		//当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
@@ -321,7 +337,7 @@ var generateMatrix = function (n) {
 		right = n - 1,
 		top = 0,
 		bottom = n - 1
-  //new Array(n).fill(0).map(() => new Array(n)),直接new Array(n)空数组map跳过
+	//new Array(n).fill(0).map(() => new Array(n)),直接new Array(n)空数组map跳过
 	const ret = Array.from({ length: n }, () => new Array(n))
 	let num = 1
 	while (num <= n * n) {
@@ -346,7 +362,7 @@ var generateMatrix = function (n) {
 
 ```javascript
 var canJump = function (nums) {
-  const len = nums.length
+	const len = nums.length
 	//能够跳到的最远位置
 	let maxPosition = 0
 	for (let i = 0; i < len; i++) {
@@ -390,19 +406,19 @@ var plusOne = function (digits) {
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length,
-	  mardedRow = new Array(rows).fill(false),
-    markedCol = new Array(cols).fill(false)
-  //先循环记录需要待转换的行或列
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      if (matrix[i][j] === 0) mardedRow[i] =  markedCol[j] = true
-    }
-  }
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      if (mardedRow[i] || markedCol[j]) matrix[i][j] = 0
-    }
-  }
+		mardedRow = new Array(rows).fill(false),
+		markedCol = new Array(cols).fill(false)
+	//先循环记录需要待转换的行或列
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (matrix[i][j] === 0) mardedRow[i] = markedCol[j] = true
+		}
+	}
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (mardedRow[i] || markedCol[j]) matrix[i][j] = 0
+		}
+	}
 }
 
 //O(mn) - O(1)
@@ -410,7 +426,7 @@ var setZeroes = function (matrix) {
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length,
-     //使用mark标记
+		//使用mark标记
 		marked = -1000001
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
@@ -437,26 +453,27 @@ var setZeroes = function (matrix) {
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length
-	let rowZero = false, colZero = false
-  //更新第一行与第一列并记录两个变量
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      if (matrix[i][j] === 0) {
-        matrix[0][j] = matrix[i][0] = 0
-        if (i === 0) rowZero = true
-        if (j === 0) colZero = true
-      }
-    }
-  }
-  //使用第一行与第一列更新其他区域
-  for (let i = 1; i < rows; i++) {
-    for (let j = 1; j < cols; j++) {
-      if (matrix[0][j] === 0 || matrix[i][0] === 0) matrix[i][j] = 0
-    }
-  }
-  //最后根据两个变量处理第一行与第一列
-  for (let i = 0; rowZero && i < cols; i++) matrix[0][i] = 0
-  for (let i = 0; colZero && i < rows; i++) matrix[i][0] = 0
+	let rowZero = false,
+		colZero = false
+	//更新第一行与第一列并记录两个变量
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (matrix[i][j] === 0) {
+				matrix[0][j] = matrix[i][0] = 0
+				if (i === 0) rowZero = true
+				if (j === 0) colZero = true
+			}
+		}
+	}
+	//使用第一行与第一列更新其他区域
+	for (let i = 1; i < rows; i++) {
+		for (let j = 1; j < cols; j++) {
+			if (matrix[0][j] === 0 || matrix[i][0] === 0) matrix[i][j] = 0
+		}
+	}
+	//最后根据两个变量处理第一行与第一列
+	for (let i = 0; rowZero && i < cols; i++) matrix[0][i] = 0
+	for (let i = 0; colZero && i < rows; i++) matrix[i][0] = 0
 }
 ```
 
@@ -508,7 +525,7 @@ var merge = function (nums1, m, nums2, n) {
 
 //三指针 / 从前往后 O(n+m) - O(m)
 var merge = (nums1, m, nums2, n) => {
-  //原数组前面会被覆盖所以copy一份
+	//原数组前面会被覆盖所以copy一份
 	const nums1Copy = nums1.slice(0, m)
 	let p1 = 0,
 		p2 = 0,
@@ -526,7 +543,7 @@ var merge = (nums1, m, nums2, n) => {
 		q = n - 1,
 		k = m + n - 1
 	//nums2全部复制完
-  //不能写成nums1[p] < nums2[q] ? nums2[q--] : nums1[p--]死循环
+	//不能写成nums1[p] < nums2[q] ? nums2[q--] : nums1[p--]死循环
 	while (q >= 0) nums1[k--] = nums1[p] > nums2[q] ? nums1[p--] : nums2[q--]
 }
 ```
@@ -541,7 +558,7 @@ var rotate = function (nums, k) {
 		let previous = nums[len - 1]
 		//每次向前滚一下
 		for (let j = 0; j < len; j++) {
-      [nums[j], previous] = [previous, nums[j]]
+			;[nums[j], previous] = [previous, nums[j]]
 		}
 	}
 }
@@ -601,17 +618,17 @@ var productExceptSelf = (nums) => {
 }
 
 //使用一个数组
-var productExceptSelf = function(nums) {
-  const len = nums.length,
-    r = new Array(len),
-    ret = new Array(len)
-  ret[0] = 1
-  for (let i = 1; i < len; i++) ret[i] = nums[i - 1] * ret[i - 1]
-  r[len - 1] = 1
-  for (let i = len - 2; i >= 0; i--) r[i] = nums[i + 1] * r[i + 1]
-  for (let i = 0; i < len; i++) ret[i] = ret[i] * r[i]
-  return ret
-};
+var productExceptSelf = function (nums) {
+	const len = nums.length,
+		r = new Array(len),
+		ret = new Array(len)
+	ret[0] = 1
+	for (let i = 1; i < len; i++) ret[i] = nums[i - 1] * ret[i - 1]
+	r[len - 1] = 1
+	for (let i = len - 2; i >= 0; i--) r[i] = nums[i + 1] * r[i + 1]
+	for (let i = 0; i < len; i++) ret[i] = ret[i] * r[i]
+	return ret
+}
 
 //better  O(1)
 var productExceptSelf = function (nums) {
@@ -622,7 +639,7 @@ var productExceptSelf = function (nums) {
 	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]
 
 	let r = 1
-  //从最后一个更新开始更新答案
+	//从最后一个更新开始更新答案
 	for (let i = len - 1; i >= 0; i--) {
 		ret[i] = ret[i] * r
 		r *= nums[i]
