@@ -1,6 +1,14 @@
 ![](./images/dp.png)
 
-# 1、线性 DP
+# 解题步骤
+
+1. 确定dp数组（dp table）以及下标的含义
+2. 确定递推公式(**一些情况是递推公式决定了dp数组要如何初始化,所以这条在前**)
+3. dp数组如何初始化
+4. 确定遍历顺序
+5. 举例推导dp数组
+
+# 线性 DP
 
 ### [5. ==最长回文子串==](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
@@ -1016,7 +1024,7 @@ var maxProfit = function (prices) {
 }
 ```
 
-# 2、区间 DP
+# 区间 DP
 
 ### [516. ==最长回文子序列==](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
 
@@ -1042,9 +1050,9 @@ var longestPalindromeSubseq = function (s) {
 }
 ```
 
-# 3、背包 DP
+# 背包 DP
 
-### [01 背包]
+### 01 背包
 
 ![](images/dp_1.png)
 
@@ -1052,20 +1060,95 @@ var longestPalindromeSubseq = function (s) {
 
 1. **dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的背包，价值总和最大是多少**
 
-2. dp\[i\]\[j\] = max(dp\[i - 1\]\[j\], dp\[i - 1\]\[j - weight\[i\]\] + value\[i\])
+2. **dp\[i\]\[j\] = max(dp\[i - 1\]\[j\], dp\[i - 1\]\[j - weight\[i\]\] + value\[i\])**
 3. base case, 注意倒序遍历和是否价值有正负
 
 ![](images/dp_2.png)
 
 4. 优化：注意遍历方向
 
+```javascript
+//二维解法
+function testWeightBagProblem(weight, value, bagWeight) {
+	const len = weight.length,
+		dp = Array(len) //empty
+			.fill() //undefined
+			.map(() => Array(bagWeight + 1).fill(0)) //注意数组偏移和第一列已经初始化为0
+	for (let j = weight[0]; j <= bagWeight; j++) dp[0][j] = value[0]
+	//先遍历物品(本题本解法两个状态遍历顺序随意,都不影响dp公式的推导)
+	for (let i = 1; i < len; i++) {
+		//再遍历背包容量
+		for (let j = 0; j <= bagWeight; j++) {
+			//不放
+			if (j < weight[i]) {
+				dp[i][j] = dp[i - 1][j]
+				//放
+			} else {
+				dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i])
+			}
+		}
+	}
+	console.table(dp)
+	return dp[len - 1][bagWeight]
+}
+
+//一维解法
+function testWeightBagProblem2(weight, value, bagWeight) {
+	const len = weight.length,
+		//dp[j]表示：容量为j的背包，所背的物品最大价值
+		//第一行初始化为0
+		dp = Array(bagWeight + 1).fill(0)
+	for (let i = 1; i <= len; i++) {
+		//倒序遍历是为了保证物品i只被放入一次!!!
+		//从右向左覆盖,一维解法不能修改两个状态的遍历先后和遍历方向!!!
+		for (let j = bagWeight; j >= weight[i - 1]; j--) {
+			dp[j] = Math.max(dp[j], value[i - 1] + dp[j - weight[i - 1]])
+		}
+	}
+	console.log(dp)
+	return dp[bagWeight]
+}
+```
+
+### 完全背包
+
+```javascript
+// 先遍历物品，再遍历背包容量
+function testCompletePack1() {
+	const weight = [1, 3, 5]
+	const value = [15, 20, 30]
+	const bagWeight = 4
+	let dp = new Array(bagWeight + 1).fill(0)
+	for (let i = 0; i < weight.length; i++) {
+		for (let j = weight[i]; j <= bagWeight; j++) {
+			dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
+		}
+	}
+	console.log(dp)
+}
+
+// 先遍历背包容量，再遍历物品
+function testCompletePack2() {
+	const weight = [1, 3, 5]
+	const value = [15, 20, 30]
+	const bagWeight = 4
+	let dp = new Array(bagWeight + 1).fill(0)
+	for (let j = 0; j <= bagWeight; j++) {
+		for (let i = 0; i < weight.length; i++) {
+			if (j >= weight[i]) dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
+		}
+	}
+	console.log(dp)
+}
+```
+
 ### [322. ==零钱兑换==](https://leetcode-cn.com/problems/coin-change/)
 
 ```javascript {.line-numbers}
+//Greedy
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-
 	let ret = Infinity
 	const greedyDFS = (coins, remain, coinsIdx, count) => {
 		if (remain === 0) {
@@ -1135,27 +1218,40 @@ var coinChange = function (coins, amount) {
 	return dfs(coins, amount)
 }
 
-//dp 自底向上
+//dp1 自底向上
+const coinChange = (coins, amount) => {
+	if (coins.length === 0) return -1
+	if (amount < 1) return 0
+	//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数,防止后面被覆盖
+	const dp = Array(amount + 1).fill(Infinity)
+	//当i = 0时无法用硬币组成
+	dp[0] = 0
+
+	for (let i = 0; i < coins.length; i++) {
+		for (let j = coins[i]; j <= amount; j++) {
+			dp[j] = Math.min(dp[j - coins[i]] + 1, dp[j])
+		}
+	}
+	return dp[amount] === Infinity ? -1 : dp[amount]
+}
+
+//dp2
 //O(Sn) + O(S)
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-
-	const max = amount + 1,
-		//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数
-		dp = new Array(max).fill(max)
+	//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数,防止后面被覆盖
+	dp = new Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
 	for (let i = 1; i <= amount; i++) {
 		//dp[i] = min(F(1−1),F(1−2),F(1−5)) + 1
 		for (let j = 0, len = coins.length; j < len; j++) {
 			//数组越界,语义上是当前剩余面值需要大于硬币价值才有意义
-			if (i - coins[j] >= 0) {
-				dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
-			}
+			if (i - coins[j] >= 0) dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
 		}
 	}
-	return dp[amount] === max ? -1 : dp[amount]
+	return dp[amount] === Infinity ? -1 : dp[amount]
 }
 ```
 
@@ -1163,26 +1259,29 @@ var coinChange = function (coins, amount) {
 
 ```javascript {.line-numbers}
 var change = function (amount, coins) {
+  //dp[j]：凑成总金额j的货币组合数为dp[j]
 	const dp = new Array(amount + 1).fill(0)
+  //凑成总金额0的货币组合数为1
 	dp[0] = 1
+  //如下遍历顺序中dp[j]里计算的是组合数！
+  //若调整状态遍历顺序则计算的是排列数！
 	for (const coin of coins) {
-		for (let i = coin; i <= amount; i++) {
-			dp[i] += dp[i - coin]
-		}
+    //dp[j] += dp[j - nums[j]]
+		for (let j = coin; j <= amount; j++) dp[j] += dp[j - coin]
 	}
 	return dp[amount]
 }
 ```
 
-# 4、树形 DP
+# 树形 DP
 
 ### 见打家劫舍 III
 
-# 5、状态压缩 DP
+# 状态压缩 DP
 
-# 6、数位 DP
+# 数位 DP
 
-# 7、计数型 DP
+# 计数型 DP
 
 ### [62. ==不同路径==](https://leetcode-cn.com/problems/unique-paths/)
 
@@ -1203,16 +1302,14 @@ var uniquePaths = function (m, n) {
 var uniquePaths = function (m, n) {
 	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
 	//base case第一列
-	for (let i = 0; i < m; i++) {
-		dp[i][0] = 1
-	}
+	for (let i = 0; i < m; i++) dp[m][0] = 1
 	//base case第一行
-	for (let j = 0; j < n; j++) {
-		dp[0][j] = 1
-	}
+	for (let i = 0; i < n; i++) dp[0][n] = 1
+	//不影响最终结果
+	//dp[0][0] = 0
 	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
-			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+		for (let j = 1; j < n; i++) {
+			dpp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 		}
 	}
 	return dp[m - 1][n - 1]
@@ -1220,13 +1317,11 @@ var uniquePaths = function (m, n) {
 
 //O(mn) - O(n)
 var uniquePaths = function (m, n) {
-	//一行一行滚动
+	//一行一行向下滚动
+  //初始化第一行，也符合base数据，隐含初始化了第一列
 	const dp = new Array(n).fill(1)
-
 	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
-			dp[j] += dp[j - 1]
-		}
+		for (let j = 1; j < n; j++) dp[j] += dp[j - 1]
 	}
 	return dp[j - 1]
 }
@@ -1306,7 +1401,7 @@ const numTrees = (n) => {
 }
 ```
 
-# 8、递推型 DP
+# 递推型 DP
 
 ### [70. ==爬楼梯==](https://leetcode-cn.com/problems/climbing-stairs/)
 
@@ -1317,23 +1412,21 @@ const numTrees = (n) => {
 //O(n) - O(n)
 var climbStairs = function (n) {
 	//dp[i]表示爬到第i级台阶的方案数
+  //直接忽视dp[0]的定义，从3开始循环更符合人类的思维模式
 	const dp = new Array(n + 1)
 	dp[1] = 1
 	dp[2] = 2
-	for (let i = 3; i <= n; i++) {
-		dp[i] = dp[i - 1] + dp[i - 2]
-	}
+	for (let i = 3; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2]
 	return dp[n]
 }
 
 //O(n) - O(1)
 var climbStairs = function (n) {
+  //特判
 	if (n <= 2) return n
-
 	let first = 1,
 		second = 2,
 		third
-
 	for (let i = 3; i <= n; i++) {
 		third = first + second
 		first = second
@@ -1346,17 +1439,48 @@ var climbStairs = function (n) {
 ### [509. ==斐波那契数==](https://leetcode-cn.com/problems/fibonacci-number/)
 
 ```javascript {.line-numbers}
+//bad version1
 var fib = function (n) {
 	if (n < 2) return n
-	let p = 0,
-		q = 0,
-		r = 1
-	for (let i = 2; i <= n; i++) {
-		p = q
-		q = r
-		r = p + q
+	return fib(n - 1) + fib(n - 2)
+}
+
+//bad version2 with memory
+var fib = function (n) {
+	const map = new Map()
+	const helper = (n) => {
+		if (n < 2) {
+			map.set(n, n)
+			return map.get(n)
+		}
+		if (map.has(n)) return map.get(n)
+		map.set(n, fib(n - 1) + fib(n - 2))
+		return map.get(n)
 	}
-	return r
+	return helper(n)
+}
+
+//DP
+var fib = function (n) {
+	dp = [0, 1]
+	for (let i = 2; i <= n; i++) {
+		dp[i] = dp[i - 1] + dp[i - 2]
+	}
+	return dp[n]
+}
+
+//DP 状态压缩 O(1)
+var fib = function (n) {
+	if (n < 2) return n
+	let pre1 = 1,
+		pre2 = 0,
+		tmp
+	for (let i = 2; i <= n; i++) {
+		tmp = pre1
+		pre1 = pre1 + pre2
+		pre2 = tmp
+	}
+	return pre1
 }
 ```
 
@@ -1380,9 +1504,9 @@ var tribonacci = function (n) {
 }
 ```
 
-# 9、概率型 DP
+# 概率型 DP
 
-# 10、博弈型 DP
+# 博弈型 DP
 
 ### [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
 
