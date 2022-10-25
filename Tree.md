@@ -31,23 +31,23 @@
   - 平衡二叉搜索树(AVL)：既满足左右子树高度差不大于 1， 又满足任意节点值大于它的左孩子节点值，小于它右孩子节点值
 
     ![](images/Tree_3.png)
-  
+
   - 红黑树
-  
+
     - 节点是红色或黑色
     - 根节点必须是黑色节点
     - 所有的叶子节点都必须是值为 NULL 的黑节点
     - 如果一个节点是红色的，则它两个子节点都是黑色的
     - 从任一节点到达它的每个叶子节点的所有的路径，都有相同数目的黑色节点
-  
+
     ![](./images/avl.png)
-  
+
   - Trie(字典树或前缀树，它是用来处理字符串匹配问题的数据结构，以及用来解决集合中查找固定前缀字符串的数据结构，高效的存储和查找字符串)
 
 # 解题要素
 
 - 一个中心:遍历
-- 两个基本点:DFS(`preorder/inorder/postorder ` 使用stack)、BFS(迭代，使用queue)
+- 两个基本点:DFS(`preorder/inorder/postorder ` 使用 stack)、BFS(迭代，使用 queue)
 - 三种题型:搜索类、构建类、修改类
 - 四个重要概念:二叉搜索树(==中序遍历是有序的==)、完全二叉树、路径、距离
 - 七个技巧
@@ -101,7 +101,6 @@ const preorderTraversal = (root) => {
 	}
 	return ret
 }
-
 
 //iteration. use stack
 var preorderTraversal = function (root) {
@@ -422,7 +421,6 @@ var zigzagLevelOrder = function (root) {
 	}
 	return ret
 }
-
 ```
 
 ##### [515.==在每个树行中找最大值==](https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/)
@@ -439,8 +437,8 @@ var largestValues = function (root) {
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			max = Math.max(max, curNode.val)
-      if (cur.left) queue.push(cur.left)
-      if (cur.right) queue.push(cur.right)
+			if (cur.left) queue.push(cur.left)
+			if (cur.right) queue.push(cur.right)
 		}
 		ret.push(max)
 	}
@@ -571,8 +569,8 @@ var isValidBST = function (root) {
 		}
 		root = stack.pop()
 		if (root.val <= prev) return false
-    //update prev
-    //if store node, prev.val maybe throw error
+		//update prev
+		//if store node, prev.val maybe throw error
 		prev = root.val
 		root = root.right
 	}
@@ -709,16 +707,16 @@ var searchBST = function (root, val) {
 }
 
 var searchBST = function (root, val) {
-  while (root !== null) {
-    if (root.val > val) {
-      root = root.left
-    } else if (root.val < val) {
-      root = root.right
-    } else {
-      return root
-    } 
-  }
-  return null
+	while (root !== null) {
+		if (root.val > val) {
+			root = root.left
+		} else if (root.val < val) {
+			root = root.right
+		} else {
+			return root
+		}
+	}
+	return null
 }
 ```
 
@@ -812,7 +810,7 @@ var generateTrees = function (n) {
 ```javascript {.line-numbers}
 var sortedArrayToBST = function (nums) {
 	const helper = (nums, l, r) => {
-   	//函数参数区间是左闭右闭,所以结束条件如下
+		//函数参数区间是左闭右闭,所以结束条件如下
 		if (l > r) return null
 		const mid = Math.floor((l + r) / 2)
 		//因高度平衡则需从中点创建根节点开始
@@ -866,7 +864,7 @@ var kthSmallest = function (root, k) {
 		if (--k === 0) break
 		root = root.right
 	}
-  return root.val
+	return root.val
 }
 ```
 
@@ -952,7 +950,7 @@ var isSymmetric = function (root) {
 			//放的时候也是两两放
 			queue.push(l.left, r.right)
 			queue.push(r.right, l.left)
-    //exists one node
+			//exists one node
 		} else if (l || r) {
 			return false
 		}
@@ -992,11 +990,11 @@ var invertTree = function (root) {
 
 ```javascript {.line-numbers}
 var maxDepth = function (root) {
-  //return root == null ? 0 : Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
-  if (!root) return 0
+	//return root == null ? 0 : Math.max(maxDepth(root.left), maxDepth(root.right)) + 1
+	if (!root) return 0
 	const lMax = maxDepth(root.left)
 	const rMax = maxDepth(root.right)
-  //+1是加上当前node的深度
+	//+1是加上当前node的深度
 	return Math.max(lMax, rMax) + 1
 }
 
@@ -1007,7 +1005,7 @@ var maxDepth = function (root) {
 	let heitght = 0
 	while (queue.length > 0) {
 		const size = queue.length
-    heitght++
+		heitght++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			if (cur.left) queue.push(cur.left)
@@ -1026,9 +1024,10 @@ var minDepth = function (root) {
 	if (!root) return 0
 	const minLeftDepth = minDepth(root.left)
 	const minRightDepth = minDepth(root.right)
-  //return minLeftDepth === 0 || minRightDepth === 0 ? ? minLeftDepth + minRightDepth + 1 : : Math.min(minLeftDepth, minRightDepth) + 1
-  if (minLeftDepth && minRightDepth) return Math.min(minLeftDepth, minRightDepth) + 1
-  return minLeftDepth === 0 ? minRightDepth + 1: minLeftDepth + 1
+	//return minLeftDepth === 0 || minRightDepth === 0 ? ? minLeftDepth + minRightDepth + 1 : : Math.min(minLeftDepth, minRightDepth) + 1
+	if (minLeftDepth && minRightDepth)
+		return Math.min(minLeftDepth, minRightDepth) + 1
+	return minLeftDepth === 0 ? minRightDepth + 1 : minLeftDepth + 1
 }
 
 //BFS
@@ -1038,7 +1037,7 @@ var minDepth = function (root) {
 	let depth = 0
 	while (queue.length > 0) {
 		const size = queue.length
-    depth++
+		depth++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			//如果左右节点都是null(在遇见的第一个leaf节点上)，则该节点深度最小
@@ -1075,7 +1074,6 @@ var isBalanced = function (root) {
 	}
 	return !(getDepth(root) === -1)
 }
-
 
 var isBalanced = function (root) {
 	const depth = (root) => {
@@ -1218,7 +1216,7 @@ var binaryTreePaths = function (root) {
 			return
 		}
 		curPath += root.val + '->'
-    //这里隐藏了回溯
+		//这里隐藏了回溯
 		dfs(root.left, curPath)
 		dfs(root.right, curPath)
 	}
@@ -1231,8 +1229,8 @@ var binaryTreePaths = function (root) {
 
 ```javascript {.line-numbers}
 var lowestCommonAncestor = function (root, p, q) {
-  //if (!root || root === p || root === q) return root
-  if (!root) return root
+	//if (!root || root === p || root === q) return root
+	if (!root) return root
 	if (root === p || root === q) return root
 	//f_lson
 	const left = lowestCommonAncestor(root.left, p, q)
@@ -1304,7 +1302,7 @@ var sumOfLeftLeaves = function (root) {
 		const isLeaf = (root) => {
 			return !root.left && !root.right
 		}
-    //当前层的左叶子之和为左子树+右子树+当前节点的值
+		//当前层的左叶子之和为左子树+右子树+当前节点的值
 		let ret = 0
 		if (root.left) {
 			ret += isLeaf(root.left) ? root.left.val : dfs(root.left)
@@ -1332,7 +1330,7 @@ var hasPathSum = function (root, sum) {
 
 var hasPathSum = function (root, targetSum) {
 	if (!root) return false
-  //双queue，一个统计节点，一个统计节点值
+	//双queue，一个统计节点，一个统计节点值
 	const queNode = [root],
 		queVal = [root.val]
 
@@ -1357,7 +1355,7 @@ var hasPathSum = function (root, targetSum) {
 
 ```javascript {.line-numbers}
 var pathSum = function (root, sum) {
-  const ret = []
+	const ret = []
 	const dfs = (root, sum, path) => {
 		if (!root) return
 		path.push(root.val)
@@ -1365,7 +1363,7 @@ var pathSum = function (root, sum) {
 		if (!root.left && !root.right && sum === root.val) ret.push([...path])
 		dfs(root.left, sum - root.val, path)
 		dfs(root.right, sum - root.val, path)
-    //backtrack
+		//backtrack
 		path.pop()
 	}
 	dfs(root, sum, [])
@@ -1436,7 +1434,7 @@ var buildTree = function (preorder, inorder) {
 		inLen = inorder.length
 	if (preLen !== inLen) throw new TypeError('invalid params')
 	const map = new Map()
-  
+
 	//space for time
 	//get inorder idx from preorder value
 	//note question: no same value Node, which means can form just one specific tree
@@ -1563,7 +1561,7 @@ const deserialize = (data) => {
 
 ```javascript {.line-numbers}
 var constructMaximumBinaryTree = function (nums) {
-  if (!nums || nums.length === 0) return nums
+	if (!nums || nums.length === 0) return nums
 	const build = (nums, low, high) => {
 		if (low > high) return null
 		let index = -1,

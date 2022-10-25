@@ -280,11 +280,12 @@ var repeatedSubstringPattern = function (s) {
 var reverseStr = function (s, k) {
 	const arr = s.split(''),
 		len = arr.length
-	for (let start = 0; start < len; start += 2 * k) {
-		let i = start,
-			j = Math.min(start + k - 1, len)
-		while (i < j) {
-			;[arr[i++], arr[j--]] = [arr[j], arr[i]]
+	for (let i = 0; i < len; i += 2 * k) {
+		let l = i,
+			//定义翻转的结束位置
+			r = Math.min(i + k - 1, len)
+		while (l < r) {
+			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
 		}
 	}
 	return arr.join('')
@@ -464,7 +465,7 @@ var replaceSpace = function (s) {
 	for (let c of s) if (c === ' ') count++
 	const len = s.length
 	const arr = new Array(len + 2 * count)
-  //从后往前赋值
+	//从后往前赋值
 	for (let i = len - 1, j = arr.length - 1; i >= 0; i--, j--) {
 		if (s[i] !== ' ') {
 			arr[j] = s[i]

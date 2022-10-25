@@ -578,6 +578,7 @@ var copyRandomList = function (head) {
 
 ```javascript {.line-numbers}
 //标记法 O(n) - O(1)
+//或使用hash标记
 var hasCycle = function (head) {
 	while (head) {
 		if (head.flag) {
@@ -590,18 +591,58 @@ var hasCycle = function (head) {
 	return false
 }
 
-//better
 //fast and slow pointer O(n) - O(1)
 var hasCycle = function (head) {
 	let fast = head,
 		slow = head
 	while (fast && fast.next) {
-    //先走再判断
+		//先走再判断
 		fast = fast.next.next
 		slow = slow.next
 		if (fast === slow) return true
 	}
 	return false
+}
+```
+
+### [142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/)
+
+```javascript {.line-numbers}
+//标记法 O(n) - O(1)
+//或使用hash标记
+var detectCycle = function (head) {
+	const hash = new Set()
+	while (head) {
+		if (hash.has(head)) return head
+		hash.add(head)
+		head = head.next
+	}
+	return null
+}
+
+//fast and slow pointer O(n) - O(1)
+//f=2s （快指针每次2步，路程刚好2倍）
+//f = s + nb (相遇时，刚好多走了n圈）
+//推出：s = nb
+//从head结点走到入环点需要走 ： a + nb， 而slow已经走了nb，那么slow再走a步就是入环点了
+//如何知道slow刚好走了a步? 从head开始，和slow指针一起走，相遇时刚好就是a步
+var detectCycle = function (head) {
+	let slow = head,
+		fast = head
+	while (fast && fast.next) {
+		slow = slow.next
+		fast = fast.next.next
+		//第一次相遇,重定义fast,再走a步即再入口相遇
+		if (fast === slow) {
+			fast = head
+			while (fast !== slow) {
+				fast = fast.next
+				slow = slow.next
+			}
+			return fast
+		}
+	}
+	return null
 }
 ```
 
