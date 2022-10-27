@@ -2,11 +2,11 @@
 
 # 解题步骤
 
-1. 确定dp数组（dp table）以及下标的含义
-2. 确定递推公式(**一些情况是递推公式决定了dp数组要如何初始化,所以这条在前**)
-3. dp数组如何初始化
+1. 确定 dp 数组（dp table）以及下标的含义
+2. 确定递推公式(**一些情况是递推公式决定了 dp 数组要如何初始化,所以这条在前**)
+3. dp 数组如何初始化
 4. 确定遍历顺序
-5. 举例推导dp数组
+5. 举例推导 dp 数组
 
 # 线性 DP
 
@@ -49,7 +49,7 @@ var longestPalindrome = function (s) {
 	const len = s.length
 	if (len < 2) return s
 
-	//dp[i..j] 表示从i到j的子串是否是回文
+	//dp[i][j] 表示从i到j的子串是否是回文
 	const dp = Array.from({ length: len }, () => new Array(len))
 
 	let begin = 0,
@@ -59,7 +59,7 @@ var longestPalindrome = function (s) {
 	for (let i = 0; i < len; i++) dp[i][i] = true
 	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
 	//先升序填列，再升序填行
-	//只需要填dp table上半边
+	//只需填dp table上半边
 	//先填左下角
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
@@ -645,35 +645,15 @@ var numSquares = function (n) {
 var lengthOfLIS = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度,注意nums[i]必须被选取
+	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度
+	//注意nums[i]必须被选取,所以初始化成1
 	const dp = new Array(len).fill(1)
 	let ret = 1
 	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
 	for (let i = 0; i < len; i++) {
 		for (let j = 0; j < i; j++) {
-			if (nums[i] > nums[j]) {
-				dp[i] = Math.max(dp[i], dp[j] + 1)
-			}
+			if (nums[i] > nums[j]) dp[i] = Math.max(dp[i], dp[j] + 1)
 		}
-		ret = Math.max(ret, dp[i])
-	}
-	return ret
-}
-
-var lengthOfLIS = function (nums) {
-	const len = nums.length
-	if (len === 0) return 0
-	const dp = new Array(len).fill(0)
-	dp[0] = 1
-	let ret = 1
-	for (let i = 1; i < len; i++) {
-		dp[i] = 1 //只a[i]一个数
-		for (let j = 0; j < i; j++) {
-			if (nums[i] > nums[j]) {
-				dp[i] = Math.max(dp[i], dp[j] + 1)
-			}
-		}
-		//每次check
 		ret = Math.max(ret, dp[i])
 	}
 	return ret
@@ -702,11 +682,6 @@ var integerBreak = function (n) {
 ### [718. ==最长重复子数组==](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
 
 ```javascript {.line-numbers}
-/**
- * @param {number[]} A
- * @param {number[]} B
- * @return {number}
- */
 var findLength = function (A, B) {
 	let m = A.length,
 		n = B.length,
@@ -764,9 +739,9 @@ var minCostClimbingStairs = function (cost) {
 var longestCommonSubsequence = function (text1, text2) {
 	const n = text1.length
 	const m = text2.length
+	//dp[i][j]表示text1[0:i]和text2[0:j]的最長公共子序列的長度
 	//直接第一行和第一列赋值base case为0,第一行第一列代表的是空,下面也不需要判断越界
 	const dp = Array.from(new Array(n + 1), () => new Array(m + 1).fill(0))
-
 	for (let i = 1; i <= n; i++) {
 		for (let j = 1; j <= m; j++) {
 			//dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j])
@@ -1034,8 +1009,7 @@ var longestPalindromeSubseq = function (s) {
 	//dp[i][j] 表示s前i个字符到前j个字符的最长回文子序列
 	//只填写了上半部，未优化
 	const dp = Array.from({ length: len }, () => new Array(len).fill(0))
-
-	//i 从最后一个字符开始往前遍历，j 从 i + 1 开始往后遍历，这样可以保证每个子问题都已经算好
+	//i从最后一个字符开始往前遍历，j从i + 1开始往后遍历，这样可保证每个子问题都已经算好
 	for (let i = len - 1; i >= 0; i--) {
 		dp[i][i] = 1
 		for (let j = i + 1; j < len; j++) {
@@ -1187,7 +1161,7 @@ var coinChange = function (coins, amount) {
 			return
 		}
 		for (let i = 0, len = coins.length; i < len; i++) {
-      //不需要回溯
+			//不需要回溯
 			dfs(coins, remain - coins[i], count + 1)
 		}
 	}
@@ -1207,7 +1181,7 @@ var coinChange = function (coins, amount) {
 		if (remain === 0) return 0
 		if (cache[remain]) return cache[remain]
 		//当前层需要取下面所有的情况的最小值
-    //F(X) = min(F(0)....F(X - 1))
+		//F(X) = min(F(0)....F(X - 1))
 		let min = Infinity
 		for (let i = 0, len = coins.length; i < len; i++) {
 			const ret = dfs(coins, remain - coins[i])
@@ -1260,14 +1234,14 @@ var coinChange = function (coins, amount) {
 
 ```javascript {.line-numbers}
 var change = function (amount, coins) {
-  //dp[j]：凑成总金额j的货币组合数为dp[j]
+	//dp[j]：凑成总金额j的货币组合数为dp[j]
 	const dp = new Array(amount + 1).fill(0)
-  //语义上讲凑成总金额0的货币组合数为1
+	//语义上讲凑成总金额0的货币组合数为1
 	dp[0] = 1
-  //如下遍历顺序dp[j]里计算的是组合数！
-  //若调整状态遍历顺序则计算的是排列数！
+	//如下遍历顺序dp[j]里计算的是组合数！
+	//若调整状态遍历顺序则计算的是排列数！
 	for (const coin of coins) {
-    //dp[j] += dp[j - nums[j]]
+		//dp[j] += dp[j - nums[j]]
 		for (let j = coin; j <= amount; j++) dp[j] += dp[j - coin]
 	}
 	return dp[amount]
@@ -1319,7 +1293,7 @@ var uniquePaths = function (m, n) {
 //O(mn) - O(n)
 var uniquePaths = function (m, n) {
 	//一行一行向下滚动
-  //初始化第一行，也符合base数据，隐含初始化了第一列
+	//初始化第一行，也符合base数据，隐含初始化了第一列
 	const dp = new Array(n).fill(1)
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) dp[j] += dp[j - 1]
@@ -1413,7 +1387,7 @@ const numTrees = (n) => {
 //O(n) - O(n)
 var climbStairs = function (n) {
 	//dp[i]表示爬到第i级台阶的方案数
-  //直接忽视dp[0]的定义，从3开始循环更符合人类的思维模式
+	//直接忽视dp[0]的定义，从3开始循环更符合人类的思维模式
 	const dp = new Array(n + 1)
 	dp[1] = 1
 	dp[2] = 2
@@ -1423,7 +1397,7 @@ var climbStairs = function (n) {
 
 //O(n) - O(1)
 var climbStairs = function (n) {
-  //特判
+	//特判
 	if (n <= 2) return n
 	let first = 1,
 		second = 2,
@@ -1554,5 +1528,36 @@ var stoneGame = function (piles) {
 		}
 	}
 	return dp[len - 1] > 0
+}
+```
+
+### [剑指 Offer 42. ==连续子数组的最大和==](https://leetcode.cn/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/)
+
+```javascript {.line-numbers}
+var maxSubArray = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	let dp = new Array(len)
+	dp[0] = nums[0]
+	let ret = nums[0]
+	for (let i = 1; i < len; i++) {
+		dp[i] = Math.max(dp[i - 1] + nums[i], nums[i])
+		ret = Math.max(ret, dp[i])
+	}
+	return ret
+}
+
+var maxSubArray = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
+	let prev = nums[0],
+		ret = nums[0],
+		cur
+	for (let i = 1; i < len; i++) {
+		cur = Math.max(prev + nums[i], nums[i])
+		ret = Math.max(ret, cur)
+		prev = cur
+	}
+	return ret
 }
 ```

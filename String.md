@@ -50,7 +50,7 @@ var longestCommonPrefix = function (strs) {
 	for (let i = 1, len = strs.length; i < len; i++) {
 		//依次得到每个str的prefix
 		prefix = getLCP(prefix, strs[i])
-		//找不到公共前缀则直接退出
+		//找不到公共前缀直接退出
 		if (prefix.length === 0) break
 	}
 	return prefix

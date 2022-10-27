@@ -9,10 +9,6 @@ Some frequent Leetcode questions implement by JavaScrip
 - 纵向扫描
 - 横向扫描
 
-#### 最长连续递增序列
-
-- 贪心
-
 #### 无重复字符的最长子串
 
 - slidewindow
@@ -40,10 +36,8 @@ Some frequent Leetcode questions implement by JavaScrip
 
 #### DP
 
+- 最长递增子序列
 - 最长回文子序列
-- 最长递增子序列
-- 最长重复子数组
 - 最长公共子序列
-- 连续子数组的最大和
 - 最长重复子数组
-- 最长递增子序列
+- 连续子数组的最大和
