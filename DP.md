@@ -1187,6 +1187,7 @@ var coinChange = function (coins, amount) {
 			return
 		}
 		for (let i = 0, len = coins.length; i < len; i++) {
+      //不需要回溯
 			dfs(coins, remain - coins[i], count + 1)
 		}
 	}
@@ -1205,7 +1206,8 @@ var coinChange = function (coins, amount) {
 		if (remain < 0) return -1
 		if (remain === 0) return 0
 		if (cache[remain]) return cache[remain]
-
+		//当前层需要取下面所有的情况的最小值
+    //F(X) = min(F(0)....F(X - 1))
 		let min = Infinity
 		for (let i = 0, len = coins.length; i < len; i++) {
 			const ret = dfs(coins, remain - coins[i])
@@ -1226,7 +1228,6 @@ const coinChange = (coins, amount) => {
 	const dp = Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
-
 	for (let i = 0; i < coins.length; i++) {
 		for (let j = coins[i]; j <= amount; j++) {
 			dp[j] = Math.min(dp[j - coins[i]] + 1, dp[j])
@@ -1261,9 +1262,9 @@ var coinChange = function (coins, amount) {
 var change = function (amount, coins) {
   //dp[j]：凑成总金额j的货币组合数为dp[j]
 	const dp = new Array(amount + 1).fill(0)
-  //凑成总金额0的货币组合数为1
+  //语义上讲凑成总金额0的货币组合数为1
 	dp[0] = 1
-  //如下遍历顺序中dp[j]里计算的是组合数！
+  //如下遍历顺序dp[j]里计算的是组合数！
   //若调整状态遍历顺序则计算的是排列数！
 	for (const coin of coins) {
     //dp[j] += dp[j - nums[j]]
