@@ -32,22 +32,7 @@
 ### [3.==无重复字符的最长子串==](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
 ```javascript {.line-numbers}
-//more simple version
-var lengthOfLongestSubstring = function (s) {
-	let ret = 0,
-		left = 0
-	const map = new Map()
-	for (let right = 0, len = s.length; right < len; right++) {
-		const char = s[right]
-		//更新滑动窗口的left
-		if (map.has(char)) left = Math.max(left, map.get(char) + 1)
-		ret = Math.max(ret, right - left + 1)
-		//字符位置
-		map.set(char, right)
-	}
-	return ret
-}
-
+//window version
 var lengthOfLongestSubstring = function (s) {
 	const window = {},
 		len = s.length
@@ -57,9 +42,26 @@ var lengthOfLongestSubstring = function (s) {
 	while (r < len) {
 		const rChar = s[r++]
 		window[rChar] ? window[rChar]++ : (window[rChar] = 1)
-		//left一直缩到widnow里当前rChar不重复的位置
+		//left一直缩到window里当前rChar不重复的位置
 		while (window[rChar] > 1) window[s[l++]]--
 		ret = Math.max(ret, r - l)
+	}
+	return ret
+}
+
+//more simple version
+var lengthOfLongestSubstring = function (s) {
+	const len = s.length,
+		map = new Map()
+	let l = 0,
+		r = 0,
+		ret = 0
+	while (r < len) {
+		const rChar = s[r]
+		//update left
+		if (map.has(rChar)) l = Math.max(l, map.get(rChar) + 1)
+		ret = Math.max(ret, r - l + 1)
+		map.set(rChar, r++)
 	}
 	return ret
 }
