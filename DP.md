@@ -19,19 +19,14 @@ var longestPalindrome = function (s) {
 	if (!s) return ''
 	const len = s.length
 	if (len < 2) return s
-
 	let maxLen = 1,
 		begin = 0
-
 	const isPalindrome = (s, l, r) => {
 		while (l < r) {
-			if (s[l] !== s[r]) return false
-			l++
-			r--
+			if (s[l++] !== s[r--]) return false
 		}
 		return true
 	}
-
 	for (let i = 0; i < len - 1; i++) {
 		for (let j = i + 1; j < len; j++) {
 			if (j - i + 1 > maxLen && isPalindrome(s, i, j)) {
@@ -48,13 +43,10 @@ var longestPalindrome = function (s) {
 	if (!s) return ''
 	const len = s.length
 	if (len < 2) return s
-
 	//dp[i][j] 表示从i到j的子串是否是回文
 	const dp = Array.from({ length: len }, () => new Array(len))
-
 	let begin = 0,
 		maxLen = 1
-
 	//对角线等于true的case未用到,下列可以忽略不写
 	for (let i = 0; i < len; i++) dp[i][i] = true
 	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
@@ -66,14 +58,14 @@ var longestPalindrome = function (s) {
 			if (s[i] !== s[j]) {
 				dp[i][j] = false
 			} else {
-				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需要判断一下头尾两个字符是否相等就可以直接下结论
+				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需看下头尾两个字符是否相等即可
 				if (j - i < 3) {
 					dp[i][j] = true
 				} else {
 					dp[i][j] = dp[i + 1][j - 1]
 				}
 			}
-
+			//每次check result
 			if (dp[i][j] && j - i + 1 > maxLen) {
 				maxLen = j - i + 1
 				begin = i
@@ -119,28 +111,28 @@ var longestPalindrome = function (s) {
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	//有效括号肯定是偶数
+	//获取字符串截取截止坐标
 	const end = len % 2 === 0 ? len : len - 1
-	//从最长开始偶数递减loop
+	//结束位置,从最长开始偶数递减
 	for (let i = end; i >= 0; i -= 2) {
+		//起点位置
 		for (let j = 0; j < len - i + 1; j++) {
 			//找到即是最长的
 			if (isValid(s.substring(j, j + i))) return i
 		}
 	}
 
-	function isValid(s) {
-		const stack = []
-		for (let c of s) {
+	function isValid(str) {
+		let balance = 0
+		for (let c of str) {
 			if (c === '(') {
-				stack.push('(')
-			} else if (stack.length > 0 && stack[stack.length - 1] === '(') {
-				stack.pop()
+				balance++
 			} else {
-				return false
+				balance--
+				if (balance < 0) return false
 			}
 		}
-		return stack.length === 0
+		return balance === 0
 	}
 }
 
@@ -150,14 +142,18 @@ var longestValidParentheses = function (s) {
 	if (len < 2) return 0
 	let ret = 0
 	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
+	//初始化成0也符合base case，比如当前字符为左括号肯定是0
 	const dp = new Array(len).fill(0)
 	for (let i = 1; i < len; i++) {
 		if (s[i] == ')') {
 			if (s[i - 1] == '(') {
 				//s[i] = ')' 且 s[i - 1] = '(',也就是字符串形如 '……()'
 				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
+				//第一个条件表示前面还有括号(可省略)
+				//第二个条件前面的括号跟当前循环的)可以匹配，即+2
 			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] == '(') {
 				//s[i] = ')' 且 s[i - 1] = ')',也就是字符串形如 '……))'
+				//内部的有效长度 + 前面的有效长度 + 2
 				dp[i] = dp[i - 1] + (i - dp[i - 1] >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
 			}
 			ret = Math.max(ret, dp[i])
@@ -170,19 +166,20 @@ var longestValidParentheses = function (s) {
 //始终保持栈底元素为当前已经遍历过的元素中「最后一个没有被匹配的右括号的下标」
 //对于遇到的每个(,将它下标放入栈中
 //对于遇到的每个),先弹出栈顶元素表示匹配了当前右括号:
-//  如果栈为空,说明当前的右括号为没有被匹配的左括号,将其下标放入栈中来更新「最后一个没有被匹配的右括号的下标」
-//  如果栈不为空,当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
+//如果栈为空,说明当前的右括号为没有被匹配的左括号,将其下标放入栈中来更新「最后一个没有被匹配的右括号的下标」
+//如果栈不为空,当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	//最长子串只能从0开始
-	const stack = [-1]
+	const stack = [-1] //表示最长子串只能从0开始
 	let maxLen = 0
 	for (let i = 0; i < len; i++) {
 		if (s[i] === '(') {
 			stack.push(i)
 		} else {
+			//先弹出匹配的左括号
 			stack.pop()
+			//放入最后一个没有被匹配的右括号的下标
 			if (stack.length === 0) {
 				stack.push(i)
 			} else {
@@ -197,25 +194,19 @@ var longestValidParentheses = function (s) {
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	let left = 0,
-		right = 0
-	maxLen = 0
+	let l = 0,
+		r = 0,
+		maxLen = 0
 	for (let i = 0; i < len; i++) {
-		s[i] === '(' ? left++ : right++
-		if (left === right) {
-			maxLen = Math.max(maxLen, left * 2)
-		} else if (right > left) {
-			left = right = 0
-		}
+		s[i] === '(' ? l++ : r++
+		if (l === r) maxLen = Math.max(maxLen, l * 2)
+		else if (r > l) l = r = 0
 	}
-	left = right = 0
+	l = r = 0
 	for (let i = len - 1; i >= 0; i--) {
-		s[i] === '(' ? left++ : right++
-		if (left === right) {
-			maxLen = Math.max(maxLen, left * 2)
-		} else if (left > right) {
-			left = right = 0
-		}
+		s[i] === ')' ? r++ : l++
+		if (l === r) maxLen = Math.max(maxLen, l * 2)
+		else if (l > r) l = r = 0
 	}
 	return maxLen
 }

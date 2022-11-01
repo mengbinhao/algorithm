@@ -33,41 +33,27 @@ var longestValidParentheses = function (s) {
 	if (len < 2) return 0
 	//获取字符串截取截止坐标
 	const end = len % 2 === 0 ? len : len - 1
-	//结束位置,从最长开始偶数递减loop
+	//结束位置,从最长开始偶数递减
 	for (let i = end; i >= 0; i -= 2) {
-    //起点位置
+		//起点位置
 		for (let j = 0; j < len - i + 1; j++) {
 			//找到即是最长的
 			if (isValid(s.substring(j, j + i))) return i
 		}
 	}
-  
-  function isValid(str) {
-    let balance = 0
-    for (let c of str) {
-      if (c === '(') {
-        balance++
-      } else {
-        balance--
-        if (balance < 0) return false
-      }
-    }
-    return balance === 0
-  }
 
-  /*
-	function isValid(s) {
-		const stack = []
-		for (let c of s) {
+	function isValid(str) {
+		let balance = 0
+		for (let c of str) {
 			if (c === '(') {
-				stack.push(')')
+				balance++
 			} else {
-				if (c !== stack.pop()) return false
+				balance--
+				if (balance < 0) return false
 			}
 		}
-		return stack.length === 0
+		return balance === 0
 	}
-	*/
 }
 
 //stack O(n) - O(n)
@@ -79,15 +65,15 @@ var longestValidParentheses = function (s) {
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	const stack = [-1] //note inital value:表示最长子串只能从0开始
+	const stack = [-1] //表示最长子串只能从0开始
 	let maxLen = 0
 	for (let i = 0; i < len; i++) {
 		if (s[i] === '(') {
 			stack.push(i)
 		} else {
-       //先弹出匹配的左括号
+			//先弹出匹配的左括号
 			stack.pop()
-      //放入最后一个没有被匹配的右括号的下标
+			//放入最后一个没有被匹配的右括号的下标
 			if (stack.length === 0) {
 				stack.push(i)
 			} else {
@@ -101,20 +87,22 @@ var longestValidParentheses = function (s) {
 //正向逆向结合 O(n) - O(1)
 var longestValidParentheses = function (s) {
 	const len = s.length
-  if (len < 2) return 0
-  let l = 0, r = 0, maxLen = 0
-  for (let i = 0; i < len; i++) {
-    s[i] === '(' ? l++ : r++
-    if (l === r) maxLen = Math.max(maxLen, l * 2)
-    else if (r > l) l = r = 0
-  }
-  l = r = 0
-  for (let i = len - 1; i >= 0; i--) {
-    s[i] === ')' ? r++ : l++
-    if (l === r) maxLen = Math.max(maxLen, l * 2)
-    else if (l > r) l = r = 0
-  }
-  return maxLen
+	if (len < 2) return 0
+	let l = 0,
+		r = 0,
+		maxLen = 0
+	for (let i = 0; i < len; i++) {
+		s[i] === '(' ? l++ : r++
+		if (l === r) maxLen = Math.max(maxLen, l * 2)
+		else if (r > l) l = r = 0
+	}
+	l = r = 0
+	for (let i = len - 1; i >= 0; i--) {
+		s[i] === ')' ? r++ : l++
+		if (l === r) maxLen = Math.max(maxLen, l * 2)
+		else if (l > r) l = r = 0
+	}
+	return maxLen
 }
 
 //DP O(n) - O(n)
@@ -123,17 +111,16 @@ var longestValidParentheses = function (s) {
 	if (len < 2) return 0
 	let ret = 0
 	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
-  //初始化成0也符合base case，比如当前字符左括号肯定是0
+	//初始化成0也符合base case，比如当前字符为左括号肯定是0
 	const dp = new Array(len).fill(0)
-  //dp[0] = 0
+	//dp[0] = 0
 	for (let i = 1; i < len; i++) {
-		//只有右括号结尾的字符才合法
 		if (s[i] === ')') {
 			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串       形如 '……()'
 				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
-       //第一个条件表示前面还有括号(可省略)
-       //第二个条件前面的括号跟当前循环的)可以匹配，即+2
+				//第一个条件表示前面还有括号(可省略)
+				//第二个条件前面的括号跟当前循环的)可以匹配，即+2
 			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
 				//内部的有效长度 + 前面的有效长度 + 2
@@ -178,7 +165,7 @@ var trap = function (height) {
 	let i = 0,
 		ret = 0
 	while (i < len) {
-    //当前柱子比栈顶的柱子高
+		//当前柱子比栈顶的柱子高
 		while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
 			//左边没有柱子或更高的柱子了
@@ -250,20 +237,21 @@ var trap = function (height) {
 //固定宽 两重循环
 
 //固定高 一重循环，向两边扫求最长底边
-var largestRectangleArea = function(heights) {
-  const len = heights.length
-  if (len === 0) return 0
-  if (len === 1) return heights[0]
-  let ret = 0
-  for (let i = 0; i < len; i++) {
-    const height = heights[i]
-    let l = i, r = i
-    while (l - 1 >= 0 && heights[l - 1] >= height) l--
-    while (r + 1 < len && heights[r + 1] >= height) r++
-    ret = Math.max(ret, (r - l + 1) * height)
-  }
-  return ret
-};
+var largestRectangleArea = function (heights) {
+	const len = heights.length
+	if (len === 0) return 0
+	if (len === 1) return heights[0]
+	let ret = 0
+	for (let i = 0; i < len; i++) {
+		const height = heights[i]
+		let l = i,
+			r = i
+		while (l - 1 >= 0 && heights[l - 1] >= height) l--
+		while (r + 1 < len && heights[r + 1] >= height) r++
+		ret = Math.max(ret, (r - l + 1) * height)
+	}
+	return ret
+}
 
 //stack  O(n) - O(n)
 //单调递增栈,存的下标
