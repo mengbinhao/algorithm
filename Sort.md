@@ -73,7 +73,6 @@ const select = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
 	if (len < 2) return arr
-
 	//双循环不重复
 	//有序区
 	for (let i = 0; i < len - 1; i++) {
@@ -210,7 +209,6 @@ const merge = (arr) => {
 
 	const helper = (arr, l, r, tmp) => {
 		if (l >= r) return
-
 		const mid = (l + r) >> 1
 		//先递
 		helper(arr, l, mid, tmp)

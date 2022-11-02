@@ -102,7 +102,7 @@ const preorderTraversal = (root) => {
 	return ret
 }
 
-//iteration. use stack
+//iteration use stack
 var preorderTraversal = function (root) {
 	const ret = [],
 		stack = []
@@ -1002,17 +1002,17 @@ var maxDepth = function (root) {
 var maxDepth = function (root) {
 	if (!root) return 0
 	const queue = [root]
-	let heitght = 0
+	let height = 0
 	while (queue.length > 0) {
 		const size = queue.length
-		heitght++
+		height++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
 	}
-	return ret
+	return height
 }
 ```
 
@@ -1233,13 +1233,13 @@ var lowestCommonAncestor = function (root, p, q) {
 	if (!root) return root
 	if (root === p || root === q) return root
 	//f_lson
-	const left = lowestCommonAncestor(root.left, p, q)
+	const lSon = lowestCommonAncestor(root.left, p, q)
 	//f_rson
-	const right = lowestCommonAncestor(root.right, p, q)
+	const rSon = lowestCommonAncestor(root.right, p, q)
 	//下面两句合二为一
 	//return left === null ? right : right === null ? left : root
-	if (left && right) return root
-	return !left ? right : left
+	if (lSon && rSon) return root
+	return !lSon ? rSon : lSon
 }
 ```
 
@@ -1439,9 +1439,7 @@ var buildTree = function (preorder, inorder) {
 	//get inorder idx from preorder value
 	//note question: no same value Node, which means can form just one specific tree
 	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
-
 	return helper(preorder, 0, preLen - 1, map, 0, inLen - 1)
-
 	function helper(preorder, preLeft, preRight, map, inLeft, inRight) {
 		if (preLeft > preRight || inLeft > inRight) return null
 

@@ -1,6 +1,8 @@
 ### [20.==有效括号 E==](https://leetcode-cn.com/problems/valid-parentheses/)
 
 ```javascript {.line-numbers}
+//brute force 一直替换
+
 //O(n) - O(n)
 var isValid = function (s) {
 	if (s.length % 2 === 1) return false
@@ -10,7 +12,6 @@ var isValid = function (s) {
 			'[': ']',
 			'{': '}',
 		}
-
 	for (let c of s) {
 		if (hash[c]) {
 			stack.push(hash[c])
@@ -20,8 +21,6 @@ var isValid = function (s) {
 	}
 	return stack.length === 0
 }
-
-//brute force 一直替换
 ```
 
 ### [32.最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
@@ -145,12 +144,8 @@ var trap = function (height) {
 	for (let i = 1; i < len - 1; i++) {
 		let lMax = -Infinity,
 			rMax = -Infinity
-		for (let j = i; j >= 0; j--) {
-			lMax = Math.max(lMax, height[j])
-		}
-		for (let j = i; j < len; j++) {
-			rMax = Math.max(rMax, height[j])
-		}
+		for (let j = i; j >= 0; j--) lMax = Math.max(lMax, height[j])
+		for (let j = i; j < len; j++) rMax = Math.max(rMax, height[j])
 		ret += Math.min(lMax, rMax) - height[i]
 	}
 	return ret
@@ -166,7 +161,7 @@ var trap = function (height) {
 		ret = 0
 	while (i < len) {
 		//当前柱子比栈顶的柱子高
-		while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
+		while (stack.length && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
 			//左边没有柱子或更高的柱子了
 			if (stack.length === 0) break
@@ -212,7 +207,6 @@ var trap = function (height) {
 		//提前存储每个height[i]对应的左右最大值
 		leftMax = [],
 		rightMax = []
-
 	leftMax[0] = height[0]
 	for (let i = 1; i < len; i++) {
 		//leftMax会传递
@@ -269,7 +263,6 @@ var largestRectangleArea = function (heights) {
 		left[i] = stack.length === 0 ? -1 : stack[stack.length - 1]
 		stack.push(i)
 	}
-
 	stack.length = 0
 	for (let i = len - 1; i >= 0; i--) {
 		while (stack.length > 0 && heights[stack[stack.length - 1]] >= heights[i])
@@ -277,7 +270,6 @@ var largestRectangleArea = function (heights) {
 		right[i] = stack.length === 0 ? len : stack[stack.length - 1]
 		stack.push(i)
 	}
-
 	let ret = 0
 	for (let i = 0; i < len; i++)
 		ret = Math.max(ret, (right[i] - left[i] - 1) * heights[i])

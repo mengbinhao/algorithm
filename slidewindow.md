@@ -14,7 +14,7 @@
   - l 和 r 都初始化为 0
   - r 指针移动一步
   - 判断窗口内的连续元素是否满足题目限定的条件
-    - 若满足,再判断是否需要更新最优解,如果需要则更新最优解.并尝试通过移动 l 指针缩小 窗口大小循环执行 3.1
+    - 3.1 若满足,再判断是否需要更新最优解,如果需要则更新最优解.并尝试通过移动 l 指针缩小 窗口大小循环执行
     - 3.2 如果不满足,则继续
 
 > 1、我们在字符串 S 中使用双指针中的左右指针技巧,初始化 left = right = 0,把索引左闭右开区间 [left, right) 称为一个「窗口」
@@ -70,50 +70,40 @@ var lengthOfLongestSubstring = function (s) {
 ### [76.最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
 
 ```javascript {.line-numbers}
-//labuladuo version
 var minWindow = function (s, t) {
 	let sLen = s.length,
 		tLen = t.length
-
 	if (sLen === 0 || tLen === 0 || sLen < tLen) return ''
-
 	let window = {},
 		need = {},
 		begin = 0,
-		left = 0,
-		right = 0,
+		l = 0,
+		r = 0,
 		minLen = Infinity,
 		//表示窗口中满足 need 条件的字符个数,如果 valid 和 need.size 的大小相同,则说明窗口已满足条件,已经完全覆盖了串t
 		valid = 0
 
 	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
 
-	while (right < sLen) {
-		const rightChar = s[right]
-		right++
-
-		//进行窗口内数据一系列更新
-		if (need[rightChar]) {
-			window[rightChar] ? window[rightChar]++ : (window[rightChar] = 1)
-			if (window[rightChar] === need[rightChar]) valid++
+	while (r < sLen) {
+		const rChar = s[r++]
+		//过滤需要的字符
+		if (need[rChar]) {
+			window[rChar] ? window[rChar]++ : (window[rChar] = 1)
+			if (window[rChar] === need[rChar]) valid++
 		}
-
-		//t中所有字符是否已全覆盖,则判断是否要收缩
+		//t中所有字符已全覆盖,判断是否要收缩
 		while (valid === Object.keys(need).length) {
-			//更新最小覆盖子串
-			if (right - left < minLen) {
-				begin = left
-				minLen = right - left
+			if (r - l < minLen) {
+				minLen = r - l
+				begin = l
 			}
-			//移出字符
-			let leftChar = s[left]
-			//左移
-			left++
-
-			//进行窗口内数据一系列更新
-			if (need[leftChar]) {
-				if (window[leftChar] === need[leftChar]) valid--
-				window[leftChar]--
+			//更新左边界
+			const lChar = s[l++]
+			//过滤需要的字符
+			if (need[lChar]) {
+				if (window[lChar] === need[lChar]) valid--
+				window[lChar]--
 			}
 		}
 	}
@@ -129,7 +119,6 @@ var minSubArrayLen = function (s, nums) {
 	if (nums.length === 0) return 0
 	let len = nums.length,
 		ret = Infinity
-
 	for (let i = 0; i < len; i++) {
 		let sum = 0
 		for (let j = i; j < len; j++) {
@@ -146,11 +135,10 @@ var minSubArrayLen = function (s, nums) {
 
 // 2 前缀和 + 二分查找
 
-// 3 双指针 O(n) - O(1) 滑动窗口
+// 3 双指针滑动窗口  O(n) - O(1) 
 var minSubArrayLen = function (s, nums) {
 	const len = nums.length
 	if (len === 0) return 0
-
 	let ret = Number.MAX_SAFE_INTEGER,
 		start = 0, //表示滑动窗口的起始位置
 		end = 0, //表示滑动窗口的结束位置
@@ -211,7 +199,6 @@ var maxSlidingWindow = function (nums, k) {
 	//单调递减栈,存的是下标
 	const stack = [],
 		ans = []
-
 	for (let i = 0, len = nums.length; i < len; i++) {
 		if (stack.length && i - k + 1 > stack[l]) l++
 		//缩小右边界直到满足条件
@@ -272,46 +259,35 @@ var findAnagrams = function (s, p) {
 ### [567.字符串的排列 M](https://leetcode-cn.com/problems/permutation-in-string/)
 
 ```javascript {.line-numbers}
-//labuladong version
 var checkInclusion = function (s, t) {
 	let sLen = s.length,
 		tLen = t.length
-
 	if (sLen === 0 || sLen > tLen) return false
-
 	let window = {},
 		need = {},
-		left = 0,
-		right = 0,
+		l = 0,
+		r = 0,
 		//表示窗口中满足 need 条件的字符个数,如果 valid 和 need.size 的大小相同,则说明窗口已满足条件,已经完全覆盖了串t
 		valid = 0
 
 	for (let c of s) need[c] ? need[c]++ : (need[c] = 1)
 
-	while (right < tLen) {
-		const rightChar = t[right]
-		//右移
-		right++
-
-		//进行窗口内数据一系列更新
-		if (need[rightChar]) {
-			window[rightChar] ? window[rightChar]++ : (window[rightChar] = 1)
-			if (window[rightChar] === need[rightChar]) valid++
+	while (r < tLen) {
+		const rChar = t[r++]
+		//过滤需要的字符
+		if (need[rChar]) {
+			window[rChar] ? window[rChar]++ : (window[rChar] = 1)
+			if (window[rChar] === need[rChar]) valid++
 		}
-
-		//t中的所有字符是否已经覆盖,则判断是否要收缩
-		while (right - left >= sLen) {
-			//更新最小覆盖子串
+		//长度够则判断
+		if (r - l >= sLen) {
 			if (valid === Object.keys(need).length) return true
-			//移出字符
-			let leftChar = t[left]
-			//左移
-			left++
-
-			//进行窗口内数据一系列更新
-			if (need[leftChar]) {
-				if (window[leftChar] === need[leftChar]) valid--
-				window[leftChar]--
+			//更新左边界
+			const lChar = t[l++]
+			//过滤需要的字符
+			if (need[lChar]) {
+				if (window[lChar] === need[lChar]) valid--
+				window[lChar]--
 			}
 		}
 	}

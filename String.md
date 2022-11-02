@@ -5,19 +5,17 @@ var myAtoi = function (str) {
 	const len = str.length,
 		max = 2 ** 31 - 1,
 		min = -(2 ** 31)
-
 	let ret = 0,
-		i = 0,
-		flag = 1
-
-	while (i < len && str[i] === ' ') i++
-	if (str[i] === '+' || str[i] === '-') {
-		flag = str[i] === '+' ? 1 : -1
-		i++
+		flag = 1,
+		idx = 0
+	while (idx < len && str[idx] === ' ') idx++
+	if (str[idx] === '+' || str[idx] === '-') {
+		flag = str[idx] === '+' ? 1 : -1
+		idx++
 	}
-	while (i < len && !Number.isNaN(parseInt(str[i], 10))) {
-		ret = ret * 10 + +str[i]
-		i++
+	while (idx < len && !Number.isNaN(parseInt(str[idx], 10))) {
+		ret = ret * 10 + +str[idx]
+		idx++
 	}
 	if (ret > max || ret < min) return flag === 1 ? max : min
 	return flag * ret
@@ -70,14 +68,13 @@ var longestCommonPrefix = function (strs) {
 var lengthOfLastWord = function (s) {
 	const len = s.length
 	if (len === 0) return 0
-	let i = len - 1
-	while (i >= 0 && s[i] === ' ') i--
-	//扫完了直接返回
-	if (i < 0) return 0
+	let end = s.length - 1
+	while (end >= 0 && s[end] === ' ') end--
+	if (end < 0) return 0
 	let ret = 0
-	while (i >= 0 && s[i] !== ' ') {
+	while (end >= 0 && s[end] !== ' ') {
 		ret++
-		i--
+		end--
 	}
 	return ret
 }
@@ -95,7 +92,6 @@ var isPalindrome = function (s) {
 	s = s.replace(/[^A-Za-z0-9]/g, '').toLowerCase()
 	let l = 0,
 		r = s.length - 1
-	//two pointer夹逼
 	while (l < r) {
 		if (s[l++] !== s[r--]) return false
 	}
@@ -119,7 +115,6 @@ var reverseWords = function (s) {
 	queue = []
 	while (s[l] === ' ') l++
 	while (s[r] === ' ') r--
-	//左往右扫
 	while (l <= r) {
 		let c = s[l]
 		if (c !== ' ') {
@@ -282,7 +277,7 @@ var reverseStr = function (s, k) {
 		len = arr.length
 	for (let i = 0; i < len; i += 2 * k) {
 		let l = i,
-			//定义翻转的结束位置
+			//本次翻转的结束位置
 			r = Math.min(i + k - 1, len)
 		while (l < r) {
 			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
@@ -447,7 +442,6 @@ var reverseOnlyLetters = function (s) {
 	let l = 0,
 		r = len - 1
 	while (true) {
-		// 判断左边是否扫描到字母
 		while (l < r && !/^[a-zA-Z]+$/.test(s[l])) l++
 		while (l < r && !/^[a-zA-Z]+$/.test(s[r])) r--
 		if (l >= r) break
