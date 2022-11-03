@@ -140,8 +140,8 @@ var majorityElement = function (nums) {
 	for (let i = 1; i < nums.length; i++) {
 		//note sequence
 		if (count === 0) {
+      ret = nums[i]
 			count++
-			ret = nums[i]
 		} else if (nums[i] === ret) {
 			count++
 		} else {
@@ -273,7 +273,6 @@ var majorityElement = function (nums) {
 var missingNumber = function (nums) {
 	const len = nums.length
 	let sum = ((1 + len) * len) / 2
-
 	for (let i = 0; i < len; i++) {
 		sum -= nums[i]
 	}

@@ -240,12 +240,10 @@ var mergeKLists = function (lists) {
 var swapPairs = function (head) {
 	const dummyHead = new ListNode(-1, head)
 	let cur = dummyHead
-
 	//够2个才换
 	while (cur.next && cur.next.next) {
 		const first = cur.next
 		const second = cur.next.next
-
 		first.next = second.next
 		second.next = first
 		cur.next = second

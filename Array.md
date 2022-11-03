@@ -31,6 +31,7 @@ var twoSum = function (nums, target) {
 	}
 	for (let j = 0; j < len; j++) {
 		//exclude same item
+    //exclude hash[nums[j]] is falsy
 		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) {
 			return [j, hash[nums[j]]]
 		}
@@ -42,7 +43,7 @@ var twoSum = function (nums, target) {
 var twoSum = function (nums, target) {
 	const hash = {}
 	for (let i = 0, len = nums.length; i < len; i++) {
-		//maybe the index in array is zero
+		//exclude hash[nums[i]] is falsy
 		if (hash[nums[i]] !== undefined) return [hash[nums[i]], i]
 		hash[target - nums[i]] = i
 	}
@@ -231,9 +232,7 @@ var removeDuplicates = function (nums) {
 var removeElement = (nums, val) => {
 	let slow = 0
 	for (let fast = 0; fast < nums.length; fast++) {
-		if (nums[fast] !== val) {
-			nums[slow++] = nums[fast]
-		}
+		if (nums[fast] !== val) nums[slow++] = nums[fast]
 	}
 	return slow
 }
@@ -251,7 +250,7 @@ var jump = function (nums) {
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
 		//当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
-		//跳到上次能跳到的最远位置后更新边界
+		//跳到上次能跳到的最远位置更新边界
 		if (i === end) {
 			end = maxPosition
 			steps++
@@ -264,8 +263,7 @@ var jump = function (nums) {
 ### [54.==螺旋矩阵==](https://leetcode-cn.com/problems/spiral-matrix/)
 
 ```javascript {.line-numbers}
-//O(n) - O(n)
-//偏移量解法
+//O(n) - O(n) 偏移量解法
 var spiralOrder = function (matrix) {
 	if (!matrix.length || !matrix[0].length) return []
 	const rows = matrix.length
@@ -303,7 +301,7 @@ var spiralOrder = function (matrix) {
 	return ret
 }
 
-//O(mn) - O(1)
+//O(mn) - O(1) 四指针
 var spiralOrder = function (matrix) {
 	let top = 0,
 		bottom = matrix.length - 1,
@@ -313,7 +311,7 @@ var spiralOrder = function (matrix) {
 	while (true) {
 		//向右移动直到最右
 		for (let i = left; i <= right; i++) ret.push(matrix[top][i])
-		//重新设定上边界，若上边界大于下边界，则遍历遍历完成，下同
+		//update上边界，若上边界大于下边界则跳出，下同
 		if (++top > bottom) break
 		//向下
 		for (let i = top; i <= bottom; i++) ret.push(matrix[i][right])
@@ -388,7 +386,7 @@ var plusOne = function (digits) {
 		//检查是否还需要进位，若不需要直接返回
 		if (digits[i] !== 0) return digits
 	}
-	//全部加完还需要进位
+	//全部加完还需要进位的情况
 	digits = Array.from({ length: len + 1 }, (_, idx) => {
 		if (idx === 0) return 1
 		return 0
@@ -485,9 +483,11 @@ var sortColors = function (nums) {
 		p1 = 0,
 		p2 = nums.length - 1
 	while (cur <= p2) {
+    //2放后
 		if (nums[cur] === 2) {
 			;[nums[cur], nums[p2--]] = [nums[p2], nums[cur]]
-		} else if (nums[cur] === 0) {
+		//0放前
+    } else if (nums[cur] === 0) {
 			;[nums[cur++], nums[p1++]] = [nums[p1], nums[cur]]
 		} else {
 			cur++
@@ -523,7 +523,7 @@ var merge = function (nums1, m, nums2, n) {
 	nums1.sort((a, b) => a - b)
 }
 
-//三指针 / 从前往后 O(n+m) - O(m)
+//三指针 从前往后 O(n+m) - O(m)
 var merge = (nums1, m, nums2, n) => {
 	//原数组前面会被覆盖所以copy一份
 	const nums1Copy = nums1.slice(0, m)
@@ -537,13 +537,13 @@ var merge = (nums1, m, nums2, n) => {
 	while (p2 < n) nums1[p++] = nums2[p2++]
 }
 
-//三指针 / 从后往前 O(n+m) - O(1)
+//三指针 从后往前 O(n+m) - O(1)
 var merge = (nums1, m, nums2, n) => {
 	let p = m - 1,
 		q = n - 1,
 		k = m + n - 1
 	//nums2全部复制完
-	//不能写成nums1[p] < nums2[q] ? nums2[q--] : nums1[p--]死循环
+	//不能写成nums1[p] < nums2[q] ? nums2[q--] : nums1[p--] 死循环
 	while (q >= 0) nums1[k--] = nums1[p] > nums2[q] ? nums1[p--] : nums2[q--]
 }
 ```
@@ -597,7 +597,7 @@ var rotate = function (nums, k) {
 ### [238.==除自身以外数组的乘积==](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 ```javascript {.line-numbers}
-//使用两个数组
+//使用两个数组，使用前缀
 var productExceptSelf = (nums) => {
 	const len = nums.length
 	// L 和 R 分别表示左右两侧的乘积列表
@@ -630,14 +630,12 @@ var productExceptSelf = function (nums) {
 	return ret
 }
 
-//better  O(1)
+//best  O(1)
 var productExceptSelf = function (nums) {
 	const len = nums.length,
 		ret = new Array(len)
-
 	ret[0] = 1
 	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]
-
 	let r = 1
 	//从最后一个更新开始更新答案
 	for (let i = len - 1; i >= 0; i--) {
