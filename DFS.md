@@ -50,7 +50,6 @@ var letterCombinations = function (digits) {
 //brute force O(2^3n * n) - O(n)
 var generateParenthesis = function (n) {
 	const ret = []
-
 	const isValid = (s) => {
 		let balance = 0
 		for (let c of s) {
@@ -63,22 +62,19 @@ var generateParenthesis = function (n) {
 		}
 		return balance === 0
 	}
-
 	const dfs = (level, max, s) => {
 		//1 recursion terminal
 		if (level >= max) {
 			if (isValid(s)) ret.push(s)
 			return
 		}
-
 		//2 process logic of current level
 		//3 drill down
 		dfs(level + 1, max, `${s}(`)
 		dfs(level + 1, max, `${s})`)
-
 		//4 reverse current params if needed
 	}
-	//level, maxCount, s
+	//level, maxCount, pathStr
 	dfs(0, 2 * n, '')
 	return ret
 }
@@ -86,7 +82,6 @@ var generateParenthesis = function (n) {
 //回溯 better
 var generateParenthesis = function (n) {
 	const ret = []
-
 	const dfs = (l, r, max, s) => {
 		if (l === max && r === max) {
 			ret.push(s)
@@ -146,7 +141,7 @@ var combine = function (n, k) {
 			ret.push([...path])
 			return
 		}
-    //剪枝n - k + 1，待组成的数凑不够k个
+    //剪枝，待组成的数凑不够k个
 		for (let i = startIdx; i <= n - (k - path.length) + 1; i++) {
 			path.push(i)
 			dfs(n, k, i + 1, path)
@@ -165,7 +160,6 @@ var combine = function (n, k) {
 	const dfs = (cur, n, k, path) => {
 		//剪枝,当前选择个数 + 剩下的待选数不够k个
 		if (path.length + (n - cur + 1) < k) return
-
 		if (path.length === k) {
 			ret.push(path)
 			return
@@ -195,7 +189,6 @@ var combinationSum = function (candidates, target) {
 			ret.push([...path])
 			return
 		}
-
 		for (let i = startIdx; i < candidates.length; i++) {
 			path.push(candidates[i])
 			//可选重复元素
@@ -220,7 +213,6 @@ var combinationSum = function (candidates, target) {
 			ret.push(path)
 			return
 		}
-
 		//choice
 		//剪枝
 		if (remain - candidates[start] >= 0) {
@@ -290,7 +282,7 @@ var permute = function (nums) {
 			if (visited[i]) continue
 			visited[i] = true
 			dfs(nums, depth + 1, [...path, nums[i]])
-			//backtrack, 这里上面的数组是传递的引用则无需回溯
+			//backtrack
 			visited[i] = false
 		}
 	}
@@ -346,7 +338,6 @@ var subsets = function (nums) {
 	//start控制下层树枝的个数
 	const dfs = (nums, startIdx, path) => {
 		//在递归压栈前做事情,取的是所有树上的叶子节点
-    
     //该题不需要结束条件，全部遍历完即可
     //if (startIdx >= path.length) return 
 		ret.push([...path])
@@ -439,10 +430,8 @@ var solveNQueens = function (n) {
 			pies.add(row + col)
 			nas.add(row - col)
 			path.push(col)
-
 			//drill down
 			dfs(row + 1, path)
-
 			//reverse
 			cols.delete(col)
 			pies.delete(row + col)

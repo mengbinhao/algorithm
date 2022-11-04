@@ -90,6 +90,7 @@ var threeSum = function (nums) {
 		for (let j = i + 1; j < len - 1; j++) {
 			for (let k = j + 1; k < len; k++) {
 				if (nums[i] + nums[j] + nums[k] === 0) {
+           //去重
 					const key = [nums[i], nums[j], nums[k]].sort()
 					if (map[key] === undefined) {
 						map[key] = true
@@ -217,9 +218,10 @@ var fourSum = function (nums, target) {
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	let slow = 0
-	for (let fast = 1; fast < len; fast++) {
-		if (nums[slow] !== nums[fast]) nums[++slow] = nums[fast]
+	let slow = 0, fast = 1 
+	while (fast < len) {
+    if (nums[slow] !== nums[fast]) nums[++slow] = nums[fast]
+    fast++
 	}
 	return slow + 1
 }
@@ -554,6 +556,7 @@ var merge = (nums1, m, nums2, n) => {
 //brute force O(n*k) - O(1)
 var rotate = function (nums, k) {
 	const len = nums.length
+  //翻转次数
 	for (let i = 0; i < k % len; i++) {
 		let previous = nums[len - 1]
 		//每次向前滚一下
@@ -688,9 +691,7 @@ var intersection = function (nums1, nums2) {
 var intersection = function (nums1, nums2) {
 	const map = {}
 	const ret = []
-	for (let i = 0; i < nums1.length; i++) {
-		map[nums1[i]] = true
-	}
+	for (let i = 0; i < nums1.length; i++) map[nums1[i]] = true
 	for (let i = 0; i < nums2.length; i++) {
 		if (map[nums2[i]]) {
 			ret.push(nums2[i])

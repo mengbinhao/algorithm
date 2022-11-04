@@ -275,7 +275,7 @@ MyQueue.prototype.pop = function () {
 
 MyQueue.prototype.peek = function () {
   const x = this.pop()
-  //上局弹出来了,这里再放进去
+  //上面弹出来了,这里再放进去
   this.stackOut.push(x)
   return x
 }

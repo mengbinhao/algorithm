@@ -63,9 +63,7 @@
 // X ^ Y ^ X = Y
 var singleNumber = function (nums) {
 	let ret = 0
-	for (let num of nums) {
-		ret ^= num
-	}
+	for (let num of nums) ret ^= num
 	return ret
 }
 ```
@@ -77,7 +75,6 @@ var singleNumber = function (nums) {
 //2 HashMap,遍历输入数组,统计每个数字出现的次数,最后返回出现次数为 1 的数字
 var singleNumber = function (nums) {
 	const map = new Map()
-
 	for (let num of nums) {
 		if (!map.has(num)) {
 			map.set(num, 1)
@@ -85,7 +82,6 @@ var singleNumber = function (nums) {
 			map.set(num, map.get(num) + 1)
 		}
 	}
-
 	for (let [idx, val] of map.entries()) {
 		if (val === 1) return idx
 	}

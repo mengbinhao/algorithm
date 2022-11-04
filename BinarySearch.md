@@ -39,16 +39,16 @@
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	if (arr.length === 0) return arr
+  const len = arr.length
+	if (len === 0) return -1
 	let l = 0,
 		//Note!!!
-		r = arr.length - 1,
+		r = len - 1,
 		mid
 	//Note!!!
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
-			//Note!!!
 			l = mid + 1
 		} else if (arr[mid] > target) {
 			//Note!!!
@@ -65,9 +65,10 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	if (arr.length === 0) return -1
+  const len = arr.length
+	if (len === 0) return -1
 	let l = 0,
-		r = arr.length - 1,
+		r = len - 1,
 		mid
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
@@ -93,9 +94,10 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-	if (arr.length === 0) return -1
+  const len = arr.length
+	if (len === 0) return -1
 	let l = 0,
-		r = arr.length - 1,
+		r = len - 1,
 		mid
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
@@ -105,7 +107,7 @@ const binarySearch = (arr, target) => {
 			r = mid - 1
 		} else {
 			//已搜到最后一个或已找到
-			if (mid === arr.length - 1 || arr[mid + 1] !== target) {
+			if (mid === len - 1 || arr[mid + 1] !== target) {
 				return mid
 			} else {
 				l = mid + 1
@@ -143,13 +145,14 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
+  const len = arr.length
 	let l = 0,
-		r = arr.length - 1,
+		r = len - 1,
 		mid
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] <= target) {
-			if (mid === arr.length - 1 || arr[mid + 1] > target) {
+			if (mid === len - 1 || arr[mid + 1] > target) {
 				return mid
 			} else {
 				l = mid + 1
@@ -227,7 +230,6 @@ var search = function (nums, target) {
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return mid
-
 		//in case mid === l 下标相等
 		//[start, mid]有序
 		if (nums[mid] >= nums[l]) {
@@ -292,7 +294,6 @@ var mySqrt = function (x) {
 	let l = 0,
 		r = x,
 		mid
-
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (mid * mid < x) {
@@ -360,13 +361,11 @@ var findMin = function (nums) {
 		mid
 	//in case array is a sorted array
 	if (nums[r] > nums[l]) return nums[0]
-
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		//judge according to nums[mid]
 		if (nums[mid] < nums[mid - 1]) return nums[mid]
 		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]
-
 		//binary search
 		if (nums[mid] > nums[0]) {
 			l = mid + 1
@@ -386,7 +385,6 @@ var isPerfectSquare = function (num) {
 	let l = 0,
 		r = num,
 		mid
-
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (mid * mid < num) {
@@ -398,5 +396,15 @@ var isPerfectSquare = function (num) {
 		}
 	}
 	return false
+}
+
+var isPerfectSquare = function(num) {
+  let x = 1, square = 1
+  while (square <= num) {
+    if (square === num) return true
+    x++
+    square = x * x
+  }
+  return false
 }
 ```
