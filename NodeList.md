@@ -152,11 +152,9 @@ var mergeTwoLists = function (list1, list2) {
 var mergeKLists = function (lists) {
 	const len = lists.length
 	if (len === 0) return null
-
 	const mergeTwoLists = (l1, l2) => {
 		if (!l1) return l2
 		if (!l2) return l1
-
 		if (l1.val < l2.val) {
 			l1.next = mergeTwoLists(l1.next, l2)
 			return l1
@@ -165,7 +163,7 @@ var mergeKLists = function (lists) {
 			return l2
 		}
 	}
-
+	
 	let ret = lists[0]
 	for (let i = 1; i < len; i++) {
 		ret = mergeTwoLists(ret, lists[i])
@@ -177,10 +175,8 @@ var mergeKLists = function (lists) {
 var mergeKLists = function (lists) {
 	const len = lists.length
 	if (len === 0) return null
-
 	const arr = []
 	let cur
-
 	//add each node's val to arr
 	lists.forEach((list) => {
 		cur = list
@@ -267,78 +263,32 @@ var swapPairs = function (head) {
 }
 ```
 
-### [25. K 个一组翻转链表 H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+### [25. ==K 个一组翻转链表== H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
 ```javascript {.line-numbers}
-const myReverse = (head, tail) => {
-	let prev = tail.next,
-		p = head
-	//翻转结束条件
-	while (prev !== tail) {
-		const nex = p.next
-		p.next = prev
-		prev = p
-		p = nex
-	}
-	return [tail, head]
-}
-
 var reverseKGroup = function (head, k) {
-	const dummyHead = new ListNode(-1)
-	dummyHead.next = head
-	let pre = dummyHead
-
-	while (head) {
-		let tail = pre
-		//剩余部分长度小于k则不需要反转
-		for (let i = 0; i < k; ++i) {
-			tail = tail.next
-			if (!tail) {
-				return dummyHead.next
-			}
-		}
-		const nex = tail.next
-		;[head, tail] = myReverse(head, tail)
-		// 把子链表重新接回原链表
-		pre.next = head
-		tail.next = nex
-		pre = tail
-		head = tail.next
+	let a = head,
+		b = head
+	for (let i = 0; i < k; i++) {
+		//不够数量直接返回
+    if (!b) return head
+		b = b.next
 	}
-	return dummyHead.next
+	const newHead = reverse(a, b)
+	a.next = reverseKGroup(b, k)
+	return newHead
 }
-
-var reverseKGroup = function (head, k) {
-	// 标兵
-	let dummy = new ListNode(-1)
-	dummy.next = head
-	let [start, end] = [dummy, dummy.next]
-	let count = 0
-	while (end) {
-		count++
-		if (count % k === 0) {
-			start = reverseList(start, end.next)
-			end = start.next
-		} else {
-			end = end.next
-		}
+function reverse(a, b) {
+	let prev = null,
+		cur = a,
+		next = a
+	while (cur != b) {
+		next = cur.next
+		cur.next = prev
+		prev = cur
+		cur = next
 	}
-	return dummy.next
-
-	// 翻转stat -> end的链表
-	function reverseList(start, end) {
-		let [pre, cur] = [start, start.next]
-		const first = cur
-		while (cur !== end) {
-			let next = cur.next
-			cur.next = pre
-			pre = cur
-			cur = next
-		}
-		start.next = pre
-		first.next = cur
-		return first
-	}
+	return prev
 }
 ```
 
@@ -753,7 +703,7 @@ var reverseList = function (head) {
 }
 ```
 
-### [234. 回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)
+### [234. ==回文链表==](https://leetcode-cn.com/problems/palindrome-linked-list/)
 
 ```javascript {.line-numbers}
 //convert ListNode to Array O(n) - O(n)
@@ -763,18 +713,26 @@ var isPalindrome = function (head) {
 		arr.push(head.val)
 		head = head.next
 	}
-	for (let i = 0, j = arr.length - 1; i < j; ++i, --j) {
-		if (arr[i] !== arr[j]) return false
+	let l = 0,
+		r = arr.length - 1
+	while (l < r) {
+		if (arr[l++] !== arr[r--]) return false
 	}
 	return true
 }
 
-//O(n) - O(1)
-// 找到前半部分链表的尾节点
-// 反转后半部分链表
-// 判断是否回文
-// 恢复链表
-// 返回结果
+//recursion
+var isPalindrome = function (head) {
+	let first = head
+	const helper = (cur) => {
+		if (!cur) return true
+		if (!helper(cur.next)) return false
+		if (first.val !== cur.val) return false
+		first = first.next
+		return true
+	}
+	return helper(head)
+}
 ```
 
 ### [328. 奇偶链表](https://leetcode-cn.com/problems/odd-even-linked-list/)
