@@ -249,8 +249,8 @@ const heap = (arr) => {
 
 	//堆化,查找三个点中的最大点
 	const down = (arr, i) => {
-		const lSon = 2 * i,
-			rSon = 2 * i + 1
+		const lSon = 2 * i + 1,
+			rSon = 2 * i + 2
 		let largest = i
 		if (lSon < len && arr[lSon] > arr[largest]) largest = lSon
 		if (rSon < len && arr[rSon] > arr[largest]) largest = rSon
@@ -263,13 +263,13 @@ const heap = (arr) => {
 
 	const buildMaxHeap = (arr) => {
 		//从第一个非叶子节点开始创建
-		for (let i = Math.floor(arr.length / 2) - 1; i >= 0; i--) down(arr, i)
+		for (let i = Math.floor(len / 2) - 1; i >= 0; i--) down(arr, i)
 	}
 
 	buildMaxHeap(arr)
 
 	//每次堆顶和最后一个元素交换，再堆化，即无序区减1，有序区加1
-	for (let i = len - 1; i > 0; i--) {
+	for (let i = len - 1; i >= 1; i--) {
 		;[arr[i], arr[0]] = [arr[0], arr[i]]
 		len--
 		//交换后从顶点开始down
