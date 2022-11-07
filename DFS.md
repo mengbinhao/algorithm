@@ -34,9 +34,9 @@ var letterCombinations = function (digits) {
 			return
 		}
 		for (let c of hash[digits[level]]) {
-      //该问题传递的是字符串则可省略回溯的过程
-      dfs(s + c, level + 1)
-    }
+			//该问题传递的是字符串则可省略回溯的过程
+			dfs(s + c, level + 1)
+		}
 	}
 	//can pass more params if you want, like ret、map、digits
 	dfs('', 0)
@@ -141,18 +141,17 @@ var combine = function (n, k) {
 			ret.push([...path])
 			return
 		}
-    //剪枝，待组成的数凑不够k个
+		//剪枝，待组成的数凑不够k个
 		for (let i = startIdx; i <= n - (k - path.length) + 1; i++) {
 			path.push(i)
 			dfs(n, k, i + 1, path)
-      //backtrack [1,2...] ->  [1,3...] -> [2...]
+			//backtrack [1,2...] ->  [1,3...] -> [2...]
 			path.pop()
 		}
 	}
 	dfs(n, k, 1, [])
 	return ret
 }
-
 
 //dfs + backtrack 2
 var combine = function (n, k) {
@@ -238,7 +237,7 @@ var combinationSum2 = function (candidates, target) {
 	const len = candidates.length,
 		ret = []
 	if (len === 0) return ret
-	//preconditon!!!!!!!
+	//precondition!!!!!!!
 	candidates.sort((a, b) => a - b)
 	const dfs = (candidates, remain, begin, path) => {
 		if (remain === 0) {
@@ -338,8 +337,8 @@ var subsets = function (nums) {
 	//start控制下层树枝的个数
 	const dfs = (nums, startIdx, path) => {
 		//在递归压栈前做事情,取的是所有树上的叶子节点
-    //该题不需要结束条件，全部遍历完即可
-    //if (startIdx >= path.length) return 
+		//该题不需要结束条件，全部遍历完即可
+		//if (startIdx >= path.length) return
 		ret.push([...path])
 		for (let i = startIdx, len = nums.length; i < len; i++) {
 			path.push(nums[i])
@@ -383,8 +382,6 @@ var subsets = function (nums) {
 }
 ```
 
-
-
 ### [90.子集 II](https://leetcode-cn.com/problems/subsets-ii/)
 
 ```javascript {.line-numbers}
@@ -404,6 +401,33 @@ var subsetsWithDup = function (nums) {
 	}
 	dfs(nums, 0, [])
 	return ret
+}
+```
+
+### [93.复原 IP 地址](https://leetcode.cn/problems/restore-ip-addresses/)
+
+```javascript {.line-numbers}
+var restoreIpAddresses = function (s) {
+	const ret = []
+	backtracking(0, [])
+	return ret
+	function backtracking(startIdx, path) {
+		const len = path.length
+		if (len > 4) return
+		//match condition
+		if (len === 4 && startIdx === s.length) {
+			ret.push([...path].join('.'))
+			return
+		}
+		for (let j = startIdx; j < s.length; j++) {
+			const str = s.slice(startIdx, j + 1)
+			//剪枝
+			if (str.length > 3 || +str > 255) break
+			if (str.length > 1 && str[0] === '0') break
+			//隐藏了回溯
+			backtracking(j + 1, [...path, str])
+		}
+	}
 }
 ```
 
@@ -567,6 +591,24 @@ var solve = function (board) {
 }
 ```
 
+### [494.==目标和==](https://leetcode.cn/problems/target-sum/)
+
+```javascript {.line-numbers}
+var findTargetSumWays = function (nums, target) {
+	let count = 0
+	const backtrack = (nums, target, index, sum) => {
+		if (index === nums.length) {
+			if (sum === target) count++
+		} else {
+			backtrack(nums, target, index + 1, sum + nums[index])
+			backtrack(nums, target, index + 1, sum - nums[index])
+		}
+	}
+	backtrack(nums, target, 0, 0)
+	return count
+}
+```
+
 ## 小岛问题
 
 ### [200.==岛屿数量==](https://leetcode-cn.com/problems/number-of-islands/)
@@ -666,9 +708,8 @@ var islandPerimeter = function (grid) {
 		if (grid[i][j] === 0) return 1
 		//遍历过的格子
 		if (grid[i][j] !== 1) return 0
-
+		//marked
 		grid[i][j] = 2
-
 		return (
 			dfs(grid, i + 1, j, rows, cols) +
 			dfs(grid, i, j + 1, rows, cols) +
@@ -698,9 +739,8 @@ var maxAreaOfIsland = function (grid) {
 
 	const dfs = (grid, i, j, rows, cols) => {
 		if (i < 0 || i >= rows || j < 0 || j >= cols || grid[i][j] !== '1') return 0
-
+		//marked
 		grid[i][j] = '2'
-
 		return (
 			1 +
 			dfs(grid, i + 1, j, rows, cols) +
@@ -712,7 +752,7 @@ var maxAreaOfIsland = function (grid) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (grid[i][j] === '1') {
-				//当次得到的最大area
+				//得到当次最大area
 				const maxArea = dfs(grid, i, j, rows, cols)
 				ret = Math.max(ret, maxArea)
 			}

@@ -1091,6 +1091,24 @@ var isBalanced = function (root) {
 
 ```javascript {.line-numbers}
 var countNodes = function (root) {
+	if (root == null) return 0
+	let l = root,
+		r = root
+	let lh = 0,
+		rh = 0
+	while (l != null) {
+		l = l.left
+		lh++
+	}
+	while (r != null) {
+		r = r.right
+		rh++
+	}
+	if (lh === rh) return Math.pow(2, lh) - 1
+	return 1 + countNodes(root.left) + countNodes(root.right)
+}
+
+var countNodes = function (root) {
 	const countLevel = (root) => {
 		let level = 0
 		while (root) {

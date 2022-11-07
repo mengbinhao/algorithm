@@ -1,7 +1,7 @@
 ### [146.LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
 
 ```javascript {.line-numbers}
-//头代表最新,尾代表老
+//hash表 + 双向链表(头代表最新,尾代表老)
 function ListNode(key, value) {
 	this.key = key
 	this.value = value
@@ -12,13 +12,13 @@ function ListNode(key, value) {
 var LRUCache = function (capacity) {
 	// 缓存容量
 	this.capacity = capacity
-	// 哈希表
+	// 哈希表 key -> ListNode
 	this.hashTable = {}
 	// 缓存数目
 	this.count = 0
+	// 虚拟头尾
 	this.dummyHead = new ListNode()
 	this.dummyTail = new ListNode()
-	// 相联系
 	this.dummyHead.next = this.dummyTail
 	this.dummyTail.prev = this.dummyHead
 }
@@ -26,7 +26,7 @@ var LRUCache = function (capacity) {
 //若哈希表中没有对应值,返回-1。若存在节点,刷新它的位置,移动到链表头部,返回该节点值
 LRUCache.prototype.get = function (key) {
 	const node = this.hashTable[key]
-	if (node == null) return -1
+	if (!node) return -1
 	this.moveToHead(node)
 	return node.value
 }
@@ -57,35 +57,26 @@ LRUCache.prototype.addToHead = function (node) {
 	this.dummyHead.next = node
 }
 
-//写入新数据,创建新的节点,添加到链表头部(最不优先被淘汰),并存入哈希表,检查是否超容,决定是否剔除"老家伙"
-//写入已有的数据,则更新数据值,刷新节点的位置
+//对于新数据,创建新节点,存入哈希表，并添加到链表头部(最不优先被淘汰),检查是否超容,决定是否剔除"老家伙"
+//对于已有数据,更新数据值,刷新节点位置
 LRUCache.prototype.put = function (key, value) {
 	const node = this.hashTable[key]
-	if (node == null) {
+	if (!node) {
 		const newNode = new ListNode(key, value)
 		this.hashTable[key] = newNode
 		this.addToHead(newNode)
 		this.count++
 		if (this.count > this.capacity) {
-			this.removeLRUItem()
+			//删除"老家伙",将它从链表尾部删除
+			const tailNode = this.dummyTail.prev
+			this.removeFromList(tailNode)
+			delete this.hashTable[tailNode.key]
+			this.count--
 		}
 	} else {
 		node.value = value
 		this.moveToHead(node)
 	}
-}
-
-LRUCache.prototype.removeLRUItem = function () {
-	//删除"老家伙",将它从链表尾部删除
-	const tail = this.popTail()
-	delete this.hashTable[tail.key]
-	this.count--
-}
-
-LRUCache.prototype.popTail = function () {
-	const tailItem = this.dummyTail.prev
-	this.removeFromList(tailItem)
-	return tailItem
 }
 ```
 
@@ -119,7 +110,6 @@ MinStack.prototype.getMin = function () {
 	return val === Infinity ? void 0 : val
 }
 
-
 //O(n) - O(1)
 var MinStack = function () {
 	this.stack = []
@@ -129,9 +119,7 @@ var MinStack = function () {
 MinStack.prototype.push = function (val) {
 	// update 'min'
 	const minV = this.minV
-	if (val < this.minV) {
-		this.minV = val
-	}
+	if (val < this.minV) this.minV = val
 	//存的是真实值与min的差
 	return this.stack.push(val - minV)
 }
@@ -139,7 +127,6 @@ MinStack.prototype.push = function (val) {
 MinStack.prototype.pop = function () {
 	const item = this.stack.pop()
 	const minV = this.minV
-
 	//如果栈顶元素小于0，说明栈顶是当前最小的元素，它出栈会对min造成影响，我们需要去更新min
 	//上一个最小的是“min - 栈顶元素”,我们需要将上一个最小值更新为当前的最小值
 	//因为栈顶元素入栈的时候的通过 栈顶元素 = 真实值 - 上一个最小的元素 得到的
@@ -154,10 +141,7 @@ MinStack.prototype.pop = function () {
 MinStack.prototype.top = function () {
 	const item = this.stack[this.stack.length - 1]
 	const minV = this.minV
-
-	if (item < 0) {
-		return minV
-	}
+	if (item < 0) return minV
 	//top时候需要对数据还原，这里千万注意是“上一个”最小值
 	return item + minV
 }
@@ -256,32 +240,33 @@ MyStack.prototype.empty = function () {
 ### [232.==用栈实现队列==](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 
 ```javascript {.line-numbers}
-//use two stacks
 var MyQueue = function () {
-	this.stackIn = []
-	this.stackOut = []
+	this.inStack = []
+	this.outStack = []
 }
 
 MyQueue.prototype.push = function (x) {
-	this.stackIn.push(x)
+	this.inStack.push(x)
 }
 
 MyQueue.prototype.pop = function () {
-	if (this.stackOut.length > 0) return this.stackOut.pop()
-  //stackOut反向装入stackIn数据
-  while (this.stackIn.length > 0) this.stackOut.push(this.stackIn.pop())
-	return this.stackOut.pop()
+	if (!this.outStack.length) this.in2out()
+	return this.outStack.pop()
 }
 
 MyQueue.prototype.peek = function () {
-  const x = this.pop()
-  //上面弹出来了,这里再放进去
-  this.stackOut.push(x)
-  return x
+	if (!this.outStack.length) this.in2out()
+	return this.outStack[this.outStack.length - 1]
 }
 
 MyQueue.prototype.empty = function () {
-	return this.stackIn.length === 0 && this.stackOut.length === 0
+	return this.outStack.length === 0 && this.inStack.length === 0
+}
+
+MyQueue.prototype.in2out = function () {
+	while (this.inStack.length) {
+		this.outStack.push(this.inStack.pop())
+	}
 }
 ```
 
@@ -397,7 +382,7 @@ MyLinkedList.prototype.addAtIndex = function (index, val) {
 	index = Math.max(0, index)
 	this.size++
 	let prev = this.head
-  while (index-- > 0) prev = prev.next
+	while (index-- > 0) prev = prev.next
 	let newAdd = new ListNode(val)
 	newAdd.next = prev.next
 	prev.next = newAdd

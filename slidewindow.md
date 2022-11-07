@@ -49,7 +49,6 @@ var lengthOfLongestSubstring = function (s) {
 	return ret
 }
 
-//more simple version
 var lengthOfLongestSubstring = function (s) {
 	const len = s.length,
 		map = new Map()
@@ -125,7 +124,7 @@ var minSubArrayLen = function (s, nums) {
 			sum += nums[j]
 			if (sum >= s) {
 				ret = Math.min(ret, j - i + 1)
-				//因要求找最短,找到即返回
+				//因找最短,找到即返回
 				break
 			}
 		}
@@ -135,7 +134,7 @@ var minSubArrayLen = function (s, nums) {
 
 // 2 前缀和 + 二分查找
 
-// 3 双指针滑动窗口  O(n) - O(1) 
+// 3 双指针滑动窗口  O(n) - O(1)
 var minSubArrayLen = function (s, nums) {
 	const len = nums.length
 	if (len === 0) return 0

@@ -172,6 +172,24 @@ var firstUniqChar = function (s) {
 }
 ```
 
+### [392. 判断子序列](https://leetcode-cn.com/problems/is-subsequence/)
+
+```javascript {.line-numbers}
+//two pointer
+var isSubsequence = function (s, t) {
+	let i = 0,
+		j = 0,
+		sLen = s.length,
+		tLen = t.length
+
+	while (i < sLen && j < tLen) {
+		if (s[i] === t[j]) i++
+		j++
+	}
+	return i === sLen
+}
+```
+
 ### [415. 字符串相加](https://leetcode-cn.com/problems/add-strings/)
 
 ```javascript {.line-numbers}
@@ -180,17 +198,16 @@ var addStrings = function (num1, num2) {
 		j = num2.length - 1,
 		curry = 0,
 		ret = []
-
 	while (i >= 0 || j >= 0 || curry) {
-		const x = i >= 0 ? num1.charAt(i) - 0 : 0
-		const y = j >= 0 ? num2.charAt(j) - 0 : 0
+		const x = i >= 0 ? +num1[i] : 0
+		const y = j >= 0 ? +num2[j] : 0
 		const tmp = x + y + curry
-		ret.push(tmp % 10)
-		curry = Math.floor(tmp / 10)
+		ret.unshift(tmp % 10)
+		curry = tmp >= 10 ? 1 : 0
 		i--
 		j--
 	}
-	return ret.reverse().join('')
+	return ret.join('')
 }
 ```
 

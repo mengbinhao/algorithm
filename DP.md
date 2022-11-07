@@ -38,6 +38,65 @@ var longestPalindrome = function (s) {
 	return s.substring(begin, begin + maxLen)
 }
 
+//中心扩展法 O(n^2) - O(1) easy version
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
+	let maxLen = 0,
+		maxStr = ''
+	for (let i = 0; i < len; i++) {
+		//取str有性能消耗
+		const oddStr = palindrome(s, i, i)
+		const evenStr = palindrome(s, i, i + 1)
+		if (oddStr.length > maxLen) {
+			maxStr = oddStr
+			maxLen = oddStr.length
+		}
+		if (evenStr.length > maxLen) {
+			maxStr = evenStr
+			maxLen = evenStr.length
+		}
+	}
+	return maxStr
+
+	function palindrome(s, l, r) {
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			l--
+			r++
+		}
+		return s.slice(l + 1, r)
+	}
+}
+
+//中心扩展法 O(n^2) - O(1)
+var longestPalindrome = function (s) {
+	if (!s) return ''
+	const len = s.length
+	if (len < 2) return s
+	let maxLen = 1,
+		begin = 0
+	for (let i = 0; i < len; i++) {
+		const oddLen = palindrome(s, i, i)
+		const evenLen = palindrome(s, i, i + 1)
+		const curMaxLen = Math.max(oddLen, evenLen)
+		if (curMaxLen > maxLen) {
+			maxLen = curMaxLen
+			//囊括奇、偶两种情况向下取整
+			begin = i - Math.floor((maxLen - 1) / 2)
+		}
+	}
+	return s.substring(begin, begin + maxLen)
+
+	function palindrome(s, l, r) {
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			l--
+			r++
+		}
+		return r - l - 1
+	}
+}
+
 //DP  O(n^2) - O(n^2)
 var longestPalindrome = function (s) {
 	if (!s) return ''
@@ -73,34 +132,6 @@ var longestPalindrome = function (s) {
 		}
 	}
 	return s.substring(begin, begin + maxLen)
-}
-
-//中心扩展法 O(n^2) - O(1)
-var longestPalindrome = function (s) {
-	if (!s) return ''
-	const len = s.length
-	if (len < 2) return s
-	let maxLen = 1,
-		begin = 0
-	for (let i = 0; i < len; i++) {
-		const oddLen = palindrome(s, i, i)
-		const evenLen = palindrome(s, i, i + 1)
-		const curMaxLen = Math.max(oddLen, evenLen)
-		if (curMaxLen > maxLen) {
-			maxLen = curMaxLen
-			//囊括奇、偶两种情况向下取整
-			begin = i - Math.floor((maxLen - 1) / 2)
-		}
-	}
-	return s.substring(begin, begin + maxLen)
-
-	function palindrome(s, l, r) {
-		while (l >= 0 && r < s.length && s[l] === s[r]) {
-			l--
-			r++
-		}
-		return r - l - 1
-	}
 }
 ```
 
@@ -275,7 +306,6 @@ var maxSubArray = function (nums) {
 //O(n) - O(1)
 var maxSubArray = function(nums) {
   let preSum = 0, maxPreSum = nums[0], minPreSum = 0
-
   for (let num of nums) {
 		//prefix sum
     preSum += num
@@ -288,7 +318,24 @@ var maxSubArray = function(nums) {
 //dp[i]表示nums中以nums[i]结尾的最大子序和
 //dp[i] = max(dp[i - 1] + nums[i], nums[i])
 //base case dp[0] = nums[0]
-//O(n) - O(1)
+var maxSubArray = function (nums) {
+	const len = nums.length
+	const dp = new Array(len)
+	dp[0] = nums[0]
+	let ret = nums[0]
+	for (let i = 1; i < len; i++) {
+		if (dp[i - 1] > 0) {
+			dp[i] = dp[i - 1] + nums[i]
+		} else {
+			dp[i] = nums[i]
+		}
+		ret = Math.max(ret, dp[i])
+	}
+	return ret
+}
+
+
+//dp优化 O(n) - O(1)
 var maxSubArray = function (nums) {
 	let preSum = 0,
 		maxPreSum = nums[0]
@@ -375,14 +422,10 @@ var minDistance = function (word1, word2) {
 	const dp = Array.from({ length: m + 1 }, () => new Array(n + 1))
 
 	//一个空串和一个非空串的编辑距离为 D[i][0] = i 和 D[0][j] = j,D[i][0] 相当于对 word1 执行 i 次删除操作
-	for (let i = 0; i <= m; i++) {
-		dp[i][0] = i
-	}
+	for (let i = 0; i <= m; i++) dp[i][0] = i
 
 	//D[0][j] 相当于对 word1执行 j 次插入操作
-	for (let j = 0; j <= n; j++) {
-		dp[0][j] = j
-	}
+	for (let j = 0; j <= n; j++) dp[0][j] = j
 
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
@@ -404,9 +447,7 @@ var minDistance = function (word1, word2) {
 	const dp = new Array(n + 1)
 
 	//第一列
-	for (let j = 0; j <= n; j++) {
-		dp[j] = j
-	}
+	for (let j = 0; j <= n; j++) dp[j] = j
 
 	for (let i = 1; i <= m; i++) {
 		//save下面需要替换
@@ -861,7 +902,6 @@ var maxProfit = function (prices) {
 	if (len < 2) return 0
 	let maxProfit = 0,
 		profit
-
 	//loop every two different days
 	for (let i = 0; i < len - 1; i++) {
 		for (let j = i + 1; j < len; j++) {

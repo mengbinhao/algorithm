@@ -2,7 +2,7 @@
 
 1. 有单调性一定可以二分
 2. 能用二分解的题不一定具有单调性
-2. 有上下界
+3. 有上下界
 
 ### 解题 3 步骤
 
@@ -39,7 +39,7 @@
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-  const len = arr.length
+	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
 		//Note!!!
@@ -65,7 +65,7 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-  const len = arr.length
+	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
 		r = len - 1,
@@ -94,7 +94,7 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-  const len = arr.length
+	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
 		r = len - 1,
@@ -145,7 +145,7 @@ const binarySearch = (arr, target) => {
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
-  const len = arr.length
+	const len = arr.length
 	let l = 0,
 		r = len - 1,
 		mid
@@ -300,11 +300,11 @@ var mySqrt = function (x) {
 			l = mid + 1
 		} else if (mid * mid > x) {
 			r = mid - 1
-		} else if (mid * mid === x) {
+		} else {
 			return mid
 		}
 	}
-  //l > r
+	//l > r
 	return r
 }
 ```
@@ -355,7 +355,6 @@ var findMin = function (nums) {
 	const len = nums.length
 	if (len === 0) return null
 	if (len === 1) return nums[0]
-
 	let l = 0,
 		r = len - 1,
 		mid
@@ -366,11 +365,10 @@ var findMin = function (nums) {
 		//judge according to nums[mid]
 		if (nums[mid] < nums[mid - 1]) return nums[mid]
 		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]
-		//binary search
-		if (nums[mid] > nums[0]) {
-			l = mid + 1
-		} else {
+		if (nums[mid] < nums[len - 1]) {
 			r = mid - 1
+		} else {
+			l = mid + 1
 		}
 	}
 	return null
@@ -398,13 +396,14 @@ var isPerfectSquare = function (num) {
 	return false
 }
 
-var isPerfectSquare = function(num) {
-  let x = 1, square = 1
-  while (square <= num) {
-    if (square === num) return true
-    x++
-    square = x * x
-  }
-  return false
+var isPerfectSquare = function (num) {
+	let x = 1,
+		square = 1
+	while (square <= num) {
+		if (square === num) return true
+		x++
+		square = x * x
+	}
+	return false
 }
 ```

@@ -113,12 +113,12 @@ const quick = (arr) => {
 	const helper = (arr, l, r) => {
 		if (l >= r) return
 		//x = arr[r] or arr[(l + r) / 2]
-    //使得 nums[l..p-1] <= nums[p] < nums[p+1..r]
+		//使得 nums[l..p-1] <= nums[p] < nums[p+1..r]
 		const pivot = arr[l]
 		let i = l - 1,
 			j = r + 1
 		while (i < j) {
-			//上面外扩，这里直接先移动，所以上面定义的时候外移1位
+			//上面外扩，这里直接先移动
 			while (arr[++i] < pivot);
 			while (arr[--j] > pivot);
 			if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]]

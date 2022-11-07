@@ -163,7 +163,7 @@ var mergeKLists = function (lists) {
 			return l2
 		}
 	}
-	
+	//遍历两两合并
 	let ret = lists[0]
 	for (let i = 1; i < len; i++) {
 		ret = mergeTwoLists(ret, lists[i])
@@ -271,7 +271,7 @@ var reverseKGroup = function (head, k) {
 		b = head
 	for (let i = 0; i < k; i++) {
 		//不够数量直接返回
-    if (!b) return head
+		if (!b) return head
 		b = b.next
 	}
 	const newHead = reverse(a, b)
@@ -281,7 +281,7 @@ var reverseKGroup = function (head, k) {
 function reverse(a, b) {
 	let prev = null,
 		cur = a,
-		next = a
+		next
 	while (cur != b) {
 		next = cur.next
 		cur.next = prev
@@ -649,6 +649,38 @@ var insertionSortList = function (head) {
 		cur = lastSorted.next
 	}
 	return dummyHead.next
+}
+```
+
+### [160. ==相交链表==](https://leetcode.cn/problems/intersection-of-two-linked-lists/)
+
+```javascript {.line-numbers}
+//O(n) - O(n)
+var getIntersectionNode = function (headA, headB) {
+	const visited = new Set()
+	let temp = headA
+	while (temp !== null) {
+		visited.add(temp)
+		temp = temp.next
+	}
+	temp = headB
+	while (temp !== null) {
+		if (visited.has(temp)) return temp
+		temp = temp.next
+	}
+	return null
+}
+
+//O(n) - O(1)
+var getIntersectionNode = function (headA, headB) {
+	if (headA === null || headB === null) return null
+	let pA = headA,
+		pB = headB
+	while (pA !== pB) {
+		pA = pA === null ? headB : pA.next
+		pB = pB === null ? headA : pB.next
+	}
+	return pA
 }
 ```
 

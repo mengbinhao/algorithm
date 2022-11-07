@@ -31,7 +31,7 @@ var twoSum = function (nums, target) {
 	}
 	for (let j = 0; j < len; j++) {
 		//exclude same item
-    //exclude hash[nums[j]] is falsy
+		//exclude hash[nums[j]] is falsy
 		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) {
 			return [j, hash[nums[j]]]
 		}
@@ -90,7 +90,7 @@ var threeSum = function (nums) {
 		for (let j = i + 1; j < len - 1; j++) {
 			for (let k = j + 1; k < len; k++) {
 				if (nums[i] + nums[j] + nums[k] === 0) {
-           //去重
+					//去重
 					const key = [nums[i], nums[j], nums[k]].sort()
 					if (map[key] === undefined) {
 						map[key] = true
@@ -218,10 +218,11 @@ var fourSum = function (nums, target) {
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	let slow = 0, fast = 1 
+	let slow = 0,
+		fast = 1
 	while (fast < len) {
-    if (nums[slow] !== nums[fast]) nums[++slow] = nums[fast]
-    fast++
+		if (nums[slow] !== nums[fast]) nums[++slow] = nums[fast]
+		fast++
 	}
 	return slow + 1
 }
@@ -406,17 +407,17 @@ var plusOne = function (digits) {
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length,
-		mardedRow = new Array(rows).fill(false),
+		markedRow = new Array(rows).fill(false),
 		markedCol = new Array(cols).fill(false)
 	//先循环记录需要待转换的行或列
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
-			if (matrix[i][j] === 0) mardedRow[i] = markedCol[j] = true
+			if (matrix[i][j] === 0) markedRow[i] = markedCol[j] = true
 		}
 	}
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
-			if (mardedRow[i] || markedCol[j]) matrix[i][j] = 0
+			if (markedRow[i] || markedCol[j]) matrix[i][j] = 0
 		}
 	}
 }
@@ -485,11 +486,11 @@ var sortColors = function (nums) {
 		p1 = 0,
 		p2 = nums.length - 1
 	while (cur <= p2) {
-    //2放后
+		//2放后
 		if (nums[cur] === 2) {
 			;[nums[cur], nums[p2--]] = [nums[p2], nums[cur]]
-		//0放前
-    } else if (nums[cur] === 0) {
+			//0放前
+		} else if (nums[cur] === 0) {
 			;[nums[cur++], nums[p1++]] = [nums[p1], nums[cur]]
 		} else {
 			cur++
@@ -556,7 +557,7 @@ var merge = (nums1, m, nums2, n) => {
 //brute force O(n*k) - O(1)
 var rotate = function (nums, k) {
 	const len = nums.length
-  //翻转次数
+	//翻转次数
 	for (let i = 0; i < k % len; i++) {
 		let previous = nums[len - 1]
 		//每次向前滚一下
@@ -579,9 +580,6 @@ var rotate = (nums, k) => {
 }
 
 //数组翻转 O(n) - O(1)
-// 1 翻转所有元素
-// 2 翻转 [0, k\bmod n - 1][0,kmodn−1] 区间的元素
-// 3 翻转 [k\bmod n, n - 1][kmodn,n−1] 区间的元素
 var rotate = function (nums, k) {
 	const len = nums.length
 	k %= len
