@@ -299,7 +299,7 @@ var rotateRight = function (head, k) {
 	if (k === 0 || !head || !head.next) return head
 	let len = 1,
 		cur = head
-	//get lenth
+	//get length
 	//len initial is 1, so from cur.next begin loop， or cur.next = head throw null error
 	while (cur.next) {
 		cur = cur.next

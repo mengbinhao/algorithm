@@ -1250,9 +1250,7 @@ var lowestCommonAncestor = function (root, p, q) {
 	//if (!root || root === p || root === q) return root
 	if (!root) return root
 	if (root === p || root === q) return root
-	//f_lson
 	const lSon = lowestCommonAncestor(root.left, p, q)
-	//f_rson
 	const rSon = lowestCommonAncestor(root.right, p, q)
 	//下面两句合二为一
 	//return left === null ? right : right === null ? left : root
