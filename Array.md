@@ -263,6 +263,62 @@ var jump = function (nums) {
 }
 ```
 
+### [48.==旋转图像==](https://leetcode.cn/problems/rotate-image/)
+
+```javascript
+//非原地旋转
+var rotate = function (matrix) {
+	const n = matrix.length
+	const arr = Array.from({ length: n }, () => new Array(n))
+	for (let i = 0; i < n; i++) {
+		for (let j = 0; j < n; j++) {
+			arr[j][n - i - 1] = matrix[i][j]
+		}
+	}
+	for (let i = 0; i < n; i++) {
+		for (let j = 0; j < n; j++) {
+			matrix[i][j] = arr[i][j]
+		}
+	}
+}
+
+//原地旋转，找到4个旋转坐标规律
+var rotate = function (matrix) {
+	const n = matrix.length
+	//i只需要走一半
+	for (let i = 0; i < Math.floor(n / 2); i++) {
+		//j考虑奇偶两种情况，当n为奇数，矩阵中间点无需旋转
+		for (let j = 0; j < Math.floor((n + 1) / 2); j++) {
+			const temp = matrix[i][j]
+			matrix[i][j] = matrix[n - j - 1][i]
+			matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1]
+			matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1]
+			matrix[j][n - i - 1] = temp
+		}
+	}
+}
+
+//原地翻转两次
+var rotate = function (matrix) {
+	const n = matrix.length
+	//上下翻转
+	for (let i = 0; i < Math.floor(n / 2); i++) {
+		for (let j = 0; j < n; j++) {
+			;[matrix[n - i - 1][j], matrix[i][j]] = [
+				matrix[i][j],
+				matrix[n - i - 1][j],
+			]
+		}
+	}
+	//左下翻转右上
+	for (let i = 1; i < n; i++) {
+		for (let j = 0; j < i; j++) {
+			;[matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]]
+		}
+	}
+}
+```
+
 ### [54.==螺旋矩阵==](https://leetcode-cn.com/problems/spiral-matrix/)
 
 ```javascript {.line-numbers}
@@ -478,6 +534,46 @@ var setZeroes = function (matrix) {
 }
 ```
 
+### [74.搜索二维矩阵](https://leetcode.cn/problems/search-a-2d-matrix/)
+
+```javascript
+var searchMatrix = function (matrix, target) {
+	const rowIndex = binarySearchFirstColumn(matrix, target)
+	if (rowIndex < 0) return false
+	return binarySearchRow(matrix[rowIndex], target)
+}
+
+const binarySearchFirstColumn = (matrix, target) => {
+	let low = 0,
+		high = matrix.length - 1
+	while (low <= high) {
+		const mid = Math.floor((high + low) / 2)
+		if (matrix[mid][0] <= target) {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	return high
+}
+
+const binarySearchRow = (row, target) => {
+	let low = 0,
+		high = row.length - 1
+	while (low <= high) {
+		const mid = Math.floor((high - low) / 2) + low
+		if (row[mid] == target) {
+			return true
+		} else if (row[mid] > target) {
+			high = mid - 1
+		} else {
+			low = mid + 1
+		}
+	}
+	return false
+}
+```
+
 ### [75.==颜色分类 M==](https://leetcode-cn.com/problems/sort-colors/)
 
 ```javascript
@@ -644,6 +740,35 @@ var productExceptSelf = function (nums) {
 		r *= nums[i]
 	}
 	return ret
+}
+```
+
+### [240.搜索二维矩阵 II](https://leetcode.cn/problems/search-a-2d-matrix-ii/)
+
+```javascript
+var searchMatrix = function (matrix, target) {
+	for (const row of matrix) {
+		const index = search(row, target)
+		if (index >= 0) return true
+	}
+	return false
+}
+
+const search = (nums, target) => {
+	let low = 0,
+		high = nums.length - 1
+	while (low <= high) {
+		const mid = Math.floor((high - low) / 2) + low
+		const num = nums[mid]
+		if (num === target) {
+			return mid
+		} else if (num > target) {
+			high = mid - 1
+		} else {
+			low = mid + 1
+		}
+	}
+	return -1
 }
 ```
 
