@@ -616,6 +616,8 @@ var removeDuplicates = function (nums) {
 ### [88.==合并两个有序数组 E==](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
+//可以使用额外的m+n空间像合并链表一样一个一个复制
+
 //最直观的方法是先将数组合并再排序
 var merge = function (nums1, m, nums2, n) {
 	nums1.splice(m, nums1.length - m, ...nums2)
@@ -822,6 +824,33 @@ var intersection = function (nums1, nums2) {
 		}
 	}
 	return ret
+}
+```
+
+### [498.对角线遍历](https://leetcode.cn/problems/diagonal-traverse/)
+
+```javascript {.line-numbers}
+var findDiagonalOrder = function (mat) {
+	const m = mat.length
+	const n = mat[0].length
+	const res = new Array(m * n).fill(0)
+	let pos = 0
+	for (let i = 0; i < m + n - 1; i++) {
+		if (i % 2 === 1) {
+			let x = i < n ? 0 : i - n + 1
+			let y = i < n ? i : n - 1
+			while (x < m && y >= 0) {
+				res[pos++] = mat[x++][y--]
+			}
+		} else {
+			let x = i < m ? i : m - 1
+			let y = i < m ? 0 : i - m + 1
+			while (x >= 0 && y < n) {
+				res[pos++] = mat[x--][y++]
+			}
+		}
+	}
+	return res
 }
 ```
 

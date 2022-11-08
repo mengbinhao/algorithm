@@ -125,7 +125,6 @@ var majorityElement = function (nums) {
 //hash O(n)
 var majorityElement = function(nums) {
   const map = {}
-	// >>是右移运算符，意思是除以2
   const n = nums.length >> 1
   for(let i = 0; i < nums.length; i++){
       map[nums[i]] = map[nums[i]] !== undefined ? map[nums[i]] + 1 : 1
@@ -133,7 +132,7 @@ var majorityElement = function(nums) {
   }
 }
 
-//投票算法 O(n) - O(1) best
+//best 投票算法 O(n) - O(1)
 var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
@@ -271,11 +270,27 @@ var majorityElement = function (nums) {
 
 ```javascript {.line-numbers}
 var missingNumber = function (nums) {
-	const len = nums.length
-	let sum = ((1 + len) * len) / 2
-	for (let i = 0; i < len; i++) {
-		sum -= nums[i]
+	nums.sort((a, b) => a - b)
+	const n = nums.length
+	for (let i = 0; i < n; i++) {
+		if (nums[i] !== i) return i
 	}
-	return sum
+	return n
+}
+
+var missingNumber = function (nums) {
+	const set = new Set()
+	const n = nums.length
+	for (let i = 0; i < n; i++) {
+		set.add(nums[i])
+	}
+	let missing = -1
+	for (let i = 0; i <= n; i++) {
+		if (!set.has(i)) {
+			missing = i
+			break
+		}
+	}
+	return missing
 }
 ```

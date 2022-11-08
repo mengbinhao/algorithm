@@ -300,14 +300,13 @@ var maxSubArray = function (nums) {
 	return max
 }
 
-//前缀和优化
+//前缀和
 //S(i)表示以 0(包括 0)开始加到 i(包括 i)的前缀和,那么S(j) - S(i - 1)就等于从i开始(包括 i)加到j(包括 j)的前缀和
 //只需要遍历一次计算出所有的 S(i), 其中 i = 0,1,2....,n-1.然后我们再减去之前的S(k),其中 k = 0，1，i - 1,中的最小值即可
 //O(n) - O(1)
 var maxSubArray = function(nums) {
   let preSum = 0, maxPreSum = nums[0], minPreSum = 0
   for (let num of nums) {
-		//prefix sum
     preSum += num
     maxPreSum = Math.max(maxPreSum, preSum - minPreSum)
     minPreSum = Math.min(minPreSum, preSum)

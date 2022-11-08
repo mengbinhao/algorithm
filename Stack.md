@@ -378,9 +378,7 @@ var calculate = function (s) {
 	let num = 0
 	const n = s.length
 	for (let i = 0; i < n; i++) {
-		if (!isNaN(+s[i]) && s[i] !== ' ') {
-			num = num * 10 + +s[i]
-		}
+		if (!isNaN(+s[i]) && s[i] !== ' ') num = num * 10 + +s[i]
 		if (isNaN(+s[i]) || i === n - 1) {
 			switch (preSign) {
 				case '+':

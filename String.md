@@ -56,7 +56,7 @@ var longestCommonPrefix = function (strs) {
 	function getLCP(s1, s2) {
 		const length = Math.min(s1.length, s2.length)
 		let idx = 0
-		while (idx < length && s1.charAt(idx) === s2.charAt(idx)) idx++
+		while (idx < length && s1[idx] === s2[idx]) idx++
 		return s1.substring(0, idx)
 	}
 }
@@ -129,6 +129,47 @@ var reverseWords = function (s) {
 	//add last word
 	queue.unshift(word)
 	return queue.join(' ')
+}
+```
+
+### [165. ==比较版本号==](https://leetcode.cn/problems/compare-version-numbers/)
+
+```javascript {.line-numbers}
+//O(n+m) - O(n+m)
+var compareVersion = function (version1, version2) {
+	const v1 = version1.split('.')
+	const v2 = version2.split('.')
+	for (let i = 0; i < v1.length || i < v2.length; i++) {
+		let x = 0,
+			y = 0
+		if (i < v1.length) x = parseInt(v1[i]) //这步已处理前导零
+		if (i < v2.length) y = parseInt(v2[i]) //这步已处理前导零
+		if (x > y) return 1
+		if (x < y) return -1
+	}
+	return 0
+}
+
+//O(n+m) - O(1)
+var compareVersion = function (version1, version2) {
+	const n = version1.length,
+		m = version2.length
+	let i = 0,
+		j = 0
+	while (i < n || j < m) {
+		let x = 0
+		for (; i < n && version1[i] !== '.'; ++i) {
+			x = x * 10 + version1[i].charCodeAt() - '0'.charCodeAt()
+		}
+		i++ // 跳过点号
+		let y = 0
+		for (; j < m && version2.charAt(j) !== '.'; ++j) {
+			y = y * 10 + version2[j].charCodeAt() - '0'.charCodeAt()
+		}
+		j++ // 跳过点号
+		if (x !== y) return x > y ? 1 : -1
+	}
+	return 0
 }
 ```
 

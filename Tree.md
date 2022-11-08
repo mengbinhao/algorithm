@@ -1410,13 +1410,11 @@ var pathSum = function (root, sum) {
 ```javascript {.line-numbers}
 var maxPathSum = function (root) {
 	let retMax = Number.MIN_SAFE_INTEGER
-
 	const dfs = (root) => {
 		if (!root) return 0
 		//if negative, then return 0 to outerSum
 		const left = Math.max(dfs(root.left), 0)
 		const right = Math.max(dfs(root.right), 0)
-
 		//update innerSum = left + right + root.val
 		retMax = Math.max(retMax, left + right + root.val)
 		return Math.max(left, right) + root.val
