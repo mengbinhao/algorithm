@@ -33,11 +33,12 @@ var longestCommonPrefix = function (strs) {
 	for (let i = 0, s0Len = strs[0].length; i < s0Len; i++) {
 		for (let j = 1, strsLen = strs.length; j < strsLen; j++) {
 			//strs[j]已经到头了
-			if (i === strs[j].length || strs[j].charAt(i) !== strs[0].charAt(i)) {
+			if (i === strs[j].length || strs[j][i] !== strs[0][i]) {
 				return strs[0].substring(0, i)
 			}
 		}
 	}
+	//strs[0]都找完了
 	return strs[0]
 }
 
@@ -142,8 +143,8 @@ var compareVersion = function (version1, version2) {
 	for (let i = 0; i < v1.length || i < v2.length; i++) {
 		let x = 0,
 			y = 0
-		if (i < v1.length) x = parseInt(v1[i]) //这步已处理前导零
-		if (i < v2.length) y = parseInt(v2[i]) //这步已处理前导零
+		if (i < v1.length) x = parseInt(v1[i]) //parseInt已处理前导零
+		if (i < v2.length) y = parseInt(v2[i])
 		if (x > y) return 1
 		if (x < y) return -1
 	}

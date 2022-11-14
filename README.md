@@ -11,7 +11,7 @@ Some frequent Leetcode questions implement by JavaScrip
 
 #### 无重复字符的最长子串
 
-- slidewindow
+- SlideWindow
 
 #### 最长连续序列
 

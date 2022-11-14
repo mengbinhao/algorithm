@@ -69,7 +69,7 @@ var longestPalindrome = function (s) {
 	}
 }
 
-//中心扩展法 O(n^2) - O(1)
+//中心扩展法 O(n^2) - O(1) better version
 var longestPalindrome = function (s) {
 	if (!s) return ''
 	const len = s.length
