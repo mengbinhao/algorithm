@@ -696,8 +696,9 @@ var lengthOfLIS = function (nums) {
 ```javascript {.line-numbers}
 var integerBreak = function (n) {
 	const dp = new Array(n + 1).fill(0)
-	//dp[i]：分拆数字i，可以得到的最大乘积为dp[i]
-	//dp[0]、dp[1]没意义
+	//dp[i]：拆分数字i，可以得到的最大乘积为dp[i]
+	//dp[0]、dp[1]没意义,初始化成0不影响最终结果
+  //dp[0] = 0, dp[1] = 0
 	dp[2] = 1
 
 	for (let i = 3; i <= n; i++) {
