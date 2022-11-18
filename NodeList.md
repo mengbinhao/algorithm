@@ -163,7 +163,6 @@ var mergeKLists = function (lists) {
 			return l2
 		}
 	}
-	//遍历两两合并
 	let ret = lists[0]
 	for (let i = 1; i < len; i++) {
 		ret = mergeTwoLists(ret, lists[i])
@@ -282,7 +281,7 @@ function reverse(a, b) {
 	let prev = null,
 		cur = a,
 		next
-	while (cur != b) {
+	while (cur !== b) {
 		next = cur.next
 		cur.next = prev
 		prev = cur
@@ -658,15 +657,15 @@ var insertionSortList = function (head) {
 //O(n) - O(n)
 var getIntersectionNode = function (headA, headB) {
 	const visited = new Set()
-	let temp = headA
-	while (temp !== null) {
-		visited.add(temp)
-		temp = temp.next
+	let cur = headA
+	while (cur !== null) {
+		visited.add(cur)
+		cur = cur.next
 	}
-	temp = headB
-	while (temp !== null) {
-		if (visited.has(temp)) return temp
-		temp = temp.next
+	cur = headB
+	while (cur !== null) {
+		if (visited.has(cur)) return cur
+		cur = cur.next
 	}
 	return null
 }
@@ -709,7 +708,6 @@ var reverseList = function (head) {
 	let prev = null,
 		cur = head,
 		next
-
 	while (cur) {
 		next = cur.next
 		//change pointer ..3->2->1->null

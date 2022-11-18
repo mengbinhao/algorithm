@@ -114,16 +114,17 @@ var longestValidParentheses = function (s) {
 	const dp = new Array(len).fill(0)
 	//dp[0] = 0
 	for (let i = 1; i < len; i++) {
+     //符合定义
 		if (s[i] === ')') {
 			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串       形如 '……()'
-				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
-				//第一个条件表示前面还有括号(可省略)
+				dp[i] = (i -2 >= 0 ? dp[i - 2] : 0) + 2
+				//第一个条件表示前面还有括号(由于js特性可省略),但为语义清晰需加上
 				//第二个条件前面的括号跟当前循环的)可以匹配，即+2
 			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
 				//内部的有效长度 + 前面的有效长度 + 2
-				dp[i] = dp[i - 1] + (i - dp[i - 1] >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
+				dp[i] = dp[i - 1] + (i - dp[i - 1] - 2 >= 0 ? dp[i - dp[i - 1] - 2] : 0) + 2
 			}
 			ret = Math.max(ret, dp[i])
 		}
