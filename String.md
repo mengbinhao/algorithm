@@ -153,18 +153,18 @@ var compareVersion = function (version1, version2) {
 
 //O(n+m) - O(1)
 var compareVersion = function (version1, version2) {
-	const n = version1.length,
-		m = version2.length
+	const len1 = version1.length,
+		len2 = version2.length
 	let i = 0,
 		j = 0
-	while (i < n || j < m) {
+	while (i < len1 || j < len2) {
 		let x = 0
-		for (; i < n && version1[i] !== '.'; ++i) {
+		for (; i < len1 && version1[i] !== '.'; i++) {
 			x = x * 10 + version1[i].charCodeAt() - '0'.charCodeAt()
 		}
 		i++ // 跳过点号
 		let y = 0
-		for (; j < m && version2.charAt(j) !== '.'; ++j) {
+		for (; j < len2 && version2.charAt(j) !== '.'; j++) {
 			y = y * 10 + version2[j].charCodeAt() - '0'.charCodeAt()
 		}
 		j++ // 跳过点号
@@ -332,17 +332,22 @@ var repeatedSubstringPattern = function (s) {
 
 ```javascript {.line-numbers}
 var reverseStr = function (s, k) {
-	const arr = s.split(''),
-		len = arr.length
+	const len = s.length
+	const arr = Array.from(s)
 	for (let i = 0; i < len; i += 2 * k) {
-		let l = i,
-			//本次翻转的结束位置
-			r = Math.min(i + k - 1, len)
-		while (l < r) {
-			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
-		}
+		reverse(arr, i, Math.min(i + k, len) - 1)
 	}
 	return arr.join('')
+}
+
+const reverse = (arr, l, r) => {
+	while (l < r) {
+		const temp = arr[l]
+		arr[l] = arr[r]
+		arr[r] = temp
+		l++
+		r--
+	}
 }
 ```
 
@@ -478,7 +483,7 @@ var toLowerCase = function (str) {
 ### [917. ==仅仅反转字母==](https://leetcode-cn.com/problems/reverse-only-letters/)
 
 ```javascript {.line-numbers}
-//use stack
+//use stack O(n) - O(n)
 var reverseOnlyLetters = function (S) {
 	const stack = []
 	const reg = /[a-zA-Z]/
@@ -494,7 +499,7 @@ var reverseOnlyLetters = function (S) {
 	return ret
 }
 
-//two point
+//two point O(n) - O(1)
 var reverseOnlyLetters = function (s) {
 	const len = s.length
 	const arr = [...s]
@@ -530,9 +535,28 @@ var replaceSpace = function (s) {
 	}
 	return arr.join('')
 }
+
+//worse version
+var replaceSpace = function (s) {
+	let count = 0
+	for (let c of s) if (c === ' ') count++
+	const len = s.length
+	const arr = new Array(len + 2 * count)
+	let idx = 0
+	for (let i = 0; i < len; i++) {
+		if (s[i] !== ' ') {
+			arr[idx++] = s[i]
+		} else {
+			arr[idx++] = '%'
+			arr[idx++] = '2'
+			arr[idx++] = '0'
+		}
+	}
+	return arr.join('')
+}
 ```
 
-### [剑指 Offer 58 - II. ==左旋转字符串==](https://leetcode.cn/problems/ti-huan-kong-ge-lcof/)
+### [剑指 Offer 58 - II. ==左旋转字符串==](https://leetcode.cn/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/)
 
 ```javascript {.line-numbers}
 var reverseLeftWords = function (s, n) {

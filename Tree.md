@@ -404,7 +404,6 @@ var levelOrder = function (root) {
 var zigzagLevelOrder = function (root) {
 	const ret = [],
 		queue = []
-
 	root && queue.push(root)
 	let direction = true
 	while (queue.length > 0) {
@@ -557,11 +556,10 @@ var verticalTraversal = function (root) {
 ##### [98.==验证二叉搜索树==](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```javascript {.line-numbers}
-//In-order
+//In-order遍历是有序的
 var isValidBST = function (root) {
 	const stack = []
 	let prev = -Infinity
-
 	while (root || stack.length) {
 		while (root) {
 			stack.push(root)
@@ -940,7 +938,6 @@ var isSymmetric = function (root) {
 var isSymmetric = function (root) {
 	if (!root) return true
 	const queue = [root, root]
-
 	while (queue.length) {
 		//每次两两对比
 		const l = queue.shift()
@@ -1233,12 +1230,32 @@ var binaryTreePaths = function (root) {
 			ret.push(curPath + root.val)
 			return
 		}
-		curPath += root.val + '->'
 		//这里隐藏了回溯
-		dfs(root.left, curPath)
-		dfs(root.right, curPath)
+		dfs(root.left, curPath + root.val + '->')
+		dfs(root.right, curPath + root.val + '->')
 	}
 	dfs(root, '')
+	return ret
+}
+
+//BFS
+var binaryTreePaths = function (root) {
+	if (!root) return []
+	let ret = [],
+		queue = [root, root.val + '']
+	while (queue.length) {
+		const cur = queue.shift(),
+			curPath = queue.shift()
+		if (!cur.left && !cur.right) ret.push(curPath)
+		if (cur.left) {
+			queue.push(cur.left)
+			queue.push(`${curPath}->${cur.left.val}`)
+		}
+		if (cur.right) {
+			queue.push(cur.right)
+			queue.push(`${curPath}->${cur.right.val}`)
+		}
+	}
 	return ret
 }
 ```
@@ -1344,7 +1361,7 @@ var hasPathSum = function (root, sum) {
 	)
 }
 
-var hasPathSum = function (root, targetSum) {
+var hasPathSum = function (root, sum) {
 	if (!root) return false
 	//双queue，一个统计节点，一个统计节点值
 	const queNode = [root],
@@ -1352,15 +1369,15 @@ var hasPathSum = function (root, targetSum) {
 
 	while (queNode.length) {
 		const cur = queNode.shift()
-		const acc = queVal.shift()
-		if (!cur.left && !cur.right) if (acc === targetSum) return true
+		const accVal = queVal.shift()
+		if (!cur.left && !cur.right) if (accVal === sum) return true
 		if (cur.left) {
 			queNode.push(cur.left)
-			queVal.push(cur.left.val + acc)
+			queVal.push(cur.left.val + accVal)
 		}
 		if (cur.right) {
 			queNode.push(cur.right)
-			queVal.push(cur.right.val + acc)
+			queVal.push(cur.right.val + accVal)
 		}
 	}
 	return false
@@ -1500,7 +1517,6 @@ var buildTree = function (inorder, postorder) {
 
 	function helper(postorder, postLeft, postRight, map, inLeft, inRight) {
 		if (inLeft > inRight || postLeft > postRight) return null
-
 		const rootVal = postorder[postRight],
 			root = new TreeNode(rootVal),
 			pIndex = map.get(rootVal)
