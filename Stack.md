@@ -147,6 +147,7 @@ var trap = function (height) {
 			rMax = -Infinity
 		for (let j = i; j >= 0; j--) lMax = Math.max(lMax, height[j])
 		for (let j = i; j < len; j++) rMax = Math.max(rMax, height[j])
+    //若自己最高，结果是0
 		ret += Math.min(lMax, rMax) - height[i]
 	}
 	return ret
@@ -164,9 +165,9 @@ var trap = function (height) {
 		//当前柱子比栈顶的柱子高
 		while (stack.length && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
-			//左边没有柱子或更高的柱子了
+			//左边没有柱子及无法形成积水
 			if (stack.length === 0) break
-			//计算右边与当前栈顶左边界的距离,即弹出上面那个val后的栈顶
+			//计算右边与当前栈顶左边界的距离,即弹出上面那个item后的栈顶
 			const distance = i - stack[stack.length - 1] - 1
 			const boundedHeight =
 				Math.min(height[i], height[stack[stack.length - 1]]) - height[idx]
@@ -271,7 +272,7 @@ var largestRectangleArea = function (heights) {
 	const len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
-	//每根柱子即每个i对应的左右端点坐标
+	//每根柱子即每个i对应的左右端点坐标,即每一根柱子的左侧且最近的小于其高度的柱子
 	const left = new Array(len),
 		right = new Array(len),
 		stack = []
@@ -326,25 +327,28 @@ var largestRectangleArea = function (heights) {
 
 ```javascript {.line-numbers}
 var evalRPN = function (tokens) {
-	const stack = []
-	const isOperator = (token) => ['+', '-', '*', '/'].includes(token)
-	let ret
+	let stack = []
+	const isOperators = (val) => ['+', '-', '*', '/'].includes(val)
 	for (let token of tokens) {
-		if (!isOperator(token)) {
+		if (!isOperators(token)) {
 			stack.push(token)
 		} else {
 			const r = +stack.pop()
 			const l = +stack.pop()
-			if (token === '+') {
-				ret = l + r
-			} else if (token === '-') {
-				ret = l - r
-			} else if (token === '*') {
-				ret = l * r
-			} else if (token === '/') {
-				ret = l / r
+			switch (token) {
+				case '+':
+					stack.push(l + r)
+					break
+				case '-':
+					stack.push(l - r)
+					break
+				case '*':
+					stack.push(l * r)
+					break
+				case '/':
+					stack.push((l / r) | 0)
+					break
 			}
-			stack.push(parseInt(ret))
 		}
 	}
 	return stack.pop()
@@ -352,7 +356,7 @@ var evalRPN = function (tokens) {
 
 //more simple
 var evalRPN = function (tokens) {
-	const s = new Map([
+	const operations = new Map([
 		['+', (a, b) => a * 1 + b * 1],
 		['-', (a, b) => b - a],
 		['*', (a, b) => b * a],
@@ -360,10 +364,10 @@ var evalRPN = function (tokens) {
 	])
 	const stack = []
 	for (const i of tokens) {
-		if (!s.has(i)) {
+		if (!operations.has(i)) {
 			stack.push(i)
 		} else {
-			stack.push(s.get(i)(stack.pop(), stack.pop()))
+			stack.push(operations.get(i)(stack.pop(), stack.pop()))
 		}
 	}
 	return stack.pop()
@@ -374,13 +378,14 @@ var evalRPN = function (tokens) {
 
 ```javascript {.line-numbers}
 var calculate = function (s) {
-	const stack = []
-	let preSign = '+'
-	let num = 0
-	const n = s.length
-	for (let i = 0; i < n; i++) {
-		if (!isNaN(+s[i]) && s[i] !== ' ') num = num * 10 + +s[i]
-		if (isNaN(+s[i]) || i === n - 1) {
+	const isNumber = (val) => typeof val === 'number' && val === val
+	let stack = [],
+		num = 0,
+		preSign = '+'
+	for (let i = 0, len = s.length; i < len; i++) {
+		if (isNumber(+s[i]) && s[i] !== ' ') num = num * 10 + +s[i]
+		//不能else，当最后一个字符时必须计算
+		if (!isNumber(+s[i]) || i === len - 1) {
 			switch (preSign) {
 				case '+':
 					stack.push(num)
@@ -391,18 +396,15 @@ var calculate = function (s) {
 				case '*':
 					stack.push(stack.pop() * num)
 					break
-				default:
+				case '/':
 					stack.push((stack.pop() / num) | 0)
 			}
+			//取字符串
 			preSign = s[i]
 			num = 0
 		}
 	}
-	let ans = 0
-	while (stack.length) {
-		ans += stack.pop()
-	}
-	return ans
+	return stack.reduce((acc, val) => acc + val)
 }
 ```
 
@@ -410,19 +412,20 @@ var calculate = function (s) {
 
 ```javascript {.line-numbers}
 var decodeString = function (s) {
-	const isNumber = (val) => {
-		return typeof +val === 'number' && +val === +val
-	}
+	const isNumber = (val) => typeof +val === 'number' && val === val
 	const stack = []
 	for (let c of s) {
 		if (c === ']') {
 			let repeatStr = '',
 				repeatCount = ''
+      //一直加到[
 			while (stack.length > 0 && stack[stack.length - 1] !== '[')
 				repeatStr = stack.pop() + repeatStr
 			//pop [
 			stack.pop()
-			while (stack.length > 0 && isNumber(stack[stack.length - 1]))
+      //['aaa', '2' ...]
+      //注意转换类型
+			while (stack.length > 0 && isNumber(+stack[stack.length - 1]))
 				repeatCount = stack.pop() + repeatCount
 			stack.push(repeatStr.repeat(+repeatCount))
 		} else {

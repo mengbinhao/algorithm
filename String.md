@@ -167,7 +167,7 @@ var compareVersion = function (version1, version2) {
 		for (; j < len2 && version2.charAt(j) !== '.'; j++) {
 			y = y * 10 + version2[j].charCodeAt() - '0'.charCodeAt()
 		}
-		j++ // 跳过点号
+		j++ // 同上
 		if (x !== y) return x > y ? 1 : -1
 	}
 	return 0
@@ -342,11 +342,7 @@ var reverseStr = function (s, k) {
 
 const reverse = (arr, l, r) => {
 	while (l < r) {
-		const temp = arr[l]
-		arr[l] = arr[r]
-		arr[r] = temp
-		l++
-		r--
+    [arr[l++], arr[r--]] = [arr[r], arr[l]]
 	}
 }
 ```

@@ -65,6 +65,7 @@ var longestPalindrome = function (s) {
 			l--
 			r++
 		}
+		//slice截的是[i...j)
 		return s.slice(l + 1, r)
 	}
 }

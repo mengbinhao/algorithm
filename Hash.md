@@ -4,12 +4,12 @@
 //obj version
 var groupAnagrams = function (strs) {
 	const hash = {}
-  for (let str of strs) {
-    //sort后相同的字母组成的不同的字符串肯定是相同的
-    const key = [...str].sort().toString()
-    hash[key] ? hash[key].push(str) :  hash[key] = [str]
-  }
-  return Object.values(hash)
+	for (let str of strs) {
+		//sort后相同的字母组成的不同的字符串肯定是相同的
+		const key = [...str].sort().toString()
+		hash[key] ? hash[key].push(str) : (hash[key] = [str])
+	}
+	return Object.values(hash)
 }
 
 //使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
@@ -35,7 +35,7 @@ var longestConsecutive = function (nums) {
 	const set = new Set(nums)
 	let ret = 0
 	for (let num of nums) {
-    //当不存在num - 1时才从num开始枚举以跳过重复枚举的情况
+		//当不存在num - 1时才从num开始枚举以跳过重复枚举的情况
 		if (!set.has(num - 1)) {
 			let cur = num,
 				curMaxLen = 1
@@ -84,7 +84,7 @@ var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
 	const arr = Array.from({ length: 26 }, () => 0),
 		len = s.length
-  const base = 'a'.charCodeAt(0)
+	const base = 'a'.charCodeAt(0)
 	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - base]++
 	for (let i = 0; i < len; i++) {
 		if (--arr[t.charCodeAt(i) - base] < 0) return false
