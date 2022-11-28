@@ -16,15 +16,15 @@ var reverse = function (x) {
 
 //advanced version
 var reverse = function (x) {
-	let result = 0
+	let ret = 0
 	while (x !== 0) {
 		//x % 10无需管正负
-		result = result * 10 + (x % 10)
+		ret = ret * 10 + (x % 10)
 		//强转32位有符号整数，正数向下取整，负数向上取整
 		x = (x / 10) | 0
 	}
 	//超过32位的整数转换结果不等于自身，用作溢出判断
-	return (result | 0) === result ? result : 0
+	return (ret | 0) === ret ? ret : 0
 }
 ```
 
@@ -83,7 +83,6 @@ var myPow = function (x, n) {
 	if (n === 0) return 1
 	if (n === 1) return x
 	if (n < 0) return 1 / myPow(x, -n)
-
 	let ret = 1
 	while (n > 1) {
 		if (n % 2 === 1) {
@@ -217,7 +216,7 @@ var isHappy = function (n) {
 }
 ```
 
-### [229.==求众数 II==](https://leetcode-cn.com/problems/majority-element-ii/)
+### [229.多数元素 II](https://leetcode-cn.com/problems/majority-element-ii/)
 
 ```javascript
 var majorityElement = function (nums) {

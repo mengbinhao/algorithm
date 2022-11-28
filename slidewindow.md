@@ -83,7 +83,6 @@ var minWindow = function (s, t) {
 		valid = 0
 
 	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
-
 	while (r < sLen) {
 		const rChar = s[r++]
 		//过滤需要的字符
@@ -99,7 +98,7 @@ var minWindow = function (s, t) {
 			}
 			//更新左边界
 			const lChar = s[l++]
-			//过滤需要的字符
+			//过滤需要的字符,行为同上面加的时候
 			if (need[lChar]) {
 				if (window[lChar] === need[lChar]) valid--
 				window[lChar]--
@@ -124,7 +123,7 @@ var minSubArrayLen = function (s, nums) {
 			sum += nums[j]
 			if (sum >= s) {
 				ret = Math.min(ret, j - i + 1)
-				//因找最短,找到即返回
+				//找最短,找到即返回
 				break
 			}
 		}
@@ -138,27 +137,25 @@ var minSubArrayLen = function (s, nums) {
 var minSubArrayLen = function (s, nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	let ret = Number.MAX_SAFE_INTEGER,
-		start = 0, //表示滑动窗口的起始位置
-		end = 0, //表示滑动窗口的结束位置
+	let ret = Infinity,
+		l = 0, //表示滑动窗口的起始位置
+		r = 0, //表示滑动窗口的结束位置
 		sum = 0
-	while (end < len) {
-		sum += nums[end]
-		//update start
+	while (r < len) {
+		sum += nums[r++]
 		while (sum >= s) {
-			ret = Math.min(ret, end - start + 1)
-			sum -= nums[start++]
+			ret = Math.min(ret, r - l)
+			sum -= nums[l++]
 		}
-		end++
 	}
-	return ret === Number.MAX_SAFE_INTEGER ? 0 : ret
+	return ret === Infinity ? 0 : ret
 }
 ```
 
 ### [239.==滑动窗口最大值 H==](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 ```javascript
-//brute force O(n \* k) - O(n - k +1)
+//brute force O(n * k) - O(k)
 var maxSlidingWindow = function (nums, k) {
 	let slideWindow = []
 	const ret = [],
@@ -216,9 +213,7 @@ var maxSlidingWindow = function (nums, k) {
 var findAnagrams = function (s, p) {
 	let sLen = s.length,
 		pLen = p.length
-
 	if (sLen === 0 || pLen === 0 || pLen > sLen) return []
-
 	let left = 0,
 		right = 0,
 		valid = 0,
@@ -226,25 +221,16 @@ var findAnagrams = function (s, p) {
 		windows = {},
 		ret = []
 
-	for (let c of p) {
-		need[c] ? need[c]++ : (need[c] = 1)
-	}
-
+	for (let c of p) need[c] ? need[c]++ : (need[c] = 1)
 	while (right < sLen) {
-		let rightChar = s[right]
-
+		let rightChar = s[right++]
 		if (need[rightChar]) {
 			windows[rightChar] ? windows[rightChar]++ : (windows[rightChar] = 1)
 			if (windows[rightChar] === need[rightChar]) valid++
 		}
-		right++
-
 		while (right - left >= pLen) {
-			if (valid === Object.keys(need).length) {
-				ret.push(left)
-			}
-			let leftChar = s[left]
-			left++
+			if (valid === Object.keys(need).length) ret.push(left)
+			let leftChar = s[left++]
 			if (need[leftChar]) {
 				if (windows[leftChar] === need[leftChar]) valid--
 				windows[leftChar]--
@@ -268,9 +254,7 @@ var checkInclusion = function (s, t) {
 		r = 0,
 		//表示窗口中满足 need 条件的字符个数,如果 valid 和 need.size 的大小相同,则说明窗口已满足条件,已经完全覆盖了串t
 		valid = 0
-
 	for (let c of s) need[c] ? need[c]++ : (need[c] = 1)
-
 	while (r < tLen) {
 		const rChar = t[r++]
 		//过滤需要的字符

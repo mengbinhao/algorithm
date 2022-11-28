@@ -35,7 +35,7 @@
   - 24 >> 1
   - 24 << 1
 
-- 判断奇数偶数
+- 判断奇偶数
 
   - `x & 1 === 1` or `x & 1 === 0` 判断奇偶 `x % 2 === 1`
 
@@ -43,11 +43,11 @@
 
   ```javascript
   ;[a, b] = [b, a]
-
+  
   a = a + b
   b = a - b
   a = a - b
-
+  
   a = a ^ b
   b = a ^ b
   a = a ^ b
@@ -72,6 +72,7 @@ var singleNumber = function (nums) {
 
 ```javascript {.line-numbers}
 //1 HashSet,将输入数组存储到 HashSet,然后使用HashSet中数字和的三倍与数组之和比较
+
 //2 HashMap,遍历输入数组,统计每个数字出现的次数,最后返回出现次数为 1 的数字
 var singleNumber = function (nums) {
 	const map = new Map()
@@ -126,9 +127,7 @@ var singleNumber = function (nums) {
 	let index = 0,
 		ret = []
 	for (let [idx, val] of map.entries()) {
-		if (val === 1) {
-			ret[index++] = idx
-		}
+		if (val === 1) ret[index++] = idx
 	}
 	return ret
 }
@@ -136,19 +135,13 @@ var singleNumber = function (nums) {
 var singleNumber = function (nums) {
 	let bitMask = 0
 	//bitMask会保留只出现一次的两个数字之间的差异
-	for (let num of nums) {
-		bitMask ^= num
-	}
-
+	for (let num of nums) bitMask ^= num
 	//得到最右边的1,这个1要么来自x,要么来自y
 	const diff = bitMask & -bitMask
-
 	let x = 0
 	//从diff分离出x
 	for (let num of nums) {
-		if ((num & diff) !== 0) {
-			x ^= num
-		}
+		if ((num & diff) !== 0) x ^= num
 	}
 	return Array.of(x, bitMask ^ x)
 }
@@ -161,6 +154,7 @@ var titleToNumber = function (columnTitle) {
 	let ret = 0
 	for (let i = 0; i < columnTitle.length; i++) {
 		const num = columnTitle.charCodeAt(i) - 65 + 1
+    //覆盖不是累加
 		ret = ret * 26 + num
 	}
 	return ret

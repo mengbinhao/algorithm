@@ -16,6 +16,7 @@ var isValid = function (s) {
 		if (hash[c]) {
 			stack.push(hash[c])
 		} else {
+      //囊括stack为空弹出undefined的情况
 			if (c !== stack.pop()) return false
 		}
 	}
@@ -147,7 +148,7 @@ var trap = function (height) {
 			rMax = -Infinity
 		for (let j = i; j >= 0; j--) lMax = Math.max(lMax, height[j])
 		for (let j = i; j < len; j++) rMax = Math.max(rMax, height[j])
-    //若自己最高，结果是0
+    //若当前轮自己最高，结果是0
 		ret += Math.min(lMax, rMax) - height[i]
 	}
 	return ret
@@ -157,23 +158,21 @@ var trap = function (height) {
 //积水只能在低洼处形成，当后面的柱子高度比前面的低时是无法接雨水的，所以使用单调递减栈存储可能储水的柱子，当找到一根比前面高的柱子时就可以计算出能接到的雨水
 var trap = function (height) {
 	const len = height.length
-	if (len === 0) return 0
-	const stack = []
-	let i = 0,
+	let stack = [],
 		ret = 0
-	while (i < len) {
-		//当前柱子比栈顶的柱子高
+	for (let i = 0; i < len; i++) {
+		//当前柱子比栈顶的柱子高,即表示可以形成积水
 		while (stack.length && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
-			//左边没有柱子及无法形成积水
+			//左边没有柱子了，及无法形成积水
 			if (stack.length === 0) break
-			//计算右边与当前栈顶左边界的距离,即弹出上面那个item后的栈顶
+			//计算右边与当前栈顶左边界的距离, 减一才是实际距离
 			const distance = i - stack[stack.length - 1] - 1
 			const boundedHeight =
 				Math.min(height[i], height[stack[stack.length - 1]]) - height[idx]
 			ret += distance * boundedHeight
 		}
-		stack.push(i++)
+		stack.push(i)
 	}
 	return ret
 }

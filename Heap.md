@@ -15,6 +15,31 @@
 
 ```javascript {.line-numbers}
 //基于快速排序的选择方法O(n) - O(logN)
+var findKthLargest = function (nums, k) {
+	const quickSelect = (arr, l, r, index) => {
+		let idx = partition(arr, l, r)
+		if (idx === index) {
+			return arr[idx]
+		} else {
+			return idx < index
+				? quickSelect(arr, idx + 1, r, index)
+				: quickSelect(arr, l, idx - 1, index)
+		}
+	}
+	const partition = (arr, l, r) => {
+		let x = arr[r],
+			i = l - 1
+		for (let j = l; j < r; j++) {
+			if (arr[j] < x) {
+				;[arr[i], arr[j]] = [arr[j], arr[++i]]
+			}
+		}
+		;[arr[i], arr[r]] = [arr[r], arr[++i]]
+		return i
+	}
+	//返回的即是nums.length - k的下标
+	return quickSelect(nums, 0, nums.length - 1, nums.length - k)
+}
 
 //基于堆排序的选择方法
 function findKthLargest(nums, k) {
@@ -31,13 +56,11 @@ function findKthLargest(nums, k) {
 			down(arr, largest)
 		}
 	}
-
 	const buildMaxHeap = (arr) => {
 		for (let i = Math.floor(arr.length / 2) - 1; i >= 0; i--) down(arr, i)
 	}
-
 	buildMaxHeap(nums)
-	//本来是大顶堆，换一次，小的下沉，第二大上到堆顶
+	//大顶堆，换一次，小的下沉，第二大上到堆顶
 	for (let i = nums.length - 1; i >= nums.length - k + 1; i--) {
 		;[nums[i], nums[0]] = [nums[0], nums[i]]
 		len--

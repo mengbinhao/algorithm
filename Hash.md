@@ -16,13 +16,13 @@ var groupAnagrams = function (strs) {
 //best version
 var groupAnagrams = function (strs) {
 	const hash = {},
-		count = new Array(26)
+		key = new Array(26)
 	for (let str of strs) {
-		count.fill(0)
+		key.fill(0)
 		for (let i = 0, len = str.length; i < len; i++) {
-			count[str.charCodeAt(i) - 'a'.charCodeAt(0)]++
+			key[str.charCodeAt(i) - 'a'.charCodeAt(0)]++
 		}
-		hash[count] ? hash[count].push(str) : (hash[count] = [str])
+		hash[key] ? hash[key].push(str) : (hash[key] = [str])
 	}
 	return Object.values(hash)
 }

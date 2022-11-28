@@ -268,7 +268,8 @@ var swapPairs = function (head) {
 var reverseKGroup = function (head, k) {
 	let a = head,
 		b = head
-	for (let i = 0; i < k; i++) {
+	//遍历完b变成了下次翻转的头结点
+  for (let i = 0; i < k; i++) {
 		//不够数量直接返回
 		if (!b) return head
 		b = b.next
@@ -558,10 +559,10 @@ var hasCycle = function (head) {
 //标记法 O(n) - O(1)
 //或使用hash标记
 var detectCycle = function (head) {
-	const hash = new Set()
+	const visited = new Set()
 	while (head) {
-		if (hash.has(head)) return head
-		hash.add(head)
+		if (visited.has(head)) return head
+		visited.add(head)
 		head = head.next
 	}
 	return null
@@ -658,12 +659,12 @@ var insertionSortList = function (head) {
 var getIntersectionNode = function (headA, headB) {
 	const visited = new Set()
 	let cur = headA
-	while (cur !== null) {
+	while (cur) {
 		visited.add(cur)
 		cur = cur.next
 	}
 	cur = headB
-	while (cur !== null) {
+	while (cur) {
 		if (visited.has(cur)) return cur
 		cur = cur.next
 	}
@@ -672,7 +673,7 @@ var getIntersectionNode = function (headA, headB) {
 
 //O(n) - O(1)
 var getIntersectionNode = function (headA, headB) {
-	if (headA === null || headB === null) return null
+	if (!headA || !headB) return null
 	let pA = headA,
 		pB = headB
 	while (pA !== pB) {
@@ -797,6 +798,23 @@ var oddEvenList = function (head) {
 ### [876. 链表中间节点](https://leetcode-cn.com/problems/middle-of-the-linked-list/)
 
 ```javascript {.line-numbers}
+var middleNode = function (head) {
+	let n = 0,
+		cur = head
+	while (cur) {
+		n++
+		cur = cur.next
+	}
+	let k = 0
+	cur = head
+	while (k < Math.trunc(n / 2)) {
+		k++
+		cur = cur.next
+	}
+	return cur
+}
+
+//fast / slow
 var middleNode = function (head) {
 	let fast = head,
 		slow = head

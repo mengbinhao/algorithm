@@ -3,35 +3,38 @@
 ```javascript
 //version 1
 var merge = function (intervals) {
+	//precondition, 按起点排序
 	intervals.sort((a, b) => a[0] - b[0])
-	const arr = [[intervals[0][0], intervals[0][1]]]
-	for (let i = 1; i < intervals.length; i++) {
+	const ret = [[intervals[0][0], intervals[0][1]]]
+	for (let i = 1, len = intervals.length; i < len; i++) {
 		const L = intervals[i][0],
 			R = intervals[i][1]
-		if (arr[arr.length - 1][1] < L) {
-			arr.push([L, R])
+		if (ret[ret.length - 1][1] < L) {
+			ret.push([L, R])
 		} else {
-			arr[arr.length - 1][1] = Math.max(arr[arr.length - 1][1], R)
+			ret[ret.length - 1][1] = Math.max(ret[ret.length - 1][1], R)
 		}
 	}
-	return arr
+	return ret
 }
 
 //two pointer
 var merge = function (intervals) {
+	//precondition, 按起点排序
 	intervals.sort((a, b) => a[0] - b[0])
 	const len = intervals.length,
-		arr = []
+		ret = []
 	for (let i = 0; i < len; ) {
-		let t = intervals[i][1]
+		let R = intervals[i][1]
 		let j = i + 1
-		while (j < len && intervals[j][0] <= t) {
-			t = Math.max(t, intervals[j][1])
+		//后面的左边界小于等于前面的右边，更新R
+		while (j < len && intervals[j][0] <= R) {
+			R = Math.max(R, intervals[j][1])
 			j++
 		}
-		arr.push([intervals[i][0], t])
+		ret.push([intervals[i][0], R])
 		i = j
 	}
-	return arr
+	return ret
 }
 ```

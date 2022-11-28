@@ -29,42 +29,46 @@
 ![](./images/binarySearch.png)
 
 > 1. 分析二分查找代码时,最好不要出现 else,全部展开成 else if 方便理解
-> 2. 注意「搜索区间」和 while 的终止条件,如果存在漏掉的元素,记得在最后检查
+> 2. 注意「搜索区间」和 while 的终止条件,如果存在漏掉的元素,记得在**最后检查**
 > 3. 如需定义左闭右开的「搜索区间」搜索左右边界,只要在 `nums[mid] == target` 时做修改即可,搜索右侧时需要减一
 > 4. 如果将「搜索区间」全都统一成两端都闭,好记,只要稍改 `nums[mid] == target` 条件处的代码和返回的逻辑即可
 
 ### some templates
 
-#### 1 ==Basic Template==
+#### 1 Basic Template
 
 ```javascript {.line-numbers}
+//返回索引,arr必须提前排序
 const binarySearch = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
-		//Note!!!
+		//Note 1
 		r = len - 1,
 		mid
-	//Note!!!
+	//Note 2
 	while (l <= r) {
+    //Maybe note
 		mid = Math.floor(l + (r - l) / 2)
-		if (arr[mid] < target) {
+		if (arr[mid] === target) {
+			return mid
+		} else if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
-			//Note!!!
+			//Note 3
 			r = mid - 1
-		} else if (arr[mid] === target) {
-			return mid
 		}
 	}
+  //Maybe note
 	return -1
 }
 ```
 
-#### 2 查找第一个值等于给定值的元素
+#### 2 查找第一个值等于给定值的元素(左边界)
 
 ```javascript {.line-numbers}
-const binarySearch = (arr, target) => {
+//返回索引,arr必须提前排序
+const binarySearchLeftBound = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
@@ -78,6 +82,7 @@ const binarySearch = (arr, target) => {
 			r = mid - 1
 		} else {
 			//已搜到第一个或已找到
+      //if (mid === 0 || arr[mid - 1] < target) {
 			if (mid === 0 || arr[mid - 1] !== target) {
 				return mid
 				//继续收缩右边界
@@ -90,9 +95,10 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 3 查找最后一个值等于给定值的元素
+#### 3 查找最后一个值等于给定值的元素(右边界)
 
 ```javascript {.line-numbers}
+//返回索引,arr必须提前排序
 const binarySearch = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
@@ -107,6 +113,7 @@ const binarySearch = (arr, target) => {
 			r = mid - 1
 		} else {
 			//已搜到最后一个或已找到
+      //if (mid === len - 1 || arr[mid + 1] > target) {
 			if (mid === len - 1 || arr[mid + 1] !== target) {
 				return mid
 			} else {
@@ -165,7 +172,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 6 寻找左侧边界的二分搜索
+#### 6 寻找左侧边界的二分搜索(labuladuo version)
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
@@ -193,7 +200,7 @@ const leftBound = (arr, target) => {
 }
 ```
 
-#### 7 寻找右侧边界的二分搜索
+#### 7 寻找右侧边界的二分搜索(labuladuo version)
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
@@ -226,11 +233,11 @@ var search = function (nums, target) {
 	let l = 0,
 		r = len - 1,
 		mid
-
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return mid
-		//in case mid === l 下标相等
+    //看左边
+		//in case mid === l 即下标相等
 		//[start, mid]有序
 		if (nums[mid] >= nums[l]) {
 			if (target < nums[mid] && target >= nums[l]) {
@@ -304,7 +311,7 @@ var mySqrt = function (x) {
 			return mid
 		}
 	}
-	//l > r
+	//l > r即l = r + 1，返回较小数
 	return r
 }
 ```
@@ -365,6 +372,7 @@ var findMin = function (nums) {
 		//judge according to nums[mid]
 		if (nums[mid] < nums[mid - 1]) return nums[mid]
 		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]
+    //看右边
 		if (nums[mid] < nums[len - 1]) {
 			r = mid - 1
 		} else {
@@ -372,6 +380,23 @@ var findMin = function (nums) {
 		}
 	}
 	return null
+}
+
+
+var findMin = function (nums) {
+	let low = 0
+	let high = nums.length - 1
+	while (low < high) {
+		const pivot = low + Math.floor((high - low) / 2)
+    //所有数据不重复，即不存在(nums[pivot] === nums[high]的情况
+    //看右边
+		if (nums[pivot] < nums[high]) {
+			high = pivot
+		} else {
+			low = pivot + 1
+		}
+	}
+	return nums[low]
 }
 ```
 
@@ -396,6 +421,7 @@ var isPerfectSquare = function (num) {
 	return false
 }
 
+//数学
 var isPerfectSquare = function (num) {
 	let x = 1,
 		square = 1

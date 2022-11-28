@@ -137,7 +137,6 @@ const quick = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
 	if (len < 2) return arr
-
 	const partition = (arr, l, r) => {
 		//设最右边为pivot
 		const pivot = r
@@ -179,7 +178,6 @@ const quickChoose = (arr, n, k) => {
 			while (arr[--j] > x);
 			if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]]
 		}
-
 		//排完后看左边的数字个数
 		const sl = j - l + 1
 		if (k <= sl) return helper(arr, l, j, k)
