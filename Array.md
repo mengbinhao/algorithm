@@ -26,19 +26,18 @@ var twoSum = function (nums, target) {
 	const hash = {},
 		len = nums.length
 	for (let i = 0; i < len; i++) {
-		//[2, 7] 9, store 7,the other loop to search 7
+		//[2, 7] 9, store 7,the below loop to search 7
 		hash[target - nums[i]] = i
 	}
 	for (let j = 0; j < len; j++) {
-		//exclude same item
-		//exclude hash[nums[j]] is falsy
+		//exclude hash[nums[j]] is falsy and same item
 		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) {
 			return [j, hash[nums[j]]]
 		}
 	}
 }
 
-//一次哈希 optimal,先放再回头找则不需要判重
+//一次哈希 optimal,先判断要找的值在不在hash里面，再放要找的值则不需要判重
 //obj or map
 var twoSum = function (nums, target) {
 	const hash = {}
@@ -92,6 +91,7 @@ var threeSum = function (nums) {
 				if (nums[i] + nums[j] + nums[k] === 0) {
 					//去重
 					const key = [nums[i], nums[j], nums[k]].sort()
+          //incase falsy
 					if (map[key] === undefined) {
 						map[key] = true
 						ret.push([nums[i], nums[j], nums[k]])
@@ -105,15 +105,18 @@ var threeSum = function (nums) {
 
 //Hash O(n^2) O(n)
 var threeSum = function (nums) {
-	const arr = []
-	if (nums == null || nums.length < 3) return arr
+	let arr = []
+	if (!nums) return arr
+  const len = nums.length
+  if (len < 3) return arr
 	//precondition!!!!!!
 	nums.sort((a, b) => a - b)
-	for (var i = 0; i < nums.length - 2; i++) {
+	for (var i = 0; i < len - 2; i++) {
 		if (nums[i] > 0) break
 		if (i > 0 && nums[i] == nums[i - 1]) continue
 		const hash = new Map()
-		for (var j = i + 1; j < nums.length; j++) {
+		for (var j = i + 1; j < len; j++) {
+      //要找的第三个值
 			const val = -(nums[i] + nums[j])
 			// 前三个数组成的结果肯定不重且防越界，所以j > i + 2
 			if (j > i + 2 && nums[j] == nums[j - 1] && nums[j] == nums[j - 2])
@@ -121,17 +124,16 @@ var threeSum = function (nums) {
 			//hash是首次记录第二次才会push到数组
 			if (hash.has(val)) {
 				arr.push([nums[i], nums[hash.get(val)], nums[j]])
-				//使用完删除防止重复[-2, 0, 0, 2, 2]
+				//使用完删除防止重复，比如[-2, 0, 0, 2, 2]
 				hash.delete(val)
 			}
-			//第一次直接加,加的是结果中的第二个数
 			hash.set(nums[j], j)
 		}
 	}
 	return arr
 }
 
-//夹逼（大部分情况需已排序） O(n^2) - O(1)
+//夹逼  O(n^2) - O(1)
 var threeSum = function (nums) {
 	const len = nums.length
 	//precondition!!!!!!
@@ -148,62 +150,13 @@ var threeSum = function (nums) {
 			if (sum === 0) {
 				ret.push([nums[i], nums[l], nums[r]])
 				while (nums[l] === nums[l + 1]) l++
-				l++
+				l++ //跳到不重复的那个数
 				while (nums[r] === nums[r - 1]) r--
-				r--
+				r-- //跳到不重复的那个数
 			} else if (sum > 0) {
 				r--
 			} else {
 				l++
-			}
-		}
-	}
-	return ret
-}
-```
-
-### [18.四数之和 M](https://leetcode-cn.com/problems/4sum/)
-
-```javascript
-var fourSum = function (nums, target) {
-	if (!Array.isArray(nums) || nums.length === 0) {
-		return []
-	}
-	if (typeof target !== 'number' || !Number.isInteger(target)) {
-		throw new TypeError(`invalid param target = ${target}`)
-	}
-
-	nums.sort((a, b) => a - b)
-	let len = nums.length,
-		ret = []
-
-	for (let k = 0; k < len - 3; k++) {
-		if (nums[k] + nums[k + 1] + nums[k + 2] + nums[k + 3] > target) break
-		if (k > 0 && nums[k] === nums[k - 1]) continue
-
-		for (let l = k + 1; l < len - 2; l++) {
-			if (l > k + 1 && nums[l] === nums[l - 1]) continue
-
-			let m = l + 1,
-				n = len - 1
-
-			while (m < n) {
-				let sum = nums[k] + nums[l] + nums[m] + nums[n]
-				if (sum === target) {
-					ret.push([nums[k], nums[l], nums[m], nums[n]])
-					while (nums[m] === nums[m + 1]) {
-						m++
-					}
-					m++
-					while (nums[n] === nums[n - 1]) {
-						n--
-					}
-					n--
-				} else if (sum < target) {
-					m++
-				} else {
-					n--
-				}
 			}
 		}
 	}
@@ -251,9 +204,9 @@ var jump = function (nums) {
 		maxPosition = 0
 	//如果访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
-		//当前位置能跳到的最远位置
+		//不停更新当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
-		//跳到上次能跳到的最远位置更新边界
+		//跳到"上一次"能跳到的最远位置更新边界
 		if (i === end) {
 			end = maxPosition
 			steps++
@@ -270,6 +223,7 @@ var jump = function (nums) {
 var rotate = function (matrix) {
 	const n = matrix.length
 	const arr = Array.from({ length: n }, () => new Array(n))
+  //matrix[i][j]变成 matrix[j][n - row - 1]
 	for (let i = 0; i < n; i++) {
 		for (let j = 0; j < n; j++) {
 			arr[j][n - i - 1] = matrix[i][j]
@@ -285,10 +239,12 @@ var rotate = function (matrix) {
 //原地旋转，找到4个旋转坐标规律
 var rotate = function (matrix) {
 	const n = matrix.length
-	//i只需要走一半
+	//matrix[i][j]变成 matrix[j][n - row - 1]
+	//考虑奇偶两种情况，当n为奇数，等分4个区域；当n为偶数，j多一位，中间格子无需转换
+	//i只需走一半
 	for (let i = 0; i < Math.floor(n / 2); i++) {
-		//j考虑奇偶两种情况，当n为奇数，矩阵中间点无需旋转
 		for (let j = 0; j < Math.floor((n + 1) / 2); j++) {
+      //左往右看同链表
 			const temp = matrix[i][j]
 			matrix[i][j] = matrix[n - j - 1][i]
 			matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1]
@@ -296,7 +252,7 @@ var rotate = function (matrix) {
 			matrix[j][n - i - 1] = temp
 		}
 	}
-}
+}	
 
 //原地翻转两次
 var rotate = function (matrix) {
@@ -310,7 +266,7 @@ var rotate = function (matrix) {
 			]
 		}
 	}
-	//左下翻转右上
+	//沿对角线左下翻转右上
 	for (let i = 1; i < n; i++) {
 		for (let j = 0; j < i; j++) {
 			;[matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]]
@@ -324,19 +280,18 @@ var rotate = function (matrix) {
 ```javascript {.line-numbers}
 //O(n) - O(n) 偏移量解法
 var spiralOrder = function (matrix) {
-	if (!matrix.length || !matrix[0].length) return []
 	const rows = matrix.length
 	const columns = matrix[0].length
 	const total = rows * columns
 	const visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
 	const ret = new Array(total)
+  //沿右下左上顺序偏移
 	const directions = [
 		[0, 1],
 		[1, 0],
 		[0, -1],
 		[-1, 0],
 	]
-
 	let directionIdx = 0,
 		row = 0,
 		column = 0
@@ -394,7 +349,7 @@ var generateMatrix = function (n) {
 		right = n - 1,
 		top = 0,
 		bottom = n - 1
-	//new Array(n).fill(0).map(() => new Array(n)),直接new Array(n)空数组map跳过
+	//new Array(n).fill(0).map(() => new Array(n)),直接new Array(n)空数组项map会跳过
 	const ret = Array.from({ length: n }, () => new Array(n))
 	let num = 1
 	while (num <= n * n) {
@@ -457,7 +412,7 @@ var plusOne = function (digits) {
 ### [73.==矩阵置零==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
 
 ```javascript {.line-numbers}
-//O(mn) - O(mn) 直接把matrix值放到m*n的数组里面
+//O(mn) - O(mn) 直接把matrix值放到m*n的二维数组里面
 
 //O(mn) - O(m + n) direct version
 var setZeroes = function (matrix) {
@@ -488,12 +443,11 @@ var setZeroes = function (matrix) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (matrix[i][j] === 0) {
+        //对于不为1的单元进行标记，要先标记下次遍历再转换
 				for (let m = 0; m < rows; m++) {
-					//要先标记下次遍历再转换
 					if (matrix[m][j] !== 0) matrix[m][j] = marked
 				}
 				for (let n = 0; n < cols; n++) {
-					//同上
 					if (matrix[i][n] !== 0) matrix[i][n] = marked
 				}
 			}
@@ -506,31 +460,51 @@ var setZeroes = function (matrix) {
 	}
 }
 
-//使用两个标记变量,使用matrix的第一行和列代替上面的两个数组
+//使用两个标记变量,使用matrix的第一行和第一列代替上面的两个数组
 var setZeroes = function (matrix) {
-	const rows = matrix.length,
-		cols = matrix[0].length
-	let rowZero = false,
-		colZero = false
-	//更新第一行与第一列并记录两个变量
-	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) {
+	const m = matrix.length,
+		n = matrix[0].length
+	let flagCol0 = false,
+		flagRow0 = false
+	//遍历第一列
+	for (let i = 0; i < m; i++) {
+		if (matrix[i][0] === 0) {
+			flagCol0 = true
+		}
+	}
+	//遍历第一行
+	for (let j = 0; j < n; j++) {
+		if (matrix[0][j] === 0) {
+			flagRow0 = true
+		}
+	}
+	//标记第一行与列
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
 			if (matrix[i][j] === 0) {
-				matrix[0][j] = matrix[i][0] = 0
-				if (i === 0) rowZero = true
-				if (j === 0) colZero = true
+				matrix[i][0] = matrix[0][j] = 0
 			}
 		}
 	}
-	//使用第一行与第一列更新其他区域
-	for (let i = 1; i < rows; i++) {
-		for (let j = 1; j < cols; j++) {
-			if (matrix[0][j] === 0 || matrix[i][0] === 0) matrix[i][j] = 0
+	//使用第一行与列反更新其他单元
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			if (matrix[i][0] === 0 || matrix[0][j] === 0) {
+				matrix[i][j] = 0
+			}
 		}
 	}
-	//最后根据两个变量处理第一行与第一列
-	for (let i = 0; rowZero && i < cols; i++) matrix[0][i] = 0
-	for (let i = 0; colZero && i < rows; i++) matrix[i][0] = 0
+	//根据标记变量处理第一行与第一列
+	if (flagCol0) {
+		for (let i = 0; i < m; i++) {
+			matrix[i][0] = 0
+		}
+	}
+	if (flagRow0) {
+		for (let j = 0; j < n; j++) {
+			matrix[0][j] = 0
+		}
+	}
 }
 ```
 
@@ -581,11 +555,12 @@ var sortColors = function (nums) {
 	let cur = 0,
 		p1 = 0,
 		p2 = nums.length - 1
+	//循环结束条件
 	while (cur <= p2) {
-		//2放后
+		//2放后，再看换过来的这个数
 		if (nums[cur] === 2) {
 			;[nums[cur], nums[p2--]] = [nums[p2], nums[cur]]
-			//0放前
+			//0放前，cur、p1同步走
 		} else if (nums[cur] === 0) {
 			;[nums[cur++], nums[p1++]] = [nums[p1], nums[cur]]
 		} else {
@@ -603,6 +578,7 @@ var sortColors = function (nums) {
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len <= 2) return len
+  //前两个必保留,从2开始
 	let slow = 2,
 		fast = 2
 	while (fast < len) {
@@ -640,12 +616,12 @@ var merge = (nums1, m, nums2, n) => {
 
 //三指针 从后往前 O(n+m) - O(1)
 var merge = (nums1, m, nums2, n) => {
-	let p = m - 1,
-		q = n - 1,
+	let p1 = m - 1,
+		p2 = n - 1,
 		k = m + n - 1
 	//nums2全部复制完
 	//不能写成nums1[p] < nums2[q] ? nums2[q--] : nums1[p--] 死循环
-	while (q >= 0) nums1[k--] = nums1[p] > nums2[q] ? nums1[p--] : nums2[q--]
+	while (p2 >= 0) nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
 }
 ```
 
@@ -669,6 +645,7 @@ var rotate = function (nums, k) {
 var rotate = (nums, k) => {
 	const len = nums.length,
 		tmp = new Array(len)
+  //元素的新位置为(i+k) % len 的位置
 	for (let i = 0; i < len; i++) {
 		//旋转后的位置
 		tmp[(i + k) % len] = nums[i]
@@ -681,11 +658,12 @@ var rotate = (nums, k) => {
 var rotate = function (nums, k) {
 	const len = nums.length
 	k %= len
-	myReverse(nums, 0, len - 1)
-	myReverse(nums, 0, k - 1)
-	myReverse(nums, k, len - 1)
+  if (k === 0) return 
+	reverse(nums, 0, len - 1)
+	reverse(nums, 0, k - 1)
+	reverse(nums, k, len - 1)
 
-	function myReverse(arr, l, r) {
+	function reverse(arr, l, r) {
 		while (l < r) {
 			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
 		}
@@ -706,11 +684,11 @@ var productExceptSelf = (nums) => {
 	// left[i] 为索引 i 左侧所有元素的乘积
 	// 对于索引为 '0' 的元素，因为左侧没有元素，所以 left[0] = 1
 	left[0] = 1
-	for (let i = 1; i < len; i++) left[i] = nums[i - 1] * left[i - 1]
+	for (let i = 1; i < len; i++) left[i] = left[i - 1] * nums[i - 1] 
 	// right[i] 为索引 i 右侧所有元素的乘积
 	// 对于索引为 'len-1' 的元素，因为右侧没有元素，所以 right[len-1] = 1
 	right[len - 1] = 1
-	for (let i = len - 2; i >= 0; i--) right[i] = nums[i + 1] * right[i + 1]
+	for (let i = len - 2; i >= 0; i--) right[i] = right[i + 1] * nums[i + 1] 
 	// 对于索引 i，除 nums[i] 之外其余各元素的乘积就是左侧所有元素的乘积乘以右侧所有元素的乘积
 	for (let i = 0; i < len; i++) ret[i] = left[i] * right[i]
 	return ret
@@ -722,9 +700,9 @@ var productExceptSelf = function (nums) {
 		r = new Array(len),
 		ret = new Array(len)
 	ret[0] = 1
-	for (let i = 1; i < len; i++) ret[i] = nums[i - 1] * ret[i - 1]
+	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1] 
 	r[len - 1] = 1
-	for (let i = len - 2; i >= 0; i--) r[i] = nums[i + 1] * r[i + 1]
+	for (let i = len - 2; i >= 0; i--) r[i] =  r[i + 1] * nums[i + 1]
 	for (let i = 0; i < len; i++) ret[i] = ret[i] * r[i]
 	return ret
 }

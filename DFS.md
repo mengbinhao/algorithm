@@ -38,7 +38,7 @@ var letterCombinations = function (digits) {
 			dfs(s + c, level + 1)
 		}
 	}
-	//can pass more params if you want, like ret、map、digits
+	//can pass more params if you want, like ret、hash、digits
 	dfs('', 0)
 	return ret
 }
@@ -223,7 +223,6 @@ var combinationSum = function (candidates, target) {
 		//no choice
 		dfs(candidates, remain, start + 1, path)
 	}
-
 	dfs(candidates, target, 0, [])
 	return ret
 }
@@ -276,7 +275,7 @@ var permute = function (nums) {
 			ret.push([...path])
 			return
 		}
-		//每次都从开头枚,有visited标记
+		//每次都从开头枚,visited标记是否使用过
 		for (let i = 0, len = nums.length; i < len; i++) {
 			if (visited[i]) continue
 			visited[i] = true
@@ -290,7 +289,7 @@ var permute = function (nums) {
 }
 ```
 
-### [47.全排列 2M](https://leetcode-cn.com/problems/permutations-ii/)
+### [47.全排列 2 M](https://leetcode-cn.com/problems/permutations-ii/)
 
 ```javascript {.line-numbers}
 //nums有重复
@@ -298,17 +297,14 @@ var permuteUnique = function (nums) {
 	const len = nums.length,
 		ret = []
 	if (len === 0) return ret
-
 	const visited = Array.from({ length: len }, () => false)
 	//升序或者降序都可以，剪枝前提
 	nums.sort((a, b) => a - b)
-
 	const dfs = (nums, depth, path, visited) => {
 		if (depth === nums.length) {
 			ret.push([...path])
 			return
 		}
-
 		for (let i = 0, len = nums.length; i < len; i++) {
 			if (visited[i]) continue
 			//剪枝
@@ -321,7 +317,6 @@ var permuteUnique = function (nums) {
 			visited[i] = false
 		}
 	}
-
 	dfs(nums, 0, [], visited)
 	return ret
 }
@@ -336,7 +331,7 @@ var subsets = function (nums) {
 	const ret = []
 	//start控制下层树枝的个数
 	const dfs = (nums, startIdx, path) => {
-		//在递归压栈前做事情,取的是所有树上的叶子节点
+		//在递归压栈前做事情,取的是所有树上的路径
 		//该题不需要结束条件，全部遍历完即可
 		//if (startIdx >= path.length) return
 		ret.push([...path])
@@ -414,9 +409,9 @@ var restoreIpAddresses = function (s) {
 	function backtracking(startIdx, path) {
 		const len = path.length
 		if (len > 4) return
-		//match condition
+		//分成四段并且全部分割腕
 		if (len === 4 && startIdx === s.length) {
-			ret.push([...path].join('.'))
+			ret.push(path.join('.'))
 			return
 		}
 		for (let j = startIdx; j < s.length; j++) {
@@ -431,7 +426,7 @@ var restoreIpAddresses = function (s) {
 }
 ```
 
-### [51.==N 皇后 H==](https://leetcode-cn.com/problems/n-queens/)
+### [51.==N  皇后 H==](https://leetcode-cn.com/problems/n-queens/)
 
 ```javascript {.line-numbers}
 var solveNQueens = function (n) {
@@ -440,16 +435,14 @@ var solveNQueens = function (n) {
 		cols = new Set(), //垂直线攻击位置
 		pies = new Set(), //左对角线攻击位置
 		nas = new Set() //右对角线攻击位置
-
 	const dfs = (row, path) => {
 		if (row >= n) {
 			solutions.push([...path])
 			return
 		}
-
+    //行通过层递进,这里遍历列
 		for (let col = 0; col < n; col++) {
 			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
-
 			cols.add(col)
 			pies.add(row + col)
 			nas.add(row - col)
@@ -463,7 +456,6 @@ var solveNQueens = function (n) {
 			path.pop()
 		}
 	}
-
 	const generatorBoard = (solutions) => {
 		return solutions.map((solution) => {
 			return solution.map((position) => {
@@ -473,13 +465,12 @@ var solveNQueens = function (n) {
 			})
 		})
 	}
-
 	dfs(0, [])
 	return generatorBoard(solutions)
 }
 ```
 
-### [52.N 皇后 2H](https://leetcode-cn.com/problems/n-queens-ii/)
+### [52. N 皇后 2 H](https://leetcode-cn.com/problems/n-queens-ii/)
 
 ```javascript {.line-numbers}
 var totalNQueens = function (n) {
@@ -493,16 +484,12 @@ var totalNQueens = function (n) {
 			ret++
 			return
 		}
-
 		for (let col = 0; col < n; col++) {
 			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
-
 			cols.add(col)
 			pies.add(row + col)
 			nas.add(row - col)
-
 			dfs(row + 1)
-
 			cols.delete(col)
 			pies.delete(row + col)
 			nas.delete(row - col)
@@ -548,10 +535,8 @@ var totalNQueens = function (n) {
 ```javascript {.line-numbers}
 var solve = function (board) {
 	if (!board || !Array.isArray(board) || board.length === 0) return board
-
 	let row = board.length,
 		col = board[0].length
-
 	for (let i = 0; i < row; i++) {
 		for (let j = 0; j < col; j++) {
 			//from edge dfs, to mark O to #
@@ -561,7 +546,6 @@ var solve = function (board) {
 			}
 		}
 	}
-
 	for (let i = 0; i < row; i++) {
 		for (let j = 0; j < col; j++) {
 			//left O change to X
@@ -618,10 +602,8 @@ var findTargetSumWays = function (nums, target) {
 var numIslands = function (grid) {
 	let ret = 0
 	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
-
 	const row = grid.length,
 		col = grid[0].length
-
 	const dfs = (grid, i, j, row, col) => {
 		if (i < 0 || j < 0 || i >= row || j >= col || grid[i][j] === '0') return
 		//marked as zero
@@ -632,7 +614,6 @@ var numIslands = function (grid) {
 		dfs(grid, i - 1, j, row, col)
 		dfs(grid, i, j - 1, row, col)
 	}
-
 	for (let i = 0; i < row; i++) {
 		for (let j = 0; j < col; j++) {
 			if (grid[i][j] === '1') {

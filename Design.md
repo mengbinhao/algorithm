@@ -1,4 +1,4 @@
-### [146.LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
+### [146.==LRU 缓存机制==](https://leetcode-cn.com/problems/lru-cache/)
 
 ```javascript {.line-numbers}
 //hash表 + 双向链表(头代表最新,尾代表老)
@@ -34,19 +34,19 @@ LRUCache.prototype.get = function (key) {
 LRUCache.prototype.moveToHead = function (node) {
 	//从链表中删除该节点
 	this.removeFromList(node)
-	//该节点添加到链表的头部
+	//将该节点添加到链表的头部
 	this.addToHead(node)
 }
 
 LRUCache.prototype.removeFromList = function (node) {
 	const prev = node.prev
 	const next = node.next
-	prev.next = next // 前驱节点的next指向后继节点
-	next.prev = prev // 后继节点的prev指向前驱节点
+	prev.next = next
+	next.prev = prev
 }
 
 LRUCache.prototype.addToHead = function (node) {
-	//插入到虚拟头结点和真实头结点之间
+	//插入到虚拟头结点和真实头结点之间,注意顺序，先链接node，在调整指针
 	//node的prev指针指向虚拟头结点
 	node.prev = this.dummyHead
 	//node的next指针指向原来的真实头结点
@@ -61,11 +61,13 @@ LRUCache.prototype.addToHead = function (node) {
 //对于已有数据,更新数据值,刷新节点位置
 LRUCache.prototype.put = function (key, value) {
 	const node = this.hashTable[key]
+  //insert
 	if (!node) {
 		const newNode = new ListNode(key, value)
 		this.hashTable[key] = newNode
 		this.addToHead(newNode)
 		this.count++
+    //check capacity
 		if (this.count > this.capacity) {
 			//删除"老家伙",将它从链表尾部删除
 			const tailNode = this.dummyTail.prev
@@ -73,6 +75,7 @@ LRUCache.prototype.put = function (key, value) {
 			delete this.hashTable[tailNode.key]
 			this.count--
 		}
+  //update
 	} else {
 		node.value = value
 		this.moveToHead(node)
@@ -90,12 +93,13 @@ var MinStack = function () {
 	this.minStack = [Infinity]
 }
 
+//辅助栈同步放每次小值
 MinStack.prototype.push = function (x) {
 	this.stack.push(x)
-	//peek always min item
 	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
 }
 
+//同步pop
 MinStack.prototype.pop = function () {
 	this.stack.pop()
 	this.minStack.pop()
@@ -110,6 +114,7 @@ MinStack.prototype.getMin = function () {
 	return val === Infinity ? void 0 : val
 }
 
+
 //O(n) - O(1)
 var MinStack = function () {
 	this.stack = []
@@ -117,20 +122,21 @@ var MinStack = function () {
 }
 
 MinStack.prototype.push = function (val) {
-	// update 'min'
 	const minV = this.minV
+  // update this.minV
 	if (val < this.minV) this.minV = val
 	//存的是真实值与min的差
+  //若当次push的是小值则存的负数
 	return this.stack.push(val - minV)
 }
 
 MinStack.prototype.pop = function () {
 	const item = this.stack.pop()
 	const minV = this.minV
-	//如果栈顶元素小于0，说明栈顶是当前最小的元素，它出栈会对min造成影响，我们需要去更新min
-	//上一个最小的是“min - 栈顶元素”,我们需要将上一个最小值更新为当前的最小值
+	//如果栈顶元素小于0，说明栈顶是当前最小的元素，它出栈会对this.minV造成影响，需更新this.minV
+	//上一个最小的是"minV - 栈顶元素",我们需要将上一个最小值更新为当前的最小值
 	//因为栈顶元素入栈的时候的通过 栈顶元素 = 真实值 - 上一个最小的元素 得到的
-	//而真实值 = min， 因此可以得出上一个最小的元素 = 真实值 -栈顶元素
+	//而真实值 = minV， 可得出上一个最小的元素 = 真实值 - 栈顶元素
 	if (item < 0) {
 		this.minV = minV - item
 		return minV
@@ -142,7 +148,7 @@ MinStack.prototype.top = function () {
 	const item = this.stack[this.stack.length - 1]
 	const minV = this.minV
 	if (item < 0) return minV
-	//top时候需要对数据还原，这里千万注意是“上一个”最小值
+	//top时候需要对数据还原，这里注意是"上一个"最小值
 	return item + minV
 }
 
@@ -249,11 +255,13 @@ MyQueue.prototype.push = function (x) {
 	this.inStack.push(x)
 }
 
+//返回的是outStack，所以需先反向装一下
 MyQueue.prototype.pop = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack.pop()
 }
 
+//返回的是outStack，所以需先反向装一下
 MyQueue.prototype.peek = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack[this.outStack.length - 1]
