@@ -1,11 +1,11 @@
 ![](./images/dp.png)
 
-# 解题步骤
+# ==解题步骤==
 
 1. 确定 dp 数组（dp table）以及下标的含义
-2. 确定递推公式(**一些情况是递推公式决定了 dp 数组要如何初始化,所以这条在前**)
-3. dp 数组如何初始化
-4. 确定遍历顺序
+2. 确定递推公式
+3. 根据递推公式可以特定的初始化dp 数组
+4. 确定遍历顺序（多状态的遍历先后）
 5. 举例推导 dp 数组(打印dp数组)
 
 # 线性 DP
@@ -49,6 +49,7 @@ var longestPalindrome = function (s) {
 		//取str有性能消耗
 		const oddStr = palindrome(s, i, i)
 		const evenStr = palindrome(s, i, i + 1)
+    //不能写成if (oddStr.length > evenStr.length)，这个结果是当次的结果
 		if (oddStr.length > maxLen) {
 			maxStr = oddStr
 			maxLen = oddStr.length
@@ -104,21 +105,19 @@ var longestPalindrome = function (s) {
 	const len = s.length
 	if (len < 2) return s
 	//dp[i][j] 表示从i到j的子串是否是回文
-	const dp = Array.from({ length: len }, () => new Array(len))
+  //初始化成符合语义的false
+	const dp = Array.from({ length: len }, () => new Array(len).fill(false))
 	let begin = 0,
 		maxLen = 1
 	//对角线等于true的case未用到,下列可以忽略不写
 	for (let i = 0; i < len; i++) dp[i][i] = true
-	//在状态转移方程中，是从长度较短的字符串向长度较长的字符串进行转移的，因此要注意动态规划的循环顺序
-	//先升序填列，再升序填行
-	//只需填dp table上半边
-	//先填左下角
+	//状态转移是从较短的字符串向较长的字符串进行转移
+  //i肯定要小于j,故填的是dp table上半部分
+  //升序填列再升序填行
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
-			if (s[i] !== s[j]) {
-				dp[i][j] = false
-			} else {
-				//j - i + 1 < 4，即当子串s[i..j]的长度等于2 or 3的时候，只需看下头尾两个字符是否相等即可
+			if (s[i] === s[j]) {
+				//j - i + 1 < 4，即当子串s[i..j]的长度等于2或3的时候，只需看头尾两个字符是否相等即可
 				if (j - i < 3) {
 					dp[i][j] = true
 				} else {
@@ -177,16 +176,17 @@ var longestValidParentheses = function (s) {
 	//初始化成0也符合base case，比如当前字符为左括号肯定是0
 	const dp = new Array(len).fill(0)
 	for (let i = 1; i < len; i++) {
-		if (s[i] == ')') {
-			if (s[i - 1] == '(') {
+    //符合语义再推
+		if (s[i] === ')') {
+			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '(',也就是字符串形如 '……()'
 				dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2
-				//第一个条件表示前面还有括号(可省略)
-				//第二个条件前面的括号跟当前循环的)可以匹配，即+2
-			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] == '(') {
+				//第一个条件表示前面存在(跟是s[i - 1]的)可匹配
+				//第二个条件表示前面还有括号(JS可省略),其他语言数组索引取负会报错,为了语义的严谨
+			} else if (s[i - dp[i - 1] - 1] === '(' && i - dp[i - 1] - 1 >= 0) {
 				//s[i] = ')' 且 s[i - 1] = ')',也就是字符串形如 '……))'
 				//内部的有效长度 + 前面的有效长度 + 2
-				dp[i] = dp[i - 1] + (i - dp[i - 1] >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
+				dp[i] = dp[i - 1] + (i - dp[i - 1] - 1 >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
 			}
 			ret = Math.max(ret, dp[i])
 		}
@@ -320,7 +320,7 @@ var maxSubArray = function(nums) {
 //base case dp[0] = nums[0]
 var maxSubArray = function (nums) {
 	const len = nums.length
-	const dp = new Array(len)
+	const dp = new Array(len).fill(-Infinity)
 	dp[0] = nums[0]
 	let ret = nums[0]
 	for (let i = 1; i < len; i++) {
@@ -340,7 +340,7 @@ var maxSubArray = function (nums) {
 	let preSum = 0,
 		maxPreSum = nums[0]
 	nums.forEach((num) => {
-		//若前面sum小于0,舍弃
+		//若前面preSum小于0,舍弃
 		preSum = Math.max(preSum + num, num)
 		maxPreSum = Math.max(maxPreSum, preSum)
 	})
@@ -351,28 +351,24 @@ var maxSubArray = function (nums) {
 ### [64. ==最小路径和==](https://leetcode-cn.com/problems/minimum-path-sum/)
 
 ```javascript {.line-numbers}
-//dp[i][j]表示从(i,j)走到(m-1, n-1)点的最小路径和
 var minPathSum = function (grid) {
 	if (!grid) return 0
 	const rows = grid.length,
 		cols = grid[0].length
 	if (rows === 0 || cols === 0) return 0
-
+	//dp[i][j]表示从(i,j)走到(m-1, n-1)点的最小路径和,初始化成大数
 	const dp = Array.from({ length: rows }, () => new Array(cols).fill(Infinity))
-
 	//base case
 	dp[0][0] = grid[0][0]
-
 	//第一列
 	for (let i = 1; i < rows; i++) {
 		dp[i][0] = dp[i - 1][0] + grid[i][0]
 	}
-
 	//第一行
 	for (let j = 1; j < cols; j++) {
 		dp[0][j] = dp[0][j - 1] + grid[0][j]
 	}
-
+  //其他单元格
 	for (let i = 1; i < rows; i++) {
 		for (let j = 1; j < cols; j++) {
 			dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
@@ -381,24 +377,22 @@ var minPathSum = function (grid) {
 	return dp[rows - 1][cols - 1]
 }
 
-//优化空间
+//状态压缩，压缩的是行状态
 var minPathSum = function (grid) {
 	if (!grid) return 0
 	const rows = grid.length,
 		cols = grid[0].length
-
 	if (!rows || !cols) return 0
-
-	//滚动列
+	//滚动列！！！
 	const dp = new Array(cols).fill(Infinity)
-
 	dp[0] = grid[0][0]
-
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (i === 0 && j === 0) continue
+      //
 			else if (i === 0) {
 				dp[j] = dp[j - 1] + grid[i][j]
+       //滚动列更新自己
 			} else if (j === 0) {
 				dp[j] += grid[i][j]
 			} else {
@@ -417,18 +411,15 @@ var minPathSum = function (grid) {
 var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
-
-	//D[i][j] 表示A的前i个字母和B的前j个字母之间的编辑距离
+	//dp[i][j] 表示word1的前i个字母和word2的前j个字母之间的编辑距离
 	const dp = Array.from({ length: m + 1 }, () => new Array(n + 1))
-
-	//一个空串和一个非空串的编辑距离为 D[i][0] = i 和 D[0][j] = j,D[i][0] 相当于对 word1 执行 i 次删除操作
+	//一个空串和一个非空串的编辑距离为dp[i][0] = i、dp[0][j] = j,dp[i][0]相当于对word1执行i次删除操作
 	for (let i = 0; i <= m; i++) dp[i][0] = i
-
-	//D[0][j] 相当于对 word1执行 j 次插入操作
+	//dp[0][j]相当于对word1执行j次插入操作
 	for (let j = 0; j <= n; j++) dp[0][j] = j
-
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
+      //坐标偏移
 			if (word1[i - 1] === word2[j - 1]) {
 				dp[i][j] = dp[i - 1][j - 1]
 			} else {
@@ -443,14 +434,12 @@ var minDistance = function (word1, word2) {
 var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
-
+  //滚动列
 	const dp = new Array(n + 1)
-
 	//第一列
 	for (let j = 0; j <= n; j++) dp[j] = j
-
 	for (let i = 1; i <= m; i++) {
-		//save下面需要替换
+		//提前存储下面需替换
 		let temp = dp[0]
 		//dp数组的每一列的第一个j-1，也就是第一行的这个格子
 		dp[0] = i
@@ -471,7 +460,7 @@ var minDistance = function (word1, word2) {
 }
 ```
 
-### [91. ==解码方法==](https://leetcode-cn.com/problems/decode-ways/)
+### [91. 解码方法](https://leetcode-cn.com/problems/decode-ways/)
 
 ```javascript {.line-numbers}
 var numDecodings = function (s) {
@@ -495,38 +484,18 @@ var numDecodings = function (s) {
 }
 ```
 
-### [118. ==杨辉三角==](https://leetcode-cn.com/problems/pascals-triangle/)
-
-```javascript {.line-numbers}
-var generate = function (numRows) {
-	const triangle = []
-	for (let i = 0; i < numRows; i++) {
-		const curRow = []
-		curRow[0] = 1
-		curRow[i] = 1
-		if (i > 1) {
-			for (let j = 1; j < i; j++) {
-				curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
-			}
-		}
-		triangle.push(curRow)
-	}
-	return triangle
-}
-```
-
 ### [120. ==三角形最小路径和==](https://leetcode-cn.com/problems/triangle/)
 
 ```javascript {.line-numbers}
-//DFS O(2^^n)
+//DFS O(2^n)
 const minimumTotal = (triangle) => {
-	return dfs(0, 0, triangle) + triangle[0][0]
-	function dfs(i, i) {
+	return dfs(0, 0) + triangle[0][0]
+	function dfs(i, j) {
 		if (i >= triangle.length - 1) return 0
 		// 往左下节点走
-		const leftSum = traverse(i + 1, j) + triangle[i + 1][j]
+		const leftSum = dfs(i + 1, j) + triangle[i + 1][j]
 		// 往右下节点走
-		const rightSum = traverse(i + 1, j + 1) + triangle[i + 1][j + 1]
+		const rightSum = dfs(i + 1, j + 1) + triangle[i + 1][j + 1]
 		// 记录每个节点往左和往右遍历的路径和的最小值
 		return Math.min(leftSum, rightSum)
 	}
@@ -538,13 +507,11 @@ const minimumTotal = (triangle) => {
 	if (!triangle) return 0
 	let height = triangle.length
 	if (height === 0) return 0
-
 	const dp = Array.from(
 		{ length: height },
-		(val, index) => new Array(triangle[index].length)
+		(_, idx) => new Array(triangle[idx].length)
 	)
-
-	// 自底而上遍历
+	// 自底而上填充
 	for (let i = height - 1; i >= 0; i--) {
 		for (let j = 0; j < triangle[i].length; j++) {
 			// base case 最底层
@@ -567,14 +534,13 @@ var minimumTotal = function (triangle) {
 	if (!triangle) return 0
 	let height = triangle.length
 	if (height === 0) return 0
-
 	const dp = new Array(height)
 	// base case 是最后一行
 	for (let i = 0; i < height; i++) {
 		dp[i] = triangle[height - 1][i]
 	}
-
 	for (let i = height - 2; i >= 0; i--) {
+    //每次更新比上一行少一个
 		for (let j = 0; j <= i; j++) {
 			dp[j] = Math.min(dp[j], dp[j + 1]) + triangle[i][j]
 		}
@@ -590,11 +556,10 @@ var minimumTotal = function (triangle) {
 var maxProduct = function (nums) {
 	let len = nums.length
 	if (len === 0) return 0
-
 	const maxDP = [...nums],
 		minDP = [...nums]
-
 	for (let i = 1; i < len; i++) {
+    //由本次乘积，最小dp乘nums[i]，nums[i]共同推出
 		maxDP[i] = Math.max(maxDP[i - 1] * nums[i], nums[i], minDP[i - 1] * nums[i])
 		minDP[i] = Math.min(minDP[i - 1] * nums[i], nums[i], maxDP[i - 1] * nums[i])
 	}
@@ -609,13 +574,11 @@ var maxProduct = function (nums) {
 var maxProduct = function (nums) {
 	let len = nums.length
 	if (len === 0) return 0
-
 	let preMax = nums[0],
 		preMin = nums[0],
 		curMax,
 		curMin,
 		ret = nums[0]
-
 	for (let i = 1; i < len; i++) {
 		curMax = Math.max(nums[i], preMax * nums[i], preMin * nums[i])
 		curMin = Math.min(nums[i], preMin * nums[i], preMax * nums[i])
@@ -623,12 +586,11 @@ var maxProduct = function (nums) {
 		preMax = curMax
 		preMin = curMin
 	}
-
 	return ret
 }
 ```
 
-### [221. ==最大正方形==](https://leetcode-cn.com/problems/maximal-square/)
+### [221. 最大正方形](https://leetcode-cn.com/problems/maximal-square/)
 
 ```javascript {.line-numbers}
 var maximalSquare = (matrix) => {
@@ -655,11 +617,11 @@ var maximalSquare = (matrix) => {
 }
 ```
 
-### [279. ==完全平方数==](https://leetcode-cn.com/problems/perfect-squares/)
+### [279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/)
 
 ```javascript {.line-numbers}
 var numSquares = function (n) {
-	const dp = [...Array(n + 1)].map((_) => 0) // 数组长度为n+1，值均为0
+	const dp = [...Array(n + 1)].map((_) => 0)
 	for (let i = 1; i <= n; i++) {
 		dp[i] = i // 最坏的情况就是每次+1
 		for (let j = 1; i - j * j >= 0; j++) {
@@ -678,13 +640,15 @@ var lengthOfLIS = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度
-	//注意nums[i]必须被选取,所以初始化成1
+	//nums[i]必须被选取,所以初始化为1
 	const dp = new Array(len).fill(1)
 	let ret = 1
 	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
 	for (let i = 0; i < len; i++) {
 		for (let j = 0; j < i; j++) {
-			if (nums[i] > nums[j]) dp[i] = Math.max(dp[i], dp[j] + 1)
+			if (nums[i] > nums[j]) {
+        dp[i] = Math.max(dp[i], dp[j] + 1)
+      }
 		}
 		ret = Math.max(ret, dp[i])
 	}
@@ -701,7 +665,6 @@ var integerBreak = function (n) {
 	//dp[0]、dp[1]没意义,初始化成0不影响最终结果
 	//dp[0] = 0, dp[1] = 0
 	dp[2] = 1
-
 	for (let i = 3; i <= n; i++) {
 		//遍历所有可拆分的j
 		for (let j = 1; j < i; j++) {
@@ -724,7 +687,6 @@ var findLength = function (A, B) {
 	for (let i = 0; i < m + 1; i++) {
 		dp[i] = new Array(n + 1).fill(0)
 	}
-
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
 			if (A[i - 1] === B[j - 1]) {
@@ -951,7 +913,6 @@ var maxProfit = function (prices) {
 	const dfs = (prices, level) => {
 		if (level >= prices.length) return 0
 		let ret = 0
-
 		//计算每天可能的利润
 		for (let start = level; start < prices.length; start++) {
 			let maxProfit = 0
@@ -973,16 +934,12 @@ var maxProfit = function (prices) {
 var maxProfit = function (prices) {
 	let len = prices.length
 	if (len < 2) return 0
-
 	//状态 dp[i][j]
 	//第一维i表示索引为i的那一天(具有前缀性质,即考虑了之前天数的收益)能获得的最大利润
 	//第二维j表示索引为i的那一天是持有股票,还是持有现金。这里0表示持有现金(cash),1表示持有股票(stock)
-
 	const dp = Array.from({ length: len }, (v, i) => new Array(2))
-
 	dp[0][0] = 0
 	dp[0][1] = -prices[0]
-
 	for (let i = 1; i < len; i++) {
 		dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i])
 		dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i])
@@ -994,18 +951,15 @@ var maxProfit = function (prices) {
 var maxProfit = function (prices) {
 	let len = prices.length
 	if (len < 2) return 0
-
 	//分开定义
 	let cash = new Array(len)
 	let hold = new Array(len)
-
 	cash[0] = 0
 	hold[0] = -prices[0]
 	for (let i = 1; i < len; i++) {
 		cash[i] = Math.max(cash[i - 1], hold[i - 1] + prices[i])
 		hold[i] = Math.max(hold[i - 1], cash[i - 1] - prices[i])
 	}
-
 	return cash[len - 1]
 }
 
@@ -1013,17 +967,14 @@ var maxProfit = function (prices) {
 var maxProfit = function (prices) {
 	let len = prices.length
 	if (len < 2) return 0
-
 	//分开定义
 	let cash = 0
 	let hold = -prices[0]
-
 	let preCash = cash,
 		preHold = hold
 	for (let i = 1; i < len; i++) {
 		cash = Math.max(preCash, preHold + prices[i])
 		hold = Math.max(preHold, preCash - prices[i])
-
 		preCash = cash
 		preHold = hold
 	}
@@ -1162,7 +1113,6 @@ var coinChange = function (coins, amount) {
 			return
 		}
 		if (coinsIdx > coins.length) return
-
 		//直接拿最大币值的最大个数找解
 		//coins递减
 		//i + count < ret剪枝非最小count解，不加则time exceeded
@@ -1185,7 +1135,7 @@ var coinChange = function (coins, amount) {
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-
+  let ret = Infinity
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
 		if (remain === 0) {
@@ -1197,7 +1147,6 @@ var coinChange = function (coins, amount) {
 			dfs(coins, remain - coins[i], count + 1)
 		}
 	}
-	let ret = Infinity
 	dfs(coins, amount, 0)
 	return ret === Infinity ? -1 : ret
 }
@@ -1212,12 +1161,12 @@ var coinChange = function (coins, amount) {
 		if (remain < 0) return -1
 		if (remain === 0) return 0
 		if (cache[remain]) return cache[remain]
-		//当前层需要取下面所有的情况的最小值
+		//当前层需要取下面所有情况的最小值
 		//F(X) = min(F(0)....F(X - 1))
 		let min = Infinity
 		for (let i = 0, len = coins.length; i < len; i++) {
 			const ret = dfs(coins, remain - coins[i])
-			//加1是为了加上得到ret结果的那个步骤中兑换的那一个硬币
+			//加1是为了加上得到ret结果的那个步骤中兑换的那个硬币
 			//下层返回需有意义并且是下层需要最少的硬币个数
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
@@ -1274,7 +1223,9 @@ var change = function (amount, coins) {
 	//若调整状态遍历顺序则计算的是排列数！
 	for (const coin of coins) {
 		//dp[j] += dp[j - nums[j]]
-		for (let j = coin; j <= amount; j++) dp[j] += dp[j - coin]
+		for (let j = coin; j <= amount; j++) {
+      dp[j] += dp[j - coin]
+    }
 	}
 	return dp[amount]
 }
@@ -1283,10 +1234,6 @@ var change = function (amount, coins) {
 # 树形 DP
 
 ### 见打家劫舍 III
-
-# 状态压缩 DP
-
-# 数位 DP
 
 # 计数型 DP
 
@@ -1328,7 +1275,9 @@ var uniquePaths = function (m, n) {
 	//初始化第一行，也符合base数据，隐含初始化了第一列
 	const dp = new Array(n).fill(1)
 	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) dp[j] += dp[j - 1]
+		for (let j = 1; j < n; j++) {
+      dp[j] += dp[j - 1]
+    }
 	}
 	return dp[j - 1]
 }
@@ -1341,15 +1290,14 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 	const m = obstacleGrid.length,
 		n = obstacleGrid[0].length,
 		dp = Array.from({ length: m }, () => new Array(n).fill(0))
-
 	//base case
 	for (let i = 0; i < m && obstacleGrid[i][0] === 0; i++) dp[i][0] = 1
 	for (let i = 0; i < n && obstacleGrid[0][i] === 0; i++) dp[0][i] = 1
-
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) {
-			if (obstacleGrid[i][j] === 1) continue
-			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+			if (obstacleGrid[i][j] === 0)  {
+	      dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+      }
 		}
 	}
 	return dp[m - 1][n - 1]
@@ -1360,7 +1308,6 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 	const m = obstacleGrid.length,
 		n = obstacleGrid[0].length,
 		dp = new Array(n).fill(0)
-
 	//每列第一个由obstacleGrid[0][0]决定
 	dp[0] = obstacleGrid[0][0] === 1 ? 0 : 1
 	for (let i = 0; i < m; i++) {
@@ -1423,7 +1370,9 @@ var climbStairs = function (n) {
 	const dp = new Array(n + 1)
 	dp[1] = 1
 	dp[2] = 2
-	for (let i = 3; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2]
+	for (let i = 3; i <= n; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2]
+  }
 	return dp[n]
 }
 
@@ -1510,8 +1459,6 @@ var tribonacci = function (n) {
 	return z
 }
 ```
-
-# 概率型 DP
 
 # 博弈型 DP
 

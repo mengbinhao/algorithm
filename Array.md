@@ -625,6 +625,38 @@ var merge = (nums1, m, nums2, n) => {
 }
 ```
 
+### [118. ==杨辉三角==](https://leetcode-cn.com/problems/pascals-triangle/)
+
+```javascript
+var generate = function (numRows) {
+	const ret = []
+	for (let i = 0; i < numRows; i++) {
+		const curRow = new Array(i + 1).fill(1)
+		for (let j = 1; j < curRow.length - 1; j++) {
+			curRow[j] = ret[i - 1][j - 1] + ret[i - 1][j]
+		}
+		ret.push(curRow)
+	}
+	return ret
+}
+
+var generate = function (numRows) {
+	const triangle = []
+	for (let i = 0; i < numRows; i++) {
+		const curRow = []
+		curRow[0] = 1
+		curRow[i] = 1
+		if (i > 1) {
+			for (let j = 1; j < i; j++) {
+				curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
+			}
+		}
+		triangle.push(curRow)
+	}
+	return triangle
+}
+```
+
 ### [189.==旋转数组 E==](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript {.line-numbers}
