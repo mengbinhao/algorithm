@@ -4,9 +4,9 @@
 
 1. 确定 dp 数组（dp table）以及下标的含义
 2. 确定递推公式
-3. 根据递推公式可以特定的初始化dp 数组
+3. 根据递推公式可以特定的初始化 dp 数组
 4. 确定遍历顺序（多状态的遍历先后）
-5. 举例推导 dp 数组(打印dp数组)
+5. 举例推导 dp 数组(打印 dp 数组)
 
 # 线性 DP
 
@@ -49,7 +49,7 @@ var longestPalindrome = function (s) {
 		//取str有性能消耗
 		const oddStr = palindrome(s, i, i)
 		const evenStr = palindrome(s, i, i + 1)
-    //不能写成if (oddStr.length > evenStr.length)，这个结果是当次的结果
+		//不能写成if (oddStr.length > evenStr.length)，这个结果是当次的结果
 		if (oddStr.length > maxLen) {
 			maxStr = oddStr
 			maxLen = oddStr.length
@@ -105,15 +105,15 @@ var longestPalindrome = function (s) {
 	const len = s.length
 	if (len < 2) return s
 	//dp[i][j] 表示从i到j的子串是否是回文
-  //初始化成符合语义的false
+	//初始化成符合语义的false
 	const dp = Array.from({ length: len }, () => new Array(len).fill(false))
 	let begin = 0,
 		maxLen = 1
 	//对角线等于true的case未用到,下列可以忽略不写
 	for (let i = 0; i < len; i++) dp[i][i] = true
 	//状态转移是从较短的字符串向较长的字符串进行转移
-  //i肯定要小于j,故填的是dp table上半部分
-  //升序填列再升序填行
+	//i肯定要小于j,故填的是dp table上半部分
+	//升序填列再升序填行
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
 			if (s[i] === s[j]) {
@@ -176,7 +176,7 @@ var longestValidParentheses = function (s) {
 	//初始化成0也符合base case，比如当前字符为左括号肯定是0
 	const dp = new Array(len).fill(0)
 	for (let i = 1; i < len; i++) {
-    //符合语义再推
+		//符合语义再推
 		if (s[i] === ')') {
 			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '(',也就是字符串形如 '……()'
@@ -186,7 +186,8 @@ var longestValidParentheses = function (s) {
 			} else if (s[i - dp[i - 1] - 1] === '(' && i - dp[i - 1] - 1 >= 0) {
 				//s[i] = ')' 且 s[i - 1] = ')',也就是字符串形如 '……))'
 				//内部的有效长度 + 前面的有效长度 + 2
-				dp[i] = dp[i - 1] + (i - dp[i - 1] - 1 >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
+				dp[i] =
+					dp[i - 1] + (i - dp[i - 1] - 1 >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
 			}
 			ret = Math.max(ret, dp[i])
 		}
@@ -368,7 +369,7 @@ var minPathSum = function (grid) {
 	for (let j = 1; j < cols; j++) {
 		dp[0][j] = dp[0][j - 1] + grid[0][j]
 	}
-  //其他单元格
+	//其他单元格
 	for (let i = 1; i < rows; i++) {
 		for (let j = 1; j < cols; j++) {
 			dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
@@ -389,10 +390,10 @@ var minPathSum = function (grid) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (i === 0 && j === 0) continue
-      //
+			//
 			else if (i === 0) {
 				dp[j] = dp[j - 1] + grid[i][j]
-       //滚动列更新自己
+				//滚动列更新自己
 			} else if (j === 0) {
 				dp[j] += grid[i][j]
 			} else {
@@ -419,7 +420,7 @@ var minDistance = function (word1, word2) {
 	for (let j = 0; j <= n; j++) dp[0][j] = j
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
-      //坐标偏移
+			//坐标偏移
 			if (word1[i - 1] === word2[j - 1]) {
 				dp[i][j] = dp[i - 1][j - 1]
 			} else {
@@ -434,7 +435,7 @@ var minDistance = function (word1, word2) {
 var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
-  //滚动列
+	//滚动列
 	const dp = new Array(n + 1)
 	//第一列
 	for (let j = 0; j <= n; j++) dp[j] = j
@@ -540,7 +541,7 @@ var minimumTotal = function (triangle) {
 		dp[i] = triangle[height - 1][i]
 	}
 	for (let i = height - 2; i >= 0; i--) {
-    //每次更新比上一行少一个
+		//每次更新比上一行少一个
 		for (let j = 0; j <= i; j++) {
 			dp[j] = Math.min(dp[j], dp[j + 1]) + triangle[i][j]
 		}
@@ -559,7 +560,7 @@ var maxProduct = function (nums) {
 	const maxDP = [...nums],
 		minDP = [...nums]
 	for (let i = 1; i < len; i++) {
-    //由本次乘积，最小dp乘nums[i]，nums[i]共同推出
+		//由本次乘积，最小dp乘nums[i]，nums[i]共同推出
 		maxDP[i] = Math.max(maxDP[i - 1] * nums[i], nums[i], minDP[i - 1] * nums[i])
 		minDP[i] = Math.min(minDP[i - 1] * nums[i], nums[i], maxDP[i - 1] * nums[i])
 	}
@@ -647,8 +648,8 @@ var lengthOfLIS = function (nums) {
 	for (let i = 0; i < len; i++) {
 		for (let j = 0; j < i; j++) {
 			if (nums[i] > nums[j]) {
-        dp[i] = Math.max(dp[i], dp[j] + 1)
-      }
+				dp[i] = Math.max(dp[i], dp[j] + 1)
+			}
 		}
 		ret = Math.max(ret, dp[i])
 	}
@@ -656,17 +657,18 @@ var lengthOfLIS = function (nums) {
 }
 ```
 
-### [343. ==整数拆分==](https://leetcode-cn.com/problems/integer-break/)
+### [343. 整数拆分](https://leetcode-cn.com/problems/integer-break/)
 
 ```javascript {.line-numbers}
 var integerBreak = function (n) {
 	const dp = new Array(n + 1).fill(0)
-	//dp[i]：拆分数字i，可以得到的最大乘积为dp[i]
+	//dp[i]：拆分数字i，可得到的最大乘积为dp[i]
 	//dp[0]、dp[1]没意义,初始化成0不影响最终结果
 	//dp[0] = 0, dp[1] = 0
 	dp[2] = 1
 	for (let i = 3; i <= n; i++) {
-		//遍历所有可拆分的j
+		//遍历所有拆i得到的数
+		//优化 j <= i / 2
 		for (let j = 1; j < i; j++) {
 			dp[i] = Math.max(dp[i], Math.max(j * (i - j), j * dp[i - j]))
 		}
@@ -704,8 +706,9 @@ var findLength = function (A, B) {
 ```javascript {.line-numbers}
 var minCostClimbingStairs = function (cost) {
 	const len = cost.length
+	//dp[i]表示到达下标i的最小花费，顶楼指的是dp[len]
 	const dp = new Array(len + 1)
-	//由于可以选择下标0或1作为初始阶梯,因此有dp[0]=dp[1]=0
+	//由于可以选择下标0或1作为初始阶梯,因此dp[0]=dp[1]=0
 	dp[0] = dp[1] = 0
 	for (let i = 2; i <= len; i++) {
 		dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2])
@@ -713,11 +716,10 @@ var minCostClimbingStairs = function (cost) {
 	return dp[len]
 }
 
-//dp[i] 表示达到下标i的最小花费
-//dp[i]=min(dp[i−1]+cost[i−1],dp[i−2]+cost[i−2])
 var minCostClimbingStairs = function (cost) {
 	const len = cost.length
-	let prev = (cur = 0),
+	let prev = 0,
+		cur = 0,
 		next
 	for (let i = 2; i <= len; i++) {
 		next = Math.min(cur + cost[i - 1], prev + cost[i - 2])
@@ -1045,7 +1047,7 @@ var coinChange = function (coins, amount) {
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-  let ret = Infinity
+	let ret = Infinity
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
 		if (remain === 0) {
@@ -1161,8 +1163,8 @@ var change = function (amount, coins) {
 	for (const coin of coins) {
 		//dp[j] += dp[j - nums[j]]
 		for (let j = coin; j <= amount; j++) {
-      dp[j] += dp[j - coin]
-    }
+			dp[j] += dp[j - coin]
+		}
 	}
 	return dp[amount]
 }
@@ -1191,16 +1193,17 @@ var uniquePaths = function (m, n) {
 
 //O(mn) - O(mn)
 var uniquePaths = function (m, n) {
+	//走到dp[i][j]有多少种路径
 	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
 	//base case第一列
 	for (let i = 0; i < m; i++) dp[m][0] = 1
 	//base case第一行
 	for (let i = 0; i < n; i++) dp[0][n] = 1
-	//不影响最终结果
+	//dp[0][0]没用上，随便定义不影响最终结果
 	//dp[0][0] = 0
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; i++) {
-			dpp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 		}
 	}
 	return dp[m - 1][n - 1]
@@ -1208,13 +1211,13 @@ var uniquePaths = function (m, n) {
 
 //O(mn) - O(n)
 var uniquePaths = function (m, n) {
-	//一行一行向下滚动
+	//滚动行
 	//初始化第一行，也符合base数据，隐含初始化了第一列
 	const dp = new Array(n).fill(1)
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) {
-      dp[j] += dp[j - 1]
-    }
+			dp[j] += dp[j - 1]
+		}
 	}
 	return dp[j - 1]
 }
@@ -1226,15 +1229,17 @@ var uniquePaths = function (m, n) {
 var uniquePathsWithObstacles = function (obstacleGrid) {
 	const m = obstacleGrid.length,
 		n = obstacleGrid[0].length,
+		//note initialize
 		dp = Array.from({ length: m }, () => new Array(n).fill(0))
-	//base case
+	//note base case
 	for (let i = 0; i < m && obstacleGrid[i][0] === 0; i++) dp[i][0] = 1
 	for (let i = 0; i < n && obstacleGrid[0][i] === 0; i++) dp[0][i] = 1
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) {
-			if (obstacleGrid[i][j] === 0)  {
-	      dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
-      }
+			//add condition
+			if (obstacleGrid[i][j] === 0) {
+				dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+			}
 		}
 	}
 	return dp[m - 1][n - 1]
@@ -1244,8 +1249,9 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 var uniquePathsWithObstacles = function (obstacleGrid) {
 	const m = obstacleGrid.length,
 		n = obstacleGrid[0].length,
+		//滚动行
 		dp = new Array(n).fill(0)
-	//每列第一个由obstacleGrid[0][0]决定
+	//base case
 	dp[0] = obstacleGrid[0][0] === 1 ? 0 : 1
 	for (let i = 0; i < m; i++) {
 		for (let j = 0; j < n; j++) {
@@ -1253,7 +1259,7 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 				dp[j] = 0
 				continue
 			}
-			//加上obstacleGrid[i][j - 1] === 0更严谨
+			//j - 1 >= 0 排除每行第一列
 			if (j - 1 >= 0 && obstacleGrid[i][j - 1] === 0) dp[j] += dp[j - 1]
 		}
 	}
@@ -1268,12 +1274,11 @@ var numTrees = function (n) {
 	//dp[i] ：用连着的i个数，所构建出的BST种类数
 	const dp = new Array(n + 1).fill(0)
 	//base case
-	dp[0] = dp[1] = 1
-
-	for (let i = 2; i <= n; i++) {
+	dp[0] = 1
+	for (let i = 1; i <= n; i++) {
 		//笛卡尔积
-		for (let j = 0; j <= i - 1; j++) {
-			dp[i] += dp[j] * dp[i - j - 1]
+		for (let j = 1; j <= i; j++) {
+			dp[i] += dp[j - 1] * dp[i - j]
 		}
 	}
 	return dp[n]
@@ -1283,7 +1288,6 @@ var numTrees = function (n) {
 const numTrees = (n) => {
 	// n个整数能创建出的BST的种类数
 	if (n == 0 || n == 1) return 1
-
 	let num = 0
 	for (let i = 0; i <= n - 1; i++) {
 		num += numTrees(i) * numTrees(n - i - 1)
@@ -1308,8 +1312,8 @@ var climbStairs = function (n) {
 	dp[1] = 1
 	dp[2] = 2
 	for (let i = 3; i <= n; i++) {
-    dp[i] = dp[i - 1] + dp[i - 2]
-  }
+		dp[i] = dp[i - 1] + dp[i - 2]
+	}
 	return dp[n]
 }
 
