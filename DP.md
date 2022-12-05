@@ -1009,96 +1009,6 @@ var longestPalindromeSubseq = function (s) {
 
 # 背包 DP
 
-### 01 背包
-
-![](images/dp_1.png)
-
-**背包问题的理论基础重中之重是 01 背包，一定要理解透！**
-
-1. **dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的背包，价值总和最大是多少**
-
-2. **dp\[i\]\[j\] = max(dp\[i - 1\]\[j\], dp\[i - 1\]\[j - weight\[i\]\] + value\[i\])**
-3. base case, 注意倒序遍历和是否价值有正负
-
-![](images/dp_2.png)
-
-4. 优化：注意遍历方向
-
-```javascript
-//二维解法
-function testWeightBagProblem(weight, value, bagWeight) {
-	const len = weight.length,
-		dp = Array(len) //empty
-			.fill() //undefined
-			.map(() => Array(bagWeight + 1).fill(0)) //注意数组偏移和第一列已经初始化为0
-	for (let j = weight[0]; j <= bagWeight; j++) dp[0][j] = value[0]
-	//先遍历物品(本题本解法两个状态遍历顺序随意,都不影响dp公式的推导)
-	for (let i = 1; i < len; i++) {
-		//再遍历背包容量
-		for (let j = 0; j <= bagWeight; j++) {
-			//不放
-			if (j < weight[i]) {
-				dp[i][j] = dp[i - 1][j]
-				//放
-			} else {
-				dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i])
-			}
-		}
-	}
-	console.table(dp)
-	return dp[len - 1][bagWeight]
-}
-
-//一维解法
-function testWeightBagProblem2(weight, value, bagWeight) {
-	const len = weight.length,
-		//dp[j]表示：容量为j的背包，所背的物品最大价值
-		//第一行初始化为0
-		dp = Array(bagWeight + 1).fill(0)
-	for (let i = 1; i <= len; i++) {
-		//倒序遍历是为了保证物品i只被放入一次!!!
-		//从右向左覆盖,一维解法不能修改两个状态的遍历先后和遍历方向!!!
-		for (let j = bagWeight; j >= weight[i - 1]; j--) {
-			dp[j] = Math.max(dp[j], value[i - 1] + dp[j - weight[i - 1]])
-		}
-	}
-	console.log(dp)
-	return dp[bagWeight]
-}
-```
-
-### 完全背包
-
-```javascript
-// 先遍历物品，再遍历背包容量
-function testCompletePack1() {
-	const weight = [1, 3, 5]
-	const value = [15, 20, 30]
-	const bagWeight = 4
-	let dp = new Array(bagWeight + 1).fill(0)
-	for (let i = 0; i < weight.length; i++) {
-		for (let j = weight[i]; j <= bagWeight; j++) {
-			dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
-		}
-	}
-	console.log(dp)
-}
-
-// 先遍历背包容量，再遍历物品
-function testCompletePack2() {
-	const weight = [1, 3, 5]
-	const value = [15, 20, 30]
-	const bagWeight = 4
-	let dp = new Array(bagWeight + 1).fill(0)
-	for (let j = 0; j <= bagWeight; j++) {
-		for (let i = 0; i < weight.length; i++) {
-			if (j >= weight[i]) dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
-		}
-	}
-	console.log(dp)
-}
-```
-
 ### [322. ==零钱兑换==](https://leetcode-cn.com/problems/coin-change/)
 
 ```javascript {.line-numbers}
@@ -1208,6 +1118,33 @@ var coinChange = function (coins, amount) {
 		}
 	}
 	return dp[amount] === Infinity ? -1 : dp[amount]
+}
+```
+
+[416.==分割等和子集==](https://leetcode.cn/problems/partition-equal-subset-sum/)
+
+```javascript
+var canPartition = function (nums) {
+	//dp[i][j] = x表示，对于前i个物品，当前背包的容量为j时;
+	//若x为true，则说明可以恰好将背包装满，若x为false，则说明不能恰好将背包装满
+	let sum = 0
+	for (let num of nums) sum += num
+	//和为奇数时，不可能划分成两个和相等的集合
+	if (sum & 1) return false
+	const n = nums.length
+	//dp[sum]即为所求的结果,是否可以二等分
+	sum = sum / 2
+	let dp = new Array(sum + 1).fill(false)
+	//base case
+	//dp[..][0] = true 和 dp[0][..] = false
+	//因为背包没有空间的时候，就相当于装满了，而当没有物品可选择的时候，肯定没办法装满背包
+	dp[0] = true
+	for (let i = 0; i < n; i++) {
+		for (let j = sum; j >= nums[i]; j--) {
+			dp[j] = dp[j] || dp[j - nums[i]]
+		}
+	}
+	return dp[sum]
 }
 ```
 
