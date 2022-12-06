@@ -426,7 +426,7 @@ var restoreIpAddresses = function (s) {
 }
 ```
 
-### [51.==N  皇后 H==](https://leetcode-cn.com/problems/n-queens/)
+### [51.==N 皇后 H==](https://leetcode-cn.com/problems/n-queens/)
 
 ```javascript {.line-numbers}
 var solveNQueens = function (n) {
@@ -440,7 +440,7 @@ var solveNQueens = function (n) {
 			solutions.push([...path])
 			return
 		}
-    //行通过层递进,这里遍历列
+		//行通过层递进,这里遍历列
 		for (let col = 0; col < n; col++) {
 			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
 			cols.add(col)
@@ -575,7 +575,7 @@ var solve = function (board) {
 }
 ```
 
-### [494.==目标和==](https://leetcode.cn/problems/target-sum/)
+### [494.目标和](https://leetcode.cn/problems/target-sum/)
 
 ```javascript {.line-numbers}
 var findTargetSumWays = function (nums, target) {

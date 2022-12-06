@@ -4,9 +4,9 @@
 
 1. 确定 dp 数组（dp table）以及下标的含义
 2. 确定递推公式
-3. 根据递推公式可以特定的初始化dp 数组
+3. 根据递推公式可以特定的初始化 dp 数组
 4. 确定遍历顺序（多状态的遍历先后）
-5. 举例推导 dp 数组(打印dp数组)
+5. 举例推导 dp 数组(打印 dp 数组)
 
 # 线性 DP
 
@@ -49,7 +49,7 @@ var longestPalindrome = function (s) {
 		//取str有性能消耗
 		const oddStr = palindrome(s, i, i)
 		const evenStr = palindrome(s, i, i + 1)
-    //不能写成if (oddStr.length > evenStr.length)，这个结果是当次的结果
+		//不能写成if (oddStr.length > evenStr.length)，这个结果是当次的结果
 		if (oddStr.length > maxLen) {
 			maxStr = oddStr
 			maxLen = oddStr.length
@@ -105,15 +105,15 @@ var longestPalindrome = function (s) {
 	const len = s.length
 	if (len < 2) return s
 	//dp[i][j] 表示从i到j的子串是否是回文
-  //初始化成符合语义的false
+	//初始化成符合语义的false
 	const dp = Array.from({ length: len }, () => new Array(len).fill(false))
 	let begin = 0,
 		maxLen = 1
 	//对角线等于true的case未用到,下列可以忽略不写
 	for (let i = 0; i < len; i++) dp[i][i] = true
 	//状态转移是从较短的字符串向较长的字符串进行转移
-  //i肯定要小于j,故填的是dp table上半部分
-  //升序填列再升序填行
+	//i肯定要小于j,故填的是dp table上半部分
+	//升序填列再升序填行
 	for (let j = 1; j < len; j++) {
 		for (let i = 0; i < j; i++) {
 			if (s[i] === s[j]) {
@@ -176,7 +176,7 @@ var longestValidParentheses = function (s) {
 	//初始化成0也符合base case，比如当前字符为左括号肯定是0
 	const dp = new Array(len).fill(0)
 	for (let i = 1; i < len; i++) {
-    //符合语义再推
+		//符合语义再推
 		if (s[i] === ')') {
 			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '(',也就是字符串形如 '……()'
@@ -186,7 +186,8 @@ var longestValidParentheses = function (s) {
 			} else if (s[i - dp[i - 1] - 1] === '(' && i - dp[i - 1] - 1 >= 0) {
 				//s[i] = ')' 且 s[i - 1] = ')',也就是字符串形如 '……))'
 				//内部的有效长度 + 前面的有效长度 + 2
-				dp[i] = dp[i - 1] + (i - dp[i - 1] - 1 >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
+				dp[i] =
+					dp[i - 1] + (i - dp[i - 1] - 1 >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2
 			}
 			ret = Math.max(ret, dp[i])
 		}
@@ -368,7 +369,7 @@ var minPathSum = function (grid) {
 	for (let j = 1; j < cols; j++) {
 		dp[0][j] = dp[0][j - 1] + grid[0][j]
 	}
-  //其他单元格
+	//其他单元格
 	for (let i = 1; i < rows; i++) {
 		for (let j = 1; j < cols; j++) {
 			dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
@@ -389,10 +390,10 @@ var minPathSum = function (grid) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (i === 0 && j === 0) continue
-      //
+			//
 			else if (i === 0) {
 				dp[j] = dp[j - 1] + grid[i][j]
-       //滚动列更新自己
+				//滚动列更新自己
 			} else if (j === 0) {
 				dp[j] += grid[i][j]
 			} else {
@@ -419,7 +420,7 @@ var minDistance = function (word1, word2) {
 	for (let j = 0; j <= n; j++) dp[0][j] = j
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
-      //坐标偏移
+			//坐标偏移
 			if (word1[i - 1] === word2[j - 1]) {
 				dp[i][j] = dp[i - 1][j - 1]
 			} else {
@@ -434,7 +435,7 @@ var minDistance = function (word1, word2) {
 var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
-  //滚动列
+	//滚动列
 	const dp = new Array(n + 1)
 	//第一列
 	for (let j = 0; j <= n; j++) dp[j] = j
@@ -540,7 +541,7 @@ var minimumTotal = function (triangle) {
 		dp[i] = triangle[height - 1][i]
 	}
 	for (let i = height - 2; i >= 0; i--) {
-    //每次更新比上一行少一个
+		//每次更新比上一行少一个
 		for (let j = 0; j <= i; j++) {
 			dp[j] = Math.min(dp[j], dp[j + 1]) + triangle[i][j]
 		}
@@ -559,7 +560,7 @@ var maxProduct = function (nums) {
 	const maxDP = [...nums],
 		minDP = [...nums]
 	for (let i = 1; i < len; i++) {
-    //由本次乘积，最小dp乘nums[i]，nums[i]共同推出
+		//由本次乘积，最小dp乘nums[i]，nums[i]共同推出
 		maxDP[i] = Math.max(maxDP[i - 1] * nums[i], nums[i], minDP[i - 1] * nums[i])
 		minDP[i] = Math.min(minDP[i - 1] * nums[i], nums[i], maxDP[i - 1] * nums[i])
 	}
@@ -621,11 +622,11 @@ var maximalSquare = (matrix) => {
 
 ```javascript {.line-numbers}
 var numSquares = function (n) {
-	const dp = [...Array(n + 1)].map((_) => 0)
-	for (let i = 1; i <= n; i++) {
-		dp[i] = i // 最坏的情况就是每次+1
-		for (let j = 1; i - j * j >= 0; j++) {
-			dp[i] = Math.min(dp[i], dp[i - j * j] + 1)
+	const dp = [...Array(n + 1)].map((_) => Infinity)
+	dp[0] = 0
+	for (let i = 1; i * i <= n; i++) {
+		for (let j = i * i; j <= n; j++) {
+			dp[j] = Math.min(dp[j], dp[j - i * i] + 1)
 		}
 	}
 	return dp[n]
@@ -647,8 +648,8 @@ var lengthOfLIS = function (nums) {
 	for (let i = 0; i < len; i++) {
 		for (let j = 0; j < i; j++) {
 			if (nums[i] > nums[j]) {
-        dp[i] = Math.max(dp[i], dp[j] + 1)
-      }
+				dp[i] = Math.max(dp[i], dp[j] + 1)
+			}
 		}
 		ret = Math.max(ret, dp[i])
 	}
@@ -762,7 +763,7 @@ var rob = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
-	//dp[i] 表示前i - 1间房屋能偷窃到的最高总金额
+	//dp[i] 考虑下标i，能偷窃到的最高总金额
 	const dp = new Array(len)
 	;(dp[0] = nums[0]), (dp[1] = Math.max(nums[0], nums[1]))
 	for (let i = 2; i < len; i++) {
@@ -1045,7 +1046,7 @@ var coinChange = function (coins, amount) {
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-  let ret = Infinity
+	let ret = Infinity
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
 		if (remain === 0) {
@@ -1125,13 +1126,13 @@ var coinChange = function (coins, amount) {
 
 ```javascript
 var canPartition = function (nums) {
+	//转换成01背包，背包容量为总和的一半，num[0...i]里面随便取看是否能装满
 	//dp[i][j] = x表示，对于前i个物品，当前背包的容量为j时;
-	//若x为true，则说明可以恰好将背包装满，若x为false，则说明不能恰好将背包装满
-	let sum = 0
-	for (let num of nums) sum += num
+	//若x为true，说明可以恰好装满背包，若x为false，说明不能恰好装满背包
+	//另种定义为 dp[i][j] = sum / 2，所求为 dp[sum / 2] === sum / 2
+	let sum = nums.reduce((acc, cur) => acc + cur)
 	//和为奇数时，不可能划分成两个和相等的集合
 	if (sum & 1) return false
-	const n = nums.length
 	//dp[sum]即为所求的结果,是否可以二等分
 	sum = sum / 2
 	let dp = new Array(sum + 1).fill(false)
@@ -1139,12 +1140,26 @@ var canPartition = function (nums) {
 	//dp[..][0] = true 和 dp[0][..] = false
 	//因为背包没有空间的时候，就相当于装满了，而当没有物品可选择的时候，肯定没办法装满背包
 	dp[0] = true
-	for (let i = 0; i < n; i++) {
+	for (let i = 0, len = nums.length; i < len; i++) {
 		for (let j = sum; j >= nums[i]; j--) {
 			dp[j] = dp[j] || dp[j - nums[i]]
 		}
 	}
 	return dp[sum]
+}
+
+var canPartition = function (nums) {
+	const sum = nums.reduce((acc, cur) => acc + cur)
+	if (sum & 1) return false
+	//长度举例就看出来了，同背包初始化
+	const dp = Array(sum / 2 + 1).fill(0)
+	for (let i = 0, len = nums.length; i < len; i++) {
+		for (let j = Math.floor(sum / 2); j >= nums[i]; j--) {
+			dp[j] = Math.max(dp[j], dp[j - nums[i]] + nums[i])
+		}
+	}
+	//dp table的最大值
+	return dp[sum / 2] === sum / 2
 }
 ```
 
@@ -1152,7 +1167,7 @@ var canPartition = function (nums) {
 
 ```javascript {.line-numbers}
 var change = function (amount, coins) {
-	//dp[j]：凑成总金额j的货币组合数为dp[j]
+	//dp[j]：凑成总金额(背包)j的货币组合数为dp[j]，有dp[j]种方法
 	const dp = new Array(amount + 1).fill(0)
 	//语义上讲凑成总金额0的货币组合数为1
 	dp[0] = 1
@@ -1161,8 +1176,8 @@ var change = function (amount, coins) {
 	for (const coin of coins) {
 		//dp[j] += dp[j - nums[j]]
 		for (let j = coin; j <= amount; j++) {
-      dp[j] += dp[j - coin]
-    }
+			dp[j] += dp[j - coin]
+		}
 	}
 	return dp[amount]
 }
@@ -1213,8 +1228,8 @@ var uniquePaths = function (m, n) {
 	const dp = new Array(n).fill(1)
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) {
-      dp[j] += dp[j - 1]
-    }
+			dp[j] += dp[j - 1]
+		}
 	}
 	return dp[j - 1]
 }
@@ -1232,9 +1247,9 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 	for (let i = 0; i < n && obstacleGrid[0][i] === 0; i++) dp[0][i] = 1
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) {
-			if (obstacleGrid[i][j] === 0)  {
-	      dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
-      }
+			if (obstacleGrid[i][j] === 0) {
+				dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+			}
 		}
 	}
 	return dp[m - 1][n - 1]
@@ -1308,8 +1323,8 @@ var climbStairs = function (n) {
 	dp[1] = 1
 	dp[2] = 2
 	for (let i = 3; i <= n; i++) {
-    dp[i] = dp[i - 1] + dp[i - 2]
-  }
+		dp[i] = dp[i - 1] + dp[i - 2]
+	}
 	return dp[n]
 }
 
