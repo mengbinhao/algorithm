@@ -118,9 +118,9 @@ dp\[i\]\[j\] = max(dp\[i - 1\]\[j\], dp\[i - 1\]\[j - weight\[i\]\] + value\[i\]
 const bag01 = (weight, value, bagWeight) => {
 	const len = weight.length
 	let dp = Array.from({ length: len }, () => new Array(bagWeight + 1).fill(0))
-	//base case
+	/base case 第一行，第一列初始化已覆盖
 	for (let j = weight[0]; j <= bagWeight; j++) dp[0][j] = value[0]
-	// 先遍历物品，再遍历背包易于理解
+	//先遍历物品，再遍历背包易于理解
 	//第一行和第一列都已经初始化了
 	for (let i = 1; i < len; i++) {
 		for (let j = 1; j <= bagWeight; j++) {
@@ -171,10 +171,10 @@ const bag01Advanced = (weight, value, bagWeight) => {
 	const len = weight.length
 	//滚动行 + base case
 	let dp = new Array(bagWeight + 1).fill(0)
-	// 必须先遍历物品，再遍历背包
-	// 背包必须倒序遍历，保证物品i只被放入一次，举例证明
+	//必须先遍历物品，再遍历背包
+	//背包必须倒序遍历，保证物品i只被放入一次，举例证明
 	for (let i = 0; i < len; i++) {
-		//结束条件为j >= 0则下面还需判断if (j - weight[i] >= 0) 才推导
+		//结束条件为j >= 0则下面还需判断if (j - weight[i] >= 0) 才能推导
 		for (let j = bagWeight; j >= weight[i]; j--) {
 			dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
 		}
@@ -246,13 +246,8 @@ const bagComplete2 = (weight, value, bagWeight) => {
 	}
 	console.log(dp)
 }
-console.log(bagComplete([1, 3, 4], [15, 20, 30], 4))
+console.log(bagComplete1([1, 3, 4], [15, 20, 30], 4))
 ```
-
-##### 其他
-
-- **如果求组合数就是外层 for 循环遍历物品，内层 for 遍历背包**
-- **如果求排列数就是外层 for 遍历背包，内层 for 循环遍历物品**
 
 ### 总结
 
@@ -264,13 +259,12 @@ console.log(bagComplete([1, 3, 4], [15, 20, 30], 4))
   - 分割等和子集：问能不能装满
   - 最后一块石头：问最多能装多少
   - 目标和：装满这个背包有多少种方法: dp\[j\] += dp\[j - nums\[i\]\]
-  - 一和零：装满背包(二维背包)最多有多少个物品：dp\[i\]\[j\] = max(dp\[i - x\]\[j - y\] + 1, dp\[i\]\[j\])
+  - 一和零：装满背包(二维)最多有多少个物品：dp\[i\]\[j\] = max(dp\[i - x\]\[j - y\] + 1, dp\[i\]\[j\])
 - 完全背包变体
   - 纯完全背包：一维 dp 两层 for 循环先后无所谓
   - 装满这个背包有多少种方法
     - 组合数：先遍历物品再遍历背包（零钱兑换 2）
     - 排列数：先遍历背包再遍历物品（组合总和 4）
-  - 装满这个背包最小用多少件物品
-    - 零钱兑换、完全平方数
-      - dp\[j\] = min(dp\[j - coins\[i\]\] + 1, dp\[j\])
-      - 先遍历物品还是背包都可以
+  - 装满这个背包最少用多少件物品（零钱兑换、完全平方数）
+    - dp\[j\] = min(dp\[j - coins\[i\]\] + 1, dp\[j\])
+    - 先遍历物品还是背包都可以

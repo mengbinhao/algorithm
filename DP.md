@@ -667,7 +667,7 @@ var integerBreak = function (n) {
 	dp[2] = 1
 	for (let i = 3; i <= n; i++) {
 		//遍历所有拆i得到的数
-		//优化 j <= i / 2
+		//可优化成 j <= i / 2
 		for (let j = 1; j < i; j++) {
 			dp[i] = Math.max(dp[i], Math.max(j * (i - j), j * dp[i - j]))
 		}
