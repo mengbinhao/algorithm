@@ -4,7 +4,7 @@
 
 1. 确定 dp 数组（dp table）以及下标的含义
 2. 确定递推公式
-3. 根据递推公式可以特定的初始化 dp 数组
+3. 根据递推公式确定如何初始化 dp 数组
 4. 确定遍历顺序（多状态的遍历先后）
 5. 举例推导 dp 数组(打印 dp 数组)
 
@@ -390,7 +390,6 @@ var minPathSum = function (grid) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (i === 0 && j === 0) continue
-			//
 			else if (i === 0) {
 				dp[j] = dp[j - 1] + grid[i][j]
 				//滚动列更新自己
@@ -657,17 +656,18 @@ var lengthOfLIS = function (nums) {
 }
 ```
 
-### [343. ==整数拆分==](https://leetcode-cn.com/problems/integer-break/)
+### [343. 整数拆分](https://leetcode-cn.com/problems/integer-break/)
 
 ```javascript {.line-numbers}
 var integerBreak = function (n) {
 	const dp = new Array(n + 1).fill(0)
-	//dp[i]：拆分数字i，可以得到的最大乘积为dp[i]
+	//dp[i]：拆分数字i，可得到的最大乘积为dp[i]
 	//dp[0]、dp[1]没意义,初始化成0不影响最终结果
 	//dp[0] = 0, dp[1] = 0
 	dp[2] = 1
 	for (let i = 3; i <= n; i++) {
-		//遍历所有可拆分的j
+		//遍历所有拆i得到的数
+		//优化 j <= i / 2
 		for (let j = 1; j < i; j++) {
 			dp[i] = Math.max(dp[i], Math.max(j * (i - j), j * dp[i - j]))
 		}
@@ -705,8 +705,9 @@ var findLength = function (A, B) {
 ```javascript {.line-numbers}
 var minCostClimbingStairs = function (cost) {
 	const len = cost.length
+	//dp[i]表示到达下标i的最小花费，顶楼指的是dp[len]
 	const dp = new Array(len + 1)
-	//由于可以选择下标0或1作为初始阶梯,因此有dp[0]=dp[1]=0
+	//由于可以选择下标0或1作为初始阶梯,因此dp[0]=dp[1]=0
 	dp[0] = dp[1] = 0
 	for (let i = 2; i <= len; i++) {
 		dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2])
@@ -714,11 +715,10 @@ var minCostClimbingStairs = function (cost) {
 	return dp[len]
 }
 
-//dp[i] 表示达到下标i的最小花费
-//dp[i]=min(dp[i−1]+cost[i−1],dp[i−2]+cost[i−2])
 var minCostClimbingStairs = function (cost) {
 	const len = cost.length
-	let prev = (cur = 0),
+	let prev = 0,
+		cur = 0,
 		next
 	for (let i = 2; i <= len; i++) {
 		next = Math.min(cur + cost[i - 1], prev + cost[i - 2])
@@ -1206,16 +1206,17 @@ var uniquePaths = function (m, n) {
 
 //O(mn) - O(mn)
 var uniquePaths = function (m, n) {
+	//走到dp[i][j]有多少种路径
 	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
 	//base case第一列
 	for (let i = 0; i < m; i++) dp[m][0] = 1
 	//base case第一行
 	for (let i = 0; i < n; i++) dp[0][n] = 1
-	//不影响最终结果
+	//dp[0][0]没用上，随便定义不影响最终结果
 	//dp[0][0] = 0
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; i++) {
-			dpp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 		}
 	}
 	return dp[m - 1][n - 1]
@@ -1223,7 +1224,7 @@ var uniquePaths = function (m, n) {
 
 //O(mn) - O(n)
 var uniquePaths = function (m, n) {
-	//一行一行向下滚动
+	//滚动行
 	//初始化第一行，也符合base数据，隐含初始化了第一列
 	const dp = new Array(n).fill(1)
 	for (let i = 1; i < m; i++) {
@@ -1241,12 +1242,14 @@ var uniquePaths = function (m, n) {
 var uniquePathsWithObstacles = function (obstacleGrid) {
 	const m = obstacleGrid.length,
 		n = obstacleGrid[0].length,
+		//note initialize
 		dp = Array.from({ length: m }, () => new Array(n).fill(0))
-	//base case
+	//note base case
 	for (let i = 0; i < m && obstacleGrid[i][0] === 0; i++) dp[i][0] = 1
 	for (let i = 0; i < n && obstacleGrid[0][i] === 0; i++) dp[0][i] = 1
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) {
+			//add condition
 			if (obstacleGrid[i][j] === 0) {
 				dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 			}
@@ -1259,8 +1262,9 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 var uniquePathsWithObstacles = function (obstacleGrid) {
 	const m = obstacleGrid.length,
 		n = obstacleGrid[0].length,
+		//滚动行
 		dp = new Array(n).fill(0)
-	//每列第一个由obstacleGrid[0][0]决定
+	//base case
 	dp[0] = obstacleGrid[0][0] === 1 ? 0 : 1
 	for (let i = 0; i < m; i++) {
 		for (let j = 0; j < n; j++) {
@@ -1268,7 +1272,7 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 				dp[j] = 0
 				continue
 			}
-			//加上obstacleGrid[i][j - 1] === 0更严谨
+			//j - 1 >= 0 排除每行第一列
 			if (j - 1 >= 0 && obstacleGrid[i][j - 1] === 0) dp[j] += dp[j - 1]
 		}
 	}
@@ -1283,12 +1287,11 @@ var numTrees = function (n) {
 	//dp[i] ：用连着的i个数，所构建出的BST种类数
 	const dp = new Array(n + 1).fill(0)
 	//base case
-	dp[0] = dp[1] = 1
-
-	for (let i = 2; i <= n; i++) {
+	dp[0] = 1
+	for (let i = 1; i <= n; i++) {
 		//笛卡尔积
-		for (let j = 0; j <= i - 1; j++) {
-			dp[i] += dp[j] * dp[i - j - 1]
+		for (let j = 1; j <= i; j++) {
+			dp[i] += dp[j - 1] * dp[i - j]
 		}
 	}
 	return dp[n]
@@ -1298,7 +1301,6 @@ var numTrees = function (n) {
 const numTrees = (n) => {
 	// n个整数能创建出的BST的种类数
 	if (n == 0 || n == 1) return 1
-
 	let num = 0
 	for (let i = 0; i <= n - 1; i++) {
 		num += numTrees(i) * numTrees(n - i - 1)
