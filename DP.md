@@ -5,8 +5,9 @@
 1. 确定 dp 数组（dp table）以及下标的含义
 2. 确定递推公式
 3. 根据递推公式确定如何初始化 dp 数组
-4. 确定遍历顺序（多状态的遍历先后）
+4. 确定状态的遍历顺序（多状态的遍历先后）
 5. 举例推导 dp 数组(打印 dp 数组)
+6. 二维状态压缩压缩的都是第一维，滚动行
 
 # 线性 DP
 
@@ -378,21 +379,22 @@ var minPathSum = function (grid) {
 	return dp[rows - 1][cols - 1]
 }
 
-//状态压缩，压缩的是行状态
+//状态压缩
 var minPathSum = function (grid) {
 	if (!grid) return 0
 	const rows = grid.length,
 		cols = grid[0].length
 	if (!rows || !cols) return 0
-	//滚动列！！！
+	//滚动行
 	const dp = new Array(cols).fill(Infinity)
 	dp[0] = grid[0][0]
+  //先更新行，在更新每行第一列，再更新其他行和列
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (i === 0 && j === 0) continue
 			else if (i === 0) {
 				dp[j] = dp[j - 1] + grid[i][j]
-				//滚动列更新自己
+				//滚动行更新自己
 			} else if (j === 0) {
 				dp[j] += grid[i][j]
 			} else {
@@ -763,7 +765,7 @@ var rob = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
-	//dp[i] 考虑下标i，能偷窃到的最高总金额
+	//dp[i] 表示考虑下标i，能偷窃到的最高总金额
 	const dp = new Array(len)
 	;(dp[0] = nums[0]), (dp[1] = Math.max(nums[0], nums[1]))
 	for (let i = 2; i < len; i++) {
@@ -797,10 +799,13 @@ var rob = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
-	//该问题可以看成两个单排问题
-	return Math.max(robRange(nums, 0, len - 2), robRange(nums, 1, len - 1))
+	//可转换成两个单排问题
+	return Math.max(
+		robWithRange(nums, 0, len - 2),
+		robWithRange(nums, 1, len - 1)
+	)
 
-	function robRange(nums, start, end) {
+	function robWithRange(nums, start, end) {
 		let dp_i_1 = 0,
 			dp_i_2 = 0,
 			dp_i = 0
@@ -817,7 +822,7 @@ var rob = function (nums) {
 ### [337. 打家劫舍 III 树形 DP](https://leetcode-cn.com/problems/house-robber-iii/)
 
 ```javascript {.line-numbers}
-//time exceeded!!!
+//TLE
 var rob = function (root) {
 	const helper = (root) => {
 		if (root == null) return 0
@@ -851,135 +856,6 @@ var rob = function (root) {
 	}
 	const [robed, notRobed] = helper(root)
 	return Math.max(robed, notRobed)
-}
-```
-
-## 股票系列
-
-### [121. ==买股票的最佳时机 E==](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
-
-```javascript {.line-numbers}
-//只能交易一次
-//brute force O(n^2) - O(1) Time exceeded
-var maxProfit = function (prices) {
-	const len = prices.length
-	if (len < 2) return 0
-	let maxProfit = 0,
-		profit
-	//loop every two different days
-	for (let i = 0; i < len - 1; i++) {
-		for (let j = i + 1; j < len; j++) {
-			profit = prices[j] - prices[i]
-			if (profit > maxProfit) maxProfit = profit
-		}
-	}
-	return maxProfit
-}
-
-//Greedy - loop once
-var maxProfit = function (prices) {
-	const len = prices.length
-	if (len < 2) return 0
-	let maxProfit = 0,
-		//维护一个最小值
-		minPrice = Infinity
-	for (let i = 0; i < len; i++) {
-		minPrice = Math.min(minPrice, prices[i])
-		maxProfit = Math.max(maxProfit, prices[i] - minPrice)
-	}
-	return maxProfit
-}
-```
-
-### [122. ==买卖股票的最佳时机 2E==](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
-
-```javascript {.line-numbers}
-//Greedy 每天可以交易一次
-var maxProfit = function (prices) {
-	let ret = 0
-	let len = prices.length
-	if (len < 2) return 0
-	for (let i = 1; i < len; i++) {
-		//profit += Math.max(prices[i] - prices[i - 1], 0);
-		// if (prices[i] > prices[i - 1]) {
-		// 	profit += prices[i] - prices[i - 1]
-		// }
-		ret += Math.max(prices[i] - prices[i - 1], 0)
-	}
-	return ret
-}
-
-//DFS  Time Limit Exceeded
-var maxProfit = function (prices) {
-	const dfs = (prices, level) => {
-		if (level >= prices.length) return 0
-		let ret = 0
-		//计算每天可能的利润
-		for (let start = level; start < prices.length; start++) {
-			let maxProfit = 0
-			for (let i = start + 1; i < prices.length; i++) {
-				if (prices[i] > prices[start]) {
-					let profit = dfs(prices, i + 1) + prices[i] - prices[start]
-					if (profit > maxProfit) maxProfit = profit
-				}
-			}
-			//每一次的最大利润
-			if (maxProfit > ret) ret = maxProfit
-		}
-		return ret
-	}
-	return dfs(prices, 0)
-}
-
-//DP O(n)-O(n)
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-	//状态 dp[i][j]
-	//第一维i表示索引为i的那一天(具有前缀性质,即考虑了之前天数的收益)能获得的最大利润
-	//第二维j表示索引为i的那一天是持有股票,还是持有现金。这里0表示持有现金(cash),1表示持有股票(stock)
-	const dp = Array.from({ length: len }, (v, i) => new Array(2))
-	dp[0][0] = 0
-	dp[0][1] = -prices[0]
-	for (let i = 1; i < len; i++) {
-		dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i])
-		dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i])
-	}
-	return dp[len - 1][0]
-}
-
-//DP O(n)-O(n)
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-	//分开定义
-	let cash = new Array(len)
-	let hold = new Array(len)
-	cash[0] = 0
-	hold[0] = -prices[0]
-	for (let i = 1; i < len; i++) {
-		cash[i] = Math.max(cash[i - 1], hold[i - 1] + prices[i])
-		hold[i] = Math.max(hold[i - 1], cash[i - 1] - prices[i])
-	}
-	return cash[len - 1]
-}
-
-//DP O(n)-O(1)
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-	//分开定义
-	let cash = 0
-	let hold = -prices[0]
-	let preCash = cash,
-		preHold = hold
-	for (let i = 1; i < len; i++) {
-		cash = Math.max(preCash, preHold + prices[i])
-		hold = Math.max(preHold, preCash - prices[i])
-		preCash = cash
-		preHold = hold
-	}
-	return cash
 }
 ```
 
@@ -1026,7 +902,7 @@ var coinChange = function (coins, amount) {
 		if (coinsIdx > coins.length) return
 		//直接拿最大币值的最大个数找解
 		//coins递减
-		//i + count < ret剪枝非最小count解，不加则time exceeded
+		//i + count < ret剪枝非最小count解，不加则TLE
 		for (
 			let i = Math.floor(remain / coins[coinsIdx]);
 			i >= 0 && i + count < ret;
@@ -1041,7 +917,7 @@ var coinChange = function (coins, amount) {
 	return ret === Infinity ? -1 : ret
 }
 
-//dfs time exceeded
+//dfs TLE
 //O(S^n) - O(n)  S总金额
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
