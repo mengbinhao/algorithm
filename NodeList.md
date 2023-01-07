@@ -269,7 +269,7 @@ var reverseKGroup = function (head, k) {
 	let a = head,
 		b = head
 	//遍历完b变成了下次翻转的头结点
-  for (let i = 0; i < k; i++) {
+	for (let i = 0; i < k; i++) {
 		//不够数量直接返回
 		if (!b) return head
 		b = b.next
@@ -358,6 +358,21 @@ var deleteDuplicates = function (head) {
 			cur = cur.next
 		}
 	}
+	return head
+}
+
+var deleteDuplicates = function (head) {
+	if (!head) return null
+	let fast = head,
+		slow = head
+	while (fast) {
+		if (fast.val !== slow.val) {
+			slow.next = fast
+			slow = slow.next
+		}
+		fast = fast.next
+	}
+	slow.next = null
 	return head
 }
 ```

@@ -77,6 +77,7 @@ var maxProfit = function (prices) {
 	const len = prices.length
 	if (len < 2) return 0
 	let dp = Array.from({length: len}, () => new Array(2).fill(0))
+  //0 不持有 1 持有
   dp[0][0] = 0
   dp[0][1] = -prices[0]
 	for (let i = 1; i < len; i++) {

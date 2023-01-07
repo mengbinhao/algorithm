@@ -388,7 +388,7 @@ var minPathSum = function (grid) {
 	//滚动行
 	const dp = new Array(cols).fill(Infinity)
 	dp[0] = grid[0][0]
-  //先更新行，在更新每行第一列，再更新其他行和列
+	//先更新行，在更新每行第一列，再更新其他行和列
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (i === 0 && j === 0) continue
@@ -641,12 +641,12 @@ var numSquares = function (n) {
 var lengthOfLIS = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	//定义dp[i]为考虑前i个元素,以第i个数字结尾的最长上升子序列的长度
+	//定义dp[i]以nums[i]結尾最长上升子序列的长度
 	//nums[i]必须被选取,所以初始化为1
 	const dp = new Array(len).fill(1)
 	let ret = 1
 	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
-	for (let i = 0; i < len; i++) {
+	for (let i = 1; i < len; i++) {
 		for (let j = 0; j < i; j++) {
 			if (nums[i] > nums[j]) {
 				dp[i] = Math.max(dp[i], dp[j] + 1)
@@ -808,7 +808,7 @@ var rob = function (nums) {
 	function robWithRange(nums, start, end) {
 		let dp_i_1 = 0,
 			dp_i_2 = 0,
-			dp_i = 0
+			dp_i
 		for (let i = start; i <= end; i++) {
 			dp_i = Math.max(dp_i_1, nums[i] + dp_i_2)
 			dp_i_2 = dp_i_1
@@ -845,10 +845,10 @@ var rob = function (root) {
 var rob = function (root) {
 	const helper = (root) => {
 		if (root === null) return [0, 0]
-		// 0: rob 1: notRob
+		//dp[0]: rob, dp[1]: notRob
+		//针对每层root都返回这样的结果，最终推出根节点的结果
 		const l = helper(root.left)
 		const r = helper(root.right)
-
 		const robed = root.val + l[1] + r[1]
 		const notRobed = Math.max(l[0], l[1]) + Math.max(r[0], r[1])
 		//返回当前节点偷还是不偷

@@ -10,4 +10,18 @@ var findLengthOfLCIS = function (nums) {
 	}
 	return ret
 }
+
+//DP
+var findLengthOfLCIS = function (nums) {
+	const len = nums.length
+	let dp = new Array(len).fill(1),
+		ret = 0
+	for (let i = 0; i < len; i++) {
+		if (nums[i] > nums[i - 1]) {
+			dp[i] = dp[i - 1] + 1
+		}
+		if (dp[i] > ret) ret = dp[i]
+	}
+	return ret
+}
 ```
