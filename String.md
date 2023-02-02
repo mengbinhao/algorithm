@@ -342,7 +342,7 @@ var reverseStr = function (s, k) {
 
 const reverse = (arr, l, r) => {
 	while (l < r) {
-    [arr[l++], arr[r--]] = [arr[r], arr[l]]
+		;[arr[l++], arr[r--]] = [arr[r], arr[l]]
 	}
 }
 ```
