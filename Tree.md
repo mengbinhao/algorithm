@@ -26,7 +26,7 @@
 
   - ==满二叉树==：除了叶结点外每一个结点都有左右孩子且叶子结点都处在最底层的二叉树
 
-  - ==二叉搜索树==：左孩子节点值均小于该节点值、右孩子节点值均大于该节点值，该节点的左、右子树也分别为二叉搜索树
+  - ==二叉搜索树==：左孩子节点值均==小于==该节点值、右孩子节点值均==大于==该节点值，该节点的左、右子树也分别为二叉搜索树
 
   - 平衡二叉搜索树(AVL)：既满足左右子树高度差不大于 1， 又满足任意节点值大于它的左孩子节点值，小于它右孩子节点值
 
@@ -133,7 +133,6 @@ var preorder = function (root) {
 			})
 		}
 	}
-
 	traversal(root, ret)
 	return ret
 }
@@ -327,7 +326,6 @@ var postorder = function (root) {
 var levelOrder = function (root) {
 	const ret = [],
 		queue = []
-
 	root && queue.push(root)
 	while (queue.length > 0) {
 		const size = queue.length,
@@ -1230,7 +1228,7 @@ var binaryTreePaths = function (root) {
 			ret.push(curPath + root.val)
 			return
 		}
-		//这里隐藏了回溯
+		//隐藏了回溯
 		dfs(root.left, curPath + root.val + '->')
 		dfs(root.right, curPath + root.val + '->')
 	}

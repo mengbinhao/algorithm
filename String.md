@@ -47,7 +47,6 @@ var longestCommonPrefix = function (strs) {
 	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
 	let prefix = strs[0]
 	for (let i = 1, len = strs.length; i < len; i++) {
-		//依次得到每个str的prefix
 		prefix = getLCP(prefix, strs[i])
 		//找不到公共前缀直接退出
 		if (prefix.length === 0) break
@@ -108,7 +107,7 @@ var reverseWords = function (s) {
 	return s.trim().replace(/ {2,}/g, ' ').split(' ').reverse().join(' ')
 }
 
-//deque
+//use queue
 var reverseWords = function (s) {
 	let l = 0,
 		r = s.length - 1,
@@ -116,6 +115,7 @@ var reverseWords = function (s) {
 	queue = []
 	while (s[l] === ' ') l++
 	while (s[r] === ' ') r--
+  //check if s still has letters
 	while (l <= r) {
 		let c = s[l]
 		if (c !== ' ') {
@@ -157,7 +157,9 @@ var compareVersion = function (version1, version2) {
 		len2 = version2.length
 	let i = 0,
 		j = 0
+  //任意version还没比完
 	while (i < len1 || j < len2) {
+    //比对每一段,默认是0
 		let x = 0
 		for (; i < len1 && version1[i] !== '.'; i++) {
 			x = x * 10 + version1[i].charCodeAt() - '0'.charCodeAt()
@@ -167,7 +169,7 @@ var compareVersion = function (version1, version2) {
 		for (; j < len2 && version2.charAt(j) !== '.'; j++) {
 			y = y * 10 + version2[j].charCodeAt() - '0'.charCodeAt()
 		}
-		j++ // 同上
+		j++ // 跳过点号
 		if (x !== y) return x > y ? 1 : -1
 	}
 	return 0
@@ -177,7 +179,7 @@ var compareVersion = function (version1, version2) {
 ### [344. ==反转字符串 E==](https://leetcode-cn.com/problems/reverse-string/)
 
 ```javascript {.line-numbers}
-//two pointer夹逼
+//two pointer夹逼 better
 var reverseString = function (s) {
 	let l = 0,
 		r = s.length - 1
@@ -333,7 +335,7 @@ var repeatedSubstringPattern = function (s) {
 ```javascript {.line-numbers}
 var reverseStr = function (s, k) {
 	const len = s.length
-	const arr = Array.from(s)
+	const arr = [...s]
 	for (let i = 0; i < len; i += 2 * k) {
 		reverse(arr, i, Math.min(i + k, len) - 1)
 	}
@@ -466,7 +468,7 @@ var countSubstrings = function (s) {
 }
 ```
 
-### [709. ==转换成小写字母==](https://leetcode-cn.com/problems/to-lower-case/)
+### [709. 转换成小写字母](https://leetcode-cn.com/problems/to-lower-case/)
 
 ```javascript {.line-numbers}
 var toLowerCase = function (str) {
@@ -483,7 +485,9 @@ var toLowerCase = function (str) {
 var reverseOnlyLetters = function (S) {
 	const stack = []
 	const reg = /[a-zA-Z]/
-	for (let c of S) if (reg.test(c)) stack.push(c)
+	for (let c of S) {
+    if (reg.test(c)) stack.push(c)
+  }
 	let ret = ''
 	for (let c of S) {
 		if (reg.test(c)) {
@@ -514,6 +518,7 @@ var reverseOnlyLetters = function (s) {
 ### [剑指 Offer 05. ==替换空格==](https://leetcode.cn/problems/ti-huan-kong-ge-lcof/)
 
 ```javascript {.line-numbers}
+//better
 var replaceSpace = function (s) {
 	let count = 0
 	for (let c of s) if (c === ' ') count++
@@ -532,20 +537,18 @@ var replaceSpace = function (s) {
 	return arr.join('')
 }
 
-//worse version
 var replaceSpace = function (s) {
 	let count = 0
 	for (let c of s) if (c === ' ') count++
 	const len = s.length
 	const arr = new Array(len + 2 * count)
-	let idx = 0
-	for (let i = 0; i < len; i++) {
+	for (let i = 0, j = 0; i < len; i++) {
 		if (s[i] !== ' ') {
-			arr[idx++] = s[i]
+			arr[j++] = s[i]
 		} else {
-			arr[idx++] = '%'
-			arr[idx++] = '2'
-			arr[idx++] = '0'
+			arr[j++] = '%'
+			arr[j++] = '2'
+			arr[j++] = '0'
 		}
 	}
 	return arr.join('')

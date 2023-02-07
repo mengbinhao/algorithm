@@ -6,7 +6,7 @@ Some frequent Leetcode questions implement by JavaScrip
 
 #### 最长公共前缀
 
-- 纵向扫描
+- 纵向扫描(better)
 - 横向扫描
 
 #### 无重复字符的最长子串
