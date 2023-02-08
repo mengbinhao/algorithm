@@ -30,7 +30,7 @@
   - 12.22 >> 0
   - 12.22 | 0
 
-- 位运算代替乘除法
+- 位运算代替乘除2
 
   - 24 >> 1
   - 24 << 1
@@ -58,9 +58,6 @@
 ### [136.==只出现一次的数字==](https://leetcode-cn.com/problems/single-number/)
 
 ```javascript {.line-numbers}
-// X ^ 0 = X
-// X ^ X = 0
-// X ^ Y ^ X = Y
 var singleNumber = function (nums) {
 	let ret = 0
 	for (let num of nums) ret ^= num
@@ -71,9 +68,7 @@ var singleNumber = function (nums) {
 ### [137.只出现一次的数字 II](https://leetcode-cn.com/problems/single-number-ii/)
 
 ```javascript {.line-numbers}
-//1 HashSet,将输入数组存储到 HashSet,然后使用HashSet中数字和的三倍与数组之和比较
-
-//2 HashMap,遍历输入数组,统计每个数字出现的次数,最后返回出现次数为 1 的数字
+//HashMap,遍历输入数组,统计每个数字出现的次数,最后返回出现次数为 1 的数字
 var singleNumber = function (nums) {
 	const map = new Map()
 	for (let num of nums) {
@@ -161,7 +156,7 @@ var titleToNumber = function (columnTitle) {
 }
 ```
 
-### [190.==颠倒二进制位==](https://leetcode-cn.com/problems/reverse-bits/)
+### [190.颠倒二进制位](https://leetcode-cn.com/problems/reverse-bits/)
 
 ```javascript {.line-numbers}
 var reverseBits = function (n) {
@@ -216,9 +211,12 @@ var isPowerOfTwo = function (n) {
 	return n === 1
 }
 
-//good version
 var isPowerOfTwo = function (n) {
 	return n > 0 && (n & (n - 1)) === 0
+}
+
+var isPowerOfTwo = function(n) {
+  return n > 0 && (n & -n) === n
 }
 ```
 

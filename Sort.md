@@ -13,8 +13,8 @@ const bubble = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
 	if (len < 2) return arr
-	let isSwap = false
 	for (let i = 0; i < len; i++) {
+    let isSwap = false
 		//每轮后面换好的不需要再进行比较
 		for (let j = 0; j < len - 1 - i; j++) {
 			if (arr[j] > arr[j + 1]) {
@@ -22,7 +22,7 @@ const bubble = (arr) => {
 				isSwap = true
 			}
 		}
-		//若当前轮无冒泡说明已经排序完成，直接跳出
+		//若当前轮无冒泡说明已排完，直接跳出
 		if (!isSwap) break
 	}
 	return arr
@@ -42,14 +42,13 @@ const insert = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
 	if (len < 2) return arr
-
 	//遍历无序区，一开始第一个数是有序区
 	for (let i = 1; i < len; i++) {
 		const cur = arr[i]
 		//依次跟前面有序区进行比较
 		let j = i - 1
 		while (j >= 0 && arr[j] > cur) {
-			//有序区依次往后挪,有序区是一直有序的,不断寻找当前无序区cur应该放在有序区的位置
+			//有序区依次往后挪,有序区是一直有序的,不断寻找无序区里的当前cur应该放在有序区的位置
 			arr[j + 1] = arr[j]
 			j--
 		}
@@ -78,14 +77,14 @@ const select = (arr) => {
 	for (let i = 0; i < len - 1; i++) {
 		//存放当前循环中最小index,默认循环初始值
 		//有序区的末尾坐标,此处应放下面找到的无序区的最小值
-		let minIdx = i
+		let lastMinIdx = i
 		//无序区找最小值
 		for (let j = i + 1; j < len; j++) {
-			if (arr[j] < arr[minIdx]) minIdx = j
+			if (arr[j] < arr[lastMinIdx]) lastMinIdx = j
 		}
 		//将最小值放到有序序列的最后(去掉这一行不稳定)
-		if (minIdx !== i) {
-			;[arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]
+		if (lastMinIdx !== i) {
+			;[arr[i], arr[lastMinIdx]] = [arr[lastMinIdx], arr[i]]
 		}
 	}
 	return arr
@@ -211,7 +210,7 @@ const merge = (arr) => {
 		//先递
 		helper(arr, l, mid, tmp)
 		helper(arr, mid + 1, r, tmp)
-		//再归
+		//再归两段数组
 		let k = 0,
 			i = l,
 			//当前层后部分数组的开始坐标
@@ -219,7 +218,7 @@ const merge = (arr) => {
 		while (i <= mid && j <= r) tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
 		while (i <= mid) tmp[k++] = arr[i++]
 		while (j <= r) tmp[k++] = arr[j++]
-		//复制回arr
+		//复制回当前层arr
 		for (let i = l, j = 0; i <= r; i++, j++) arr[i] = tmp[j]
 		return arr
 	}

@@ -996,18 +996,18 @@ var maxDepth = function (root) {
 //BFS
 var maxDepth = function (root) {
 	if (!root) return 0
-	const queue = [root]
-	let height = 0
+	let queue = [root],
+		depth = 0
 	while (queue.length > 0) {
 		const size = queue.length
-		height++
+		depth++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
 	}
-	return height
+	return depth
 }
 ```
 
@@ -1019,7 +1019,7 @@ var minDepth = function (root) {
 	if (!root) return 0
 	const minLeftDepth = minDepth(root.left)
 	const minRightDepth = minDepth(root.right)
-	//return minLeftDepth === 0 || minRightDepth === 0 ? ? minLeftDepth + minRightDepth + 1 : : Math.min(minLeftDepth, minRightDepth) + 1
+	//return minLeftDepth === 0 || minRightDepth === 0 ?  minLeftDepth + minRightDepth + 1 : :Math.min(minLeftDepth, minRightDepth) + 1
 	if (minLeftDepth && minRightDepth)
 		return Math.min(minLeftDepth, minRightDepth) + 1
 	return minLeftDepth === 0 ? minRightDepth + 1 : minLeftDepth + 1
@@ -1028,14 +1028,14 @@ var minDepth = function (root) {
 //BFS
 var minDepth = function (root) {
 	if (!root) return 0
-	const queue = [root]
-	let depth = 0
+	let queue = [root],
+		depth = 0
 	while (queue.length > 0) {
 		const size = queue.length
 		depth++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
-			//如果左右节点都是null(在遇见的第一个leaf节点上)，则该节点深度最小
+			//若左右节点都是null(在遇见的第一个leaf节点上)，则该节点深度最小
 			if (cur.left == null && cur.right == null) return depth
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
@@ -1256,6 +1256,27 @@ var binaryTreePaths = function (root) {
 	}
 	return ret
 }
+
+var binaryTreePaths = function (root) {
+	if (!root) return []
+	let ret = [],
+		queue = [root],
+    queuePath = [root.val + '']
+	while (queue.length) {
+		const cur = queue.shift(),
+			curPath = queuePath.shift()
+		if (!cur.left && !cur.right) ret.push(curPath)
+		if (cur.left) {
+			queue.push(cur.left)
+			queuePath.push(`${curPath}->${cur.left.val}`)
+		}
+		if (cur.right) {
+			queue.push(cur.right)
+			queuePath.push(`${curPath}->${cur.right.val}`)
+		}
+	}
+	return ret
+}
 ```
 
 ##### [236.==二叉树的最近公共祖先==](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
@@ -1361,25 +1382,26 @@ var hasPathSum = function (root, sum) {
 
 var hasPathSum = function (root, sum) {
 	if (!root) return false
-	//双queue，一个统计节点，一个统计节点值
-	const queNode = [root],
-		queVal = [root.val]
+	//一个统计节点，一个统计节点值
+	let queueNode = [root],
+		queueVal = [root.val]
 
-	while (queNode.length) {
-		const cur = queNode.shift()
-		const accVal = queVal.shift()
+	while (queueNode.length > 0) {
+		let cur = queueNode.shift()
+		let accVal = queueVal.shift()
 		if (!cur.left && !cur.right) if (accVal === sum) return true
 		if (cur.left) {
-			queNode.push(cur.left)
-			queVal.push(cur.left.val + accVal)
+			queueNode.push(cur.left)
+			queueVal.push(cur.left.val + accVal)
 		}
 		if (cur.right) {
-			queNode.push(cur.right)
-			queVal.push(cur.right.val + accVal)
+			queueNode.push(cur.right)
+			queueVal.push(cur.right.val + accVal)
 		}
 	}
 	return false
 }
+
 ```
 
 ##### [113.==路径总和 II==](https://leetcode-cn.com/problems/path-sum-ii/)

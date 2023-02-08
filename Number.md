@@ -7,9 +7,11 @@
 var reverse = function (x) {
 	let ret = 0
 	while (x) {
+    //x % 10无需管正负
 		ret = ret * 10 + (x % 10)
+    if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(-2, 31)) return 0
+    //强转32位有符号整数，正数向下取整，负数向上取整
 		x = (x / 10) | 0
-		if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(-2, 31)) return 0
 	}
 	return ret
 }
@@ -136,7 +138,7 @@ var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
-		//note sequence
+		//note check sequence!
 		if (count === 0) {
       ret = nums[i]
 			count++
@@ -246,8 +248,7 @@ var majorityElement = function (nums) {
 		count1--
 		count2--
 	}
-
-	// 找到了两个候选人之后，需要确定票数是否满足大于 N/3
+	// 找到了两个候选人之后，需确定票数是否满足大于 N/3
 	const ret = [],
 		len = nums.length
 	count1 = count2 = 0

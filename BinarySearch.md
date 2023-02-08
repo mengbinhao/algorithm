@@ -48,7 +48,7 @@ const binarySearch = (arr, target) => {
 		mid
 	//Note 2
 	while (l <= r) {
-    //Maybe note
+		//Maybe note
 		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] === target) {
 			return mid
@@ -59,7 +59,7 @@ const binarySearch = (arr, target) => {
 			r = mid - 1
 		}
 	}
-  //Maybe note
+	//Maybe note
 	return -1
 }
 ```
@@ -82,7 +82,7 @@ const binarySearchLeftBound = (arr, target) => {
 			r = mid - 1
 		} else {
 			//已搜到第一个或已找到
-      //if (mid === 0 || arr[mid - 1] < target) {
+			//if (mid === 0 || arr[mid - 1] < target) {
 			if (mid === 0 || arr[mid - 1] !== target) {
 				return mid
 				//继续收缩右边界
@@ -113,7 +113,7 @@ const binarySearch = (arr, target) => {
 			r = mid - 1
 		} else {
 			//已搜到最后一个或已找到
-      //if (mid === len - 1 || arr[mid + 1] > target) {
+			//if (mid === len - 1 || arr[mid + 1] > target) {
 			if (mid === len - 1 || arr[mid + 1] !== target) {
 				return mid
 			} else {
@@ -236,7 +236,7 @@ var search = function (nums, target) {
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return mid
-    //看左边
+		//看左边
 		//in case mid === l 即下标相等
 		//[start, mid]有序
 		if (nums[mid] >= nums[l]) {
@@ -372,7 +372,7 @@ var findMin = function (nums) {
 		//judge according to nums[mid]
 		if (nums[mid] < nums[mid - 1]) return nums[mid]
 		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]
-    //看右边
+		//看右边
 		if (nums[mid] < nums[len - 1]) {
 			r = mid - 1
 		} else {
@@ -382,14 +382,13 @@ var findMin = function (nums) {
 	return null
 }
 
-
 var findMin = function (nums) {
 	let low = 0
 	let high = nums.length - 1
 	while (low < high) {
 		const pivot = low + Math.floor((high - low) / 2)
-    //所有数据不重复，即不存在(nums[pivot] === nums[high]的情况
-    //看右边
+		//所有数据不重复，即不存在(nums[pivot] === nums[high]的情况
+		//看右边
 		if (nums[pivot] < nums[high]) {
 			high = pivot
 		} else {

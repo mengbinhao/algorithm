@@ -33,17 +33,18 @@
 
 ```javascript {.line-numbers}
 //window version， better
+//window version， better
 var lengthOfLongestSubstring = function (s) {
-	const window = {},
+	const slideWindow = {},
 		len = s.length
 	let l = 0,
 		r = 0,
 		ret = 0
 	while (r < len) {
 		const rChar = s[r++]
-		window[rChar] ? window[rChar]++ : (window[rChar] = 1)
+		slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
 		//left一直缩到window里当前rChar不重复的位置
-		while (window[rChar] > 1) window[s[l++]]--
+		while (slideWindow[rChar] > 1) slideWindow[s[l++]]--
 		ret = Math.max(ret, r - l)
 	}
 	return ret
@@ -73,13 +74,13 @@ var minWindow = function (s, t) {
 	let sLen = s.length,
 		tLen = t.length
 	if (sLen === 0 || tLen === 0 || sLen < tLen) return ''
-	let window = {},
+	let slideWindow = {},
 		need = {},
 		begin = 0,
 		l = 0,
 		r = 0,
 		minLen = Infinity,
-		//表示窗口中满足 need 条件的字符个数,如果 valid 和 need.size 的大小相同,则说明窗口已满足条件,已经完全覆盖了串t
+		//窗口中满足need条件的字符个数,如果valid和need.size的大小相同,则说明窗口已满足条件,已完全覆盖了串t
 		valid = 0
 
 	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
@@ -87,10 +88,10 @@ var minWindow = function (s, t) {
 		const rChar = s[r++]
 		//过滤需要的字符
 		if (need[rChar]) {
-			window[rChar] ? window[rChar]++ : (window[rChar] = 1)
-			if (window[rChar] === need[rChar]) valid++
+			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
+			if (slideWindow[rChar] === need[rChar]) valid++
 		}
-		//t中所有字符已全覆盖,判断是否要收缩
+		//t中所有字符已全覆盖,判断是否收缩
 		while (valid === Object.keys(need).length) {
 			if (r - l < minLen) {
 				minLen = r - l
@@ -100,8 +101,8 @@ var minWindow = function (s, t) {
 			const lChar = s[l++]
 			//过滤需要的字符,行为同上面加的时候
 			if (need[lChar]) {
-				if (window[lChar] === need[lChar]) valid--
-				window[lChar]--
+				if (slideWindow[lChar] === need[lChar]) valid--
+				slideWindow[lChar]--
 			}
 		}
 	}
@@ -170,11 +171,11 @@ var maxSlidingWindow = function (nums, k) {
 }
 
 //deque O(n) - O(n)
+//头尾尾头
 var maxSlidingWindow = function (nums, k) {
 	//放的下标,递减队列,第一个第一大的index,依此类推
-	const deque = [],
+	let deque = [],
 		ret = []
-	//头尾尾头
 	for (let i = 0, len = nums.length; i < len; i++) {
 		//队列满了移出去一个
 		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
@@ -218,22 +219,22 @@ var findAnagrams = function (s, p) {
 		right = 0,
 		valid = 0,
 		need = {},
-		windows = {},
+		slideWindow = {},
 		ret = []
 
 	for (let c of p) need[c] ? need[c]++ : (need[c] = 1)
 	while (right < sLen) {
 		let rightChar = s[right++]
 		if (need[rightChar]) {
-			windows[rightChar] ? windows[rightChar]++ : (windows[rightChar] = 1)
-			if (windows[rightChar] === need[rightChar]) valid++
+			slideWindow[rightChar] ? slideWindow[rightChar]++ : (slideWindow[rightChar] = 1)
+			if (slideWindow[rightChar] === need[rightChar]) valid++
 		}
 		while (right - left >= pLen) {
 			if (valid === Object.keys(need).length) ret.push(left)
 			let leftChar = s[left++]
 			if (need[leftChar]) {
-				if (windows[leftChar] === need[leftChar]) valid--
-				windows[leftChar]--
+				if (slideWindow[leftChar] === need[leftChar]) valid--
+				slideWindow[leftChar]--
 			}
 		}
 	}
@@ -248,7 +249,7 @@ var checkInclusion = function (s, t) {
 	let sLen = s.length,
 		tLen = t.length
 	if (sLen === 0 || sLen > tLen) return false
-	let window = {},
+	let slideWindow = {},
 		need = {},
 		l = 0,
 		r = 0,
@@ -259,8 +260,8 @@ var checkInclusion = function (s, t) {
 		const rChar = t[r++]
 		//过滤需要的字符
 		if (need[rChar]) {
-			window[rChar] ? window[rChar]++ : (window[rChar] = 1)
-			if (window[rChar] === need[rChar]) valid++
+			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
+			if (slideWindow[rChar] === need[rChar]) valid++
 		}
 		//长度够则判断
 		if (r - l >= sLen) {
@@ -269,8 +270,8 @@ var checkInclusion = function (s, t) {
 			const lChar = t[l++]
 			//过滤需要的字符
 			if (need[lChar]) {
-				if (window[lChar] === need[lChar]) valid--
-				window[lChar]--
+				if (slideWindow[lChar] === need[lChar]) valid--
+				slideWindow[lChar]--
 			}
 		}
 	}
