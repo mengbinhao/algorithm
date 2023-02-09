@@ -226,7 +226,9 @@ var findAnagrams = function (s, p) {
 	while (right < sLen) {
 		let rightChar = s[right++]
 		if (need[rightChar]) {
-			slideWindow[rightChar] ? slideWindow[rightChar]++ : (slideWindow[rightChar] = 1)
+			slideWindow[rightChar]
+				? slideWindow[rightChar]++
+				: (slideWindow[rightChar] = 1)
 			if (slideWindow[rightChar] === need[rightChar]) valid++
 		}
 		while (right - left >= pLen) {

@@ -5,7 +5,7 @@
 - 三个注意: 环、边界、递归
 - 四个技巧:
   - 虚拟头
-    - 若题目的头节点可能被移除、会变，使用虚拟节点，这样头节点就变成了中间节点，就不需要为头节点做特殊判断
+    - 若题目的头节点可能被移除/会变，则可以使用虚拟头节点，这样头节点就变成了中间节点，就不需要为头节点做特殊判断
     - 通过在合适的时候断开链接，返回链表的中间节点
   - 快慢指针
   - 穿针引线
@@ -67,6 +67,7 @@ var removeNthFromEnd = function (head, n) {
 	const dummyHead = new ListNode(-1, head)
 	const len = getLen(head)
 	let cur = dummyHead
+  //找到要删除节点的前驱结点
 	for (let i = 0; i < len - n; i++) cur = cur.next
 	cur.next = cur.next.next
 	return dummyHead.next
@@ -638,7 +639,7 @@ var reorderList = function (head) {
 }
 ```
 
-### [147. ==对链表进行插入排序==](https://leetcode-cn.com/problems/insertion-sort-list/)
+### [147. 对链表进行插入排序](https://leetcode-cn.com/problems/insertion-sort-list/)
 
 ```javascript {.line-numbers}
 var insertionSortList = function (head) {
@@ -744,7 +745,7 @@ var reverseList = function (head) {
 	head.next.next = head
 	//cut the ring
 	head.next = null
-	//原本的tail变成了head，一直返回tail就是要求输出的head
+	//原本的tail变成了head，一直返回tail就是反转后的头结点
 	return tail
 }
 ```

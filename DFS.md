@@ -58,6 +58,7 @@ var generateParenthesis = function (n) {
 			} else {
 				balance--
 			}
+      //提前返回
 			if (balance < 0) return false
 		}
 		return balance === 0

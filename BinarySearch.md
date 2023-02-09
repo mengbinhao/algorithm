@@ -229,7 +229,6 @@ const rightBound = (arr, target) => {
 var search = function (nums, target) {
 	const len = nums.length
 	if (len === 0) return -1
-
 	let l = 0,
 		r = len - 1,
 		mid
@@ -264,21 +263,21 @@ var search = function (nums, target) {
 const binarySearch = (nums, target, lower) => {
 	let l = 0,
 		r = nums.length - 1,
-		ans = nums.length
+		ret = nums.length
 	while (l <= r) {
 		const mid = Math.floor((l + r) / 2)
 		if (nums[mid] > target || (lower && nums[mid] >= target)) {
 			r = mid - 1
-			ans = mid
+			ret = mid
 		} else {
 			l = mid + 1
 		}
 	}
-	return ans
+	return ret
 }
 
 var searchRange = function (nums, target) {
-	const ans = [-1, -1]
+	const ret = [-1, -1]
 	const leftIdx = binarySearch(nums, target, true)
 	const rightIdx = binarySearch(nums, target, false) - 1
 	if (
@@ -287,9 +286,9 @@ var searchRange = function (nums, target) {
 		nums[leftIdx] === target &&
 		nums[rightIdx] === target
 	) {
-		ans = [leftIdx, rightIdx]
+		ret = [leftIdx, rightIdx]
 	}
-	return ans
+	return ret
 }
 ```
 
@@ -322,11 +321,9 @@ var mySqrt = function (x) {
 var search = function (nums, target) {
 	const len = nums.length
 	if (len === 0) return false
-
 	let l = 0,
 		r = len - 1,
 		mid
-
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return true
@@ -382,20 +379,21 @@ var findMin = function (nums) {
 	return null
 }
 
+//better
 var findMin = function (nums) {
-	let low = 0
-	let high = nums.length - 1
-	while (low < high) {
-		const pivot = low + Math.floor((high - low) / 2)
-		//所有数据不重复，即不存在(nums[pivot] === nums[high]的情况
+	let l = 0
+	let r = nums.length - 1
+	while (l < r) {
+		const mid = l + Math.floor((r - l) / 2)
+		//所有数据不重复，即不存在(nums[mid] === nums[r]的情况
 		//看右边
-		if (nums[pivot] < nums[high]) {
-			high = pivot
+		if (nums[mid] < nums[r]) {
+			r = mid
 		} else {
-			low = pivot + 1
+			l = mid + 1
 		}
 	}
-	return nums[low]
+	return nums[l]
 }
 ```
 
