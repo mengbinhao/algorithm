@@ -271,8 +271,8 @@ var permute = function (nums) {
 	//space for time
 	const visited = Array.from({ length: len }, () => false)
 
-	const dfs = (nums, depth, path) => {
-		if (depth === nums.length) {
+	const dfs = (nums, level, path) => {
+		if (level >= nums.length) {
 			ret.push([...path])
 			return
 		}
@@ -280,7 +280,7 @@ var permute = function (nums) {
 		for (let i = 0, len = nums.length; i < len; i++) {
 			if (visited[i]) continue
 			visited[i] = true
-			dfs(nums, depth + 1, [...path, nums[i]])
+			dfs(nums, level + 1, [...path, nums[i]])
 			//backtrack
 			visited[i] = false
 		}
@@ -309,7 +309,7 @@ var permuteUnique = function (nums) {
 		for (let i = 0, len = nums.length; i < len; i++) {
 			if (visited[i]) continue
 			//剪枝
-			//和前一个元素值相同并且前一个元素还没有被使用过,否则其在下层遍历肯定会出现
+			//nums[i]和nums[i - 1]相同且前一个元素还没有被使用过,否则其在下层遍历肯定会出现
 			if (i > 0 && nums[i] === nums[i - 1] && !visited[i - 1]) continue
 			path.push(nums[i])
 			visited[i] = true
