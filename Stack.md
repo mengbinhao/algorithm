@@ -57,11 +57,11 @@ var longestValidParentheses = function (s) {
 }
 
 //stack O(n) - O(n)
-//始终保持栈底元素为当前已经遍历过的元素中“最后一个没有被匹配的右括号的下标”
+//始终保持栈底元素为当前已经遍历过的元素中"最后一个没有被匹配的右括号的下标"
 //对于遇到的每个(，将它下标放入栈中
 //对于遇到的每个)，先弹出栈顶元素与之匹配的左括号
 //如果栈为空，说明当前的右括号为没有被匹配的左括号，将其下标放入栈中来更新“最后一个没有被匹配的右括号的下标”
-//如果栈不为空，当前右括号的下标减去栈顶元素即为“以该右括号为结尾的最长有效括号的长度”
+//如果栈不为空，当前右括号的下标减去栈顶元素即为"以该右括号为结尾的最长有效括号的长度"
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
@@ -120,7 +120,7 @@ var longestValidParentheses = function (s) {
 			if (s[i - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串       形如 '……()'
 				dp[i] = (i -2 >= 0 ? dp[i - 2] : 0) + 2
-				//第一个条件表示前面还有括号(由于js特性可省略),但为语义清晰需加上
+				//第一个条件表示前面还有括号(根据JS特性可省略),但为语义清晰最好加上
 				//第二个条件前面的括号跟当前循环的)可以匹配，即+2
 			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
@@ -146,7 +146,9 @@ var trap = function (height) {
 	for (let i = 1; i < len - 1; i++) {
 		let lMax = -Infinity,
 			rMax = -Infinity
+    //左扫
 		for (let j = i; j >= 0; j--) lMax = Math.max(lMax, height[j])
+    //右扫
 		for (let j = i; j < len; j++) rMax = Math.max(rMax, height[j])
     //若当前轮自己最高，结果是0
 		ret += Math.min(lMax, rMax) - height[i]
@@ -164,7 +166,7 @@ var trap = function (height) {
 		//当前柱子比栈顶的柱子高,即表示可以形成积水
 		while (stack.length && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
-			//左边没有柱子了，及无法形成积水
+			//左边没有柱子了，即无法形成积水
 			if (stack.length === 0) break
 			//计算右边与当前栈顶左边界的距离, 减一才是实际距离
 			const distance = i - stack[stack.length - 1] - 1

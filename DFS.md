@@ -451,10 +451,10 @@ var solveNQueens = function (n) {
 			//drill down
 			dfs(row + 1, path)
 			//reverse
+      path.pop()
 			cols.delete(col)
 			pies.delete(row + col)
 			nas.delete(row - col)
-			path.pop()
 		}
 	}
 	const generatorBoard = (solutions) => {
@@ -540,7 +540,7 @@ var solve = function (board) {
 		col = board[0].length
 	for (let i = 0; i < row; i++) {
 		for (let j = 0; j < col; j++) {
-			//from edge dfs, to mark O to #
+			//from edge dfs for marking O to #
 			let isEdge = i === 0 || j === 0 || i === row - 1 || j === col - 1
 			if (isEdge && board[i][j] === 'O') {
 				dfs(board, i, j, row, col)
@@ -684,9 +684,9 @@ var islandPerimeter = function (grid) {
 		cols = grid[0].length
 
 	const dfs = (grid, i, j, rows, cols) => {
-		//对应一条黄色的边
+		//对应一条外边
 		if (i < 0 || i >= rows || j < 0 || j >= cols) return 1
-		//对应一条蓝色的边
+		//对应一条内边
 		if (grid[i][j] === 0) return 1
 		//遍历过的格子
 		if (grid[i][j] !== 1) return 0
