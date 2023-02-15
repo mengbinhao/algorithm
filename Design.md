@@ -46,7 +46,7 @@ LRUCache.prototype.removeFromList = function (node) {
 }
 
 LRUCache.prototype.addToHead = function (node) {
-	//插入到虚拟头结点和真实头结点之间,注意顺序，先链接node，在调整指针
+	//插入到虚拟头结点和真实头结点之间,注意顺序，先链接node，再调整指针
 	//node的prev指针指向虚拟头结点
 	node.prev = this.dummyHead
 	//node的next指针指向原来的真实头结点
@@ -93,7 +93,7 @@ var MinStack = function () {
 	this.minStack = [Infinity]
 }
 
-//辅助栈同步放每次小值
+//辅助栈同步放每次最小值
 MinStack.prototype.push = function (x) {
 	this.stack.push(x)
 	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))

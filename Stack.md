@@ -76,6 +76,7 @@ var longestValidParentheses = function (s) {
 			//放入最后一个没有被匹配的右括号的下标
 			if (stack.length === 0) {
 				stack.push(i)
+       //当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
 			} else {
 				maxLen = Math.max(maxLen, i - stack[stack.length - 1])
 			}

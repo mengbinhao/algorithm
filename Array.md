@@ -26,7 +26,7 @@ var twoSum = function (nums, target) {
 	const hash = {},
 		len = nums.length
 	for (let i = 0; i < len; i++) {
-		//[2, 7] 9, store 7,the below loop to search 7
+		//[2, 7] 9, store 7,the below loop search 7
 		hash[target - nums[i]] = i
 	}
 	for (let j = 0; j < len; j++) {
