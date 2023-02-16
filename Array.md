@@ -222,16 +222,16 @@ var jump = function (nums) {
 //非原地旋转
 var rotate = function (matrix) {
 	const n = matrix.length
-	const arr = Array.from({ length: n }, () => new Array(n))
-	//matrix[i][j]变成 matrix[j][n - row - 1]
+	const tmp = Array.from({ length: n }, () => new Array(n))
+	//matrix[i][j]变成 matrix[j][n - i - 1]
 	for (let i = 0; i < n; i++) {
 		for (let j = 0; j < n; j++) {
-			arr[j][n - i - 1] = matrix[i][j]
+			tmp[j][n - i - 1] = matrix[i][j]
 		}
 	}
 	for (let i = 0; i < n; i++) {
 		for (let j = 0; j < n; j++) {
-			matrix[i][j] = arr[i][j]
+			matrix[i][j] = tmp[i][j]
 		}
 	}
 }
@@ -239,7 +239,7 @@ var rotate = function (matrix) {
 //原地旋转，找到4个旋转坐标规律
 var rotate = function (matrix) {
 	const n = matrix.length
-	//matrix[i][j]变成 matrix[j][n - row - 1]
+	//matrix[i][j]变成 matrix[j][n - i - 1]
 	//考虑奇偶两种情况，当n为奇数，等分4个区域；当n为偶数，j多一位，中间格子无需转换
 	//i只需走一半
 	for (let i = 0; i < Math.floor(n / 2); i++) {
@@ -280,37 +280,40 @@ var rotate = function (matrix) {
 ```javascript {.line-numbers}
 //O(n) - O(n) 偏移量解法
 var spiralOrder = function (matrix) {
-	const rows = matrix.length
-	const columns = matrix[0].length
-	const total = rows * columns
-	const visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
-	const ret = new Array(total)
-	//沿右下左上顺序偏移
-	const directions = [
-		[0, 1],
-		[1, 0],
-		[0, -1],
-		[-1, 0],
-	]
-	let directionIdx = 0,
+	const rows = matrix.length,
+		cols = matrix[0].length,
+		total = rows * cols
+  //let visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
+	let visited = Array.from({ length: rows }, () => new Array(cols)),
+		directions = [
+			[0, 1],
+			[1, 0],
+			[0, -1],
+			[-1, 0],
+		],
 		row = 0,
-		column = 0
+		col = 0,
+		direction = 0,
+     //ret = new Array(total)
+     ret = [],
 	for (let i = 0; i < total; i++) {
-		ret[i] = matrix[row][column]
-		visited[row][column] = true
-		const nextRow = row + directions[directionIdx][0]
-		const nexColumn = column + directions[directionIdx][1]
+		ret[i] = matrix[row][col]
+    //marked
+		visited[row][col] = true
+		const nextRow = row + directions[direction][0]
+		const nextCol = col + directions[direction][1]
+    //check
 		if (
 			nextRow < 0 ||
 			nextRow >= rows ||
-			nexColumn < 0 ||
-			nexColumn >= columns ||
-			visited[nextRow][nexColumn]
+			nextCol < 0 ||
+			nextCol >= cols ||
+			visited[nextRow][nextCol]
 		) {
-			directionIdx = (directionIdx + 1) % 4
+			direction = (direction + 1) % 4
 		}
-		row += directions[directionIdx][0]
-		column += directions[directionIdx][1]
+		row += directions[direction][0]
+		col += directions[direction][1]
 	}
 	return ret
 }
@@ -320,8 +323,8 @@ var spiralOrder = function (matrix) {
 	let top = 0,
 		bottom = matrix.length - 1,
 		left = 0,
-		right = matrix[0].length - 1
-	const ret = []
+		right = matrix[0].length - 1,
+     ret = []
 	while (true) {
 		//向右移动直到最右
 		for (let i = left; i <= right; i++) ret.push(matrix[top][i])

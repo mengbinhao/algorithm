@@ -67,7 +67,7 @@ var longestPalindrome = function (s) {
 			l--
 			r++
 		}
-		//slice截的是[i...j)
+		//slice截的是[l...r)
 		return s.slice(l + 1, r)
 	}
 }
@@ -322,31 +322,30 @@ var maxSubArray = function(nums) {
 //base case dp[0] = nums[0]
 var maxSubArray = function (nums) {
 	const len = nums.length
-	const dp = new Array(len).fill(-Infinity)
+	if (len === 0) return 0
+	let dp = new Array(len).fill(-Infinity)
 	dp[0] = nums[0]
 	let ret = nums[0]
 	for (let i = 1; i < len; i++) {
-		if (dp[i - 1] > 0) {
-			dp[i] = dp[i - 1] + nums[i]
-		} else {
-			dp[i] = nums[i]
-		}
+		dp[i] = Math.max(dp[i - 1] + nums[i], nums[i])
 		ret = Math.max(ret, dp[i])
 	}
 	return ret
 }
 
-
 //dp优化 O(n) - O(1)
 var maxSubArray = function (nums) {
-	let preSum = 0,
-		maxPreSum = nums[0]
-	nums.forEach((num) => {
-		//若前面preSum小于0,舍弃
-		preSum = Math.max(preSum + num, num)
-		maxPreSum = Math.max(maxPreSum, preSum)
-	})
-	return maxPreSum
+	const len = nums.length
+	if (len === 0) return 0
+	let prev = nums[0],
+		ret = nums[0],
+		cur
+	for (let i = 1; i < len; i++) {
+		cur = Math.max(prev + nums[i], nums[i])
+		ret = Math.max(ret, cur)
+		prev = cur
+	}
+	return ret
 }
 ```
 
@@ -388,7 +387,7 @@ var minPathSum = function (grid) {
 	//滚动行
 	const dp = new Array(cols).fill(Infinity)
 	dp[0] = grid[0][0]
-	//先更新行，在更新每行第一列，再更新其他行和列
+	//先更新行，再更新每行第一列，再更新其他行和列
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (i === 0 && j === 0) continue
@@ -396,7 +395,7 @@ var minPathSum = function (grid) {
 				dp[j] = dp[j - 1] + grid[i][j]
 				//滚动行更新自己
 			} else if (j === 0) {
-				dp[j] += grid[i][j]
+				dp[j] = dp[j] + grid[i][j]
 			} else {
 				dp[j] = Math.min(dp[j], dp[j - 1]) + grid[i][j]
 			}
@@ -507,7 +506,7 @@ const minimumTotal = (triangle) => {
 //自底向上不需要最后再遍历最后一层数组找最小值
 const minimumTotal = (triangle) => {
 	if (!triangle) return 0
-	let height = triangle.length
+	const height = triangle.length
 	if (height === 0) return 0
 	const dp = Array.from(
 		{ length: height },
@@ -534,7 +533,7 @@ const minimumTotal = (triangle) => {
 //O(n^2) - O(n)
 var minimumTotal = function (triangle) {
 	if (!triangle) return 0
-	let height = triangle.length
+	const height = triangle.length
 	if (height === 0) return 0
 	const dp = new Array(height)
 	// base case 是最后一行
@@ -1195,6 +1194,7 @@ const numTrees = (n) => {
 
 //O(n) - O(n)
 var climbStairs = function (n) {
+  if (n <= 2) return n
 	//dp[i]表示爬到第i级台阶的方案数
 	//直接忽视dp[0]的定义，从3开始循环更符合人类的思维模式
 	const dp = new Array(n + 1)
@@ -1337,36 +1337,5 @@ var stoneGame = function (piles) {
 		}
 	}
 	return dp[len - 1] > 0
-}
-```
-
-### [剑指 Offer 42. ==连续子数组的最大和==](https://leetcode.cn/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/)
-
-```javascript {.line-numbers}
-var maxSubArray = function (nums) {
-	const len = nums.length
-	if (len === 0) return 0
-	let dp = new Array(len)
-	dp[0] = nums[0]
-	let ret = nums[0]
-	for (let i = 1; i < len; i++) {
-		dp[i] = Math.max(dp[i - 1] + nums[i], nums[i])
-		ret = Math.max(ret, dp[i])
-	}
-	return ret
-}
-
-var maxSubArray = function (nums) {
-	const len = nums.length
-	if (len === 0) return 0
-	let prev = nums[0],
-		ret = nums[0],
-		cur
-	for (let i = 1; i < len; i++) {
-		cur = Math.max(prev + nums[i], nums[i])
-		ret = Math.max(ret, cur)
-		prev = cur
-	}
-	return ret
 }
 ```
