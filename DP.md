@@ -910,7 +910,7 @@ var coinChange = function (coins, amount) {
 			greedyDFS(coins, remain - i * coins[coinsIdx], coinsIdx + 1, i + count)
 		}
 	}
-	//desc + precondition for greedy
+	//precondition for greedy
 	coins.sort((a, b) => b - a)
 	greedyDFS(coins, amount, 0, 0)
 	return ret === Infinity ? -1 : ret
@@ -954,6 +954,8 @@ var coinChange = function (coins, amount) {
 			const ret = dfs(coins, remain - coins[i])
 			//加1是为了加上得到ret结果的那个步骤中兑换的那个硬币
 			//下层返回需有意义并且是下层需要最少的硬币个数
+      //ret >= 0 意思下层返回的ret需要有意义才更新min
+      //ret < min 防止下层后面的返回不是最小的
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
 		return (cache[remain] = min === Infinity ? -1 : min)
@@ -961,7 +963,7 @@ var coinChange = function (coins, amount) {
 	return dfs(coins, amount)
 }
 
-//dp1 自底向上
+//dp1 自底向上 better
 const coinChange = (coins, amount) => {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
@@ -969,8 +971,8 @@ const coinChange = (coins, amount) => {
 	const dp = Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
-	for (let i = 0; i < coins.length; i++) {
-		for (let j = coins[i]; j <= amount; j++) {
+	for (let i = 0; i < coins.length; i++) {  //物品
+		for (let j = coins[i]; j <= amount; j++) {  //背包
 			dp[j] = Math.min(dp[j - coins[i]] + 1, dp[j])
 		}
 	}
@@ -986,9 +988,9 @@ var coinChange = function (coins, amount) {
 	dp = new Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
-	for (let i = 1; i <= amount; i++) {
+	for (let i = 1; i <= amount; i++) { //背包
 		//dp[i] = min(F(1−1),F(1−2),F(1−5)) + 1
-		for (let j = 0, len = coins.length; j < len; j++) {
+		for (let j = 0, len = coins.length; j < len; j++) { //物品
 			//数组越界,语义上是当前剩余面值需要大于硬币价值才有意义
 			if (i - coins[j] >= 0) dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
 		}
@@ -1038,16 +1040,16 @@ var canPartition = function (nums) {
 }
 ```
 
-### [518. ==零钱兑换 II==](https://leetcode-cn.com/problems/coin-change-2/)
+### [518. ==零钱兑换 II==](https://leetcode.cn/problems/coin-change-ii/)
 
 ```javascript {.line-numbers}
 var change = function (amount, coins) {
 	//dp[j]：凑成总金额(背包)j的货币组合数为dp[j]，有dp[j]种方法
 	const dp = new Array(amount + 1).fill(0)
-	//语义上讲凑成总金额0的货币组合数为1
+	//语义上讲凑成总金额0的货币组合数为1,且根据推导公式为1才能推过去
 	dp[0] = 1
-	//如下遍历顺序dp[j]里计算的是组合数！
-	//若调整状态遍历顺序则计算的是排列数！
+	//如下遍历顺序dp[j]里计算的是组合数
+	//若调整状态遍历顺序则计算的是排列数
 	for (const coin of coins) {
 		//dp[j] += dp[j - nums[j]]
 		for (let j = coin; j <= amount; j++) {
