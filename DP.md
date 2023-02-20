@@ -955,10 +955,11 @@ var coinChange = function (coins, amount) {
 			//加1是为了加上得到ret结果的那个步骤中兑换的那个硬币
 			//下层返回需有意义并且是下层需要最少的硬币个数
       //ret >= 0 意思下层返回的ret需要有意义才更新min
-      //ret < min 防止下层后面的返回不是最小的
+      //ret < min 防止下层后面的解返回的不是最小的
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
-		return (cache[remain] = min === Infinity ? -1 : min)
+    cache[remain] = min
+		return min === Infinity ? -1 : min
 	}
 	return dfs(coins, amount)
 }
