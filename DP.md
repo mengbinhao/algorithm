@@ -942,7 +942,7 @@ var coinChange = function (coins, amount) {
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) -1
 	if (amount < 1) return 0
-	const cache = {}
+	let cache = {}
 	const dfs = (coins, remain) => {
 		if (remain < 0) return -1
 		if (remain === 0) return 0

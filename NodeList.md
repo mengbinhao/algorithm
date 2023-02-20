@@ -28,8 +28,15 @@ targetInsertNode.next = next
 
 ![](./images/NodeList_insert.png)
 
-- 删除`pre.next = 待删除位置的前驱节点.next.next`
-  ![](./images/NodeList_delete.png)
+- 删除
+
+```javascript
+//pre待删除节点的前驱节点
+pre.next = 待删除位置的前驱节点.next.next
+```
+
+
+![](./images/NodeList_delete.png)
 
 ## 3 questions
 
@@ -111,20 +118,20 @@ var removeNthFromEnd = function (head, n) {
 //iteration
 var mergeTwoLists = function (list1, list2) {
 	const dummyHead = new ListNode(-1)
-	let prev = dummyHead
+	let cur = dummyHead
 	while (list1 && list2) {
 		if (list1.val < list2.val) {
-			prev.next = list1
+			cur.next = list1
 			list1 = list1.next
 		} else {
-			prev.next = list2
+			cur.next = list2
 			list2 = list2.next
 		}
-		//update prev
-		prev = prev.next
+		//update cur
+		cur = cur.next
 	}
-	//合并后 l1 和 l2 最多只有一个还未被合并完,将链表末尾指向未合并完的链表
-	prev.next = list1 || list2
+	//合并后 l1 和 l2 至多只有一个还未被合并完,将链表末尾指向未合并完的链表
+	cur.next = list1 || list2
 	return dummyHead.next
 }
 
@@ -140,7 +147,7 @@ var mergeTwoLists = function (list1, list2) {
 		return list1
 	} else {
 		list2.next = mergeTwoLists(list1, list2.next)
-		//返回当前递归的头结点
+		//同上
 		return list2
 	}
 }
@@ -239,7 +246,7 @@ var swapPairs = function (head) {
 	//够2个才换
 	while (cur.next && cur.next.next) {
 		const first = cur.next
-		const second = cur.next.next
+		const second = first.next
 		first.next = second.next
 		second.next = first
 		cur.next = second
@@ -263,7 +270,7 @@ var swapPairs = function (head) {
 }
 ```
 
-### [25. ==K 个一组翻转链表== H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+### [25. K 个一组翻转链表 H](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
 ```javascript {.line-numbers}
 var reverseKGroup = function (head, k) {
@@ -331,8 +338,8 @@ var rotateRight = function (head, k) {
 ```javascript {.line-numbers}
 var deleteDuplicates = function (head) {
 	if (!head) return head
-	const dummy = new ListNode(-1, head)
-	let cur = dummy
+	let dummyHead = new ListNode(-1, head)
+	let cur = dummyHead
 	while (cur.next && cur.next.next) {
 		if (cur.next.val === cur.next.next.val) {
 			const x = cur.next.val
@@ -343,7 +350,7 @@ var deleteDuplicates = function (head) {
 			cur = cur.next
 		}
 	}
-	return dummy.next
+	return dummyHead.next
 }
 ```
 
@@ -353,7 +360,7 @@ var deleteDuplicates = function (head) {
 var deleteDuplicates = function (head) {
 	let cur = head
 	while (cur && cur.next) {
-		if (cur.next.val === cur.val) {
+		if (cur.val === cur.next.val) {
 			cur.next = cur.next.next
 		} else {
 			cur = cur.next
@@ -399,7 +406,6 @@ var partition = function (head, x) {
 		head = head.next
 	}
 	after.next = null
-	//link before List and after List
 	before.next = dummyAfter.next
 	return dummyBefore.next
 }
@@ -575,7 +581,7 @@ var hasCycle = function (head) {
 //标记法 O(n) - O(1)
 //或使用hash标记
 var detectCycle = function (head) {
-	const visited = new Set()
+	let visited = new Set()
 	while (head) {
 		if (visited.has(head)) return head
 		visited.add(head)
@@ -673,7 +679,7 @@ var insertionSortList = function (head) {
 ```javascript {.line-numbers}
 //O(n) - O(n)
 var getIntersectionNode = function (headA, headB) {
-	const visited = new Set()
+	let visited = new Set()
 	let cur = headA
 	while (cur) {
 		visited.add(cur)
