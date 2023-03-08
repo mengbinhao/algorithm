@@ -65,7 +65,7 @@ var longestValidParentheses = function (s) {
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	const stack = [-1] //表示最长子串只能从0开始
+	let stack = [-1] //表示最长子串只能从0开始
 	let maxLen = 0
 	for (let i = 0; i < len; i++) {
 		if (s[i] === '(') {
@@ -261,7 +261,9 @@ var largestRectangleArea = function (heights) {
 		const height = heights[i]
 		let l = i,
 			r = i
+    //左扩
 		while (l - 1 >= 0 && heights[l - 1] >= height) l--
+    //右扩
 		while (r + 1 < len && heights[r + 1] >= height) r++
 		ret = Math.max(ret, (r - l + 1) * height)
 	}
@@ -274,8 +276,11 @@ var largestRectangleArea = function (heights) {
 	const len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
-	//每根柱子即每个i对应的左右端点坐标,即每一根柱子的左侧且最近的小于其高度的柱子
-	const left = new Array(len),
+	//每根柱子即每个i对应的左右端点坐标
+	//left[i]即每一根柱子的左侧且最近的小于其高度的柱子坐标
+	//right[i]即每一根柱子的右侧且最近的小于其高度的柱子坐标
+	//当看到元素的高度严格小于栈顶元素的高度时，栈顶元素出站，进而计算出栈顶元素的所能勾勒出来的最大面积
+	let left = new Array(len),
 		right = new Array(len),
 		stack = []
 	for (let i = 0; i < len; i++) {
@@ -306,13 +311,13 @@ var largestRectangleArea = function (heights) {
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
 	let ret = 0
-	const tmp = new Array(len + 2).fill(0)
+	let tmp = new Array(len + 2).fill(0)
 	for (let i = 0; i < len; i++) {
 		tmp[i + 1] = heights[i]
 	}
 	len += 2
 	heights = tmp
-	const stack = [0]
+	let stack = [0]
 	for (let i = 1; i < len; i++) {
 		while (heights[stack[stack.length - 1]] > heights[i]) {
 			const height = heights[stack.pop()]
