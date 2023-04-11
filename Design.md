@@ -93,13 +93,13 @@ var MinStack = function () {
 	this.minStack = [Infinity]
 }
 
-//辅助栈同步放每次最小值
-MinStack.prototype.push = function (x) {
-	this.stack.push(x)
-	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], x))
+//同时放
+MinStack.prototype.push = function (val) {
+	this.stack.push(val)
+	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], val))
 }
 
-//同步pop
+//同步弹
 MinStack.prototype.pop = function () {
 	this.stack.pop()
 	this.minStack.pop()
@@ -118,42 +118,39 @@ MinStack.prototype.getMin = function () {
 //O(n) - O(1)
 var MinStack = function () {
 	this.stack = []
-	this.minV = Number.MAX_VALUE
+  //初始化
+	this.min = Number.MAX_VALUE
 }
 
 MinStack.prototype.push = function (val) {
-	const minV = this.minV
-  // update this.minV
-	if (val < this.minV) this.minV = val
-	//存的是真实值与min的差
-  //若当次push的是小值则存的负数
-	return this.stack.push(val - minV)
+  //上一次的最小min
+	const min = this.min
+  // update this.min
+	if (val < min) this.min = val
+	//存的是真实值与上一次的最小min的差
+  //若当次push的是小值则存的是负数
+	this.stack.push(val - min)
 }
 
 MinStack.prototype.pop = function () {
-	const item = this.stack.pop()
-	const minV = this.minV
-	//如果栈顶元素小于0，说明栈顶是当前最小的元素，它出栈会对this.minV造成影响，需更新this.minV
-	//上一个最小的是"minV - 栈顶元素",我们需要将上一个最小值更新为当前的最小值
-	//因为栈顶元素入栈的时候的通过 栈顶元素 = 真实值 - 上一个最小的元素 得到的
-	//而真实值 = minV， 可得出上一个最小的元素 = 真实值 - 栈顶元素
-	if (item < 0) {
-		this.minV = minV - item
-		return minV
-	}
-	return item + minV
+	const val = this.stack.pop()
+	const min = this.min
+	//若栈顶元素小于0，说明栈顶是当前最小的元素，它出栈会对this.min造成影响，需更新this.min
+	//因为栈顶元素入栈是 栈顶元素 = 真实值 - 上一个最小的元素
+	//而真实值 = min，故上一个最小元素 = 真实值 - 栈顶元素
+	if (val < 0) this.min = min - val
 }
 
 MinStack.prototype.top = function () {
-	const item = this.stack[this.stack.length - 1]
-	const minV = this.minV
-	if (item < 0) return minV
-	//top时候需要对数据还原，这里注意是"上一个"最小值
-	return item + minV
+	const val = this.stack[this.stack.length - 1]
+	const min = this.min
+	if (val < 0) return min
+	//数据还原，注意是"上一个"最小值
+	return val + min
 }
 
 MinStack.prototype.min = function () {
-	return this.minV
+	return this.min
 }
 ```
 
@@ -216,7 +213,7 @@ Trie.prototype.startsWith = function (prefix) {
 }
 ```
 
-### [225.==用队列实现栈==](https://leetcode-cn.com/problems/implement-stack-using-queues/)
+### [225.用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
 
 ```javascript {.line-numbers}
 var MyStack = function () {
@@ -255,13 +252,13 @@ MyQueue.prototype.push = function (x) {
 	this.inStack.push(x)
 }
 
-//返回的是outStack，所以需先反向装一下
+//返回的是outStack，故先反向装一下
 MyQueue.prototype.pop = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack.pop()
 }
 
-//返回的是outStack，所以需先反向装一下
+//返回的是outStack，故先反向装一下
 MyQueue.prototype.peek = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack[this.outStack.length - 1]
@@ -279,6 +276,11 @@ MyQueue.prototype.in2out = function () {
 ```
 
 ### [641.设计循环双端队列](https://leetcode-cn.com/problems/design-circular-deque/)
+
+> 在循环队列中，当队列为空，可知  front=rear；而当所有队列空间全占满时，也有 front=rear。为了区别这两种情况，假设队列使用的数组有capacity个存储空间，则此时规定循环队列最多只能有capacity−1个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。根据以上可知，队列判空的条件是 
+> front=rear，而队列判满的条件是 **front=(rear+1) mod capacity**。
+> 对于一个固定大小的数组，只要知道队尾 rear与队首 front，即可计算出队列当前的长度：
+> **(rear−front+capacity) mod capacity**
 
 ```javascript {.line-numbers}
 var MyCircularDeque = function (k) {
@@ -298,43 +300,33 @@ MyCircularDeque.prototype.insertFront = function (value) {
 }
 
 MyCircularDeque.prototype.insertLast = function (value) {
-	if (this.isFull()) {
-		return false
-	}
+	if (this.isFull()) return false
 	this.arr[this.rear] = value
 	this.rear = (this.rear + 1) % this.capacity
 	return true
 }
 
 MyCircularDeque.prototype.deleteFront = function () {
-	if (this.isEmpty()) {
-		return false
-	}
+	if (this.isEmpty()) return false
 	// front 被设计在数组的开头，所以是 +1
 	this.front = (this.front + 1) % this.capacity
 	return true
 }
 
 MyCircularDeque.prototype.deleteLast = function () {
-	if (this.isEmpty()) {
-		return false
-	}
+	if (this.isEmpty()) return false
 	// rear 被设计在数组的末尾，所以是 -1
 	this.rear = (this.rear - 1 + this.capacity) % this.capacity
 	return true
 }
 
 MyCircularDeque.prototype.getFront = function () {
-	if (this.isEmpty()) {
-		return -1
-	}
+	if (this.isEmpty()) return -1
 	return this.arr[this.front]
 }
 
 MyCircularDeque.prototype.getRear = function () {
-	if (this.isEmpty()) {
-		return -1
-	}
+	if (this.isEmpty()) return -1
 	// 当 rear 为 0 时防止数组越界
 	return this.arr[(this.rear - 1 + this.capacity) % this.capacity]
 }
@@ -345,7 +337,7 @@ MyCircularDeque.prototype.isEmpty = function () {
 
 MyCircularDeque.prototype.isFull = function () {
 	// 注意：这个设计是非常经典的做法
-	return (this.rear + 1) % this.capacity == this.front
+	return (this.rear + 1) % this.capacity === this.front
 }
 
 /**
