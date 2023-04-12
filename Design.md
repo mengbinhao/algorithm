@@ -1,21 +1,21 @@
 ### [146.==LRU 缓存机制==](https://leetcode-cn.com/problems/lru-cache/)
 
 ```javascript {.line-numbers}
-//hash表 + 双向链表(头代表最新,尾代表老)
-function ListNode(key, value) {
+//hash表 + 双向链表(头代表新,尾代表老)
+var ListNode = function (key, value) {
 	this.key = key
 	this.value = value
-	this.next = null
 	this.prev = null
+	this.next = null
 }
 
 var LRUCache = function (capacity) {
 	// 缓存容量
 	this.capacity = capacity
+ 	// 缓存数目
+	this.count = 0
 	// 哈希表 key -> ListNode
 	this.hashTable = {}
-	// 缓存数目
-	this.count = 0
 	// 虚拟头尾
 	this.dummyHead = new ListNode()
 	this.dummyTail = new ListNode()
@@ -23,7 +23,8 @@ var LRUCache = function (capacity) {
 	this.dummyTail.prev = this.dummyHead
 }
 
-//若哈希表中没有对应值,返回-1。若存在节点,刷新它的位置,移动到链表头部,返回该节点值
+//若哈希表中没有对应值,返回-1
+//若存在节点,刷新它的位置,移动到链表头部,返回该节点值
 LRUCache.prototype.get = function (key) {
 	const node = this.hashTable[key]
 	if (!node) return -1
@@ -90,7 +91,8 @@ LRUCache.prototype.put = function (key, value) {
 var MinStack = function () {
 	this.stack = []
 	//add an initial value
-	this.minStack = [Infinity]
+  //Infinity
+	this.minStack = [Number.MAX_VALUE]
 }
 
 //同时放
@@ -170,13 +172,9 @@ var Trie = function () {
 
 Trie.prototype.insert = function (word) {
 	if (!word) return false
-
 	let node = this.root
-
 	for (let i = 0; i < word.length; i++) {
-		if (!node.next[word[i]]) {
-			node.next[word[i]] = new TrieNode()
-		}
+		if (!node.next[word[i]]) node.next[word[i]] = new TrieNode()
 		node = node.next[word[i]]
 	}
 	node.isEnd = true
@@ -185,9 +183,7 @@ Trie.prototype.insert = function (word) {
 
 Trie.prototype.search = function (word) {
 	if (!word) return false
-
 	let node = this.root
-
 	for (let i = 0; i < word.length; i++) {
 		if (node.next[word[i]]) {
 			node = node.next[word[i]]
@@ -200,7 +196,6 @@ Trie.prototype.search = function (word) {
 
 Trie.prototype.startsWith = function (prefix) {
 	if (!prefix) return true
-
 	let node = this.root
 	for (let i = 0; i < prefix.length; i++) {
 		if (node.next[prefix[i]]) {
@@ -269,7 +264,7 @@ MyQueue.prototype.empty = function () {
 }
 
 MyQueue.prototype.in2out = function () {
-	while (this.inStack.length) {
+	while (this.inStack.length > 0) {
 		this.outStack.push(this.inStack.pop())
 	}
 }

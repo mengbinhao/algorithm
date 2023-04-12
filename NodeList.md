@@ -32,7 +32,7 @@ targetInsertNode.next = next
 
 ```javascript
 //pre待删除节点的前驱节点
-pre.next = 待删除位置的前驱节点.next.next
+pre.next = pre.next.next
 ```
 
 
@@ -70,11 +70,12 @@ var addTwoNumbers = function (l1, l2) {
 
 ```javascript {.line-numbers}
 //basic version
+//获取链表长度,循环len-n找到pre
 var removeNthFromEnd = function (head, n) {
 	const dummyHead = new ListNode(-1, head)
 	const len = getLen(head)
 	let cur = dummyHead
-  //找到要删除节点的前驱结点
+  //找到删除节点的pre
 	for (let i = 0; i < len - n; i++) cur = cur.next
 	cur.next = cur.next.next
 	return dummyHead.next
@@ -300,7 +301,7 @@ function reverse(a, b) {
 }
 ```
 
-### [61. ==旋转链表==](https://leetcode-cn.com/problems/rotate-list/)
+### [61. 旋转链表](https://leetcode-cn.com/problems/rotate-list/)
 
 ```javascript {.line-numbers}
 var rotateRight = function (head, k) {
@@ -308,12 +309,11 @@ var rotateRight = function (head, k) {
 	let len = 1,
 		cur = head
 	//get length
-	//len initial is 1, so from cur.next begin loop， or cur.next = head throw null error
 	while (cur.next) {
 		cur = cur.next
 		len++
 	}
-	// 当k大于长度时, 又是一个轮回, 所以对长度取余
+	// 当k大于长度时, 又是一个轮回, 对长度取余
 	const num = k % len
 	// 不需要旋转
 	if (num === 0) return head
@@ -321,11 +321,8 @@ var rotateRight = function (head, k) {
 	cur.next = head
 	let index = 1,
 		newTail = head
-	//find new tail
-	while (index < len - num) {
-		newTail = newTail.next
-		index++
-	}
+	//find newTail
+	while (index++ < len - num) newTail = newTail.next
 	const newHead = newTail.next
 	//break ring
 	newTail.next = null
@@ -369,6 +366,7 @@ var deleteDuplicates = function (head) {
 	return head
 }
 
+//fast、slow
 var deleteDuplicates = function (head) {
 	if (!head) return null
 	let fast = head,
@@ -419,10 +417,7 @@ var reverseBetween = function (head, left, right) {
 	const dummyHead = new ListNode(-1)
 	dummyHead.next = head
 	let pre = dummyHead
-	for (let i = 0; i < left - 1; i++) {
-		pre = pre.next
-	}
-
+	for (let i = 0; i < left - 1; i++) pre = pre.next
 	let cur = pre.next
 	for (let i = 0; i < right - left; i++) {
 		const next = cur.next
@@ -739,7 +734,7 @@ var reverseList = function (head) {
 		prev = cur
 		cur = next
 	}
-	//返回反转后的头结点
+	//反转后的头结点
 	return prev
 }
 
