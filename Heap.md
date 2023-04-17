@@ -14,7 +14,7 @@
 ### [215.==数组中的第 K 个最大元素==](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 ```javascript {.line-numbers}
-//基于快速排序的选择方法O(n) - O(logN)
+//基于快序的选择方法O(n) - O(logN)
 var findKthLargest = function (nums, k) {
 	const quickSelect = (arr, l, r, index) => {
 		let idx = partition(arr, l, r)
@@ -26,21 +26,40 @@ var findKthLargest = function (nums, k) {
 				: quickSelect(arr, l, idx - 1, index)
 		}
 	}
-	const partition = (arr, l, r) => {
-		let x = arr[r],
+  const partition = (arr, l, r) => {
+		let pivot = arr[r],
 			i = l - 1
 		for (let j = l; j < r; j++) {
-			if (arr[j] < x) {
-				;[arr[i], arr[j]] = [arr[j], arr[++i]]
-			}
+			if (arr[j] < pivot) [arr[i], arr[j]] = [arr[j], arr[++i]]
 		}
+    //pivot放到本轮该放的位置
 		;[arr[i], arr[r]] = [arr[r], arr[++i]]
 		return i
 	}
+  /* another version
+  const partition = (arr, l, r) => {
+		//设最右边为pivot
+		const pivot = r
+		let index = l
+		for (let i = index; i < r; i++) {
+			if (arr[i] < arr[pivot]) {
+				//大的放pivot后,小的放pivot前,不稳定
+				;[arr[i], arr[index]] = [arr[index], arr[i]]
+				//记录有多少个比pivot小的
+				index++
+			}
+		}
+    //此时index是pivot应放的位置，即左右已排好序列的中间
+		;[arr[index], arr[pivot]] = [arr[pivot], arr[index]]
+		return index
+	}
+	*/
 	//返回的即是nums.length - k的下标
 	return quickSelect(nums, 0, nums.length - 1, nums.length - k)
 }
+```
 
+```javascript
 //基于堆排序的选择方法
 function findKthLargest(nums, k) {
 	let len = nums.length
@@ -61,6 +80,7 @@ function findKthLargest(nums, k) {
 	}
 	buildMaxHeap(nums)
 	//大顶堆，换一次，小的下沉，第二大上到堆顶
+  //注意遍历结束条件
 	for (let i = nums.length - 1; i >= nums.length - k + 1; i--) {
 		;[nums[i], nums[0]] = [nums[0], nums[i]]
 		len--
@@ -77,23 +97,18 @@ function findKthLargest(nums, k) {
 //时间复杂度优于O(nlogn),n是数组的大小
 var topKFrequent = function (nums, k) {
 	const hash = {}
-	//使用hash统计每个item次数
 	for (let i = 0, len = nums.length; i < len; i++) {
 		hash[nums[i]] ? hash[nums[i]]++ : (hash[nums[i]] = 1)
 	}
-	//desc sort
 	const list = []
 	Object.keys(hash).forEach((key) => {
 		list.push({ key, value: hash[key] })
 	})
+  //desc sort
 	list.sort((a, b) => b.value - a.value)
-
-	//build return
 	const ret = []
 	list.forEach((obj, index) => {
-		if (index < k) {
-			ret.push(Number.parseInt(obj.key, 10))
-		}
+		if (index < k) ret.push(Number.parseInt(obj.key, 10))
 	})
 	return ret
 }
@@ -102,7 +117,6 @@ var topKFrequent = function (nums, k) {
 var topKFrequent = function (nums, k) {
 	const map = new Map(),
 		arr = [...new Set(nums)]
-
 	nums.forEach((num) => {
 		if (map.has(num)) {
 			map.set(num, map.get(num) + 1)

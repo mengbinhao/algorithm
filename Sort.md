@@ -22,7 +22,7 @@ const bubble = (arr) => {
 				isSwap = true
 			}
 		}
-		//若当前轮无冒泡说明已排完，直接跳出
+		//若当前轮无冒泡说明已排完
 		if (!isSwap) break
 	}
 	return arr
@@ -47,6 +47,7 @@ const insert = (arr) => {
 		const cur = arr[i]
 		//依次跟前面有序区进行比较
 		let j = i - 1
+    //有序区
 		while (j >= 0 && arr[j] > cur) {
 			//有序区依次往后挪,有序区是一直有序的,不断寻找无序区里的当前cur应该放在有序区的位置
 			arr[j + 1] = arr[j]
@@ -148,14 +149,25 @@ const quick = (arr) => {
 				index++
 			}
 		}
-		//pivot放左右已排好序列中间
+    //此时index是pivot应放的位置，即左右已排好序列的中间
 		;[arr[index], arr[pivot]] = [arr[pivot], arr[index]]
 		return index
 	}
-
+  /* another version
+  const partition = (arr, l, r) => {
+		let pivot = arr[r],
+			i = l - 1
+		for (let j = l; j < r; j++) {
+			if (arr[j] < pivot) [arr[i], arr[j]] = [arr[j], arr[++i]]
+		}
+    //pivot放到本轮该放的位置
+		;[arr[i], arr[r]] = [arr[r], arr[++i]]
+		return i
+	}
+	*/
 	const helper = (arr, l, r) => {
 		if (l >= r) return
-		//取得pivot坐标
+		//获取当次pivot分区坐标
 		const pos = partition(arr, l, r)
 		helper(arr, l, pos - 1)
 		helper(arr, pos + 1, r)
@@ -207,13 +219,13 @@ const merge = (arr) => {
 	const helper = (arr, l, r, tmp) => {
 		if (l >= r) return
 		const mid = (l + r) >> 1
-		//先递
+		//先递，左闭右闭
 		helper(arr, l, mid, tmp)
 		helper(arr, mid + 1, r, tmp)
 		//再归两段数组
 		let k = 0,
+       //这里初始值跟上边两段数组开始坐标对应
 			i = l,
-			//当前层后部分数组的开始坐标
 			j = mid + 1
 		while (i <= mid && j <= r) tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
 		while (i <= mid) tmp[k++] = arr[i++]
@@ -228,13 +240,25 @@ const merge = (arr) => {
 
 ### 6 heap
 
+- 堆就是利用完全二叉树的结构来维护的一维数组
+
+- **大顶堆**：每个结点的值都大于或等于其左右孩子结点的值
+
+- **小顶堆**：每个结点的值都小于或等于其左右孩子结点的值
+
+- 一般我们说 `topK` 问题，就可以用大顶堆或小顶堆来实现
+  **最大的 K 个**：小顶堆
+  **最小的 K 个**：大顶堆
+  
+  **topK**:  全排 -> 只排前k个 -> 只找不排（前k个数构造小顶堆，for k+1到len-1,当val>堆顶替换堆顶并堆化小顶堆）
+
 > 最好 O(nlogn)、最坏 O(nlogn)、平均时间复杂度都是 O(nlogn)
 >
 > 空间复杂度为 O(1), 稳定的排序算法
 >
-> 1. 将初始待排序关键字序列(R1,R2….Rn)构建成大顶堆，此堆为初始的无序区；
+> 1. 将初始待排序关键字序列(R1,R2….Rn)构建成大顶堆，此堆为初始的无序区
 >
-> 2. 将堆顶元素 R[1]与最后一个元素 R[n]交换，此时得到新的无序区(R1,R2,……Rn-1)和新的有序区(Rn),且满足 R[1,2…n-1]<=R[n]；
+> 2. 将堆顶元素 R[1]与最后一个元素 R[n]交换，此时得到新的无序区(R1,R2,……Rn-1)和新的有序区(Rn),且满足 R[1,2…n-1]<=R[n]
 >
 > 3. 由于交换后新的堆顶 R[1]可能违反堆的性质，因此需要对当前无序区(R1,R2,……Rn-1)调整为新堆，然后再次将 R[1]与无序区最后一个元素交换，得到新的无序区(R1,R2….Rn-2)和新的有序区(Rn-1,Rn)。不断重复此过程直到有序区的元素个数为 n-1，则整个排序过程完成
 

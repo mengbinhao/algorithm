@@ -5,7 +5,7 @@
 var merge = function (intervals) {
 	//precondition, 按起点排序
 	intervals.sort((a, b) => a[0] - b[0])
-	const ret = [[intervals[0][0], intervals[0][1]]]
+	let ret = [[intervals[0][0], intervals[0][1]]]
 	for (let i = 1, len = intervals.length; i < len; i++) {
 		const L = intervals[i][0],
 			R = intervals[i][1]

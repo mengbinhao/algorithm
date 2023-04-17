@@ -77,6 +77,7 @@
 var preorderTraversal = function (root) {
 	const ret = []
 	const traversal = (root) => {
+    //同if (root) {xxx}
 		if (!root) return
 		ret.push(root.val)
 		traversal(root.left)
@@ -214,6 +215,7 @@ var postorderTraversal = function (root) {
 	const stack = []
 	while (root || stack.length > 0) {
 		while (root) {
+       //反装+左右颠倒
 			ret.unshift(root.val)
 			stack.push(root)
 			root = root.right
@@ -806,7 +808,7 @@ var generateTrees = function (n) {
 ```javascript {.line-numbers}
 var sortedArrayToBST = function (nums) {
 	const helper = (nums, l, r) => {
-		//函数参数区间是左闭右闭,所以结束条件如下
+		//函数参数区间是左闭右闭
 		if (l > r) return null
 		const mid = Math.floor((l + r) / 2)
 		//因高度平衡则需从中点创建根节点开始

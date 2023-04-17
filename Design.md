@@ -270,83 +270,115 @@ MyQueue.prototype.in2out = function () {
 }
 ```
 
+### [622.设计循环队列](https://leetcode.cn/problems/design-circular-queue/)
+
+> 在循环队列中，当队列为空，`front=rear`；而当所有队列空间全占满时，也有`front=rear`。为了区别这两种情况，假设队列使用的数组有`capacity`个存储空间，则此时规定循环队列最多只能有`capacity−1`个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。根据以上可知，队列判空的条件是 
+> `front=rear`，而队列判满的条件是 **`front=(rear + 1) mod capacity`**
+> 对于一个固定大小的数组，只要知道队尾`rear`与队首`front`，可计算出队列长度：
+> **`(rear − front + capacity) mod capacity`**
+>
+> 循环队列的属性如下:
+> elements：一个固定大小的数组，用于保存循环队列的元素
+> capacity：循环队列的容量，即队列中最多可以容纳的元素数量
+> front：队列首元素对应的数组的索引
+> rear：队列尾元素对应的索引的**下一个索引**
+
+```javascript {.line-numbers}
+//数组实现
+var MyCircularQueue = function (k) {
+	this.capacity = k + 1
+	this.elements = new Array(this.capacity).fill(0)
+	this.rear = 0
+	this.front = 0
+}
+
+MyCircularQueue.prototype.enQueue = function (value) {
+	if (this.isFull()) return false
+	this.elements[this.rear] = value
+	this.rear = (this.rear + 1) % this.capacity
+	return true
+}
+
+MyCircularQueue.prototype.deQueue = function () {
+	if (this.isEmpty()) return false
+	this.front = (this.front + 1) % this.capacity
+	return true
+}
+
+MyCircularQueue.prototype.Front = function () {
+	if (this.isEmpty()) return -1
+	return this.elements[this.front]
+}
+
+MyCircularQueue.prototype.Rear = function () {
+	if (this.isEmpty()) return -1
+	return this.elements[(this.rear - 1 + this.capacity) % this.capacity]
+}
+
+MyCircularQueue.prototype.isEmpty = function () {
+	return this.rear == this.front
+}
+
+MyCircularQueue.prototype.isFull = function () {
+	return (this.rear + 1) % this.capacity === this.front
+}
+```
+
 ### [641.设计循环双端队列](https://leetcode-cn.com/problems/design-circular-deque/)
 
-> 在循环队列中，当队列为空，可知  front=rear；而当所有队列空间全占满时，也有 front=rear。为了区别这两种情况，假设队列使用的数组有capacity个存储空间，则此时规定循环队列最多只能有capacity−1个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。根据以上可知，队列判空的条件是 
-> front=rear，而队列判满的条件是 **front=(rear+1) mod capacity**。
-> 对于一个固定大小的数组，只要知道队尾 rear与队首 front，即可计算出队列当前的长度：
-> **(rear−front+capacity) mod capacity**
+> 在循环队列的基础上，增加`insertFront`和`deleteFront`
 
 ```javascript {.line-numbers}
 var MyCircularDeque = function (k) {
-	//point to first valid position
-	this.front = 0
-	//point to last valid position
-	this.rear = 0
 	this.capacity = k + 1
-	this.arr = Array(this.capacity)
+	this.elements = new Array(k + 1).fill(0)
+	this.rear = 0
+	this.front = 0
 }
 
 MyCircularDeque.prototype.insertFront = function (value) {
 	if (this.isFull()) return false
 	this.front = (this.front - 1 + this.capacity) % this.capacity
-	this.arr[this.front] = value
+	this.elements[this.front] = value
 	return true
 }
 
 MyCircularDeque.prototype.insertLast = function (value) {
 	if (this.isFull()) return false
-	this.arr[this.rear] = value
+	this.elements[this.rear] = value
 	this.rear = (this.rear + 1) % this.capacity
 	return true
 }
 
 MyCircularDeque.prototype.deleteFront = function () {
 	if (this.isEmpty()) return false
-	// front 被设计在数组的开头，所以是 +1
 	this.front = (this.front + 1) % this.capacity
 	return true
 }
 
 MyCircularDeque.prototype.deleteLast = function () {
 	if (this.isEmpty()) return false
-	// rear 被设计在数组的末尾，所以是 -1
 	this.rear = (this.rear - 1 + this.capacity) % this.capacity
 	return true
 }
 
 MyCircularDeque.prototype.getFront = function () {
 	if (this.isEmpty()) return -1
-	return this.arr[this.front]
+	return this.elements[this.front]
 }
 
 MyCircularDeque.prototype.getRear = function () {
 	if (this.isEmpty()) return -1
-	// 当 rear 为 0 时防止数组越界
-	return this.arr[(this.rear - 1 + this.capacity) % this.capacity]
+	return this.elements[(this.rear - 1 + this.capacity) % this.capacity]
 }
 
 MyCircularDeque.prototype.isEmpty = function () {
-	return this.front === this.rear
+	return this.rear == this.front
 }
 
 MyCircularDeque.prototype.isFull = function () {
-	// 注意：这个设计是非常经典的做法
-	return (this.rear + 1) % this.capacity === this.front
+	return (this.rear + 1) % this.capacity == this.front
 }
-
-/**
- * Your MyCircularDeque object will be instantiated and called as such:
- * var obj = new MyCircularDeque(k)
- * var param_1 = obj.insertFront(value)
- * var param_2 = obj.insertLast(value)
- * var param_3 = obj.deleteFront()
- * var param_4 = obj.deleteLast()
- * var param_5 = obj.getFront()
- * var param_6 = obj.getRear()
- * var param_7 = obj.isEmpty()
- * var param_8 = obj.isFull()
- */
 ```
 
 ### [707.设计链表](https://leetcode.cn/problems/design-linked-list/)
@@ -354,7 +386,8 @@ MyCircularDeque.prototype.isFull = function () {
 ```javascript {.line-numbers}
 var MyLinkedList = function () {
 	this.size = 0
-	this.head = new ListNode(0)
+	//sentinel
+	this.head = new ListNode()
 }
 
 MyLinkedList.prototype.get = function (index) {
@@ -373,21 +406,30 @@ MyLinkedList.prototype.addAtTail = function (val) {
 }
 
 MyLinkedList.prototype.addAtIndex = function (index, val) {
-	if (index > this.size) return
-	index = Math.max(0, index)
-	this.size++
+	if (index < 0 || index > this.size) return
 	let prev = this.head
 	while (index-- > 0) prev = prev.next
-	let newAdd = new ListNode(val)
-	newAdd.next = prev.next
-	prev.next = newAdd
+	let toAdd = new ListNode(val)
+	toAdd.next = prev.next
+	prev.next = toAdd
+	this.size++
 }
 
 MyLinkedList.prototype.deleteAtIndex = function (index) {
 	if (index < 0 || index >= this.size) return
-	this.size--
 	let prev = this.head
 	while (index-- > 0) prev = prev.next
 	prev.next = prev.next.next
+	this.size--
 }
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * var obj = new MyLinkedList()
+ * var param_1 = obj.get(index)
+ * obj.addAtHead(val)
+ * obj.addAtTail(val)
+ * obj.addAtIndex(index,val)
+ * obj.deleteAtIndex(index)
+ */
 ```

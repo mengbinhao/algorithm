@@ -82,9 +82,9 @@ var removeNthFromEnd = function (head, n) {
 
 	function getLen(head) {
 		let len = 0
-		while (head) {
+		while (head++) {
+      head = head.next
 			len++
-			head = head.next
 		}
 		return len
 	}
@@ -248,6 +248,7 @@ var swapPairs = function (head) {
 	while (cur.next && cur.next.next) {
 		const first = cur.next
 		const second = first.next
+    //穿针引线四句
 		first.next = second.next
 		second.next = first
 		cur.next = second
@@ -351,7 +352,7 @@ var deleteDuplicates = function (head) {
 }
 ```
 
-### [83. 删除排序链表中的重复元素](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)
+### [83. ==删除排序链表中的重复元素==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)
 
 ```javascript {.line-numbers}
 var deleteDuplicates = function (head) {
@@ -414,8 +415,7 @@ var partition = function (head, x) {
 ```javascript {.line-numbers}
 //loop once
 var reverseBetween = function (head, left, right) {
-	const dummyHead = new ListNode(-1)
-	dummyHead.next = head
+	const dummyHead = new ListNode(-1, head)
 	let pre = dummyHead
 	for (let i = 0; i < left - 1; i++) pre = pre.next
 	let cur = pre.next
@@ -710,9 +710,9 @@ var removeElements = function (head, val) {
 	while (cur.next) {
 		if (cur.next.val === val) {
 			cur.next = cur.next.next
-			continue
-		}
-		cur = cur.next
+		} else {
+		  cur = cur.next
+    }
 	}
 	return dummyNode.next
 }
@@ -815,22 +815,6 @@ var oddEvenList = function (head) {
 ### [876. 链表中间节点](https://leetcode-cn.com/problems/middle-of-the-linked-list/)
 
 ```javascript {.line-numbers}
-var middleNode = function (head) {
-	let n = 0,
-		cur = head
-	while (cur) {
-		n++
-		cur = cur.next
-	}
-	let k = 0
-	cur = head
-	while (k < Math.trunc(n / 2)) {
-		k++
-		cur = cur.next
-	}
-	return cur
-}
-
 //fast / slow
 var middleNode = function (head) {
 	let fast = head,

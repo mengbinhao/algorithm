@@ -12,16 +12,15 @@ var groupAnagrams = function (strs) {
 	return Object.values(hash)
 }
 
-//使用计数器做key，可以去掉sort的时间复杂度 O(NK) - O(NK)
+//使用计数器做key，可去掉sort的时间复杂度 O(NK) - O(NK)
 //best version
 var groupAnagrams = function (strs) {
 	const hash = {},
 		key = new Array(26)
 	for (let str of strs) {
 		key.fill(0)
-		for (let i = 0, len = str.length; i < len; i++) {
+		for (let i = 0, len = str.length; i < len; i++)
 			key[str.charCodeAt(i) - 'a'.charCodeAt(0)]++
-		}
 		hash[key] ? hash[key].push(str) : (hash[key] = [str])
 	}
 	return Object.values(hash)
@@ -64,10 +63,8 @@ var isAnagram = function (s, t) {
 //good version
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
-	const hash = {}
-	for (let c of s) {
-		hash[c] ? hash[c]++ : (hash[c] = 1)
-	}
+	let hash = {}
+	for (let c of s) hash[c] ? hash[c]++ : (hash[c] = 1)
 	for (let c of t) {
 		if (hash[c]) {
 			hash[c]--
@@ -83,12 +80,12 @@ var isAnagram = function (s, t) {
 var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
 	const arr = Array.from({ length: 26 }, () => 0),
-		len = s.length
-	const base = 'a'.charCodeAt(0)
+		len = s.length,
+		base = 'a'.charCodeAt(0)
+	//记录每个字母的个数
 	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - base]++
-	for (let i = 0; i < len; i++) {
+	for (let i = 0; i < len; i++)
 		if (--arr[t.charCodeAt(i) - base] < 0) return false
-	}
 	return true
 }
 ```
