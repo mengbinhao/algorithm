@@ -598,7 +598,6 @@ var isValidBST = function (root) {
 var recoverTree = function (root) {
 	const stack = []
 	let prev = (first = second = null)
-
 	while (root || stack.length) {
 		while (root) {
 			stack.push(root)
@@ -607,7 +606,7 @@ var recoverTree = function (root) {
 		root = stack.pop()
 		//case 1: [1,2,3,4,5,6,7] -> [1,6,3,4,5,2,7],两处不合法
 		//case 2: [1,2,3,4,5,6,7] -> [1,3,2,4,5,6,7],一处不合法
-		if (prev && root.val < prev.val) {
+		if (prev && prev.val > root.val) {
 			second = root
 			if (first == null) {
 				first = prev
@@ -617,7 +616,7 @@ var recoverTree = function (root) {
 		prev = root
 		root = root.right
 	}
-
+  //判断更严谨
 	if (first && second) {
 		;[first.val, second.val] = [second.val, first.val]
 	}
@@ -743,7 +742,6 @@ var numTrees = function (n) {
 	const dp = new Array(n + 1).fill(0)
 	//base case
 	dp[0] = dp[1] = 1
-
 	for (let i = 2; i <= n; i++) {
 		//笛卡尔积
 		for (let j = 0; j <= i - 1; j++) {
@@ -757,7 +755,6 @@ var numTrees = function (n) {
 const numTrees = (n) => {
 	// n个整数能创建出的BST的种类数
 	if (n == 0 || n == 1) return 1
-
 	let num = 0
 	for (let i = 0; i <= n - 1; i++) {
 		num += numTrees(i) * numTrees(n - i - 1)
@@ -771,7 +768,6 @@ const numTrees = (n) => {
 ```javascript {.line-numbers}
 var generateTrees = function (n) {
 	if (n === 0) return []
-
 	const buildTree = (start, end) => {
 		//以当前i为root能够组成的BST个数
 		const ret = []
@@ -779,7 +775,6 @@ var generateTrees = function (n) {
 			ret.push(null)
 			return ret
 		}
-
 		//loop root node
 		for (let i = start; i <= end; i++) {
 			//获得所有可行的左子树集合
@@ -833,7 +828,6 @@ var sortedListToBST = function (head) {
 		}
 		return slow
 	}
-
 	const buildTree = (left, right) => {
 		if (left === right) return null
 		const mid = getMedian(left, right)
@@ -1002,12 +996,12 @@ var maxDepth = function (root) {
 		depth = 0
 	while (queue.length > 0) {
 		const size = queue.length
-		depth++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
+    depth++
 	}
 	return depth
 }
@@ -1034,7 +1028,6 @@ var minDepth = function (root) {
 		depth = 0
 	while (queue.length > 0) {
 		const size = queue.length
-		depth++
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
 			//若左右节点都是null(在遇见的第一个leaf节点上)，则该节点深度最小
@@ -1042,6 +1035,7 @@ var minDepth = function (root) {
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
+    depth++
 	}
 	return depth
 }
@@ -1223,7 +1217,7 @@ var findTilt = function (root) {
 
 ```javascript {.line-numbers}
 var binaryTreePaths = function (root) {
-	const ret = []
+	let ret = []
 	const dfs = (root, curPath) => {
 		if (!root) return
 		if (!root.left && !root.right) {
@@ -1387,7 +1381,6 @@ var hasPathSum = function (root, sum) {
 	//一个统计节点，一个统计节点值
 	let queueNode = [root],
 		queueVal = [root.val]
-
 	while (queueNode.length > 0) {
 		let cur = queueNode.shift()
 		let accVal = queueVal.shift()
@@ -1418,7 +1411,7 @@ var pathSum = function (root, sum) {
 		if (!root.left && !root.right && sum === root.val) ret.push([...path])
 		dfs(root.left, sum - root.val, path)
 		dfs(root.right, sum - root.val, path)
-		//backtrack
+		//backtrack,pop的当前节点
 		path.pop()
 	}
 	dfs(root, sum, [])
@@ -1487,7 +1480,6 @@ var buildTree = function (preorder, inorder) {
 		inLen = inorder.length
 	if (preLen !== inLen) throw new TypeError('invalid params')
 	const map = new Map()
-
 	//space for time
 	//get inorder idx from preorder value
 	//note question: no same value Node, which means can form just one specific tree
@@ -1495,7 +1487,6 @@ var buildTree = function (preorder, inorder) {
 	return helper(preorder, 0, preLen - 1, map, 0, inLen - 1)
 	function helper(preorder, preLeft, preRight, map, inLeft, inRight) {
 		if (preLeft > preRight || inLeft > inRight) return null
-
 		const rootVal = preorder[preLeft],
 			root = new TreeNode(rootVal),
 			pIndex = map.get(rootVal)

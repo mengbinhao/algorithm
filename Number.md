@@ -281,9 +281,7 @@ var missingNumber = function (nums) {
 var missingNumber = function (nums) {
 	const set = new Set()
 	const n = nums.length
-	for (let i = 0; i < n; i++) {
-		set.add(nums[i])
-	}
+	for (let i = 0; i < n; i++) set.add(nums[i])
 	let missing = -1
 	for (let i = 0; i <= n; i++) {
 		if (!set.has(i)) {
