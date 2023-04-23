@@ -16,7 +16,7 @@
 
 ```javascript
 var letterCombinations = function (digits) {
-	const ret = []
+	let ret = []
 	if (!digits) return ret
 	const hash = {
 		2: 'abc',
@@ -34,7 +34,7 @@ var letterCombinations = function (digits) {
 			return
 		}
 		for (let c of hash[digits[level]]) {
-			//该问题传递的是字符串则可省略回溯的过程
+			//字符串省略回溯
 			dfs(s + c, level + 1)
 		}
 	}

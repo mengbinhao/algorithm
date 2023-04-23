@@ -10,14 +10,14 @@
 2. 二分查找：使用循环或递归在每次比较后将查找空间二分
    1. **先定义搜索区间**
    2. **根据搜索区间定义循环结束条件**
-   3. 取中间元素和目标元素做对比(目标元素可能是需要找的元素或者是数组第一个/最后一个元素等)
+   3. 取中间元素和目标元素做对比(目标元素可能是需要找的元素或者是数组中满足条件的第一个或最后一个元素等)
    4. 根据比较的结果收缩区间,舍弃非法解
 3. 后处理：在剩余空间中确定可行的候选者
 
 ### 常见变体
 
-- 如果存在多个满足条件的元素,返回最左边满足条件的索引
-- 如果存在多个满足条件的元素,返回最右边满足条件的索引
+- 若存在多个满足条件的元素,返回最左边满足条件的索引
+- 若存在多个满足条件的元素,返回最右边满足条件的索引
 - 数组不是整体有序的,比如先升序再降序,或者先降序再升序
 - 将一维数组变成二维数组
 - 。。。
@@ -29,7 +29,7 @@
 ![](./images/binarySearch.png)
 
 > 1. 分析二分查找代码时,最好不要出现 else,全部展开成 else if 方便理解
-> 2. 注意「搜索区间」和 while 的终止条件,如果存在漏掉的元素,记得在**最后检查**
+> 2. 注意「搜索区间」和 while 的终止条件,若存在漏掉的元素,记得在**最后检查**
 > 3. 如需定义左闭右开的「搜索区间」搜索左右边界,只要在 `nums[mid] == target` 时做修改即可,搜索右侧时需要减一
 > 4. 如果将「搜索区间」全都统一成两端都闭,好记,只要稍改 `nums[mid] == target` 条件处的代码和返回的逻辑即可
 
@@ -172,7 +172,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 6 寻找左侧边界的二分搜索(labuladuo version)
+#### 6 寻找左侧边界的二分搜索(labuladuo version,同2)
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
@@ -195,12 +195,29 @@ const leftBound = (arr, target) => {
 	}
 	//Note 4
 	//检查出界情况
+  //case 1: [1,2,2,2,3], 4
+  //case 2: [2,3,3,3,4], 1
+	if (l >= arr.length || arr[l] !== target) return -1
+	return l
+}
+
+const leftBound = (arr, target) => {
+	let l = 0,
+		r = arr.length - 1
+	while (l <= r) {
+		let mid = Math.floor(l + (r - l) / 2)
+		if (arr[mid] < target) {
+			l = mid + 1
+		} else if (arr[mid] >= target) {
+			r = mid - 1
+		}
+	}
 	if (l >= arr.length || arr[l] !== target) return -1
 	return l
 }
 ```
 
-#### 7 寻找右侧边界的二分搜索(labuladuo version)
+#### 7 寻找右侧边界的二分搜索(labuladuo version,同3)
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
@@ -236,16 +253,16 @@ var search = function (nums, target) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return mid
 		//看左边
-		//in case mid === l 即下标相等
-		//[start, mid]有序
+    //in case mid === l 即下标相等
 		if (nums[mid] >= nums[l]) {
+       //[start, mid]有序
 			if (target < nums[mid] && target >= nums[l]) {
 				r = mid - 1
 			} else {
 				l = mid + 1
 			}
-			// [mid, end]有序
 		} else {
+       // [mid, end]有序
 			if (target > nums[mid] && target <= nums[r]) {
 				l = mid + 1
 			} else {
@@ -327,13 +344,11 @@ var search = function (nums, target) {
 	while (l <= r) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return true
-
 		//move left pointer to exclude repeat item, or we can not define the monotonic section
 		if (nums[l] === nums[mid]) {
 			l++
 			continue
 		}
-
 		if (nums[mid] >= nums[l]) {
 			if (target < nums[mid] && target >= nums[l]) {
 				r = mid - 1
@@ -393,6 +408,7 @@ var findMin = function (nums) {
 			l = mid + 1
 		}
 	}
+  //l >= r
 	return nums[l]
 }
 ```

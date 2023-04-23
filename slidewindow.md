@@ -14,7 +14,7 @@
   - l 和 r 都初始化为 0
   - r 指针移动一步
   - 判断窗口内的连续元素是否满足题目限定的条件
-    - 3.1 若满足,再判断是否需要更新最优解,如果需要则更新最优解.并尝试通过移动 l 指针缩小 窗口大小循环执行
+    - 3.1 若满足,再判断是否需要更新最优解,如果需要则更新最优解.并尝试通过移动 l 指针缩小窗口大小循环执行
     - 3.2 如果不满足,则继续
 
 > 1、我们在字符串 S 中使用双指针中的左右指针技巧,初始化 left = right = 0,把索引左闭右开区间 [left, right) 称为一个「窗口」
@@ -32,8 +32,7 @@
 ### [3.==无重复字符的最长子串==](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
 ```javascript {.line-numbers}
-//window version， better
-//window version， better
+//window version   better
 var lengthOfLongestSubstring = function (s) {
 	const slideWindow = {},
 		len = s.length
@@ -43,7 +42,7 @@ var lengthOfLongestSubstring = function (s) {
 	while (r < len) {
 		const rChar = s[r++]
 		slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
-		//left一直缩到window里当前rChar不重复的位置
+		//缩小window左边界，l一直缩到window里当前rChar不重复的位置
 		while (slideWindow[rChar] > 1) slideWindow[s[l++]]--
 		ret = Math.max(ret, r - l)
 	}
@@ -80,7 +79,7 @@ var minWindow = function (s, t) {
 		l = 0,
 		r = 0,
 		minLen = Infinity,
-		//窗口中满足need条件的字符个数,如果valid和need.size的大小相同,则说明窗口已满足条件,已完全覆盖了串t
+		//窗口中满足need条件的字符个数,若valid和need.size的大小相同,则说明窗口已满足条件,已完全覆盖t
 		valid = 0
 
 	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
@@ -89,20 +88,21 @@ var minWindow = function (s, t) {
 		//过滤需要的字符
 		if (need[rChar]) {
 			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
+       //某字符已找够
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
-		//t中所有字符已全覆盖,判断是否收缩
+		//t中所有字符已全覆盖,收缩左边界
 		while (valid === Object.keys(need).length) {
 			if (r - l < minLen) {
 				minLen = r - l
 				begin = l
 			}
-			//更新左边界
+			//update left
 			const lChar = s[l++]
-			//过滤需要的字符,行为同上面加的时候
+			//过滤需要的字符,行为同上面加的时候，加的时候是满足个数加，减一样
 			if (need[lChar]) {
 				if (slideWindow[lChar] === need[lChar]) valid--
-				slideWindow[lChar]--
+         slideWindow[lChar]--
 			}
 		}
 	}
@@ -139,8 +139,8 @@ var minSubArrayLen = function (s, nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	let ret = Infinity,
-		l = 0, //表示滑动窗口的起始位置
-		r = 0, //表示滑动窗口的结束位置
+		l = 0, //滑动窗口起始位置
+		r = 0, //滑动窗口结束位置
 		sum = 0
 	while (r < len) {
 		sum += nums[r++]
@@ -170,10 +170,9 @@ var maxSlidingWindow = function (nums, k) {
 	return ret
 }
 
-//deque O(n) - O(n)
+//deque O(n) - O(n)，存下标，单调递减，第一个元素是第一大的index,依此类推
 //头尾尾头
 var maxSlidingWindow = function (nums, k) {
-	//放的下标,递减队列,第一个第一大的index,依此类推
 	let deque = [],
 		ret = []
 	for (let i = 0, len = nums.length; i < len; i++) {
@@ -189,15 +188,14 @@ var maxSlidingWindow = function (nums, k) {
 	return ret
 }
 
-//stack O(n) - O(n)
+//stack O(n) - O(n) 单调递减
 var maxSlidingWindow = function (nums, k) {
 	let l = 0,
 		r = -1
-	//单调递减栈,存的是下标
-	const stack = [],
+	let stack = [],
 		ans = []
 	for (let i = 0, len = nums.length; i < len; i++) {
-		if (stack.length && i - k + 1 > stack[l]) l++
+		if (stack.length && stack[l] < i - k + 1) l++
 		//缩小右边界直到满足条件
 		while (stack.length && l <= r && nums[stack[r]] < nums[i]) r--
 		stack[++r] = i
