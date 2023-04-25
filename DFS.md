@@ -38,7 +38,7 @@ var letterCombinations = function (digits) {
 			dfs(s + c, level + 1)
 		}
 	}
-	//can pass more params if you want, like ret、hash、digits
+	//can pass more params if needed, like ret、hash、digits
 	dfs('', 0)
 	return ret
 }
@@ -103,9 +103,9 @@ var generateParenthesis = function (n) {
 
 ```javascript
 var isValidSudoku = function (board) {
-	const rows = {}, //记录每行对应的key
-		columns = {}, //记录每列对应的key
-		boxes = {} //记录每个小数独对应的key
+	const rows = {}, //每行对应的key
+		columns = {}, //每列对应的key
+		boxes = {} //每个小数独对应的key
 
 	for (let i = 0; i < 9; i++) {
 		for (let j = 0; j < 9; j++) {
@@ -119,7 +119,6 @@ var isValidSudoku = function (board) {
 					boxes[boxIdx + '-' + num]
 				)
 					return false
-				//标记
 				rows[i + '-' + num] = true
 				columns[j + '-' + num] = true
 				boxes[boxIdx + '-' + num] = true
@@ -136,7 +135,7 @@ var isValidSudoku = function (board) {
 //dfs + backtrack 1
 //best version
 var combine = function (n, k) {
-	const ret = []
+	let ret = []
 	const dfs = (n, k, startIdx, path) => {
 		if (path.length === k) {
 			ret.push([...path])
@@ -269,7 +268,7 @@ var permute = function (nums) {
 		ret = []
 	if (len === 0) return ret
 	//space for time
-	const visited = Array.from({ length: len }, () => false)
+	let visited = Array.from({ length: len }, () => false)
 
 	const dfs = (nums, level, path) => {
 		if (level >= nums.length) {
@@ -334,7 +333,6 @@ var subsets = function (nums) {
 	const dfs = (nums, startIdx, path) => {
 		//在递归压栈前做事情,取的是所有树上的路径
 		//该题不需要结束条件，全部遍历完即可
-		//if (startIdx >= path.length) return
 		ret.push([...path])
 		for (let i = startIdx, len = nums.length; i < len; i++) {
 			path.push(nums[i])
@@ -441,14 +439,13 @@ var solveNQueens = function (n) {
 			solutions.push([...path])
 			return
 		}
-		//行通过层递进,这里遍历列
 		for (let col = 0; col < n; col++) {
 			if (cols.has(col) || pies.has(row + col) || nas.has(row - col)) continue
 			cols.add(col)
 			pies.add(row + col)
 			nas.add(row - col)
 			path.push(col)
-			//drill down
+			//drill down 行数通过层递归
 			dfs(row + 1, path)
 			//reverse
       path.pop()
@@ -609,7 +606,6 @@ var numIslands = function (grid) {
 		if (i < 0 || j < 0 || i >= row || j >= col || grid[i][j] === '0') return
 		//marked as zero
 		grid[i][j] = '0'
-		//四周外扩一格
 		dfs(grid, i + 1, j, row, col)
 		dfs(grid, i, j + 1, row, col)
 		dfs(grid, i - 1, j, row, col)
