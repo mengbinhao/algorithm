@@ -93,7 +93,7 @@ var generateParenthesis = function (n) {
 		//回溯的过程中直接剪枝掉无效的组合
 		if (l > r) dfs(l, r + 1, max, s + ')')
 	}
-	//pass ret if you want
+	//pass ret if needed
 	dfs(0, 0, n, '')
 	return ret
 }
@@ -407,8 +407,9 @@ var restoreIpAddresses = function (s) {
 	return ret
 	function backtracking(startIdx, path) {
 		const len = path.length
+    //已经分割出第五个了即不合法
 		if (len > 4) return
-		//分成四段并且全部分割腕
+		//分成四段且全部分割完
 		if (len === 4 && startIdx === s.length) {
 			ret.push(path.join('.'))
 			return
@@ -501,17 +502,14 @@ var totalNQueens = function (n) {
 var totalNQueens = function (n) {
 	if (n < 1) return []
 	let ret = 0
-
 	const dfs = (n, row, col, pie, na) => {
 		if (row >= n) {
 			ret++
 			return
 		}
-
 		//得到当前row所有可以放Queue空位
 		//n位可放置的二进制数
 		let bits = ~(col | pie | na) & ((1 << n) - 1)
-
 		//直到没位置可放
 		while (bits > 0) {
 			//得到最低位的1的二进制数
@@ -522,7 +520,6 @@ var totalNQueens = function (n) {
 			bits &= bits - 1
 		}
 	}
-
 	dfs(n, 0, 0, 0, 0)
 	return ret
 }
@@ -581,10 +578,10 @@ var findTargetSumWays = function (nums, target) {
 	const backtrack = (nums, target, index, sum) => {
 		if (index === nums.length) {
 			if (sum === target) count++
-		} else {
-			backtrack(nums, target, index + 1, sum + nums[index])
-			backtrack(nums, target, index + 1, sum - nums[index])
+      return 
 		}
+    backtrack(nums, target, index + 1, sum + nums[index])
+    backtrack(nums, target, index + 1, sum - nums[index])
 	}
 	backtrack(nums, target, 0, 0)
 	return count
