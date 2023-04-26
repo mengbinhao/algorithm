@@ -6,7 +6,7 @@
 //O(n) - O(n)
 var isValid = function (s) {
 	if (s.length % 2 === 1) return false
-	const stack = [],
+	let stack = [],
 		hash = {
 			'(': ')',
 			'[': ']',
@@ -16,7 +16,7 @@ var isValid = function (s) {
 		if (hash[c]) {
 			stack.push(hash[c])
 		} else {
-      //囊括stack为空弹出undefined的情况
+			//囊括stack为空弹出undefined的情况
 			if (c !== stack.pop()) return false
 		}
 	}
@@ -33,9 +33,9 @@ var longestValidParentheses = function (s) {
 	if (len < 2) return 0
 	//获取字符串截取截止坐标
 	const end = len % 2 === 0 ? len : len - 1
-	//结束位置,从最长开始偶数递减
+	//枚结束位置,从最长开始偶数递减
 	for (let i = end; i >= 0; i -= 2) {
-		//起点位置
+		//枚起点位置
 		for (let j = 0; j < len - i + 1; j++) {
 			//找到即是最长的
 			if (isValid(s.substring(j, j + i))) return i
@@ -60,13 +60,13 @@ var longestValidParentheses = function (s) {
 //始终保持栈底元素为当前已经遍历过的元素中"最后一个没有被匹配的右括号的下标"
 //对于遇到的每个(，将它下标放入栈中
 //对于遇到的每个)，先弹出栈顶元素与之匹配的左括号
-//如果栈为空，说明当前的右括号为没有被匹配的左括号，将其下标放入栈中来更新“最后一个没有被匹配的右括号的下标”
-//如果栈不为空，当前右括号的下标减去栈顶元素即为"以该右括号为结尾的最长有效括号的长度"
+//若栈为空，说明当前的右括号为没有被匹配的左括号，将其下标放入栈中来更新“最后一个没有被匹配的右括号的下标”
+//若栈不为空，当前右括号的下标减去栈顶元素即为"以该右括号为结尾的最长有效括号的长度"
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0
-	let stack = [-1] //表示最长子串只能从0开始
-	let maxLen = 0
+	let stack = [-1], //表示最长子串只能从0开始
+		maxLen = 0
 	for (let i = 0; i < len; i++) {
 		if (s[i] === '(') {
 			stack.push(i)
@@ -76,7 +76,7 @@ var longestValidParentheses = function (s) {
 			//放入最后一个没有被匹配的右括号的下标
 			if (stack.length === 0) {
 				stack.push(i)
-       //当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
+				//当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」
 			} else {
 				maxLen = Math.max(maxLen, i - stack[stack.length - 1])
 			}
@@ -112,21 +112,23 @@ var longestValidParentheses = function (s) {
 	if (len < 2) return 0
 	let ret = 0
 	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
-	//初始化成0也符合base case，比如当前字符为左括号肯定是0
+	//初始化成0符合base case，比如当前字符为左括号肯定是0
 	const dp = new Array(len).fill(0)
 	//dp[0] = 0
 	for (let i = 1; i < len; i++) {
-     //符合定义
+		//符合定义
 		if (s[i] === ')') {
 			if (s[i - 1] === '(') {
-				//s[i] = ')' 且 s[i - 1] = '('，也就是字符串       形如 '……()'
-				dp[i] = (i -2 >= 0 ? dp[i - 2] : 0) + 2
+				//形如 '……()'
+				dp[i] = (i - 2 >= 0 ? dp[i - 2] : 0) + 2
 				//第一个条件表示前面还有括号(根据JS特性可省略),但为语义清晰最好加上
 				//第二个条件前面的括号跟当前循环的)可以匹配，即+2
+				//形如 '…((…))'
 			} else if (i - dp[i - 1] > 0 && s[i - dp[i - 1] - 1] === '(') {
 				//s[i] = ')' 且 s[i - 1] = ')'，也就是字符串形如 '……))'
 				//内部的有效长度 + 前面的有效长度 + 2
-				dp[i] = dp[i - 1] + (i - dp[i - 1] - 2 >= 0 ? dp[i - dp[i - 1] - 2] : 0) + 2
+				dp[i] =
+					dp[i - 1] + (i - dp[i - 1] - 2 >= 0 ? dp[i - dp[i - 1] - 2] : 0) + 2
 			}
 			ret = Math.max(ret, dp[i])
 		}
@@ -147,11 +149,11 @@ var trap = function (height) {
 	for (let i = 1; i < len - 1; i++) {
 		let lMax = -Infinity,
 			rMax = -Infinity
-    //左扫
+		//左扫
 		for (let j = i; j >= 0; j--) lMax = Math.max(lMax, height[j])
-    //右扫
+		//右扫
 		for (let j = i; j < len; j++) rMax = Math.max(rMax, height[j])
-    //若当前轮自己最高，结果是0
+		//若当前轮自己最高，结果是0
 		ret += Math.min(lMax, rMax) - height[i]
 	}
 	return ret
@@ -236,7 +238,7 @@ var simplifyPath = function (path) {
 	const stack = []
 	for (let name of names) {
 		if (name === '..') {
-			if (stack.length) stack.pop()
+			if (stack.length > 0) stack.pop()
 		} else if (name.length && name !== '.') {
 			stack.push(name)
 		}
@@ -261,9 +263,9 @@ var largestRectangleArea = function (heights) {
 		const height = heights[i]
 		let l = i,
 			r = i
-    //左扩
+		//左扩
 		while (l - 1 >= 0 && heights[l - 1] >= height) l--
-    //右扩
+		//右扩
 		while (r + 1 < len && heights[r + 1] >= height) r++
 		ret = Math.max(ret, (r - l + 1) * height)
 	}
@@ -425,13 +427,13 @@ var decodeString = function (s) {
 		if (c === ']') {
 			let repeatStr = '',
 				repeatCount = ''
-      //一直加到[
+			//一直加到[
 			while (stack.length > 0 && stack[stack.length - 1] !== '[')
 				repeatStr = stack.pop() + repeatStr
 			//pop [
 			stack.pop()
-      //['aaa', '2' ...]
-      //注意转换类型
+			//['aaa', '2' ...]
+			//注意转换类型
 			while (stack.length > 0 && isNumber(+stack[stack.length - 1]))
 				repeatCount = stack.pop() + repeatCount
 			stack.push(repeatStr.repeat(+repeatCount))

@@ -99,7 +99,7 @@ var generateParenthesis = function (n) {
 }
 ```
 
-### [36.==有效的数独==](https://leetcode-cn.com/problems/valid-sudoku/)
+### [36.有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)
 
 ```javascript
 var isValidSudoku = function (board) {
@@ -246,7 +246,7 @@ var combinationSum2 = function (candidates, target) {
 		for (let i = begin, len = candidates.length; i < len; i++) {
 			//大剪枝:减去candidates[i]小于 0，减去后面的candidates[i + 1]、candidates[i + 2]肯定也小于 0
 			if (remain - candidates[i] < 0) break
-			//小剪枝:对同一层使用过相同数值的元素跳过
+			//小剪枝:对同层使用过相同数值的元素跳过
 			if (i > begin && candidates[i - 1] === candidates[i]) continue
 			path.push(candidates[i])
 			dfs(candidates, remain - candidates[i], i + 1, path)
@@ -264,27 +264,26 @@ var combinationSum2 = function (candidates, target) {
 //nums无重复
 //dfs + backtrack
 var permute = function (nums) {
-	const len = nums.length,
-		ret = []
-	if (len === 0) return ret
-	//space for time
-	let visited = Array.from({ length: len }, () => false)
+	const len = nums.length
+	let ret = [],
+		//space for time
+		visited = Array.from({ length: len }, () => false)
 
-	const dfs = (nums, level, path) => {
+	const dfs = (level, path) => {
 		if (level >= nums.length) {
 			ret.push([...path])
 			return
 		}
-		//每次都从开头枚,visited标记是否使用过
+		//每层都从开头枚,visited标记是否上层选过
 		for (let i = 0, len = nums.length; i < len; i++) {
 			if (visited[i]) continue
 			visited[i] = true
-			dfs(nums, level + 1, [...path, nums[i]])
+			dfs(level + 1, [...path, nums[i]])
 			//backtrack
 			visited[i] = false
 		}
 	}
-	dfs(nums, 0, [])
+	dfs(0, [])
 	return ret
 }
 ```
@@ -549,7 +548,6 @@ var solve = function (board) {
 			if (board[i][j] === '#') board[i][j] = 'O'
 		}
 	}
-
 	function dfs(board, i, j, row, col) {
 		if (
 			i < 0 ||
@@ -575,13 +573,13 @@ var solve = function (board) {
 ```javascript {.line-numbers}
 var findTargetSumWays = function (nums, target) {
 	let count = 0
-	const backtrack = (nums, target, index, sum) => {
-		if (index === nums.length) {
+	const backtrack = (nums, target, level, sum) => {
+		if (level === nums.length) {
 			if (sum === target) count++
       return 
 		}
-    backtrack(nums, target, index + 1, sum + nums[index])
-    backtrack(nums, target, index + 1, sum - nums[index])
+    backtrack(nums, target, level + 1, sum + nums[level])
+    backtrack(nums, target, level + 1, sum - nums[level])
 	}
 	backtrack(nums, target, 0, 0)
 	return count
@@ -634,7 +632,7 @@ var numIslands = function (grid) {
 				//store each level's item
 				const queue = []
 				//二维转一维
-				//queue.add(i * n + j);
+				//queue.add(i * n + j)
 				queue.push([i, j])
 				while (queue.length > 0) {
 					const cur = queue.shift(),
