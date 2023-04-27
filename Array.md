@@ -26,7 +26,7 @@ var twoSum = function (nums, target) {
 	const hash = {},
 		len = nums.length
 	for (let i = 0; i < len; i++) {
-		//[2, 7] 9, store 7,the below loop search 7
+		//[2, 7] 9, store 7,below search 7
 		hash[target - nums[i]] = i
 	}
 	for (let j = 0; j < len; j++) {
@@ -136,7 +136,7 @@ var threeSum = function (nums) {
 //夹逼  O(n^2) - O(1)
 var threeSum = function (nums) {
 	const len = nums.length
-	//precondition!!!!!!
+	//precondition!!!
 	nums.sort((a, b) => a - b)
 	const ret = []
 	//不重复的三个数
@@ -152,7 +152,7 @@ var threeSum = function (nums) {
 				while (nums[l] === nums[l + 1]) l++
 				l++ //跳到不重复的那个数
 				while (nums[r] === nums[r - 1]) r--
-				r-- //跳到不重复的那个数
+				r-- //同上
 			} else if (sum > 0) {
 				r--
 			} else {
@@ -174,7 +174,13 @@ var removeDuplicates = function (nums) {
 	let slow = 0,
 		fast = 1
 	while (fast < len) {
-		if (nums[slow] !== nums[fast]) nums[++slow] = nums[fast]
+		if (nums[slow] !== nums[fast]) {
+       //[0,1,2,3,4,5] 避免原地复制
+			if (fast - slow > 1) {
+				nums[slow + 1] = nums[fast]
+			}
+			slow++
+		}
 		fast++
 	}
 	return slow + 1
@@ -186,7 +192,7 @@ var removeDuplicates = function (nums) {
 ```javascript
 //slow - fast pointer
 var removeElement = (nums, val) => {
-	let slow = 0
+	let slow = fast =  0
 	for (let fast = 0; fast < nums.length; fast++) {
 		if (nums[fast] !== val) nums[slow++] = nums[fast]
 	}
@@ -278,7 +284,7 @@ var rotate = function (matrix) {
 ### [54.==螺旋矩阵==](https://leetcode-cn.com/problems/spiral-matrix/)
 
 ```javascript {.line-numbers}
-//O(n) - O(n) 偏移量解法
+//O(n) - O(n) 偏移量
 var spiralOrder = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length,
