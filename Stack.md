@@ -165,11 +165,11 @@ var trap = function (height) {
 	const len = height.length
 	let stack = [],
 		ret = 0
-	for (let i = 0; i < len; i++) {
+	while (i < len) {
 		//当前柱子比栈顶的柱子高,即表示可以形成积水
 		while (stack.length && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
-			//左边没有柱子了，即无法形成积水
+			//左边没有柱子了，即无法形成积水，积水是两边柱子中间低洼的地方形成
 			if (stack.length === 0) break
 			//计算右边与当前栈顶左边界的距离, 减一才是实际距离
 			const distance = i - stack[stack.length - 1] - 1
@@ -177,12 +177,12 @@ var trap = function (height) {
 				Math.min(height[i], height[stack[stack.length - 1]]) - height[idx]
 			ret += distance * boundedHeight
 		}
-		stack.push(i)
+		stack.push(i++)
 	}
 	return ret
 }
 
-// two pointer O(n) - O(1)
+// two pointer夹逼 O(n) - O(1)
 // best version
 var trap = function (height) {
 	const len = height.length
@@ -215,7 +215,7 @@ var trap = function (height) {
 		rightMax = []
 	leftMax[0] = height[0]
 	for (let i = 1; i < len; i++) {
-		//leftMax会传递
+		//会传递
 		leftMax[i] = Math.max(height[i], leftMax[i - 1])
 	}
 	rightMax[len - 1] = height[len - 1]
@@ -272,8 +272,70 @@ var largestRectangleArea = function (heights) {
 	return ret
 }
 
-//stack  O(n) - O(n)
-//单调递增栈,存的下标
+//stack 
+var largestRectangleArea = function (heights) {
+	let len = heights.length
+	if (len === 0) return 0
+	if (len === 1) return heights[0]
+	let ret = 0
+	let stack = []
+  //特殊情况1, stack空了width = i即可以延展到数组开头
+  //特殊情况2, 一遍遍历完成后，width = len即可以扩展到整个数组长度
+  //特殊情况3, 当新栈顶高度=旧栈顶，计算是错的，但是不影响最终计算结果，严谨性加上内层while
+	for (let i = 0; i < len; i++) {
+		while (stack.length && heights[stack[stack.length - 1]] > heights[i]) {
+			const height = heights[stack.pop()]
+			while (stack.length && heights[stack[stack.length - 1]] === height)
+				stack.pop()
+			let width
+			if (!stack.length) {
+				width = i
+			} else {
+				width = i - stack[stack.length - 1] - 1
+			}
+			ret = Math.max(ret, width * height)
+		}
+		stack.push(i)
+	}
+	while (stack.length) {
+		const height = heights[stack.pop()]
+		while (stack.length && heights[stack[stack.length - 1]] === height)
+			stack.pop()
+		let width
+		if (!stack.length) {
+			width = len
+		} else {
+			width = len - stack[stack.length - 1] - 1
+		}
+		ret = Math.max(ret, width * height)
+	}
+	return ret
+}
+
+//stack with sentinel O(n) - O(1)
+//单调递增栈
+var largestRectangleArea = function (heights) {
+	let len = heights.length
+	if (len === 0) return 0
+	if (len === 1) return heights[0]
+	let ret = 0
+  //前面哨兵保证非空，后面哨兵保证循环一遍所有元素都被计算
+	let tmp = [0, ...heights, 0]
+	len += 2
+	heights = tmp
+	let stack = [0]
+	for (let i = 1; i < len; i++) {
+		while (heights[stack[stack.length - 1]] > heights[i]) {
+			const height = heights[stack.pop()]
+			const width = i - stack[stack.length - 1] - 1
+			ret = Math.max(ret, height * width)
+		}
+		stack.push(i)
+	}
+	return ret
+}
+
+//dp  O(n) - O(n)
 var largestRectangleArea = function (heights) {
 	const len = heights.length
 	if (len === 0) return 0
@@ -303,36 +365,9 @@ var largestRectangleArea = function (heights) {
 		ret = Math.max(ret, (right[i] - left[i] - 1) * heights[i])
 	return ret
 }
-
-//stack  O(n) - O(1)
-//单调递增栈,存的下标
-//求出每一根柱子的左侧且最近的小于其高度的柱子
-//使用哨兵技巧(排除非空判断)
-var largestRectangleArea = function (heights) {
-	let len = heights.length
-	if (len === 0) return 0
-	if (len === 1) return heights[0]
-	let ret = 0
-	let tmp = new Array(len + 2).fill(0)
-	for (let i = 0; i < len; i++) {
-		tmp[i + 1] = heights[i]
-	}
-	len += 2
-	heights = tmp
-	let stack = [0]
-	for (let i = 1; i < len; i++) {
-		while (heights[stack[stack.length - 1]] > heights[i]) {
-			const height = heights[stack.pop()]
-			const width = i - stack[stack.length - 1] - 1
-			ret = Math.max(ret, height * width)
-		}
-		stack.push(i)
-	}
-	return ret
-}
 ```
 
-### [150.==逆波兰表达式求值==](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+### [150.逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 
 ```javascript {.line-numbers}
 var evalRPN = function (tokens) {
@@ -383,7 +418,7 @@ var evalRPN = function (tokens) {
 }
 ```
 
-### [227. ==基本计算器 II==](https://leetcode-cn.com/problems/basic-calculator-ii/)
+### [227. 基本计算器 II](https://leetcode-cn.com/problems/basic-calculator-ii/)
 
 ```javascript {.line-numbers}
 var calculate = function (s) {
@@ -408,7 +443,7 @@ var calculate = function (s) {
 				case '/':
 					stack.push((stack.pop() / num) | 0)
 			}
-			//取字符串
+			//update preSign and num
 			preSign = s[i]
 			num = 0
 		}
@@ -433,7 +468,6 @@ var decodeString = function (s) {
 			//pop [
 			stack.pop()
 			//['aaa', '2' ...]
-			//注意转换类型
 			while (stack.length > 0 && isNumber(+stack[stack.length - 1]))
 				repeatCount = stack.pop() + repeatCount
 			stack.push(repeatStr.repeat(+repeatCount))
