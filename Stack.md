@@ -16,7 +16,7 @@ var isValid = function (s) {
 		if (hash[c]) {
 			stack.push(hash[c])
 		} else {
-			//囊括stack为空弹出undefined的情况
+			//囊括stack为空弹出undefined的case
 			if (c !== stack.pop()) return false
 		}
 	}
