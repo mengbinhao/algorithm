@@ -124,7 +124,7 @@ var threeSum = function (nums) {
 			//hash是首次记录第二次才会push到数组
 			if (hash.has(val)) {
 				arr.push([nums[i], nums[hash.get(val)], nums[j]])
-				//使用完删除防止重复，比如[-2, 0, 0, 2, 2]
+				//使用完删除防止重复，如[-2, 0, 0, 2, 2]
 				hash.delete(val)
 			}
 			hash.set(nums[j], j)
@@ -176,9 +176,7 @@ var removeDuplicates = function (nums) {
 	while (fast < len) {
 		if (nums[slow] !== nums[fast]) {
        //[0,1,2,3,4,5] 避免原地复制
-			if (fast - slow > 1) {
-				nums[slow + 1] = nums[fast]
-			}
+			if (fast - slow > 1) nums[slow + 1] = nums[fast]
 			slow++
 		}
 		fast++
@@ -203,12 +201,29 @@ var removeElement = (nums, val) => {
 ### [45.==跳跃游戏 II M==](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```javascript
+//basic
+var jump = function (nums) {
+	const len = nums.length
+	let ret = (start = 0),
+		end = 1
+	while (end < len) {
+		let maxPos = 0
+		for (let i = start; i < end; i++) {
+			maxPos = Math.max(maxPos, i + nums[i])
+		}
+		start = end // 下一次起跳点范围开始的格子
+		end = maxPos + 1 // 下一次起跳点范围结束的格子
+		ret++ // 跳跃次数
+	}
+	return ret
+}
+
+//optimize
 var jump = function (nums) {
 	let steps = 0,
-		//边界
 		end = 0,
 		maxPosition = 0
-	//如果访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
+	//若访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
 		//不停更新当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
@@ -220,6 +235,8 @@ var jump = function (nums) {
 	}
 	return steps
 }
+
+
 ```
 
 ### [48.==旋转图像==](https://leetcode.cn/problems/rotate-image/)
@@ -246,7 +263,7 @@ var rotate = function (matrix) {
 var rotate = function (matrix) {
 	const n = matrix.length
 	//matrix[i][j]变成 matrix[j][n - i - 1]
-	//考虑奇偶两种情况，当n为奇数，等分4个区域；当n为偶数，j多一位，中间格子无需转换
+	//当n为偶数，等分4个区域；当n为奇数，j多一位，中间格子无需转换
 	//i只需走一半
 	for (let i = 0; i < Math.floor(n / 2); i++) {
 		for (let j = 0; j < Math.floor((n + 1) / 2); j++) {
@@ -261,9 +278,11 @@ var rotate = function (matrix) {
 }
 
 //原地翻转两次
+//best
 var rotate = function (matrix) {
 	const n = matrix.length
 	//上下翻转
+  //matrix[row][col] -> matrix[n−row−1][col]
 	for (let i = 0; i < Math.floor(n / 2); i++) {
 		for (let j = 0; j < n; j++) {
 			;[matrix[n - i - 1][j], matrix[i][j]] = [
@@ -273,6 +292,7 @@ var rotate = function (matrix) {
 		}
 	}
 	//沿对角线左下翻转右上
+  //matrix[row][col] -> matrix[col][row]
 	for (let i = 1; i < n; i++) {
 		for (let j = 0; j < i; j++) {
 			;[matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]]
@@ -291,6 +311,7 @@ var spiralOrder = function (matrix) {
 		total = rows * cols
   //let visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
 	let visited = Array.from({ length: rows }, () => new Array(cols)),
+    //key param
 		directions = [
 			[0, 1],
 			[1, 0],
@@ -383,6 +404,15 @@ var generateMatrix = function (n) {
 
 ```javascript
 var canJump = function (nums) {
+	let maxPosition = 0
+	for (let i = 0; i < nums.length; i++) {
+		if (i > maxPosition) return false
+		maxPosition = Math.max(maxPosition, i + nums[i])
+	}
+	return true
+}
+
+var canJump = function (nums) {
 	const len = nums.length
 	//能够跳到的最远位置
 	let maxPosition = 0
@@ -406,7 +436,7 @@ var plusOne = function (digits) {
 		digits[i]++
 		//变回个位数
 		digits[i] %= 10
-		//检查是否还需要进位，若不需要直接返回
+		//若该位不需要直接返回
 		if (digits[i] !== 0) return digits
 	}
 	//全部加完还需要进位的情况
@@ -429,7 +459,7 @@ var setZeroes = function (matrix) {
 		cols = matrix[0].length,
 		markedRow = new Array(rows).fill(false),
 		markedCol = new Array(cols).fill(false)
-	//先循环记录需要待转换的行或列
+	//记录需要待转换的行或列
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (matrix[i][j] === 0) markedRow[i] = markedCol[j] = true
@@ -561,10 +591,27 @@ const binarySearchRow = (row, target) => {
 
 ```javascript
 var sortColors = function (nums) {
+	const len = nums.length
+	let p = 0
+	for (let i = 0; i < len; i++) {
+		if (nums[i] === 0) {
+			;[nums[p], nums[i]] = [nums[i], nums[p]]
+			p++
+		}
+	}
+	for (let i = p; i < len; i++) {
+		if (nums[i] === 1) {
+			;[nums[p], nums[i]] = [nums[i], nums[p]]
+			p++
+		}
+	}
+	return nums
+}
+
+var sortColors = function (nums) {
 	let cur = 0,
 		p1 = 0,
 		p2 = nums.length - 1
-	//循环结束条件
 	while (cur <= p2) {
 		//2放后，再看换过来的这个数
 		if (nums[cur] === 2) {
@@ -715,22 +762,22 @@ var rotate = function (nums, k) {
 ### [238.==除自身以外数组的乘积==](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 ```javascript {.line-numbers}
-//使用两个数组，使用前缀
+//使用两个前缀数组
 var productExceptSelf = (nums) => {
 	const len = nums.length
-	// L 和 R 分别表示左右两侧的乘积列表
+	// L和R分别表示左右两侧的乘积列表
 	const left = new Array(len)
 	const right = new Array(len)
 	const ret = new Array(len)
-	// left[i] 为索引 i 左侧所有元素的乘积
-	// 对于索引为 '0' 的元素，因为左侧没有元素，所以 left[0] = 1
+	// left[i] 为索引i左侧所有元素的乘积
+	// 对于索引为0的元素，因为左侧没有元素，所以 left[0] = 1
 	left[0] = 1
 	for (let i = 1; i < len; i++) left[i] = left[i - 1] * nums[i - 1]
-	// right[i] 为索引 i 右侧所有元素的乘积
-	// 对于索引为 'len-1' 的元素，因为右侧没有元素，所以 right[len-1] = 1
+	// right[i]为索引i右侧所有元素的乘积
+	// 对于索引为len-1的元素，因为右侧没有元素，所以 right[len-1] = 1
 	right[len - 1] = 1
 	for (let i = len - 2; i >= 0; i--) right[i] = right[i + 1] * nums[i + 1]
-	// 对于索引 i，除 nums[i] 之外其余各元素的乘积就是左侧所有元素的乘积乘以右侧所有元素的乘积
+	// 对于索引i，除nums[i]之外其余各元素的乘积就是左侧所有元素的乘积乘以右侧所有元素的乘积
 	for (let i = 0; i < len; i++) ret[i] = left[i] * right[i]
 	return ret
 }
@@ -738,13 +785,13 @@ var productExceptSelf = (nums) => {
 //使用一个数组
 var productExceptSelf = function (nums) {
 	const len = nums.length,
-		r = new Array(len),
+		right = new Array(len),
 		ret = new Array(len)
 	ret[0] = 1
 	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]
-	r[len - 1] = 1
-	for (let i = len - 2; i >= 0; i--) r[i] = r[i + 1] * nums[i + 1]
-	for (let i = 0; i < len; i++) ret[i] = ret[i] * r[i]
+	right[len - 1] = 1
+	for (let i = len - 2; i >= 0; i--) right[i] = right[i + 1] * nums[i + 1]
+	for (let i = 0; i < len; i++) ret[i] = ret[i] * right[i]
 	return ret
 }
 
@@ -755,7 +802,7 @@ var productExceptSelf = function (nums) {
 	ret[0] = 1
 	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]
 	let r = 1
-	//从最后一个更新开始更新答案
+	//从最后一个开始更新答案
 	for (let i = len - 1; i >= 0; i--) {
 		ret[i] = ret[i] * r
 		r *= nums[i]
@@ -796,7 +843,7 @@ const search = (nums, target) => {
 ### [283.==移动零==](https://leetcode-cn.com/problems/move-zeroes/)
 
 ```javascript {.line-numbers}
-//循环一整次把非0换到前面，第二次循环把0填到后面 O(n) - O(1)
+//循环一次把非0换到前面，再次循环把0填到后面 O(n) - O(1)
 var moveZeroes = function (nums) {
 	let lastFoundZeroIndex = 0
 	const len = nums.length

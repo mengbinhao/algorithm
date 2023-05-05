@@ -169,7 +169,7 @@ var trap = function (height) {
 		//当前柱子比栈顶的柱子高,即表示可以形成积水
 		while (stack.length && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
-			//左边没有柱子了，即无法形成积水，积水是两边柱子中间低洼的地方形成
+			//左边没有柱子了，即无法形成积水，积水由两边柱子中间低洼的地方形成
 			if (stack.length === 0) break
 			//计算右边与当前栈顶左边界的距离, 减一才是实际距离
 			const distance = i - stack[stack.length - 1] - 1
@@ -280,7 +280,7 @@ var largestRectangleArea = function (heights) {
 	let ret = 0
 	let stack = []
   //特殊情况1, stack空了width = i即可以延展到数组开头
-  //特殊情况2, 一遍遍历完成后，width = len即可以扩展到整个数组长度
+  //特殊情况2, 一遍遍历完成后，width = len即可以扩展到数组末尾
   //特殊情况3, 当新栈顶高度=旧栈顶，计算是错的，但是不影响最终计算结果，严谨性加上内层while
 	for (let i = 0; i < len; i++) {
 		while (stack.length && heights[stack[stack.length - 1]] > heights[i]) {
