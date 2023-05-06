@@ -860,7 +860,7 @@ var rob = function (root) {
 
 # 区间 DP
 
-### [516. ==最长回文子序列==](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
+### [516. 最长回文子序列](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)
 
 ```javascript {.line-numbers}
 var longestPalindromeSubseq = function (s) {
@@ -928,10 +928,7 @@ var coinChange = function (coins, amount) {
 			ret = Math.min(ret, count)
 			return
 		}
-		for (let i = 0, len = coins.length; i < len; i++) {
-			//不需要回溯
-			dfs(coins, remain - coins[i], count + 1)
-		}
+		for (let i = 0, len = coins.length; i < len; i++) dfs(coins, remain - coins[i], count + 1)
 	}
 	dfs(coins, amount, 0)
 	return ret === Infinity ? -1 : ret
@@ -1103,7 +1100,7 @@ var uniquePaths = function (m, n) {
 //O(mn) - O(n)
 var uniquePaths = function (m, n) {
 	//滚动行
-	//初始化第一行，也符合base数据，隐含初始化了第一列
+	//初始化第一行，也符合base数据
 	const dp = new Array(n).fill(1)
 	for (let i = 1; i < m; i++) {
 		for (let j = 1; j < n; j++) {
@@ -1150,7 +1147,6 @@ var uniquePathsWithObstacles = function (obstacleGrid) {
 				dp[j] = 0
 				continue
 			}
-			//j - 1 >= 0 排除每行第一列
 			if (j - 1 >= 0 && obstacleGrid[i][j - 1] === 0) dp[j] += dp[j - 1]
 		}
 	}
@@ -1203,9 +1199,7 @@ var climbStairs = function (n) {
 	const dp = new Array(n + 1)
 	dp[1] = 1
 	dp[2] = 2
-	for (let i = 3; i <= n; i++) {
-		dp[i] = dp[i - 1] + dp[i - 2]
-	}
+	for (let i = 3; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2]
 	return dp[n]
 }
 
@@ -1251,7 +1245,7 @@ var fib = function (n) {
 
 //DP
 var fib = function (n) {
-	dp = [0, 1]
+	let dp = [0, 1]
 	for (let i = 2; i <= n; i++) {
 		dp[i] = dp[i - 1] + dp[i - 2]
 	}

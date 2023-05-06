@@ -13,15 +13,11 @@
 - 每一件物品只有两个状态，取或者不取，所以可以使用回溯法搜索出所有的情况，那么时间复杂度就是 O(2^n)，这里的 n 表示物品数量
 
   ```javascript
-  function bag01(w, n, items, values) {
-  	//存储背包中物品总价值的最大值
-  	let maxValue = 0
-  	dfs(0, 0, 0)
-  	return maxValue
-  	// cw表示当前已经装进去的物品的重量和
-  	// cv表示当前已经装进去的物品的价值和
+  const bag01 = (w, n, items, values) => {
+  	// curWeight表示当前已经装进去的物品的重量和
+  	// curValue表示当前已经装进去的物品的价值和
   	// i表示考察到哪个物品
-  	function dfs(i, curWeight, curValue) {
+  	const dfs = (i, curWeight, curValue) => {
   		// cw === w表示装满了;i === n表示已经考察完所有的物品
   		if (curWeight === w || i === n) {
   			if (curValue > maxValue) maxValue = curValue
@@ -35,20 +31,23 @@
   			dfs(i + 1, curWeight + items[i], curValue + values[i])
   		}
   	}
+  	let maxValue = 0
+  	dfs(0, 0, 0)
+  	return maxValue
   }
   ```
 
 #### DP 解法
 
-##### dp 定义
+##### 1 dp 定义
 
 dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的背包，最大价值是多少
 
-##### 递推公式
+##### 2 递推公式
 
 `dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i])`
 
-##### base case
+##### 3 base case
 
 - dp\[i\]\[0\]
 
@@ -63,19 +62,15 @@ dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的
 - 初始化代码
 
   ```javascript
-  let dp = Array.from({ length: items.length }, () =>
-  	new Array(bagWeight + 1).fill(0)
-  )
-  for (let j = weight[0]; j <= bagWeight; j++) {
-  	dp[0][j] = value[0]
-  }
+  let dp = Array.from({ length: items.length }, () => new Array(bagWeight + 1).fill(0))
+  for (let j = weight[0]; j <= bagWeight; j++) dp[0][j] = value[0]
   ```
-
+  
 - 最终初始化 dp 如图
 
   ![](./images/dp_5.png)
 
-##### 遍历顺序
+##### 4 遍历顺序
 
 - **先遍历物品，再遍历背包**
 
@@ -119,10 +114,8 @@ dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的
 const bag01 = (weight, value, bagWeight) => {
 	const len = weight.length
 	let dp = Array.from({ length: len }, () => new Array(bagWeight + 1).fill(0))
-	//base case 第一行，第一列初始化已覆盖
 	for (let j = weight[0]; j <= bagWeight; j++) dp[0][j] = value[0]
 	//先遍历物品，再遍历背包更易于理解
-	//第一行和第一列都已经初始化了
 	for (let i = 1; i < len; i++) {
 		for (let j = 1; j <= bagWeight; j++) {
 			if (j < weight[i]) {
@@ -153,7 +146,7 @@ dp[0] = 0, 其它根据递推公式初始化成 0 以防止被覆盖
 
 ###### ==遍历顺序==
 
-1. 背包倒序遍历，保证物品 i 只被放入一次
+1. **背包倒序遍历保证物品 i 只被放入一次**
 
 2. 为什么二维 dp 数组历的时候不能倒序
 
@@ -169,13 +162,12 @@ dp[0] = 0, 其它根据递推公式初始化成 0 以防止被覆盖
 
 ```javascript
 const bag01Advanced = (weight, value, bagWeight) => {
-	const len = weight.length
 	//滚动行 + base case
 	let dp = new Array(bagWeight + 1).fill(0)
 	//必须先遍历物品，再遍历背包
 	//背包必须倒序遍历，保证物品i只被放入一次，举例证明
-	for (let i = 0; i < len; i++) {
-		//结束条件为j >= 0则下面还需判断if (j - weight[i] >= 0) 才能推导
+	for (let i = 0, len = weight.length; i < len; i++) {
+		//结束条件为j >= 0则下面还需判断if (j - weight[i] >= 0)
 		for (let j = bagWeight; j >= weight[i]; j--) {
 			dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
 		}
@@ -229,12 +221,12 @@ console.log(bag01Advanced([1, 3, 4], [15, 20, 30], 4))
 // 先遍历物品，再遍历背包
 const bagComplete1 = (weight, value, bagWeight) => {
 	let dp = new Array(bagWeight + 1).fill(0)
-	for (let i = 0; i < weight.length; i++) {
+	for (let i = 0, len = weight.length; i < len; i++) {
 		for (let j = weight[i]; j <= bagWeight; j++) {
 			dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
 		}
 	}
-	console.log(dp)
+  return dp[bagWeight]
 }
 
 // 先遍历背包，再遍历物品
@@ -245,7 +237,7 @@ const bagComplete2 = (weight, value, bagWeight) => {
 			if (j >= weight[i]) dp[j] = Math.max(dp[j], dp[j - weight[i]] + value[i])
 		}
 	}
-	console.log(dp)
+  return dp[bagWeight]
 }
 console.log(bagComplete1([1, 3, 4], [15, 20, 30], 4))
 ```
@@ -253,10 +245,10 @@ console.log(bagComplete1([1, 3, 4], [15, 20, 30], 4))
 ### 总结
 
 - 01 背包二维物品、背包先后遍历顺序无所谓
-- 01 背包状态压缩版，必须**先物品再背包**
+- 01 背包状态压缩（滚动行），必须**先物品再背包**
   - **背包倒序遍历，防止物品被放置多次**
   - 防止下层数据被提前覆盖，即从右向左覆盖，本质是右下角的数据依赖上层左上角的数据
-- 完全背包状态压缩版，遍历顺序无所谓
+- 完全背包状态压缩，遍历顺序无所谓
 - 01 背包变体
   - 纯 01 背包：问装满这个容器的最大价值
   - 分割等和子集：问能不能装满
