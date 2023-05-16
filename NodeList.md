@@ -70,8 +70,16 @@ var addTwoNumbers = function (l1, l2) {
 
 ```javascript {.line-numbers}
 //basic version
-//获取链表长度,循环len-n找到pre
+//获取链表长度,循环len-n找到preNode
 var removeNthFromEnd = function (head, n) {
+  const getLen = head = {
+    let len = 0
+    while (head) {
+      len++
+      head = head.next
+    }
+  	return len
+  }
 	const dummyHead = new ListNode(-1, head)
 	const len = getLen(head)
 	let cur = dummyHead
@@ -79,15 +87,6 @@ var removeNthFromEnd = function (head, n) {
 	for (let i = 0; i < len - n; i++) cur = cur.next
 	cur.next = cur.next.next
 	return dummyHead.next
-
-	function getLen(head) {
-		let len = 0
-		while (head++) {
-      head = head.next
-			len++
-		}
-		return len
-	}
 }
 
 //O(n) - O(1)
@@ -96,12 +95,9 @@ var removeNthFromEnd = function (head, n) {
 	const dummyHead = new ListNode(-1, head)
 	let fast = dummyHead,
 		slow = dummyHead
-	//移完后fast和slow的距离是n
-	while (n >= 0) {
-		fast = fast.next
-		n--
-	}
-	//说明要删除的是头结点
+	//移完后fast和slow之间的距离是n
+	while (n-- >= 0) fast = fast.next
+	//删除的是头结点
 	if (!fast) return head.next
 	//同步走，slow走到要删除节点的前驱节点
 	while (fast) {
