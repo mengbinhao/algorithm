@@ -44,25 +44,24 @@ pre.next = pre.next.next
 
 ```javascript {.line-numbers}
 var addTwoNumbers = function (l1, l2) {
-	const dummyHead = new ListNode(-1)
-	let p1 = l1,
-		p2 = l2,
-		cur = dummyHead,
+	let dummyNode = new ListNode(-1)
+	let cur = dummyNode,
 		carry = 0
-	while (p1 || p2) {
-		const x = p1 !== null ? p1.val : 0
-		const y = p2 !== null ? p2.val : 0
+	while (l1 || l2) {
+		const x = l1 ? l1.val : 0
+		const y = l2 ? l2.val : 0
 		const sum = x + y + carry
 		carry = sum >= 10 ? 1 : 0
-		cur.next = new ListNode(sum % 10)
+		const val = sum % 10
+		cur.next = new ListNode(val)
 		// update cur
 		cur = cur.next
-		if (p1 !== null) p1 = p1.next
-		if (p2 !== null) p2 = p2.next
+		if (l1) l1 = l1.next
+		if (l2) l2 = l2.next
 	}
 	//最后的进位
-	if (carry === 1) cur.next = new ListNode(carry)
-	return dummyHead.next
+	if (carry) cur.next = new ListNode(1)
+	return dummyNode.next
 }
 ```
 
@@ -134,17 +133,15 @@ var mergeTwoLists = function (list1, list2) {
 
 //recursion
 var mergeTwoLists = function (list1, list2) {
-	if (list1 == null) {
+	if (!list1) {
 		return list2
-	} else if (list2 == null) {
+	} else if (!list2) {
 		return list1
 	} else if (list1.val < list2.val) {
 		list1.next = mergeTwoLists(list1.next, list2)
-		//返回当前递归的头结点
 		return list1
 	} else {
 		list2.next = mergeTwoLists(list1, list2.next)
-		//同上
 		return list2
 	}
 }
@@ -726,7 +723,6 @@ var reverseList = function (head) {
 		next = cur.next
 		//change pointer ..3->2->1->null
 		cur.next = prev
-		//先移pre再移cur
 		prev = cur
 		cur = next
 	}
