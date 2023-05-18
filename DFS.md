@@ -136,20 +136,23 @@ var isValidSudoku = function (board) {
 //best version
 var combine = function (n, k) {
 	let ret = []
-	const dfs = (n, k, startIdx, path) => {
+	const dfs = (startIdx, path) => {
 		if (path.length === k) {
 			ret.push([...path])
 			return
 		}
 		//剪枝，待组成的数凑不够k个
 		for (let i = startIdx; i <= n - (k - path.length) + 1; i++) {
+      //dfs(i + 1, [...path, i])
 			path.push(i)
-			dfs(n, k, i + 1, path)
+      //note i + 1 not startIdx + 1
+			dfs(i + 1, path)
 			//backtrack [1,2...] ->  [1,3...] -> [2...]
 			path.pop()
 		}
 	}
-	dfs(n, k, 1, [])
+  //can pass n、k if you want
+	dfs(1, [])
 	return ret
 }
 
@@ -190,7 +193,7 @@ var combinationSum = function (candidates, target) {
 		}
 		for (let i = startIdx; i < candidates.length; i++) {
 			path.push(candidates[i])
-			//可选重复元素
+			//可重复选元素
 			dfs(candidates, remain - candidates[i], i, path)
 			//backtrack
 			path.pop()
@@ -238,16 +241,16 @@ var combinationSum2 = function (candidates, target) {
 	if (len === 0) return ret
 	//precondition!!!!!!!
 	candidates.sort((a, b) => a - b)
-	const dfs = (candidates, remain, begin, path) => {
+	const dfs = (candidates, remain, startIdx, path) => {
 		if (remain === 0) {
 			ret.push([...path])
 			return
 		}
-		for (let i = begin, len = candidates.length; i < len; i++) {
+		for (let i = startIdx, len = candidates.length; i < len; i++) {
 			//大剪枝:减去candidates[i]小于 0，减去后面的candidates[i + 1]、candidates[i + 2]肯定也小于 0
 			if (remain - candidates[i] < 0) break
 			//小剪枝:对同层使用过相同数值的元素跳过
-			if (i > begin && candidates[i - 1] === candidates[i]) continue
+			if (i > startIdx && candidates[i - 1] === candidates[i]) continue
 			path.push(candidates[i])
 			dfs(candidates, remain - candidates[i], i + 1, path)
 			path.pop()
@@ -268,19 +271,20 @@ var permute = function (nums) {
 	let ret = [],
 		//space for time
 		visited = Array.from({ length: len }, () => false)
-
 	const dfs = (level, path) => {
 		if (level >= nums.length) {
 			ret.push([...path])
 			return
 		}
 		//每层都从开头枚,visited标记是否上层选过
-		for (let i = 0, len = nums.length; i < len; i++) {
+		for (let i = 0; i < nums.length; i++) {
 			if (visited[i]) continue
+			path.push(nums[i])
 			visited[i] = true
-			dfs(level + 1, [...path, nums[i]])
+			dfs(level + 1, path)
 			//backtrack
-			visited[i] = false
+      visited[i] = false
+			path.pop()
 		}
 	}
 	dfs(0, [])
@@ -306,14 +310,13 @@ var permuteUnique = function (nums) {
 		}
 		for (let i = 0, len = nums.length; i < len; i++) {
 			if (visited[i]) continue
-			//剪枝
-			//nums[i]和nums[i - 1]相同且前一个元素还没有被使用过,否则其在下层遍历肯定会出现
+			//剪枝： nums[i]和nums[i - 1]相同且前一个元素刚刚被撤销了选择
 			if (i > 0 && nums[i] === nums[i - 1] && !visited[i - 1]) continue
 			path.push(nums[i])
 			visited[i] = true
 			dfs(nums, depth + 1, path, visited)
+      visited[i] = false
 			path.pop()
-			visited[i] = false
 		}
 	}
 	dfs(nums, 0, [], visited)
@@ -330,8 +333,8 @@ var subsets = function (nums) {
 	const ret = []
 	//start控制下层树枝的个数
 	const dfs = (nums, startIdx, path) => {
-		//在递归压栈前做事情,取的是所有树上的路径
-		//该题不需要结束条件，全部遍历完即可
+		//在递归压栈前做事情,取的是树上的所有路径
+		//不需要结束条件，全部遍历完即可
 		ret.push([...path])
 		for (let i = startIdx, len = nums.length; i < len; i++) {
 			path.push(nums[i])
@@ -401,27 +404,25 @@ var subsetsWithDup = function (nums) {
 
 ```javascript {.line-numbers}
 var restoreIpAddresses = function (s) {
-	const ret = []
-	backtracking(0, [])
-	return ret
-	function backtracking(startIdx, path) {
+	let ret = []
+	const dfs = (startIdx, path) => {
 		const len = path.length
-    //已经分割出第五个了即不合法
+		//已分割出第五个即不合法
 		if (len > 4) return
 		//分成四段且全部分割完
 		if (len === 4 && startIdx === s.length) {
 			ret.push(path.join('.'))
 			return
 		}
-		for (let j = startIdx; j < s.length; j++) {
-			const str = s.slice(startIdx, j + 1)
-			//剪枝
+		for (let i = startIdx; i < s.length; i++) {
+			const str = s.substring(startIdx, i + 1)
 			if (str.length > 3 || +str > 255) break
 			if (str.length > 1 && str[0] === '0') break
-			//隐藏了回溯
-			backtracking(j + 1, [...path, str])
+			dfs(i + 1, [...path, str])
 		}
 	}
+	dfs(0, [])
+	return ret
 }
 ```
 
