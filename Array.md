@@ -204,7 +204,7 @@ var removeElement = (nums, val) => {
 //basic
 var jump = function (nums) {
 	const len = nums.length
-	let ret = (start = 0),
+	let steps = (start = 0),
 		end = 1
 	while (end < len) {
 		let maxPos = 0
@@ -213,9 +213,9 @@ var jump = function (nums) {
 		}
 		start = end // 下一次起跳点范围开始的格子
 		end = maxPos + 1 // 下一次起跳点范围结束的格子
-		ret++ // 跳跃次数
+		steps++ // 跳跃次数
 	}
-	return ret
+	return steps
 }
 
 //optimize
@@ -225,7 +225,7 @@ var jump = function (nums) {
 		maxPosition = 0
 	//若访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
-		//不停更新当前位置能跳到的最远位置
+		//更新当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
 		//跳到"上一次"能跳到的最远位置更新边界
 		if (i === end) {
@@ -259,24 +259,6 @@ var rotate = function (matrix) {
 	}
 }
 
-//原地旋转，找到4个旋转坐标规律
-var rotate = function (matrix) {
-	const n = matrix.length
-	//matrix[i][j]变成 matrix[j][n - i - 1]
-	//当n为偶数，等分4个区域；当n为奇数，j多一位，中间格子无需转换
-	//i只需走一半
-	for (let i = 0; i < Math.floor(n / 2); i++) {
-		for (let j = 0; j < Math.floor((n + 1) / 2); j++) {
-			//左往右看同链表
-			const temp = matrix[i][j]
-			matrix[i][j] = matrix[n - j - 1][i]
-			matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1]
-			matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1]
-			matrix[j][n - i - 1] = temp
-		}
-	}
-}
-
 //原地翻转两次
 //best
 var rotate = function (matrix) {
@@ -296,6 +278,24 @@ var rotate = function (matrix) {
 	for (let i = 1; i < n; i++) {
 		for (let j = 0; j < i; j++) {
 			;[matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]]
+		}
+	}
+}
+
+//原地旋转，找到4个旋转坐标规律
+var rotate = function (matrix) {
+	const n = matrix.length
+	//matrix[i][j]变成 matrix[j][n - i - 1]
+	//当n为偶数，等分4个区域；当n为奇数，j多一位，中间格子无需转换
+	//i只需走一半
+	for (let i = 0; i < Math.floor(n / 2); i++) {
+		for (let j = 0; j < Math.floor((n + 1) / 2); j++) {
+			//左往右看同链表
+			const temp = matrix[i][j]
+			matrix[i][j] = matrix[n - j - 1][i]
+			matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1]
+			matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1]
+			matrix[j][n - i - 1] = temp
 		}
 	}
 }
@@ -322,7 +322,7 @@ var spiralOrder = function (matrix) {
 		col = 0,
 		direction = 0,
      //ret = new Array(total)
-     ret = [],
+     ret = []
 	for (let i = 0; i < total; i++) {
 		ret[i] = matrix[row][col]
     //marked
@@ -337,6 +337,7 @@ var spiralOrder = function (matrix) {
 			nextCol >= cols ||
 			visited[nextRow][nextCol]
 		) {
+      //key formula
 			direction = (direction + 1) % 4
 		}
 		row += directions[direction][0]
@@ -404,26 +405,17 @@ var generateMatrix = function (n) {
 
 ```javascript
 var canJump = function (nums) {
+  //能够跳到的最远位置
 	let maxPosition = 0
 	for (let i = 0; i < nums.length; i++) {
+    //若当前位置都跳不到,后面就更跳不到了
 		if (i > maxPosition) return false
+    //更新max为当前能走到的最远位置
 		maxPosition = Math.max(maxPosition, i + nums[i])
 	}
+  //当前位置跳跃距离是否能跳到数组末尾或超过数组长度
+  //return maxPosition >= len - 1
 	return true
-}
-
-var canJump = function (nums) {
-	const len = nums.length
-	//能够跳到的最远位置
-	let maxPosition = 0
-	for (let i = 0; i < len; i++) {
-		//若当前位置都跳不到,后面就更跳不到了
-		if (maxPosition < i) return false
-		//更新max为当前能走到的最远位置
-		maxPosition = Math.max(nums[i] + i, maxPosition)
-	}
-	//当前位置跳跃距离是否能跳到数组末尾或超过数组长度
-	return maxPosition >= len - 1
 }
 ```
 
@@ -436,7 +428,7 @@ var plusOne = function (digits) {
 		digits[i]++
 		//变回个位数
 		digits[i] %= 10
-		//若该位不需要直接返回
+		//若该位不进位直接返回
 		if (digits[i] !== 0) return digits
 	}
 	//全部加完还需要进位的情况
@@ -451,8 +443,6 @@ var plusOne = function (digits) {
 ### [73.==矩阵置零==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
 
 ```javascript {.line-numbers}
-//O(mn) - O(mn) 直接把matrix值放到m*n的二维数组里面
-
 //O(mn) - O(m + n) direct version
 var setZeroes = function (matrix) {
 	const rows = matrix.length,

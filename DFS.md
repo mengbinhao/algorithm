@@ -446,16 +446,14 @@ var solveNQueens = function (n) {
 			pies.add(row + col)
 			nas.add(row - col)
 			path.push(col)
-			//drill down 行数通过层递归
 			dfs(row + 1, path)
-			//reverse
       path.pop()
 			cols.delete(col)
 			pies.delete(row + col)
 			nas.delete(row - col)
 		}
 	}
-	const generatorBoard = (solutions) => {
+	const generatedBoard = (solutions) => {
 		return solutions.map((solution) => {
 			return solution.map((position) => {
 				return Array.from({ length: n }, (_, idx) => {
@@ -465,7 +463,7 @@ var solveNQueens = function (n) {
 		})
 	}
 	dfs(0, [])
-	return generatorBoard(solutions)
+	return generatedBoard(solutions)
 }
 ```
 
@@ -507,16 +505,14 @@ var totalNQueens = function (n) {
 			ret++
 			return
 		}
-		//得到当前row所有可以放Queue空位
-		//n位可放置的二进制数
+    //col | pie | na 所有上层已放位置，取反并与上((1 << n) - 1)转成当前层row所有可放空位, 1代表可放queue
 		let bits = ~(col | pie | na) & ((1 << n) - 1)
-		//直到没位置可放
+		//从最右边开始放，直到当前层没位置可放
 		while (bits > 0) {
 			//得到最低位的1的二进制数
 			const p = bits & -bits
-			//drill down next row
 			dfs(n, row + 1, col | p, (pie | p) << 1, (na | p) >> 1)
-			//打掉二进制数最后一位的1，即放上皇后
+			//打掉二进制数最后一位1
 			bits &= bits - 1
 		}
 	}
@@ -536,9 +532,7 @@ var solve = function (board) {
 		for (let j = 0; j < col; j++) {
 			//from edge dfs for marking O to #
 			let isEdge = i === 0 || j === 0 || i === row - 1 || j === col - 1
-			if (isEdge && board[i][j] === 'O') {
-				dfs(board, i, j, row, col)
-			}
+			if (isEdge && board[i][j] === 'O') dfs(board, i, j, row, col)
 		}
 	}
 	for (let i = 0; i < row; i++) {
