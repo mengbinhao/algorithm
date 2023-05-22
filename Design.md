@@ -33,9 +33,7 @@ LRUCache.prototype.get = function (key) {
 }
 
 LRUCache.prototype.moveToHead = function (node) {
-	//从链表中删除该节点
 	this.removeFromList(node)
-	//将该节点添加到链表的头部
 	this.addToHead(node)
 }
 
@@ -52,7 +50,7 @@ LRUCache.prototype.addToHead = function (node) {
 	node.prev = this.dummyHead
 	//node的next指针指向原来的真实头结点
 	node.next = this.dummyHead.next
-	//原来的真实头结点的prev指向node
+	//原来的真实头结点的prev指向node,与下句不能弄反
 	this.dummyHead.next.prev = node
 	//虚拟头结点的next指向node
 	this.dummyHead.next = node
@@ -90,12 +88,11 @@ LRUCache.prototype.put = function (key, value) {
 //使用辅助栈
 var MinStack = function () {
 	this.stack = []
-	//add an initial value
-  //Infinity
+	//Note:add an initial value
 	this.minStack = [Number.MAX_VALUE]
 }
 
-//同时放
+//同步放
 MinStack.prototype.push = function (val) {
 	this.stack.push(val)
 	this.minStack.push(Math.min(this.minStack[this.minStack.length - 1], val))
@@ -117,10 +114,10 @@ MinStack.prototype.getMin = function () {
 }
 
 
-//O(n) - O(1)
+//O(n) - O(1) better
 var MinStack = function () {
 	this.stack = []
-  //初始化
+  //Note: initial value
 	this.min = Number.MAX_VALUE
 }
 
@@ -129,7 +126,7 @@ MinStack.prototype.push = function (val) {
 	const min = this.min
   // update this.min
 	if (val < min) this.min = val
-	//存的是真实值与上一次的最小min的差
+	//存的是真实值与"上一次"的最小min的差
   //若当次push的是小值则存的是负数
 	this.stack.push(val - min)
 }
@@ -146,8 +143,9 @@ MinStack.prototype.pop = function () {
 MinStack.prototype.top = function () {
 	const val = this.stack[this.stack.length - 1]
 	const min = this.min
+  //真实值 = min
 	if (val < 0) return min
-	//数据还原，注意是"上一个"最小值
+	//还原数据，注意是"上一个"最小值
 	return val + min
 }
 
@@ -247,13 +245,13 @@ MyQueue.prototype.push = function (x) {
 	this.inStack.push(x)
 }
 
-//返回的是outStack，故先反向装一下
+//返回的是outStack，故先反装一下
 MyQueue.prototype.pop = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack.pop()
 }
 
-//返回的是outStack，故先反向装一下
+//返回的是outStack，故先反装一下
 MyQueue.prototype.peek = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack[this.outStack.length - 1]

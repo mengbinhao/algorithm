@@ -10,7 +10,7 @@
 2. 二分查找：使用循环或递归在每次比较后将查找空间二分
    1. **先定义搜索区间**
    2. **根据搜索区间定义循环结束条件**
-   3. 取中间元素和目标元素做对比(目标元素可能是需要找的元素或者是数组中满足条件的第一个或最后一个元素等)
+   3. 取中间元素和目标元素做对比(目标元素可能是需要找的元素或是数组中满足条件的第一个或最后一个元素等)
    4. 根据比较的结果收缩区间,舍弃非法解
 3. 后处理：在剩余空间中确定可行的候选者
 
@@ -38,7 +38,7 @@
 #### 1 Basic Template
 
 ```javascript {.line-numbers}
-//返回索引,arr必须提前排序
+//返回索引,arr必须已排序
 const binarySearch = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
@@ -59,7 +59,7 @@ const binarySearch = (arr, target) => {
 			r = mid - 1
 		}
 	}
-	//Maybe note
+	//Note
 	return -1
 }
 ```
@@ -72,10 +72,9 @@ const binarySearchLeftBound = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
-		r = len - 1,
-		mid
+		r = len - 1
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		const mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -103,10 +102,9 @@ const binarySearch = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
-		r = len - 1,
-		mid
+		r = len - 1
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		const mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -172,16 +170,18 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 6 寻找左侧边界的二分搜索(labuladuo version,同2)
+#### 6 寻找左侧边界的二分搜索(labuladuo version,同2, better)
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
+  const len = arr.length
+  if (len === 0) return -1
 	let l = 0,
 		//Note 1
-		r = arr.length - 1
+		r = len - 1
 	//Note 2
 	while (l <= r) {
-		let mid = Math.floor(l + (r - l) / 2)
+		const mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			//Note 3
 			l = mid + 1
@@ -197,34 +197,35 @@ const leftBound = (arr, target) => {
 	//检查出界情况
   //case 1: [1,2,2,2,3], 4
   //case 2: [2,3,3,3,4], 1
-	if (l >= arr.length || arr[l] !== target) return -1
+	if (l >= len || arr[l] !== target) return -1
 	return l
 }
 
 const leftBound = (arr, target) => {
+  const len = arr.length
 	let l = 0,
-		r = arr.length - 1
+		r = len - 1
 	while (l <= r) {
-		let mid = Math.floor(l + (r - l) / 2)
+		const mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] >= target) {
 			r = mid - 1
 		}
 	}
-	if (l >= arr.length || arr[l] !== target) return -1
+	if (l >= len || arr[l] !== target) return -1
 	return l
 }
 ```
 
-#### 7 寻找右侧边界的二分搜索(labuladuo version,同3)
+#### 7 寻找右侧边界的二分搜索(labuladuo version,同3, better)
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
 	let l = 0,
 		r = arr.length - 1
 	while (l <= r) {
-		let mid = Math.floor(l + (r - l) / 2)
+		const mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -327,7 +328,7 @@ var mySqrt = function (x) {
 			return mid
 		}
 	}
-	//l > r即l = r + 1，返回较小数
+	//l > r即l = r + 1，返回较小值
 	return r
 }
 ```

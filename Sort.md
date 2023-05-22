@@ -77,7 +77,7 @@ const select = (arr) => {
 	//有序区
 	for (let i = 0; i < len - 1; i++) {
 		//存放当前循环中最小index,默认循环初始值
-		//有序区的末尾坐标,此处应放下面找到的无序区的最小值
+		//有序区的末尾坐标,此处放下面找到的无序区的最小值
 		let lastMinIdx = i
 		//无序区找最小值
 		for (let j = i + 1; j < len; j++) {
@@ -250,7 +250,7 @@ const merge = (arr) => {
   **最大的 K 个**：小顶堆
   **最小的 K 个**：大顶堆
   
-  **topK**:  全排 -> 只排前k个 -> 只找不排（前k个数构造小顶堆，for k+1到len-1,当val>堆顶替换堆顶并堆化小顶堆）
+  **topK**:  全排 -> 只排前k个(冒泡) -> 只找不排（前k个数构造小顶堆，for k+1到len-1,当val>堆顶替换堆顶并堆化小顶堆）
 
 > 最好 O(nlogn)、最坏 O(nlogn)、平均时间复杂度都是 O(nlogn)
 >
@@ -267,7 +267,6 @@ const heap = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	let len = arr.length
 	if (len < 2) return arr
-
 	//堆化,查找三个点中的最大点
 	const down = (arr, i) => {
 		const lSon = 2 * i + 1,
@@ -281,14 +280,11 @@ const heap = (arr) => {
 			down(arr, largest)
 		}
 	}
-
 	const buildMaxHeap = (arr) => {
 		//从第一个非叶子节点开始创建
 		for (let i = Math.floor(len / 2) - 1; i >= 0; i--) down(arr, i)
 	}
-
 	buildMaxHeap(arr)
-
 	//每次堆顶和最后一个元素交换，再堆化，即无序区减1，有序区加1
 	for (let i = len - 1; i >= 1; i--) {
 		;[arr[i], arr[0]] = [arr[0], arr[i]]
