@@ -89,7 +89,7 @@ LRUCache.prototype.put = function (key, value) {
 var MinStack = function () {
 	this.stack = []
 	//Note:add an initial value
-	this.minStack = [Number.MAX_VALUE]
+	this.minStack = [Infinity]
 }
 
 //同步放
@@ -118,7 +118,7 @@ MinStack.prototype.getMin = function () {
 var MinStack = function () {
 	this.stack = []
   //Note: initial value
-	this.min = Number.MAX_VALUE
+	this.min = Infinity
 }
 
 MinStack.prototype.push = function (val) {
@@ -149,8 +149,9 @@ MinStack.prototype.top = function () {
 	return val + min
 }
 
-MinStack.prototype.min = function () {
-	return this.min
+MinStack.prototype.getMin = function () {
+  const min = this.min
+	return min === Infinity ? void 0 : min
 }
 ```
 
@@ -270,8 +271,8 @@ MyQueue.prototype.in2out = function () {
 
 ### [622.设计循环队列](https://leetcode.cn/problems/design-circular-queue/)
 
-> 在循环队列中，当队列为空，`front=rear`；而当所有队列空间全占满时，也有`front=rear`。为了区别这两种情况，假设队列使用的数组有`capacity`个存储空间，则此时规定循环队列最多只能有`capacity−1`个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。根据以上可知，队列判空的条件是 
-> `front=rear`，而队列判满的条件是 **`front=(rear + 1) mod capacity`**
+> 在循环队列中，当队列为空，`front=rear`；而当所有队列空间全占满时，也有`front=rear`。为了区别这两种情况，假设队列使用的数组有`capacity`个存储空间，则此时规定循环队列最多只能有`capacity−1`个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。综上，队列判空条件是 
+> `front=rear`，而队列判满00条件是 **`front=(rear + 1) mod capacity`**
 > 对于一个固定大小的数组，只要知道队尾`rear`与队首`front`，可计算出队列长度：
 > **`(rear − front + capacity) mod capacity`**
 >
@@ -284,6 +285,7 @@ MyQueue.prototype.in2out = function () {
 ```javascript {.line-numbers}
 //数组实现
 var MyCircularQueue = function (k) {
+  //多开一个空间不存储数据
 	this.capacity = k + 1
 	this.elements = new Array(this.capacity).fill(0)
 	this.rear = 0
@@ -389,6 +391,7 @@ var MyLinkedList = function () {
 }
 
 MyLinkedList.prototype.get = function (index) {
+  //List index from 0 to size - 1
 	if (index < 0 || index >= this.size) return -1
 	let cur = this.head
 	while (index-- >= 0) cur = cur.next
@@ -404,16 +407,18 @@ MyLinkedList.prototype.addAtTail = function (val) {
 }
 
 MyLinkedList.prototype.addAtIndex = function (index, val) {
+  //可以在size最后这个位置添加
 	if (index < 0 || index > this.size) return
 	let prev = this.head
 	while (index-- > 0) prev = prev.next
-	let toAdd = new ListNode(val)
+	const toAdd = new ListNode(val)
 	toAdd.next = prev.next
 	prev.next = toAdd
 	this.size++
 }
 
 MyLinkedList.prototype.deleteAtIndex = function (index) {
+  //List index from 0 to size - 1
 	if (index < 0 || index >= this.size) return
 	let prev = this.head
 	while (index-- > 0) prev = prev.next

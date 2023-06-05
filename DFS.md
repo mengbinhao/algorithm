@@ -141,11 +141,11 @@ var combine = function (n, k) {
 			ret.push([...path])
 			return
 		}
-		//剪枝，待组成的数凑不够k个
+		//剪枝：待组成的数凑不够k个
 		for (let i = startIdx; i <= n - (k - path.length) + 1; i++) {
       //dfs(i + 1, [...path, i])
 			path.push(i)
-      //note i + 1 not startIdx + 1
+      //Note：i + 1 not startIdx + 1
 			dfs(i + 1, path)
 			//backtrack [1,2...] ->  [1,3...] -> [2...]
 			path.pop()
@@ -334,7 +334,7 @@ var subsets = function (nums) {
 	//start控制下层树枝的个数
 	const dfs = (nums, startIdx, path) => {
 		//在递归压栈前做事情,取的是树上的所有路径
-		//不需要结束条件，全部遍历完即可
+		//因此不需要结束条件，全部遍历完即可
 		ret.push([...path])
 		for (let i = startIdx, len = nums.length; i < len; i++) {
 			path.push(nums[i])
@@ -407,14 +407,16 @@ var restoreIpAddresses = function (s) {
 	let ret = []
 	const dfs = (startIdx, path) => {
 		const len = path.length
-		//已分割出第五个即不合法
+		//切割出第五个不合法
 		if (len > 4) return
-		//分成四段且全部分割完
+		//切成四段且全部分割完
 		if (len === 4 && startIdx === s.length) {
 			ret.push(path.join('.'))
 			return
 		}
+    //开始切的位置
 		for (let i = startIdx; i < s.length; i++) {
+      //从开始往后挨着切
 			const str = s.substring(startIdx, i + 1)
 			if (str.length > 3 || +str > 255) break
 			if (str.length > 1 && str[0] === '0') break
