@@ -103,9 +103,9 @@ var generateParenthesis = function (n) {
 
 ```javascript
 var isValidSudoku = function (board) {
-	const rows = {}, //每行对应的key
-		columns = {}, //每列对应的key
-		boxes = {} //每个小数独对应的key
+	const rows = {}, //记录每行数字
+		columns = {}, //记录每列数字
+		boxes = {} //记录每个小数独对应的key
 
 	for (let i = 0; i < 9; i++) {
 		for (let j = 0; j < 9; j++) {
