@@ -147,7 +147,7 @@ var combine = function (n, k) {
 			path.push(i)
       //Note：i + 1 not startIdx + 1
 			dfs(i + 1, path)
-			//backtrack [1,2...] ->  [1,3...] -> [2...]
+			//backtrack [1,2...] -> [1,3...] -> [2...]
 			path.pop()
 		}
 	}
@@ -407,9 +407,9 @@ var restoreIpAddresses = function (s) {
 	let ret = []
 	const dfs = (startIdx, path) => {
 		const len = path.length
-		//切割出第五个不合法
+		//剪递归深度：切割出第五个不合法
 		if (len > 4) return
-		//切成四段且全部分割完
+		//切成四段且全部切完
 		if (len === 4 && startIdx === s.length) {
 			ret.push(path.join('.'))
 			return
@@ -418,6 +418,7 @@ var restoreIpAddresses = function (s) {
 		for (let i = startIdx; i < s.length; i++) {
       //从开始往后挨着切
 			const str = s.substring(startIdx, i + 1)
+      //剪树枝
 			if (str.length > 3 || +str > 255) break
 			if (str.length > 1 && str[0] === '0') break
 			dfs(i + 1, [...path, str])
