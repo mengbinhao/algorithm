@@ -205,6 +205,7 @@ var reverseBits = function (n) {
 ### [191.==位 1 的个数==](https://leetcode-cn.com/problems/number-of-1-bits/)
 
 ```javascript {.line-numbers}
+//lowbit
 var hammingWeight = function (n) {
 	let count = 0
 	while (n !== 0) {
@@ -213,6 +214,14 @@ var hammingWeight = function (n) {
 	}
 	return count
 }
+
+var hammingWeight = function(n) {
+  let ret = 0
+  for (let i = 0; i < 32; i++) {
+    if (n >> i & 1) ret++
+  }
+  return ret
+};
 ```
 
 ### [201.数字范围按位与](https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/)

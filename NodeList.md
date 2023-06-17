@@ -343,6 +343,22 @@ var deleteDuplicates = function (head) {
 	}
 	return dummyHead.next
 }
+
+//dxc version
+var deleteDuplicates = function(head) {
+  let dummyNode = new ListNode(-1, head)
+  let p = dummyNode
+  while (p.next) {
+    let q = p.next
+    while (q.next && q.next.val === p.next.val) q = q.next
+    if (q === p.next) {
+      p = q
+    } else {
+      p.next = q.next
+    }
+  }
+  return dummyNode.next
+}
 ```
 
 ### [83. ==删除排序链表中的重复元素==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)
