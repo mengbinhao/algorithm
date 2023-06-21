@@ -109,7 +109,6 @@ const quick = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
 	if (len < 2) return arr
-
 	const helper = (arr, l, r) => {
 		if (l >= r) return
 		//x = arr[r] or arr[(l + r) / 2]
@@ -139,10 +138,12 @@ const quick = (arr) => {
 	if (len < 2) return arr
 	const partition = (arr, l, r) => {
 		//设最右边为pivot
-		const pivot = r
+		//const pivot = r
+    const pivot = arr[r]
 		let index = l
 		for (let i = index; i < r; i++) {
-			if (arr[i] < arr[pivot]) {
+      //arr[i] < arr[pivot]
+			if (arr[i] < pivot) {
 				//大的放pivot后,小的放pivot前,不稳定
 				;[arr[i], arr[index]] = [arr[index], arr[i]]
 				//记录有多少个比pivot小的
@@ -150,21 +151,9 @@ const quick = (arr) => {
 			}
 		}
     //此时index是pivot应放的位置，即左右已排好序列的中间
-		;[arr[index], arr[pivot]] = [arr[pivot], arr[index]]
+		;[arr[index], arr[r]] = [arr[r], arr[index]]
 		return index
 	}
-  /* another version
-  const partition = (arr, l, r) => {
-		let pivot = arr[r],
-			i = l - 1
-		for (let j = l; j < r; j++) {
-			if (arr[j] < pivot) [arr[i], arr[j]] = [arr[j], arr[++i]]
-		}
-    //pivot放到本轮该放的位置
-		;[arr[i], arr[r]] = [arr[r], arr[++i]]
-		return i
-	}
-	*/
 	const helper = (arr, l, r) => {
 		if (l >= r) return
 		//获取当次pivot分区坐标
@@ -215,7 +204,6 @@ const merge = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
 	if (len < 2) return arr
-
 	const helper = (arr, l, r, tmp) => {
 		if (l >= r) return
 		const mid = (l + r) >> 1

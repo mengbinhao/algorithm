@@ -43,6 +43,13 @@
     ![](./images/avl.png)
 
   - Trie(字典树或前缀树，它是用来处理字符串匹配问题的数据结构，以及用来解决集合中查找固定前缀字符串的数据结构，高效的存储和查找字符串)
+  
+  - **DFS算法/回溯算法/动态规划算都可以看做二叉树问题的扩展**
+  
+    - **动态规划算法属于分解问题的思路，它的关注点在整棵「子树」**
+    - **回溯算法属于遍历的思路，它的关注点在节点间的「树枝」**
+    - **DFS 算法属于遍历的思路，它的关注点在单个「节点」**
+  
 
 # 解题要素
 
@@ -52,6 +59,9 @@
 - 四个重要概念:二叉搜索树(==中序遍历是有序的==)、完全二叉树、路径、距离
 - 七个技巧
   - dfs(root)
+    - **前序位置的代码在刚刚进入一个二叉树节点的时候执行**
+    - **后序位置的代码在将要离开一个二叉树节点的时候执行**
+    - **中序位置的代码在一个二叉树节点左子树都遍历完，即将开始遍历右子树的时候执行**
   - 单/双递归(如果题目有类似,任意节点开始`xxx`或者所有`xxx`这样的说法,就可以考虑使用双递归，但是如果递归中有重复计算,则可以使用双递归 + 记忆化或者直接单递归)
     ![](./images/Tree_1.png)
   - 前后遍历
@@ -989,6 +999,20 @@ var maxDepth = function (root) {
 	return Math.max(lMax, rMax) + 1
 }
 
+var maxDepth = function(root) {
+  let ret = 0, depth = 0
+  const hepler = root => {
+    if (!root) return
+    depth++
+    if (!root.left && !root.right) ret = Math.max(ret, depth)
+    hepler(root.left)
+    hepler(root.right)
+    depth--
+  }
+  hepler(root)
+  return ret
+}
+
 //BFS
 var maxDepth = function (root) {
 	if (!root) return 0
@@ -1180,19 +1204,20 @@ var widthOfBinaryTree = function (root) {
 ##### [543.二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
 
 ```javascript {.line-numbers}
+//每一条二叉树的「直径」长度，就是一个节点的左右子树的最大深度之和
 var diameterOfBinaryTree = function (root) {
 	const dfs = (root) => {
 		if (!root) return 0
 		const leftDepth = dfs(root.left)
 		const rightDepth = dfs(root.right)
 		//inner cycle
-		ret = Math.max(ret, leftDepth + rightDepth + 1)
+		ret = Math.max(ret, leftDepth + rightDepth)
 		//return该节点为根的子树深度
 		return Math.max(leftDepth, rightDepth) + 1
 	}
-	let ret = 1
+	let ret = 0
 	dfs(root)
-	return ret - 1
+	return ret
 }
 ```
 
