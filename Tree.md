@@ -14,7 +14,7 @@
 
 - height of node：叶子节点到该节点的最长路径，根节点的高度为树的高度
 
-- depth of node：从根节点到该节点所经历的边的个数（根节点的深度和叶子节点的高度都是 0）
+- depth of node：从根节点到该节点所经历的边的个数（**根节点的深度和叶子节点的高度都是 0**）
 
 - width
 
@@ -225,7 +225,7 @@ var postorderTraversal = function (root) {
 	const stack = []
 	while (root || stack.length > 0) {
 		while (root) {
-       //反装+左右颠倒
+       //反装 + 左右颠倒
 			ret.unshift(root.val)
 			stack.push(root)
 			root = root.right
@@ -459,7 +459,7 @@ var largestValues = function (root) {
 	const ret = []
 	const dfs = (root, level, ret) => {
 		if (!root) return
-		//hole!!! node's value maybe null, so can not code like if (!ret[level])
+		//hole!!! node's value maybe null, so can not code like 'if (!ret[level])'
 		if (ret[level] === undefined) ret[level] = root.val
 		ret[level] = Math.max(ret[level], root.val)
 		dfs(root.left, level + 1, ret)
@@ -685,7 +685,7 @@ var recoverTree = function (root) {
 }
 ```
 
-##### [669.修剪二叉搜索树](https://leetcode-cn.com/problems/trim-a-binary-search-tree/)
+##### [669.==修剪二叉搜索树==](https://leetcode-cn.com/problems/trim-a-binary-search-tree/)
 
 ```javascript {.line-numbers}
 var trimBST = function (root, low, high) {
@@ -896,6 +896,7 @@ var convertBST = function (root) {
 	const dfs = (root) => {
 		if (!root) return null
 		dfs(root.right)
+    //记录累加sum,下一句更新到当前节点上
 		sum += root.val
 		root.val = sum
 		dfs(root.left)
@@ -966,17 +967,38 @@ var isSymmetric = function (root) {
 //preorder or postorder can work, inorder means no invert
 var invertTree = function (root) {
 	if (!root) return root
+	const tmp = root.left
+	root.left = root.right
+	root.right = tmp
+	invertTree(root.left)
+	invertTree(root.right)
+	return root
+}
+//postorder
+var invertTree = function (root) {
+	if (!root) return root
 	const l = invertTree(root.left)
 	const r = invertTree(root.right)
 	root.left = r
 	root.right = l
 	return root
 }
+//inorder
+var invertTree = function (root) {
+	if (!root) return root
+	invertTree(root.left)
+	const tmp = root.left
+	root.left = root.right
+	root.right = tmp
+	invertTree(root.left)
+	return root
+}
+
 
 //BFS 自上往下
 var invertTree = function (root) {
 	if (!root) return root
-	const queue = [root]
+	let queue = [root]
 	while (queue.length > 0) {
 		const cur = queue.shift()
 		;[cur.left, cur.right] = [cur.right, cur.left]
@@ -999,6 +1021,7 @@ var maxDepth = function (root) {
 	return Math.max(lMax, rMax) + 1
 }
 
+//labuladong version
 var maxDepth = function(root) {
   let ret = 0, depth = 0
   const hepler = root => {
@@ -1007,6 +1030,7 @@ var maxDepth = function(root) {
     if (!root.left && !root.right) ret = Math.max(ret, depth)
     hepler(root.left)
     hepler(root.right)
+    //reverse
     depth--
   }
   hepler(root)
@@ -1243,15 +1267,15 @@ var findTilt = function (root) {
 ```javascript {.line-numbers}
 var binaryTreePaths = function (root) {
 	let ret = []
-	const dfs = (root, curPath) => {
+	const dfs = (root, path) => {
 		if (!root) return
 		if (!root.left && !root.right) {
-			ret.push(curPath + root.val)
+			ret.push(path + root.val)
 			return
 		}
 		//隐藏了回溯
-		dfs(root.left, curPath + root.val + '->')
-		dfs(root.right, curPath + root.val + '->')
+		dfs(root.left, path + root.val + '->')
+		dfs(root.right, path + root.val + '->')
 	}
 	dfs(root, '')
 	return ret
@@ -1375,14 +1399,10 @@ var sumOfLeftLeaves = function (root) {
 		const isLeaf = (root) => {
 			return !root.left && !root.right
 		}
-		//当前层的左叶子之和为左子树+右子树+当前节点的值
+		//当前层的左叶子之和为左子树左叶子和 + 右子树左叶子和
 		let ret = 0
-		if (root.left) {
-			ret += isLeaf(root.left) ? root.left.val : dfs(root.left)
-		}
-		if (root.right && !isLeaf(root.right)) {
-			ret += dfs(root.right)
-		}
+		if (root.left) ret += isLeaf(root.left) ? root.left.val : dfs(root.left)
+		if (root.right && !isLeaf(root.right)) ret += dfs(root.right)
 		return ret
 	}
 	return !root ? 0 : dfs(root)
@@ -1428,7 +1448,7 @@ var hasPathSum = function (root, sum) {
 
 ```javascript {.line-numbers}
 var pathSum = function (root, sum) {
-	const ret = []
+	let ret = []
 	const dfs = (root, sum, path) => {
 		if (!root) return
 		path.push(root.val)
@@ -1436,7 +1456,7 @@ var pathSum = function (root, sum) {
 		if (!root.left && !root.right && sum === root.val) ret.push([...path])
 		dfs(root.left, sum - root.val, path)
 		dfs(root.right, sum - root.val, path)
-		//backtrack,pop的当前节点
+		//backtrack
 		path.pop()
 	}
 	dfs(root, sum, [])
@@ -1515,7 +1535,6 @@ var buildTree = function (preorder, inorder) {
 		const rootVal = preorder[preLeft],
 			root = new TreeNode(rootVal),
 			pIndex = map.get(rootVal)
-
 		root.left = helper(
 			preorder,
 			preLeft + 1,
@@ -1606,7 +1625,7 @@ const serialize = (root) => {
 	if (!root) return 'X'
 	const left = serialize(root.left)
 	const right = serialize(root.right)
-	return root.val + ',' + left + ',' + right // 按根,左,右  拼接字符串
+	return root.val + ',' + left + ',' + right // 按根左右拼接字符串
 }
 
 const deserialize = (data) => {

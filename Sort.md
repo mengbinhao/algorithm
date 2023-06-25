@@ -13,7 +13,7 @@ const bubble = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
 	if (len < 2) return arr
-	for (let i = 0; i < len; i++) {
+	for (let i = 0; i < len - 1; i++) {
     let isSwap = false
 		//每轮后面换好的不需要再进行比较
 		for (let j = 0; j < len - 1 - i; j++) {
@@ -22,7 +22,7 @@ const bubble = (arr) => {
 				isSwap = true
 			}
 		}
-		//若当前轮无冒泡说明已排完
+		//若当前轮无冒泡说明已排好
 		if (!isSwap) break
 	}
 	return arr
