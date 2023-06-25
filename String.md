@@ -68,8 +68,9 @@ var longestCommonPrefix = function (strs) {
 var lengthOfLastWord = function (s) {
 	const len = s.length
 	if (len === 0) return 0
-	let end = s.length - 1
+	let end = len - 1
 	while (end >= 0 && s[end] === ' ') end--
+  //特判
 	if (end < 0) return 0
 	let ret = 0
 	while (end >= 0 && s[end] !== ' ') {
@@ -157,7 +158,6 @@ var compareVersion = function (version1, version2) {
 		len2 = version2.length
 	let i = 0,
 		j = 0
-  //任意version还没比完
 	while (i < len1 || j < len2) {
     //比对每一段,默认是0
 		let x = 0
@@ -538,7 +538,8 @@ var replaceSpace = function (s) {
 	for (let c of s) if (c === ' ') count++
 	const len = s.length
 	const arr = new Array(len + 2 * count)
-	for (let i = 0, j = 0; i < len; i++) {
+  let j = 0
+	for (let i = 0; i < len; i++) {
 		if (s[i] !== ' ') {
 			arr[j++] = s[i]
 		} else {
