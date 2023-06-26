@@ -5,7 +5,7 @@
 var groupAnagrams = function (strs) {
 	const hash = {}
 	for (let str of strs) {
-		//sort后相同的字母组成的不同的字符串肯定是相同的
+		//sort后相同的字母组成的不同的字符串排序相同
 		const key = [...str].sort().toString()
 		hash[key] ? hash[key].push(str) : (hash[key] = [str])
 	}
@@ -81,11 +81,11 @@ var isAnagram = function (s, t) {
 	if (s.length !== t.length) return false
 	const arr = Array.from({ length: 26 }, () => 0),
 		len = s.length,
-		base = 'a'.charCodeAt(0)
+		baseCode = 'a'.charCodeAt(0)
 	//记录每个字母的个数
-	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - base]++
+	for (let i = 0; i < len; i++) arr[s.charCodeAt(i) - baseCode]++
 	for (let i = 0; i < len; i++)
-		if (--arr[t.charCodeAt(i) - base] < 0) return false
+		if (--arr[t.charCodeAt(i) - baseCode] < 0) return false
 	return true
 }
 ```

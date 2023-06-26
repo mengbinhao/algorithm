@@ -2,13 +2,13 @@
 
 ```javascript
 var findLengthOfLCIS = function (nums) {
-	let ret = 0,
+	let maxLen = 1,
 		start = 0
 	for (let i = 0, len = nums.length; i < len; i++) {
 		if (i > 0 && nums[i] <= nums[i - 1]) start = i
-		ret = Math.max(ret, i - start + 1)
+		maxLen = Math.max(maxLen, i - start + 1)
 	}
-	return ret
+	return maxLen
 }
 
 //DP

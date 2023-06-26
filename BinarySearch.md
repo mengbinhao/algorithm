@@ -30,15 +30,15 @@
 
 > 1. 分析二分查找代码时,最好不要出现 else,全部展开成 else if 方便理解
 > 2. 注意「搜索区间」和 while 的终止条件,若存在漏掉的元素,记得在**最后检查**
-> 3. 如需定义左闭右开的「搜索区间」搜索左右边界,只要在 `nums[mid] == target` 时做修改即可,搜索右侧时需要减一
-> 4. 如果将「搜索区间」全都统一成两端都闭,好记,只要稍改 `nums[mid] == target` 条件处的代码和返回的逻辑即可
+> 3. 如需定义**左闭右开**的「搜索区间」搜索左右边界,只要在 `nums[mid] == target` 时做修改即可,搜索右侧时需要减一
+> 4. 如果将「搜索区间」全都统一成两端都闭,只要稍改 `nums[mid] == target` 条件处的代码和返回的逻辑即可
 
 ### some templates
 
 #### 1 Basic Template
 
 ```javascript {.line-numbers}
-//返回索引,arr必须已排序
+//返回索引,arr已排序
 const binarySearch = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
@@ -247,6 +247,7 @@ const rightBound = (arr, target) => {
 var search = function (nums, target) {
 	const len = nums.length
 	if (len === 0) return -1
+  if (len === 1) return nums[0] === target ? 0 : -1
 	let l = 0,
 		r = len - 1,
 		mid
@@ -255,16 +256,16 @@ var search = function (nums, target) {
 		if (nums[mid] === target) return mid
 		//看左边
     //in case mid === l 即下标相等
-		if (nums[mid] >= nums[l]) {
-       //[start, mid]有序
-			if (target < nums[mid] && target >= nums[l]) {
+		if (nums[0] <= nums[mid]) {
+       //[l, mid - 1]有序
+			if (nums[0] <= target && target < nums[mid]) {
 				r = mid - 1
 			} else {
 				l = mid + 1
 			}
 		} else {
-       // [mid, end]有序
-			if (target > nums[mid] && target <= nums[r]) {
+       // [mid + 1, r]有序
+			if (nums[mid] < target && target <= nums[len - 1]) {
 				l = mid + 1
 			} else {
 				r = mid - 1
@@ -328,7 +329,7 @@ var mySqrt = function (x) {
 			return mid
 		}
 	}
-	//l > r即l = r + 1，返回较小值
+	//返回较小值
 	return r
 }
 ```
@@ -409,7 +410,6 @@ var findMin = function (nums) {
 			l = mid + 1
 		}
 	}
-  //l >= r
 	return nums[l]
 }
 ```

@@ -79,8 +79,8 @@ var removeNthFromEnd = function (head, n) {
     }
   	return len
   }
-	const dummyHead = new ListNode(-1, head)
 	const len = getLen(head)
+  const dummyHead = new ListNode(-1, head)
 	let cur = dummyHead
   //找到删除节点的pre
 	for (let i = 0; i < len - n; i++) cur = cur.next
@@ -393,7 +393,7 @@ var deleteDuplicates = function (head) {
 }
 ```
 
-### [86. ==分隔链表==](https://leetcode-cn.com/problems/partition-list/)
+### [86. 分隔链表](https://leetcode-cn.com/problems/partition-list/)
 
 ```javascript {.line-numbers}
 //O(n) - O(1)
@@ -759,7 +759,7 @@ var reverseList = function (head) {
 }
 ```
 
-### [234. ==回文链表==](https://leetcode-cn.com/problems/palindrome-linked-list/)
+### [234. 回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)
 
 ```javascript {.line-numbers}
 //convert ListNode to Array O(n) - O(n)
