@@ -47,7 +47,7 @@ var letterCombinations = function (digits) {
 ### [22.==括号生成==](https://leetcode-cn.com/problems/generate-parentheses/)
 
 ```javascript
-//brute force O(2^3n * n) - O(n)
+//brute force
 var generateParenthesis = function (n) {
 	const ret = []
 	const isValid = (s) => {
@@ -58,7 +58,7 @@ var generateParenthesis = function (n) {
 			} else {
 				balance--
 			}
-      //提前返回
+			//提前返回
 			if (balance < 0) return false
 		}
 		return balance === 0
@@ -143,15 +143,15 @@ var combine = function (n, k) {
 		}
 		//剪枝：待组成的数凑不够k个
 		for (let i = startIdx; i <= n - (k - path.length) + 1; i++) {
-      //dfs(i + 1, [...path, i])
+			//dfs(i + 1, [...path, i])
 			path.push(i)
-      //Note：i + 1 not startIdx + 1
+			//Note：i + 1 not startIdx + 1
 			dfs(i + 1, path)
 			//backtrack [1,2...] -> [1,3...] -> [2...]
 			path.pop()
 		}
 	}
-  //can pass n、k if you want
+	//can pass n、k if you want
 	dfs(1, [])
 	return ret
 }
@@ -283,7 +283,7 @@ var permute = function (nums) {
 			visited[i] = true
 			dfs(level + 1, path)
 			//backtrack
-      visited[i] = false
+			visited[i] = false
 			path.pop()
 		}
 	}
@@ -315,7 +315,7 @@ var permuteUnique = function (nums) {
 			path.push(nums[i])
 			visited[i] = true
 			dfs(nums, depth + 1, path, visited)
-      visited[i] = false
+			visited[i] = false
 			path.pop()
 		}
 	}
@@ -414,11 +414,11 @@ var restoreIpAddresses = function (s) {
 			ret.push(path.join('.'))
 			return
 		}
-    //开始切的位置
+		//开始切的位置
 		for (let i = startIdx; i < s.length; i++) {
-      //从开始往后挨着切
+			//从开始往后挨着切
 			const str = s.substring(startIdx, i + 1)
-      //剪树枝
+			//剪树枝
 			if (str.length > 3 || +str > 255) break
 			if (str.length > 1 && str[0] === '0') break
 			dfs(i + 1, [...path, str])
@@ -450,7 +450,7 @@ var solveNQueens = function (n) {
 			nas.add(row - col)
 			path.push(col)
 			dfs(row + 1, path)
-       path.pop()
+			path.pop()
 			cols.delete(col)
 			pies.delete(row + col)
 			nas.delete(row - col)
@@ -508,7 +508,7 @@ var totalNQueens = function (n) {
 			ret++
 			return
 		}
-    //col | pie | na 所有上层已放位置，取反并与上((1 << n) - 1)转成当前层row所有可放空位, 1代表可放queue
+		//col | pie | na 所有上层已放位置，取反并与上((1 << n) - 1)转成当前层row所有可放空位, 1代表可放queue
 		let bits = ~(col | pie | na) & ((1 << n) - 1)
 		//从最右边开始放，直到当前层没位置可放
 		while (bits > 0) {
@@ -574,10 +574,10 @@ var findTargetSumWays = function (nums, target) {
 	const backtrack = (nums, target, level, sum) => {
 		if (level === nums.length) {
 			if (sum === target) count++
-      return 
+			return
 		}
-    backtrack(nums, target, level + 1, sum + nums[level])
-    backtrack(nums, target, level + 1, sum - nums[level])
+		backtrack(nums, target, level + 1, sum + nums[level])
+		backtrack(nums, target, level + 1, sum - nums[level])
 	}
 	backtrack(nums, target, 0, 0)
 	return count

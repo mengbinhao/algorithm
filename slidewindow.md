@@ -81,14 +81,13 @@ var minWindow = function (s, t) {
 		minLen = Infinity,
 		//窗口中满足need条件的字符个数,若valid和need.size的大小相同,则说明窗口已满足条件,已完全覆盖t
 		valid = 0
-
 	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
 	while (r < sLen) {
 		const rChar = s[r++]
 		//过滤需要的字符
 		if (need[rChar]) {
 			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
-       //某字符已找够
+			//某字符已找够
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
 		//t中所有字符已全覆盖,收缩左边界
@@ -102,7 +101,7 @@ var minWindow = function (s, t) {
 			//过滤需要的字符,行为同上面加的时候，加的时候是满足个数加，减一样
 			if (need[lChar]) {
 				if (slideWindow[lChar] === need[lChar]) valid--
-         slideWindow[lChar]--
+				slideWindow[lChar]--
 			}
 		}
 	}
@@ -156,12 +155,12 @@ var minSubArrayLen = function (s, nums) {
 ### [239.==滑动窗口最大值 H==](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 ```javascript
-//brute force O(n * k) - O(k)
+//brute force O(nk) - O(k)
 var maxSlidingWindow = function (nums, k) {
-	let slideWindow = []
-	const ret = [],
-		len = nums.length
-	//能形成的最大窗口个数
+	const len = nums.length
+	let slideWindow = [],
+		ret = []
+	//优化：能形成的最大窗口个数
 	for (let i = 0; i < len - k + 1; i++) {
 		for (let j = 0; j < k; j++) slideWindow.push(nums[i + j])
 		ret.push(Math.max(...slideWindow))
@@ -186,23 +185,6 @@ var maxSlidingWindow = function (nums, k) {
 		if (i >= k - 1) ret.push(nums[deque[0]])
 	}
 	return ret
-}
-
-//stack O(n) - O(n) 单调递减
-var maxSlidingWindow = function (nums, k) {
-	let l = 0,
-		r = -1
-	let stack = [],
-		ans = []
-	for (let i = 0, len = nums.length; i < len; i++) {
-		if (stack.length && stack[l] < i - k + 1) l++
-		//缩小右边界直到满足条件
-		while (stack.length && l <= r && nums[stack[r]] < nums[i]) r--
-		stack[++r] = i
-		//满足条件才放答案
-		if (i >= k - 1) ans.push(nums[stack[l]])
-	}
-	return ans
 }
 ```
 

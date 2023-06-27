@@ -70,7 +70,7 @@ var lengthOfLastWord = function (s) {
 	if (len === 0) return 0
 	let end = len - 1
 	while (end >= 0 && s[end] === ' ') end--
-  //特判
+	//特判
 	if (end < 0) return 0
 	let ret = 0
 	while (end >= 0 && s[end] !== ' ') {
@@ -116,7 +116,7 @@ var reverseWords = function (s) {
 	queue = []
 	while (s[l] === ' ') l++
 	while (s[r] === ' ') r--
-  //check if s still has letters
+	//check if s still has letters
 	while (l <= r) {
 		let c = s[l]
 		if (c !== ' ') {
@@ -137,7 +137,7 @@ var reverseWords = function (s) {
 ### [165. ==比较版本号==](https://leetcode.cn/problems/compare-version-numbers/)
 
 ```javascript {.line-numbers}
-//O(n+m) - O(n+m)
+//O(n + m) - O(n + m)
 var compareVersion = function (version1, version2) {
 	const v1 = version1.split('.')
 	const v2 = version2.split('.')
@@ -152,14 +152,14 @@ var compareVersion = function (version1, version2) {
 	return 0
 }
 
-//O(n+m) - O(1)
+//O(n + m) - O(1)
 var compareVersion = function (version1, version2) {
 	const len1 = version1.length,
 		len2 = version2.length
 	let i = 0,
 		j = 0
 	while (i < len1 || j < len2) {
-    //比对每一段,默认是0
+		//比对每一段,默认是0
 		let x = 0
 		for (; i < len1 && version1[i] !== '.'; i++) {
 			x = x * 10 + version1[i].charCodeAt() - '0'.charCodeAt()
@@ -482,8 +482,8 @@ var reverseOnlyLetters = function (S) {
 	const stack = []
 	const reg = /[a-zA-Z]/
 	for (let c of S) {
-    if (reg.test(c)) stack.push(c)
-  }
+		if (reg.test(c)) stack.push(c)
+	}
 	let ret = ''
 	for (let c of S) {
 		if (reg.test(c)) {
@@ -538,7 +538,7 @@ var replaceSpace = function (s) {
 	for (let c of s) if (c === ' ') count++
 	const len = s.length
 	const arr = new Array(len + 2 * count)
-  let j = 0
+	let j = 0
 	for (let i = 0; i < len; i++) {
 		if (s[i] !== ' ') {
 			arr[j++] = s[i]

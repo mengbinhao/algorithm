@@ -175,7 +175,7 @@ var removeDuplicates = function (nums) {
 		fast = 1
 	while (fast < len) {
 		if (nums[slow] !== nums[fast]) {
-       //[0,1,2,3,4,5] 避免原地复制
+			//[0,1,2,3,4,5] 避免原地复制
 			if (fast - slow > 1) nums[slow + 1] = nums[fast]
 			slow++
 		}
@@ -190,7 +190,8 @@ var removeDuplicates = function (nums) {
 ```javascript
 //slow - fast pointer
 var removeElement = (nums, val) => {
-	let slow = fast =  0
+	let slow = 0,
+		fast = 0
 	for (let fast = 0; fast < nums.length; fast++) {
 		if (nums[fast] !== val) nums[slow++] = nums[fast]
 	}
@@ -204,16 +205,15 @@ var removeElement = (nums, val) => {
 //basic
 var jump = function (nums) {
 	const len = nums.length
-	let steps = (start = 0),
+	let steps = 0,
+		start = 0,
 		end = 1
 	while (end < len) {
 		let maxPos = 0
-		for (let i = start; i < end; i++) {
-			maxPos = Math.max(maxPos, i + nums[i])
-		}
-		start = end // 下一次起跳点范围开始的格子
-		end = maxPos + 1 // 下一次起跳点范围结束的格子
-		steps++ // 跳跃次数
+		for (let i = start; i < end; i++) maxPos = Math.max(maxPos, i + nums[i])
+		start = end // 下一次起跳点开始格子
+		end = maxPos + 1 //此步避免多跳一次
+		steps++
 	}
 	return steps
 }
@@ -235,8 +235,6 @@ var jump = function (nums) {
 	}
 	return steps
 }
-
-
 ```
 
 ### [48.==旋转图像==](https://leetcode.cn/problems/rotate-image/)
@@ -264,7 +262,7 @@ var rotate = function (matrix) {
 var rotate = function (matrix) {
 	const n = matrix.length
 	//上下翻转
-  //matrix[row][col] -> matrix[n−row−1][col]
+	//matrix[row][col] -> matrix[n−row−1][col]
 	for (let i = 0; i < Math.floor(n / 2); i++) {
 		for (let j = 0; j < n; j++) {
 			;[matrix[n - i - 1][j], matrix[i][j]] = [
@@ -274,7 +272,7 @@ var rotate = function (matrix) {
 		}
 	}
 	//沿对角线左下翻转右上
-  //matrix[row][col] -> matrix[col][row]
+	//matrix[row][col] -> matrix[col][row]
 	for (let i = 1; i < n; i++) {
 		for (let j = 0; j < i; j++) {
 			;[matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]]
@@ -309,9 +307,9 @@ var spiralOrder = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length,
 		total = rows * cols
-  //let visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
+	//let visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
 	let visited = Array.from({ length: rows }, () => new Array(cols)),
-    //key param
+		//key param
 		directions = [
 			[0, 1],
 			[1, 0],
@@ -321,15 +319,14 @@ var spiralOrder = function (matrix) {
 		row = 0,
 		col = 0,
 		direction = 0,
-     //ret = new Array(total)
-     ret = []
+		//ret = new Array(total)
+		ret = []
 	for (let i = 0; i < total; i++) {
 		ret[i] = matrix[row][col]
-    //marked
+		//marked
 		visited[row][col] = true
 		const nextRow = row + directions[direction][0]
 		const nextCol = col + directions[direction][1]
-    //check
 		if (
 			nextRow < 0 ||
 			nextRow >= rows ||
@@ -337,7 +334,6 @@ var spiralOrder = function (matrix) {
 			nextCol >= cols ||
 			visited[nextRow][nextCol]
 		) {
-      //key formula
 			direction = (direction + 1) % 4
 		}
 		row += directions[direction][0]
@@ -352,7 +348,7 @@ var spiralOrder = function (matrix) {
 		bottom = matrix.length - 1,
 		left = 0,
 		right = matrix[0].length - 1,
-     ret = []
+		ret = []
 	while (true) {
 		//向右移动直到最右
 		for (let i = left; i <= right; i++) ret.push(matrix[top][i])
@@ -405,16 +401,30 @@ var generateMatrix = function (n) {
 
 ```javascript
 var canJump = function (nums) {
-  //能够跳到的最远位置
+	//能够跳到的最远位置
 	let maxPosition = 0
 	for (let i = 0; i < nums.length; i++) {
-    //若当前位置都跳不到,后面就更跳不到了
+		//若当前位置都跳不到,后面就更跳不到了
 		if (i > maxPosition) return false
-    //更新max为当前能走到的最远位置
+		//更新max为当前能走到的最远位置
 		maxPosition = Math.max(maxPosition, i + nums[i])
 	}
-  //当前位置跳跃距离是否能跳到数组末尾或超过数组长度
-  //return maxPosition >= len - 1
+	//当前位置跳跃距离是否能跳到数组末尾或超过数组长度
+	//return maxPosition >= len - 1
+	return true
+}
+
+//more rigorous
+var canJump = function (nums) {
+	const len = nums.length
+	let maxPosition = 0
+	for (let i = 0; i < len; i++) {
+		if (i > maxPosition) return false
+		else {
+			maxPosition = Math.max(maxPosition, nums[i] + i)
+			if (maxPosition >= len - 1) return true
+		}
+	}
 	return true
 }
 ```
@@ -473,19 +483,13 @@ var setZeroes = function (matrix) {
 		for (let j = 0; j < cols; j++) {
 			if (matrix[i][j] === 0) {
 				//对于不为1的单元进行标记，要先标记下次遍历再转换
-				for (let m = 0; m < rows; m++) {
-					if (matrix[m][j] !== 0) matrix[m][j] = marked
-				}
-				for (let n = 0; n < cols; n++) {
-					if (matrix[i][n] !== 0) matrix[i][n] = marked
-				}
+				for (let m = 0; m < rows; m++) if (matrix[m][j] !== 0) matrix[m][j] = marked
+				for (let n = 0; n < cols; n++) if (matrix[i][n] !== 0) matrix[i][n] = marked
 			}
 		}
 	}
 	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) {
-			if (matrix[i][j] === marked) matrix[i][j] = 0
-		}
+		for (let j = 0; j < cols; j++) if (matrix[i][j] === marked) matrix[i][j] = 0
 	}
 }
 
@@ -583,12 +587,14 @@ const binarySearchRow = (row, target) => {
 var sortColors = function (nums) {
 	const len = nums.length
 	let p = 0
+	//前移0
 	for (let i = 0; i < len; i++) {
 		if (nums[i] === 0) {
 			;[nums[p], nums[i]] = [nums[i], nums[p]]
 			p++
 		}
 	}
+	//再前移1
 	for (let i = p; i < len; i++) {
 		if (nums[i] === 1) {
 			;[nums[p], nums[i]] = [nums[i], nums[p]]
@@ -617,7 +623,7 @@ var sortColors = function (nums) {
 }
 ```
 
-### [80.==删除排序数组重复项 II==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/)
+### [80.删除排序数组重复项 II](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array-ii/)
 
 ```javascript
 //slow - fast pointer
@@ -646,21 +652,20 @@ var merge = function (nums1, m, nums2, n) {
 	nums1.sort((a, b) => a - b)
 }
 
-//三指针 从前往后 O(n+m) - O(m)
+//三指针 从前往后 O(n + m) - O(m)
 var merge = (nums1, m, nums2, n) => {
-	//原数组前面会被覆盖所以copy一份
+	//原数组前面可能会被覆盖所以copy一份
 	const nums1Copy = nums1.slice(0, m)
 	let p1 = 0,
 		p2 = 0,
 		p = 0
-	while (p1 < m && p2 < n) {
+	while (p1 < m && p2 < n)
 		nums1[p++] = nums1Copy[p1] < nums2[p2] ? nums1Copy[p1++] : nums2[p2++]
-	}
 	while (p1 < m) nums1[p++] = nums1Copy[p1++]
 	while (p2 < n) nums1[p++] = nums2[p2++]
 }
 
-//三指针 从后往前 O(n+m) - O(1)
+//三指针 从后往前 O(n + m) - O(1)
 var merge = (nums1, m, nums2, n) => {
 	let p1 = m - 1,
 		p2 = n - 1,
@@ -706,7 +711,7 @@ var generate = function (numRows) {
 ### [189.==旋转数组 E==](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript {.line-numbers}
-//brute force O(n*k) - O(1)
+//brute force O(nk) - O(1)
 var rotate = function (nums, k) {
 	const len = nums.length
 	//翻转次数
