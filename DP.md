@@ -2,12 +2,12 @@
 
 # ==解题步骤==
 
-1. 确定 dp 数组（dp table）以及下标的含义
-2. 确定递推公式
+1. 确定 dp 一维/二维数组（dp table）下标含义
+2. 确定状态转移方程
 3. 根据递推公式确定如何初始化 dp 数组
 4. 确定状态的遍历顺序（多状态的遍历先后）
 5. 举例推导 dp 数组(打印 dp 数组)
-6. 二维状态压缩压缩的都是第一维，滚动行
+6. 二维状态压缩压缩的都是第一维（滚动行）
 
 # 线性 DP
 
@@ -1069,14 +1069,13 @@ var change = function (amount, coins) {
 ```javascript {.line-numbers}
 //DFS O(2^(m + n - 1) - 1)
 var uniquePaths = function (m, n) {
-	return dfs(1, 1, m, n)
 	function dfs(i, j, m, n) {
-		// 越界了
-		if (i > m || j > n) return 0
+		if (i >= m || j >= n) return 0
 		// 找到一种方法,相当于找到了叶子节点
-		if (i === m && j === n) return 1
+		if (i === m - 1 && j === n - 1) return 1
 		return dfs(i + 1, j, m, n) + dfs(i, j + 1, m, n)
 	}
+  return dfs(0, 0, m, n)
 }
 
 //O(mn) - O(mn)
@@ -1222,13 +1221,13 @@ var climbStairs = function (n) {
 ### [509. ==斐波那契数==](https://leetcode-cn.com/problems/fibonacci-number/)
 
 ```javascript {.line-numbers}
-//bad version1
+//bad version
 var fib = function (n) {
 	if (n < 2) return n
 	return fib(n - 1) + fib(n - 2)
 }
 
-//bad version2 with memory
+//bad version with memory
 var fib = function (n) {
 	const map = new Map()
 	const helper = (n) => {
@@ -1246,9 +1245,7 @@ var fib = function (n) {
 //DP
 var fib = function (n) {
 	let dp = [0, 1]
-	for (let i = 2; i <= n; i++) {
-		dp[i] = dp[i - 1] + dp[i - 2]
-	}
+	for (let i = 2; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2]
 	return dp[n]
 }
 

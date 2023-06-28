@@ -6,7 +6,7 @@
 
 #### 题目
 
-> 有 n 件物品和一个最多能装重量为 w 的背包。第 i 件物品的重量是 weight[i]，得到的价值是 value[i] 。**每件物品只能用一次**，求解将哪些物品装入背包里物品价值总和最大
+> 有 n 件物品和一个最多能装重量为 w 的背包。第 i 件物品的重量是 weight[i]，对应价值是 value[i] 。**每件物品只能装一次**，求将哪些物品装入背包里物品价值总和最大
 
 #### 首先想到回溯
 
@@ -14,20 +14,20 @@
 
   ```javascript
   const bag01 = (w, n, items, values) => {
+    // i表示考察到哪个物品
   	// curWeight表示当前已经装进去的物品的重量和
   	// curValue表示当前已经装进去的物品的价值和
-  	// i表示考察到哪个物品
   	const dfs = (i, curWeight, curValue) => {
   		// cw === w表示装满了;i === n表示已经考察完所有的物品
   		if (curWeight === w || i === n) {
   			if (curValue > maxValue) maxValue = curValue
   			return
   		}
-  		// 不装第 i + 1 个物品
+  		// 不装第 i 个物品
   		dfs(i + 1, curWeight, curValue)
   		// 不超过背包承受的重量再装
   		if (curWeight + items[i] <= w) {
-  			// 装第 i + 1 个物品
+  			// 装第 i 个物品
   			dfs(i + 1, curWeight + items[i], curValue + values[i])
   		}
   	}
@@ -53,9 +53,12 @@ dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的
 
   ![](./images/dp_3.png)
 
-- dp\[0\]\[j\] (当 j < weight[0]的时候，dp\[0\]\[j\] 是 0，因为背包容量比编号 0 的物品重量还小
+- dp\[0\]\[j\] 
 
-  当 j >= weight[0]时，dp\[0\]\[j\] 应该是 value\[0\]，因为背包容量放足够放编号 0 物品)
+  - j < weight[0]的时候，dp\[0\]\[j\] 是 0
+
+  - j >= weight[0]时，dp\[0\]\[j\] 应该是 value\[0\]
+
 
   ![](./images/dp_4.png)
 
@@ -65,7 +68,7 @@ dp\[i\]\[j\]表示从下标为[0-i]的物品里任意取，放进容量为 j 的
   let dp = Array.from({ length: items.length }, () => new Array(bagWeight + 1).fill(0))
   for (let j = weight[0]; j <= bagWeight; j++) dp[0][j] = value[0]
   ```
-  
+
 - 最终初始化 dp 如图
 
   ![](./images/dp_5.png)
