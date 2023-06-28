@@ -113,7 +113,7 @@ var longestValidParentheses = function (s) {
 	let ret = 0
 	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
 	//初始化成0符合base case，比如当前字符为左括号肯定是0
-	const dp = new Array(len).fill(0)
+	let dp = new Array(len).fill(0)
 	//dp[0] = 0
 	for (let i = 1; i < len; i++) {
 		//符合定义
@@ -146,7 +146,7 @@ var trap = function (height) {
 	if (len === 0) return 0
 	let ret = 0
 	//两边无法接雨水
-	for (let i = 1; i < len - 1; i++) {
+	for (let i = 0; i < len; i++) {
 		let lMax = -Infinity,
 			rMax = -Infinity
 		//左扫
@@ -161,11 +161,12 @@ var trap = function (height) {
 
 //单调递减栈 O(n) - O(n)
 //积水只能在低洼处形成，当后面的柱子高度比前面的低时是无法接雨水的，所以使用单调递减栈存储可能储水的柱子，当找到一根比前面高的柱子时就可以计算出能接到的雨水
+//横着找答案
 var trap = function (height) {
 	const len = height.length
 	let stack = [],
 		ret = 0
-	while (i < len) {
+	for (let i = 0; i < len; i++) {
 		//当前柱子比栈顶的柱子高,即表示可以形成积水
 		while (stack.length && height[i] > height[stack[stack.length - 1]]) {
 			const idx = stack.pop()
@@ -177,7 +178,7 @@ var trap = function (height) {
 				Math.min(height[i], height[stack[stack.length - 1]]) - height[idx]
 			ret += distance * boundedHeight
 		}
-		stack.push(i++)
+		stack.push(i)
 	}
 	return ret
 }
@@ -263,16 +264,14 @@ var largestRectangleArea = function (heights) {
 		const height = heights[i]
 		let l = i,
 			r = i
-		//左扩
 		while (l - 1 >= 0 && heights[l - 1] >= height) l--
-		//右扩
 		while (r + 1 < len && heights[r + 1] >= height) r++
 		ret = Math.max(ret, (r - l + 1) * height)
 	}
 	return ret
 }
 
-//stack 
+//stack  单调递增
 var largestRectangleArea = function (heights) {
 	let len = heights.length
 	if (len === 0) return 0
@@ -319,7 +318,7 @@ var largestRectangleArea = function (heights) {
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
 	let ret = 0
-  //前面哨兵保证非空，后面哨兵保证循环一遍所有元素都被计算
+  //前面哨兵保证栈非空，后面哨兵保证heights循环完所有元素都可被计算，即heights原本有效元素都会出栈
 	let tmp = [0, ...heights, 0]
 	len += 2
 	heights = tmp
