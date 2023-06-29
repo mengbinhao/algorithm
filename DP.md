@@ -889,6 +889,7 @@ var longestPalindromeSubseq = function (s) {
 
 ```javascript {.line-numbers}
 //Greedy
+/*
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
@@ -900,8 +901,7 @@ var coinChange = function (coins, amount) {
 		}
 		if (coinsIdx > coins.length) return
 		//直接拿最大币值的最大个数找解
-		//coins递减
-		//i + count < ret剪枝非最小count解，不加则TLE
+		//i + count < ret剪枝非最小count解，不加TLE
 		for (
 			let i = Math.floor(remain / coins[coinsIdx]);
 			i >= 0 && i + count < ret;
@@ -915,6 +915,7 @@ var coinChange = function (coins, amount) {
 	greedyDFS(coins, amount, 0, 0)
 	return ret === Infinity ? -1 : ret
 }
+*/
 
 //dfs TLE
 //O(S^n) - O(n)  S总金额
@@ -924,6 +925,7 @@ var coinChange = function (coins, amount) {
 	let ret = Infinity
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
+    // means successful
 		if (remain === 0) {
 			ret = Math.min(ret, count)
 			return
@@ -949,10 +951,8 @@ var coinChange = function (coins, amount) {
 		let min = Infinity
 		for (let i = 0, len = coins.length; i < len; i++) {
 			const ret = dfs(coins, remain - coins[i])
-			//加1是为了加上得到ret结果的那个步骤中兑换的那个硬币
-			//下层返回需有意义并且是下层需要最少的硬币个数
-      //ret >= 0 意思下层返回的ret需要有意义才更新min
-      //ret < min 防止下层后面的解返回的不是最小的
+			//加1是加上得到ret那个步骤中兑换的那枚硬币
+			//下层返回需有意义且是下层需要最少的硬币数,再更新cache[remain]
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
     cache[remain] = min
@@ -965,7 +965,7 @@ var coinChange = function (coins, amount) {
 const coinChange = (coins, amount) => {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-	//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数,防止后面被覆盖
+	//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数即可,防止歧义初始化成Infinity
 	const dp = Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
@@ -997,7 +997,7 @@ var coinChange = function (coins, amount) {
 }
 ```
 
-[416.==分割等和子集==](https://leetcode.cn/problems/partition-equal-subset-sum/)
+### [416.==分割等和子集==](https://leetcode.cn/problems/partition-equal-subset-sum/)
 
 ```javascript
 var canPartition = function (nums) {
