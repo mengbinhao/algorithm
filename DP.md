@@ -285,7 +285,7 @@ var isMatch = function (s, p) {
 }
 ```
 
-### [53. ==最大子序和==](https://leetcode-cn.com/problems/maximum-subarray/)
+### 53. [最大子数组和](https://leetcode.cn/problems/maximum-subarray/)
 
 ```javascript {.line-numbers}
 //brute force
@@ -317,13 +317,13 @@ var maxSubArray = function(nums) {
   return maxPreSum
 }
 
-//dp[i]表示nums中以nums[i]结尾的最大子序和
+//dp[i]表示nums中以nums[i]结尾的最大子数组序和
 //dp[i] = max(dp[i - 1] + nums[i], nums[i])
 //base case dp[0] = nums[0]
 var maxSubArray = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	let dp = new Array(len).fill(-Infinity)
+	let dp = new Array(len).fill(0)
 	dp[0] = nums[0]
 	let ret = nums[0]
 	for (let i = 1; i < len; i++) {
@@ -349,7 +349,7 @@ var maxSubArray = function (nums) {
 }
 ```
 
-### [64. ==最小路径和==](https://leetcode-cn.com/problems/minimum-path-sum/)
+### [64. 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
 
 ```javascript {.line-numbers}
 var minPathSum = function (grid) {
@@ -405,14 +405,14 @@ var minPathSum = function (grid) {
 }
 ```
 
-### [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)
+### [72. ==编辑距离==](https://leetcode-cn.com/problems/edit-distance/)
 
 ```javascript {.line-numbers}
 //O(mn) - O(mn)
 var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
-	//dp[i][j] 表示word1的前i个字母和word2的前j个字母之间的编辑距离
+	//dp[i][j] 表示word1的前i - 1个字母和word2的前j - 1个字母之间的最少操作次数
 	const dp = Array.from({ length: m + 1 }, () => new Array(n + 1))
 	//一个空串和一个非空串的编辑距离为dp[i][0] = i、dp[0][j] = j,dp[i][0]相当于对word1执行i次删除操作
 	for (let i = 0; i <= m; i++) dp[i][0] = i
@@ -485,7 +485,7 @@ var numDecodings = function (s) {
 }
 ```
 
-### [120. ==三角形最小路径和==](https://leetcode-cn.com/problems/triangle/)
+### [120. 三角形最小路径和](https://leetcode-cn.com/problems/triangle/)
 
 ```javascript {.line-numbers}
 //DFS O(2^n)
@@ -550,7 +550,7 @@ var minimumTotal = function (triangle) {
 }
 ```
 
-### [152. ==乘积最大子数组==](https://leetcode-cn.com/problems/maximum-product-subarray/)
+### [152. 乘积最大子数组](https://leetcode-cn.com/problems/maximum-product-subarray/)
 
 ```javascript {.line-numbers}
 //O(n) - O(n)
@@ -618,38 +618,21 @@ var maximalSquare = (matrix) => {
 }
 ```
 
-### [279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/)
-
-```javascript {.line-numbers}
-var numSquares = function (n) {
-	const dp = [...Array(n + 1)].map((_) => Infinity)
-	dp[0] = 0
-	for (let i = 1; i * i <= n; i++) {
-		for (let j = i * i; j <= n; j++) {
-			dp[j] = Math.min(dp[j], dp[j - i * i] + 1)
-		}
-	}
-	return dp[n]
-}
-```
-
-### [300. ==最长递增子序列==](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+### [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
 ```javascript {.line-numbers}
 //O(n^2) - O(n)
 var lengthOfLIS = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	//定义dp[i]以nums[i]結尾最长上升子序列的长度
+	//定义dp[i]以nums[i]結尾最长递增子序列的长度
 	//nums[i]必须被选取,所以初始化为1
 	const dp = new Array(len).fill(1)
 	let ret = 1
 	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
 	for (let i = 1; i < len; i++) {
 		for (let j = 0; j < i; j++) {
-			if (nums[i] > nums[j]) {
-				dp[i] = Math.max(dp[i], dp[j] + 1)
-			}
+			if (nums[i] > nums[j]) dp[i] = Math.max(dp[i], dp[j] + 1)
 		}
 		ret = Math.max(ret, dp[i])
 	}
@@ -662,12 +645,12 @@ var lengthOfLIS = function (nums) {
 ```javascript {.line-numbers}
 var integerBreak = function (n) {
 	const dp = new Array(n + 1).fill(0)
-	//dp[i]：拆分数字i，可得到的最大乘积为dp[i]
+	//dp[i]：拆分数字i，可以得到的最大乘积为dp[i]
 	//dp[0]、dp[1]没意义,初始化成0不影响最终结果
-	//dp[0] = 0, dp[1] = 0
 	dp[2] = 1
 	for (let i = 3; i <= n; i++) {
 		//遍历所有拆i得到的数
+		//dp[i - j]指拆成多个i-j的所有种拆法
 		//可优化成 j <= i / 2
 		for (let j = 1; j < i; j++) {
 			dp[i] = Math.max(dp[i], Math.max(j * (i - j), j * dp[i - j]))
@@ -677,23 +660,43 @@ var integerBreak = function (n) {
 }
 ```
 
-### [718. ==最长重复子数组==](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
+### 674. [最长连续递增序列](https://leetcode.cn/problems/longest-continuous-increasing-subsequence/)
 
 ```javascript {.line-numbers}
-var findLength = function (A, B) {
-	let m = A.length,
-		n = B.length,
-		ret = 0,
-		//init two-dimension array
-		dp = new Array(m + 1)
-	for (let i = 0; i < m + 1; i++) {
-		dp[i] = new Array(n + 1).fill(0)
+var findLengthOfLCIS = function (nums) {
+	const len = nums.length
+	let dp = new Array(len).fill(1),
+		ret = 1
+	for (let i = 1; i < len; i++) {
+		if (nums[i] > nums[i - 1]) dp[i] = dp[i - 1] + 1
+		ret = Math.max(ret, dp[i])
 	}
+	return ret
+}
+//greedy
+var findLengthOfLCIS = function (nums) {
+	let start = 0,
+		maxLen = 1
+	for (let i = 0, len = nums.length; i < len - 1; i++) {
+		if (nums[i + 1] <= nums[i]) start = i + 1
+		maxLen = Math.max(maxLen, i + 1 - start + 1)
+	}
+	return maxLen
+}
+```
+
+### [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
+
+```javascript {.line-numbers}
+var findLength = function (nums1, nums2) {
+	let m = nums1.length,
+		n = nums2.length,
+		ret = 0,
+		//dp[i][j]表示已[i - 1][j - 1]为结尾的最长重复子数组的长度，省两行初始化代码
+		dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0))
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
-			if (A[i - 1] === B[j - 1]) {
-				dp[i][j] = dp[i - 1][j - 1] + 1
-			}
+			if (nums1[i - 1] === nums2[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1
 			ret = Math.max(ret, dp[i][j])
 		}
 	}
@@ -736,7 +739,7 @@ var minCostClimbingStairs = function (cost) {
 var longestCommonSubsequence = function (text1, text2) {
 	const n = text1.length
 	const m = text2.length
-	//dp[i][j]表示text1[0:i]和text2[0:j]的最長公共子序列的長度
+	//dp[i][j]表示text1[0:i - 1]和text2[0:j - 1]的最長公共子序列的長度
 	//直接第一行和第一列赋值base case为0,第一行第一列代表的是空,下面也不需要判断越界
 	const dp = Array.from(new Array(n + 1), () => new Array(m + 1).fill(0))
 	for (let i = 1; i <= n; i++) {
@@ -793,18 +796,25 @@ var rob = function (nums) {
 ### [213. 打家劫舍 II](https://leetcode-cn.com/problems/house-robber-ii/)
 
 ```javascript {.line-numbers}
-//O(n) - O(1)
 var rob = function (nums) {
+	const robRange = (nums, start, end) => {
+		if (start === end) return nums[start]
+		let dp = new Array(nums.length).fill(0)
+		;(dp[start] = nums[start]),
+			(dp[start + 1] = Math.max(nums[start], nums[start + 1]))
+		for (let i = start + 2; i <= end; i++)
+			dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i])
+		return dp[end]
+	}
 	const len = nums.length
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
-	//可转换成两个单排问题
-	return Math.max(
-		robWithRange(nums, 0, len - 2),
-		robWithRange(nums, 1, len - 1)
-	)
+	return Math.max(robRange(nums, 0, len - 2), robRange(nums, 1, len - 1))
+}
 
-	function robWithRange(nums, start, end) {
+//O(n) - O(1)
+var rob = function (nums) {
+	const robRange = (nums, start, end) => {
 		let dp_i_1 = 0,
 			dp_i_2 = 0,
 			dp_i
@@ -815,46 +825,46 @@ var rob = function (nums) {
 		}
 		return dp_i
 	}
+	const len = nums.length
+	if (len === 0) return 0
+	if (len === 1) return nums[0]
+	//转换成两个线性问题
+	return Math.max(robRange(nums, 0, len - 2), robRange(nums, 1, len - 1))
 }
 ```
 
 ### [337. 打家劫舍 III 树形 DP](https://leetcode-cn.com/problems/house-robber-iii/)
 
 ```javascript {.line-numbers}
-//TLE
+//brute force with memory
 var rob = function (root) {
+	let cached = new Map()
 	const helper = (root) => {
-		if (root == null) return 0
-		if (memo.has(root)) return memo.get(root)
-		// 抢，然后去下下家
-		const do_it =
-			root.val +
-			(root.left == null ? 0 : rob(root.left.left) + rob(root.left.right)) +
-			(root.right == null ? 0 : rob(root.right.left) + rob(root.right.right))
-		// 不抢，然后去下家
-		const not_do = rob(root.left) + rob(root.right)
-		const ret = Math.max(do_it, not_do)
-		memo.set(root, ret)
-		return ret
+		if (!root) return 0
+		if (!root.left && !root.right) return root.val
+		if (cached.has(root)) return cached.get(root)
+		let val1 = root.val
+		if (root.left) val1 += helper(root.left.left) + helper(root.left.right)
+		if (root.right) val1 += helper(root.right.left) + helper(root.right.right)
+		let val2 = helper(root.left) + helper(root.right)
+		cached.set(root, Math.max(val1, val2))
+		return cached.get(root)
 	}
-	const memo = new Map()
 	return helper(root)
 }
 
 var rob = function (root) {
 	const helper = (root) => {
-		if (root === null) return [0, 0]
-		//dp[0]: rob, dp[1]: notRob
-		//针对每层root都返回这样的结果，最终推出根节点的结果
+		if (!root) return [0, 0]
+		//dp[0]: rob, dp[1]: notRob，每层针对每个root得出对应结果并返回这个长度为2的dp结果
+		//后续遍历推出根节点结果
 		const l = helper(root.left)
 		const r = helper(root.right)
-		const robed = root.val + l[1] + r[1]
-		const notRobed = Math.max(l[0], l[1]) + Math.max(r[0], r[1])
-		//返回当前节点偷还是不偷
-		return [robed, notRobed]
+		const rob = root.val + l[1] + r[1]
+		const notRot = Math.max(l[0], l[1]) + Math.max(r[0], r[1])
+		return [rob, notRot]
 	}
-	const [robed, notRobed] = helper(root)
-	return Math.max(robed, notRobed)
+	return Math.max(...helper(root))
 }
 ```
 
@@ -865,7 +875,7 @@ var rob = function (root) {
 ```javascript {.line-numbers}
 var longestPalindromeSubseq = function (s) {
 	const len = s.length
-	//dp[i][j] 表示s前i个字符到前j个字符的最长回文子序列
+	//dp[i][j] 表示字符串s[i, j]这段最长回文子序列
 	//只填写了上半部，未优化
 	const dp = Array.from({ length: len }, () => new Array(len).fill(0))
 	//i从最后一个字符开始往前遍历，j从i + 1开始往后遍历，这样可保证每个子问题都已经算好
@@ -925,12 +935,13 @@ var coinChange = function (coins, amount) {
 	let ret = Infinity
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
-    // means successful
+		// means successful
 		if (remain === 0) {
 			ret = Math.min(ret, count)
 			return
 		}
-		for (let i = 0, len = coins.length; i < len; i++) dfs(coins, remain - coins[i], count + 1)
+		for (let i = 0, len = coins.length; i < len; i++)
+			dfs(coins, remain - coins[i], count + 1)
 	}
 	dfs(coins, amount, 0)
 	return ret === Infinity ? -1 : ret
@@ -955,7 +966,7 @@ var coinChange = function (coins, amount) {
 			//下层返回需有意义且是下层需要最少的硬币数,再更新cache[remain]
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
-    cache[remain] = min
+		cache[remain] = min
 		return min === Infinity ? -1 : min
 	}
 	return dfs(coins, amount)
@@ -969,8 +980,10 @@ const coinChange = (coins, amount) => {
 	const dp = Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
-	for (let i = 0; i < coins.length; i++) {  //物品
-		for (let j = coins[i]; j <= amount; j++) {  //背包
+	for (let i = 0; i < coins.length; i++) {
+		//物品
+		for (let j = coins[i]; j <= amount; j++) {
+			//背包
 			dp[j] = Math.min(dp[j - coins[i]] + 1, dp[j])
 		}
 	}
@@ -986,9 +999,11 @@ var coinChange = function (coins, amount) {
 	dp = new Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
-	for (let i = 1; i <= amount; i++) { //背包
+	for (let i = 1; i <= amount; i++) {
+		//背包
 		//dp[i] = min(F(1−1),F(1−2),F(1−5)) + 1
-		for (let j = 0, len = coins.length; j < len; j++) { //物品
+		for (let j = 0, len = coins.length; j < len; j++) {
+			//物品
 			//数组越界,语义上是当前剩余面值需要大于硬币价值才有意义
 			if (i - coins[j] >= 0) dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
 		}
@@ -997,18 +1012,31 @@ var coinChange = function (coins, amount) {
 }
 ```
 
-### [416.==分割等和子集==](https://leetcode.cn/problems/partition-equal-subset-sum/)
+### [416.分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/)
 
 ```javascript
+// better version
 var canPartition = function (nums) {
-	//转换成01背包，背包容量为总和的一半，num[0...i]里面随便取看是否能装满
-	//dp[i][j] = x表示，对于前i个物品，当前背包的容量为j时;
-	//若x为true，说明可以恰好装满背包，若x为false，说明不能恰好装满背包
-	//另种定义为 dp[i][j] = sum / 2，所求为 dp[sum / 2] === sum / 2
+	//转换成01背包，nums是物品（物品的重量等于物品的价值），背包为容量总和的一半，nums[0...i]里面随便取看是否能装满
 	let sum = nums.reduce((acc, cur) => acc + cur)
 	//和为奇数时，不可能划分成两个和相等的集合
 	if (sum & 1) return false
+	sum = sum / 2
+	const dp = Array(sum + 1).fill(0)
+	for (let i = 0, len = nums.length; i < len; i++) {
+		for (let j = sum; j >= nums[i]; j--) {
+			dp[j] = Math.max(dp[j], dp[j - nums[i]] + nums[i])
+		}
+	}
 	//dp[sum]即为所求的结果,是否可以二等分
+	return dp[sum] === sum
+}
+
+var canPartition = function (nums) {
+	//dp[i][j] = x表示，对于前i个物品，当前背包的容量为j时; 若x为true，说明可以恰好装满背包，若x为false，说明不能恰好装满背包
+	//或者定义为 dp[i][j] = sum / 2，所求为 dp[sum / 2] === sum / 2
+	let sum = nums.reduce((acc, cur) => acc + cur)
+	if (sum & 1) return false
 	sum = sum / 2
 	let dp = new Array(sum + 1).fill(false)
 	//base case
@@ -1022,27 +1050,13 @@ var canPartition = function (nums) {
 	}
 	return dp[sum]
 }
-
-var canPartition = function (nums) {
-	const sum = nums.reduce((acc, cur) => acc + cur)
-	if (sum & 1) return false
-	//长度举例就看出来了，同背包初始化
-	const dp = Array(sum / 2 + 1).fill(0)
-	for (let i = 0, len = nums.length; i < len; i++) {
-		for (let j = Math.floor(sum / 2); j >= nums[i]; j--) {
-			dp[j] = Math.max(dp[j], dp[j - nums[i]] + nums[i])
-		}
-	}
-	//dp table的最大值
-	return dp[sum / 2] === sum / 2
-}
 ```
 
 ### [518. ==零钱兑换 II==](https://leetcode.cn/problems/coin-change-ii/)
 
 ```javascript {.line-numbers}
 var change = function (amount, coins) {
-	//dp[j]：凑成总金额(背包)j的货币组合数为dp[j]，有dp[j]种方法
+	//dp[j]：凑成总金额(背包)j的货币组合数为dp[j]，有dp[j]种方法（组合数）
 	const dp = new Array(amount + 1).fill(0)
 	//语义上讲凑成总金额0的货币组合数为1,且根据推导公式为1才能推过去
 	dp[0] = 1
@@ -1050,9 +1064,7 @@ var change = function (amount, coins) {
 	//若调整状态遍历顺序则计算的是排列数
 	for (const coin of coins) {
 		//dp[j] += dp[j - nums[j]]
-		for (let j = coin; j <= amount; j++) {
-			dp[j] += dp[j - coin]
-		}
+		for (let j = coin; j <= amount; j++) dp[j] += dp[j - coin]
 	}
 	return dp[amount]
 }
@@ -1075,7 +1087,7 @@ var uniquePaths = function (m, n) {
 		if (i === m - 1 && j === n - 1) return 1
 		return dfs(i + 1, j, m, n) + dfs(i, j + 1, m, n)
 	}
-  return dfs(0, 0, m, n)
+	return dfs(0, 0, m, n)
 }
 
 //O(mn) - O(mn)
@@ -1161,8 +1173,13 @@ var numTrees = function (n) {
 	const dp = new Array(n + 1).fill(0)
 	//base case
 	dp[0] = 1
+	//n为3构建的树= 头1 + 头2 + 头3
+	//头1 = 左子树0节点 * 右子树2节点
+	//头2 = 左子树1节点 * 右子树1节点
+	//头3 = 左子树2节点 * 右子树0节点
+	//dp[3] = dp[0] * dp[2] + dp[1] * dp[21 + dp[2] * dp[0]
 	for (let i = 1; i <= n; i++) {
-		//笛卡尔积
+		//以1为头结点的所有情况、以2为头结点的所有情况，以3为头结点的所有情况。。。
 		for (let j = 1; j <= i; j++) {
 			dp[i] += dp[j - 1] * dp[i - j]
 		}
@@ -1172,12 +1189,9 @@ var numTrees = function (n) {
 
 //recursion
 const numTrees = (n) => {
-	// n个整数能创建出的BST的种类数
 	if (n == 0 || n == 1) return 1
 	let num = 0
-	for (let i = 0; i <= n - 1; i++) {
-		num += numTrees(i) * numTrees(n - i - 1)
-	}
+	for (let i = 1; i <= n; i++) num += numTrees(i - 1) * numTrees(n - i)
 	return num
 }
 ```
@@ -1192,7 +1206,7 @@ const numTrees = (n) => {
 
 //O(n) - O(n)
 var climbStairs = function (n) {
-  if (n <= 2) return n
+	if (n <= 2) return n
 	//dp[i]表示爬到第i级台阶的方案数
 	//直接忽视dp[0]的定义，从3开始循环更符合人类的思维模式
 	const dp = new Array(n + 1)
