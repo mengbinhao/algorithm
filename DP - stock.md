@@ -1,14 +1,12 @@
 ## 思路
 
-1. dp定义: 第i天，k第i天的最大交易次数上限，0 不持有， 1持有
+1. dp定义: 第i天，允许交易的最大次数，0 不持有， 1持有的最大利润
 
-   > 求的最终答案是 `dp[n - 1][K][0]`，即最后一天，最多允许 `K` 次交易，最多获得多少利润
+   > 求的最终答案是 `dp[n - 1][K][0]`，即最后一天，最多允许 `K` 次交易，不持有的状态的利润
 
    ![](./images/dp_11.png)
 
 2. 递推公式
-
-   **dp\[i\]\[k\]\[1\]今天选择buy的时候前一天k为什么减1**
 
    ![](./images/dp_12.png)
 
@@ -16,15 +14,13 @@
    对于dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
                  max( 今天选择 rest,        今天选择 sell      )
                  
-   1、昨天就没有持有，且截至昨天最大交易次数限制为k；今天选择rest，所以今天还是没有持有，最大交易次数限制依然为k
-   2、昨天持有股票，且截至昨天最大交易次数限制为k；但今天sell了，所以今天没有持有股票了，最大交易次数限制依然为k
+   
    
    对于dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
-                 max( 今天选择 rest,         今天选择 buy        )
-   1、昨天就持有着股票，且截至昨天最大交易次数限制为k；然后今天选择rest，所以今天还持有着股票，最大交易次数限制依然为k
-   2、昨天没有持有，且截至昨天最大交易次数限制为k - 1；但今天选择buy，所以今天持有股票，最大交易次数限制为k
+                       max( 今天选择 rest,         今天选择 buy        )
+   因为buy了,相当于开了一次交易,所以前一天从同交易上限次数的k-1次推导过来
    ```
-
+   
 3. 根据递推公式确定base case
 
    ![](./images/dp_13.png)
@@ -38,18 +34,16 @@
 ### [121. 买股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```javascript {.line-numbers}
-//找出买卖一次可获得最大利润的那次
-//brute force O(n^2) - O(1) TLE
-//枚举所有情况，找出最大的结果
+//brute force O(n^2) - O(1) 两两暴力搜索
 var maxProfit = function (prices) {
 	if (!prices) return 0
 	const len = prices.length
 	if (len < 2) return 0
 	let maxProfit = 0,
 		profit
-	//loop every two different days
 	for (let i = 0; i < len - 1; i++) {
 		for (let j = i + 1; j < len; j++) {
+      //maxProfit = Math.max(maxProfit, prices[j] - prices[i])
 			profit = prices[j] - prices[i]
 			if (profit > maxProfit) maxProfit = profit
 		}
@@ -57,23 +51,21 @@ var maxProfit = function (prices) {
 	return maxProfit
 }
 
-//DP 未考虑状态持有还是未持有 O(n) - O(n)
+//O(n) - O(1)
 var maxProfit = function (prices) {
 	if (!prices) return 0
 	const len = prices.length
 	if (len < 2) return 0
-	let minPrice = prices[0]
-	//dp[i] 表示前i天的最大利润
-	//dp[i] = max(dp[i - 1], price[i] - minPrice)
-	let dp = new Array(len).fill(0)
-	for (let i = 1; i < len; i++) {
+	let maxProfit = 0,
+		minPrice = Infinity
+	for (let i = 0; i < len; i++) {
 		minPrice = Math.min(minPrice, prices[i])
-		dp[i] = Math.max(dp[i - 1], prices[i] - minPrice)
+		maxProfit = Math.max(maxProfit, prices[i] - minPrice)
 	}
-	return dp[len - 1]
+	return maxProfit
 }
 
-//DP 考虑状态持有还是未持有 O(n) - O(n)
+//DP O(n) - O(n)
 var maxProfit = function (prices) {
 	if (!prices) return 0
 	const len = prices.length
@@ -89,36 +81,18 @@ var maxProfit = function (prices) {
 	return dp[len - 1][0]
 }
 
-//DP状态压缩 考虑状态持有还是未持有 O(n) - O(n)
+//DP O(n) - O(1)
 var maxProfit = function (prices) {
 	if (!prices) return 0
 	const len = prices.length
 	if (len < 2) return 0
 	let dp_i_0 = 0,
-		dp_i_1 = -Infinity
-  //当使用变量，必须从0开始推导, for example [1, 2]
-	for (let i = 0; i < len; i++) {
+		dp_i_1 = -prices[0]
+	for (let i = 1; i < len; i++) {
 		dp_i_0 = Math.max(dp_i_0, dp_i_1 + prices[i])
     dp_i_1 = Math.max(dp_i_1, -prices[i])
 	}
 	return dp_i_0
-}
-
-//O(n) - O(1)
-var maxProfit = function (prices) {
-	if (!prices) return 0
-	const len = prices.length
-	if (len < 2) return 0
-	//维护最小价格和最大利润
-	let maxProfit = 0,
-		minPrice = Infinity
-	for (let i = 0; i < len; i++) {
-		//直接check比判断if (prices[i] < minPrice)清秀
-		minPrice = Math.min(minPrice, prices[i])
-		//直接check比判断prices[i] - minPrice > maxProfit清秀
-		maxProfit = Math.max(maxProfit, prices[i] - minPrice)
-	}
-	return maxProfit
 }
 ```
 
@@ -134,9 +108,7 @@ var maxProfit = function (prices) {
 	//status 0 表示不持有股票，1表示持有股票
 	//curProfit当前收益
 	const dfs = (prices, idx, status, profit) => {
-		if (idx >= prices.length) {
-			if (profit > ret) ret = profit
-		}
+		if (idx >= prices.length) if (profit > ret) ret = profit
 		dfs(prices, idx + 1, status, profit)
 		if (status === 0) {
 			dfs(prices, idx + 1, 1, profit - prices[idx])
@@ -219,6 +191,9 @@ var maxProfit = function (prices) {
 		new Array(2 + 1).fill(0).map(() => new Array(2).fill(0))
 	)
 	for (let i = 0; i < len; i++) {
+    //k从大到小遍历更符合语义
+    //从小到大也可
+    //dp[i][k][..] 不依赖 dp[i][k - 1][..]，而是依赖 dp[i - 1][k - 1][..]
 		for (let k = 2; k >= 1; k--) {
 			if (i - 1 === -1) {
 				// base case
@@ -234,7 +209,6 @@ var maxProfit = function (prices) {
 }
 
 var maxProfit = function (prices) {
-	// base case
 	let dp_i10 = 0,
 		dp_i11 = -Infinity
 	let dp_i20 = 0,
@@ -258,6 +232,7 @@ var maxProfit = function (k, prices) {
 	let dp = Array.from({ length: len }, () =>
 		new Array(k + 1).fill(0).map(() => new Array(2).fill(0))
 	)
+  //base case
   for (let i = 0; i< len; i++) {
     dp[i][0][0] = 0
     dp[i][0][1] = -Infinity

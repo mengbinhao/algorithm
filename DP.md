@@ -660,6 +660,39 @@ var integerBreak = function (n) {
 }
 ```
 
+### 494.[目标和](https://leetcode.cn/problems/target-sum/)
+
+```javascript
+var findTargetSumWays = function (nums, target) {
+	let count = 0
+	const backtrack = (nums, target, level, sum) => {
+		if (level === nums.length) {
+			if (sum === target) count++
+			return
+		}
+		backtrack(nums, target, level + 1, sum + nums[level])
+		backtrack(nums, target, level + 1, sum - nums[level])
+	}
+	backtrack(nums, target, 0, 0)
+	return count
+}
+
+const findTargetSumWays = (nums, target) => {
+	const sum = nums.reduce((a, b) => a + b)
+	if (Math.abs(target) > sum) return 0
+	if ((target + sum) % 2) return 0
+	const halfSum = (target + sum) / 2
+	let dp = new Array(halfSum + 1).fill(0)
+	dp[0] = 1
+	for (let i = 0; i < nums.length; i++) {
+		for (let j = halfSum; j >= nums[i]; j--) {
+			dp[j] += dp[j - nums[i]]
+		}
+	}
+	return dp[halfSum]
+}
+```
+
 ### 674. [最长连续递增序列](https://leetcode.cn/problems/longest-continuous-increasing-subsequence/)
 
 ```javascript {.line-numbers}
@@ -767,7 +800,7 @@ var rob = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
-	//dp[i] 表示考虑下标i，能偷窃到的最高总金额
+	//dp[i] 表示考虑下标i所能偷窃到的最高总金额
 	const dp = new Array(len)
 	;(dp[0] = nums[0]), (dp[1] = Math.max(nums[0], nums[1]))
 	for (let i = 2; i < len; i++) {
@@ -828,7 +861,6 @@ var rob = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
-	//转换成两个线性问题
 	return Math.max(robRange(nums, 0, len - 2), robRange(nums, 1, len - 1))
 }
 ```
