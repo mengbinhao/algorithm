@@ -1013,9 +1013,7 @@ const coinChange = (coins, amount) => {
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
 	for (let i = 0; i < coins.length; i++) {
-		//物品
 		for (let j = coins[i]; j <= amount; j++) {
-			//背包
 			dp[j] = Math.min(dp[j - coins[i]] + 1, dp[j])
 		}
 	}
