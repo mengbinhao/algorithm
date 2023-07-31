@@ -72,9 +72,10 @@ const binarySearchLeftBound = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
-		r = len - 1
+		r = len - 1,
+     mid
 	while (l <= r) {
-		const mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -102,9 +103,10 @@ const binarySearch = (arr, target) => {
 	const len = arr.length
 	if (len === 0) return -1
 	let l = 0,
-		r = len - 1
+		r = len - 1,
+      mid
 	while (l <= r) {
-		const mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -178,10 +180,11 @@ const leftBound = (arr, target) => {
   if (len === 0) return -1
 	let l = 0,
 		//Note 1
-		r = len - 1
+		r = len - 1,
+      mid
 	//Note 2
 	while (l <= r) {
-		const mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			//Note 3
 			l = mid + 1
@@ -204,9 +207,10 @@ const leftBound = (arr, target) => {
 const leftBound = (arr, target) => {
   const len = arr.length
 	let l = 0,
-		r = len - 1
+		r = len - 1,
+      mid
 	while (l <= r) {
-		const mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] >= target) {
@@ -223,9 +227,10 @@ const leftBound = (arr, target) => {
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
 	let l = 0,
-		r = arr.length - 1
+		r = arr.length - 1,
+      mid
 	while (l <= r) {
-		const mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor(l + (r - l) / 2)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {

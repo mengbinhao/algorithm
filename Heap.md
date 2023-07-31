@@ -14,7 +14,7 @@
 ### [215.==数组中的第 K 个最大元素==](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 ```javascript {.line-numbers}
-//基于快序的选择方法O(n) - O(logN)
+//基于快速排序的选择方法O(n) - O(logN)
 var findKthLargest = function (nums, k) {
 	const quickSelect = (arr, l, r, index) => {
 		let idx = partition(arr, l, r)

@@ -540,8 +540,7 @@ var replaceSpace = function (s) {
 	for (let c of s) if (c === ' ') count++
 	const len = s.length
 	const arr = new Array(len + 2 * count)
-	let j = 0
-	for (let i = 0; i < len; i++) {
+	for (let i = 0, j = 0; i < len; i++) {
 		if (s[i] !== ' ') {
 			arr[j++] = s[i]
 		} else {

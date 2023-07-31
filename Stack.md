@@ -146,6 +146,7 @@ var trap = function (height) {
 	if (len === 0) return 0
 	let ret = 0
 	//两边无法接雨水
+	//for (let i = 1; i < len - 1; i++) {
 	for (let i = 0; i < len; i++) {
 		let lMax = -Infinity,
 			rMax = -Infinity

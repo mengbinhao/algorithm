@@ -268,6 +268,7 @@ var combinationSum2 = function (candidates, target) {
 //dfs + backtrack
 var permute = function (nums) {
 	const len = nums.length
+	if (len === 0) return ret
 	let ret = [],
 		//space for time
 		visited = Array.from({ length: len }, () => false)
@@ -310,7 +311,7 @@ var permuteUnique = function (nums) {
 		}
 		for (let i = 0, len = nums.length; i < len; i++) {
 			if (visited[i]) continue
-			//剪枝： nums[i]和nums[i - 1]相同且前一个元素刚刚被撤销了选择
+			//剪枝： nums[i]和nums[i - 1]相同且前一个元素刚刚被撤销了选择，其在下层遍历肯定会再次出现
 			if (i > 0 && nums[i] === nums[i - 1] && !visited[i - 1]) continue
 			path.push(nums[i])
 			visited[i] = true
@@ -335,6 +336,7 @@ var subsets = function (nums) {
 	const dfs = (nums, startIdx, path) => {
 		//在递归压栈前做事情,取的是树上的所有路径
 		//不需要结束条件，全部遍历完即可
+		//if (startIdx >= path.length) return
 		ret.push([...path])
 		for (let i = startIdx, len = nums.length; i < len; i++) {
 			path.push(nums[i])

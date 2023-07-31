@@ -22,19 +22,14 @@ var twoSum = function (nums, target) {
 
 //两次哈希 O(n) - O(n)
 //obj or map
-var twoSum = function (nums, target) {
-	const hash = {},
-		len = nums.length
-	for (let i = 0; i < len; i++) {
-		//[2, 7] 9, store 7,below search 7
-		hash[target - nums[i]] = i
-	}
-	for (let j = 0; j < len; j++) {
-		//exclude hash[nums[j]] is falsy and same item
-		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) {
-			return [j, hash[nums[j]]]
-		}
-	}
+var twoSum = function(nums, target) {
+  const len = nums.length
+  let hash = {}
+  for (let i = 0; i < len; i++) hash[target - nums[i]] = i
+  for (let j = 0; j < len; j++) {
+    //exclude hash[nums[j]] is falsy and same item
+    if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) return [j, hash[nums[j]]]
+  }
 }
 
 //一次哈希 optimal,先判断要找的值在不在hash里面，再放要找的值则不需要判重
@@ -190,8 +185,7 @@ var removeDuplicates = function (nums) {
 ```javascript
 //slow - fast pointer
 var removeElement = (nums, val) => {
-	let slow = 0,
-		fast = 0
+	let slow = 0
 	for (let fast = 0; fast < nums.length; fast++) {
 		if (nums[fast] !== val) nums[slow++] = nums[fast]
 	}
