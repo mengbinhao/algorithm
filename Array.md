@@ -44,18 +44,19 @@ var twoSum = function (nums, target) {
 }
 ```
 
-### [11.==装最多水的容器 M==](https://leetcode-cn.com/problems/container-with-most-water/)
+### [11.==盛最多水的容器 M==](https://leetcode-cn.com/problems/container-with-most-water/)
 
 ```javascript
 //brute force O(n^2) - O(1)
-var maxArea = function (height) {
-	let maxArea = 0
-	for (let l = 0; l < height.length - 1; l++) {
-		for (let r = l + 1; r < height.length; r++) {
-			maxArea = Math.max(maxArea, Math.min(height[l], height[r]) * (r - l))
-		}
-	}
-	return maxArea
+var maxArea = function(height) {
+  const len = height.length
+  let maxArea = 0
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = i + 1; j < len; j++) {
+      maxArea = Math.max(ret, Math.min(height[i], height[j]) * (j - i))
+    }
+  }
+  return maxArea
 }
 
 //two pointer夹逼 O(n) - O(1)
@@ -128,34 +129,33 @@ var threeSum = function (nums) {
 	return arr
 }
 
-//夹逼  O(n^2) - O(1)
 var threeSum = function (nums) {
 	const len = nums.length
-	//precondition!!!
-	nums.sort((a, b) => a - b)
-	const ret = []
-	//不重复的三个数
-	for (let i = 0; i < len - 2; i++) {
-		if (nums[i] > 0) break
-		if (i > 0 && nums[i] === nums[i - 1]) continue
-		let l = i + 1,
-			r = len - 1
-		while (l < r) {
-			const sum = nums[i] + nums[l] + nums[r]
-			if (sum === 0) {
-				ret.push([nums[i], nums[l], nums[r]])
-				while (nums[l] === nums[l + 1]) l++
-				l++ //跳到不重复的那个数
-				while (nums[r] === nums[r - 1]) r--
-				r-- //同上
-			} else if (sum > 0) {
-				r--
-			} else {
-				l++
-			}
-		}
-	}
-	return ret
+  let ret = []
+  //precondition!
+  nums.sort((a, b) => a - b)
+  //不重复的三个数
+  for (let i = 0; i < len - 2; i++) {
+    if (nums[i] > 0) break
+    if (i > 0 && nums[i] === nums[i - 1]) continue
+    let l = i + 1, r = len - 1
+    while (l < r) {
+      const sum = nums[i] + nums[l] + nums[r]
+      if (sum === 0) {
+        ret.push([nums[i], nums[l], nums[r]])
+        //l < len - 4至少保证3个相加的数
+        while (l < len - 4 && nums[l + 1] === nums[l]) l++
+        l++ //跳到不重复的那个数
+        while (r > 3 && nums[r - 1] === nums[r]) r--
+        r-- //同上
+      } else if (sum > 0) {
+        r--
+      } else {
+        l++
+      }
+    }
+  }
+  return ret
 }
 ```
 
@@ -845,12 +845,12 @@ var moveZeroes = function (nums) {
 
 //循环一次，快慢指针，慢指针当前第一个 0 的位置 O(n)- O(1)
 var moveZeroes = function (nums) {
-	let lastFoundZeroIndex = 0
+	let slow = 0
 	for (let fast = 0, len = nums.length; fast < len; fast++) {
 		if (nums[fast] !== 0) {
-			;[nums[lastFoundZeroIndex++], nums[fast]] = [
+			;[nums[slow++], nums[fast]] = [
 				nums[fast],
-				nums[lastFoundZeroIndex],
+				nums[slow],
 			]
 		}
 	}

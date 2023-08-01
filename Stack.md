@@ -255,7 +255,7 @@ var simplifyPath = function (path) {
 //brute force O(n^2)
 //固定宽 两重循环
 
-//固定高 一重循环，向两边扫求最长底边
+//固定高向两边扫一遍求最长底边
 var largestRectangleArea = function (heights) {
 	const len = heights.length
 	if (len === 0) return 0

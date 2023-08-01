@@ -1,6 +1,19 @@
-# algorithm
+# Algorithm
 
-Some frequent Leetcode questions implement by JavaScrip
+Some frequent leetcode questions implement by JavaScript
+
+### 易混淆
+
+- 盛最多水的容器
+  - 双循环不重复
+  - 双指针夹逼
+- 接雨水
+  - 固定i，左右扫
+  - 单调递减栈
+  - 双指针夹逼
+- 最大矩形的面积
+  - 固定高向两边扫一遍求最长底边
+  - 单调递增栈
 
 ### 最长系列
 
@@ -11,7 +24,7 @@ Some frequent Leetcode questions implement by JavaScrip
 
 #### 无重复字符的最长子串
 
-- SlideWindow
+- slideWindow
 
 #### 最长连续序列
 

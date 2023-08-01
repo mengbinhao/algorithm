@@ -15,12 +15,14 @@ var groupAnagrams = function (strs) {
 //使用计数器做key，可去掉sort的时间复杂度 O(NK) - O(NK)
 //best version
 var groupAnagrams = function (strs) {
-	const hash = {},
+	let hash = {},
 		key = new Array(26)
+  const baseCode = 'a'.charCodeAt(0)
 	for (let str of strs) {
 		key.fill(0)
 		for (let i = 0, len = str.length; i < len; i++)
-			key[str.charCodeAt(i) - 'a'.charCodeAt(0)]++
+			key[str.charCodeAt(i) - baseCode]++
+    //key数组调用toString转换成obj的字符串键
 		hash[key] ? hash[key].push(str) : (hash[key] = [str])
 	}
 	return Object.values(hash)

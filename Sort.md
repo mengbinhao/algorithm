@@ -195,6 +195,8 @@ const quickChoose = (arr, n, k) => {
 >
 > 原理：先把数组从中间分成前后两部分，然后对前后两部分分别排序，再将排好序的两部分合并在一起，这样整个数组就都有序了。归并排序使用的就是分治思想
 
+![](./images/sort_merge_o(n).png)
+
 ```javascript {.line-numbers}
 // 大雪菜version
 // 1 确定分界点 mid = (l + r) / 2
