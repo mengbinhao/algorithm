@@ -173,7 +173,7 @@ var trap = function (height) {
 			const idx = stack.pop()
 			//左边没有柱子了，即无法形成积水，积水由两边柱子中间低洼的地方形成
 			if (stack.length === 0) break
-			//计算右边与当前栈顶左边界的距离, 减一才是实际距离
+			//计算右边与当前栈顶左边界的距离
 			const distance = i - stack[stack.length - 1] - 1
 			const boundedHeight =
 				Math.min(height[i], height[stack[stack.length - 1]]) - height[idx]
@@ -260,16 +260,16 @@ var largestRectangleArea = function (heights) {
 	const len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
-	let ret = 0
+	let maxArea = 0
 	for (let i = 0; i < len; i++) {
 		const height = heights[i]
 		let l = i,
 			r = i
 		while (l - 1 >= 0 && heights[l - 1] >= height) l--
 		while (r + 1 < len && heights[r + 1] >= height) r++
-		ret = Math.max(ret, (r - l + 1) * height)
+		maxArea = Math.max(maxArea, (r - l + 1) * height)
 	}
-	return ret
+	return maxArea
 }
 
 //stack  单调递增
@@ -277,8 +277,7 @@ var largestRectangleArea = function (heights) {
 	let len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
-	let ret = 0
-	let stack = []
+	let maxArea = 0, stack = []
   //特殊情况1, stack空了width = i即可以延展到数组开头
   //特殊情况2, 一遍遍历完成后，width = len即可以扩展到数组末尾
   //特殊情况3, 当新栈顶高度=旧栈顶，计算是错的，但是不影响最终计算结果，严谨性加上内层while
@@ -293,7 +292,7 @@ var largestRectangleArea = function (heights) {
 			} else {
 				width = i - stack[stack.length - 1] - 1
 			}
-			ret = Math.max(ret, width * height)
+			maxArea = Math.max(maxArea, width * height)
 		}
 		stack.push(i)
 	}
@@ -307,9 +306,9 @@ var largestRectangleArea = function (heights) {
 		} else {
 			width = len - stack[stack.length - 1] - 1
 		}
-		ret = Math.max(ret, width * height)
+		maxArea = Math.max(maxArea, width * height)
 	}
-	return ret
+	return maxArea
 }
 
 //stack with sentinel O(n) - O(1)
@@ -318,7 +317,7 @@ var largestRectangleArea = function (heights) {
 	let len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
-	let ret = 0
+	let maxArea = 0
   //前面哨兵保证栈非空，后面哨兵保证heights循环完所有元素都可被计算，即heights原本有效元素都会出栈
 	let tmp = [0, ...heights, 0]
 	len += 2
@@ -328,11 +327,11 @@ var largestRectangleArea = function (heights) {
 		while (heights[stack[stack.length - 1]] > heights[i]) {
 			const height = heights[stack.pop()]
 			const width = i - stack[stack.length - 1] - 1
-			ret = Math.max(ret, height * width)
+			maxArea = Math.max(maxArea, height * width)
 		}
 		stack.push(i)
 	}
-	return ret
+	return maxArea
 }
 
 //dp  O(n) - O(n)
@@ -360,10 +359,10 @@ var largestRectangleArea = function (heights) {
 		right[i] = stack.length === 0 ? len : stack[stack.length - 1]
 		stack.push(i)
 	}
-	let ret = 0
+	let maxArea = 0
 	for (let i = 0; i < len; i++)
-		ret = Math.max(ret, (right[i] - left[i] - 1) * heights[i])
-	return ret
+		maxArea = Math.max(ret, (right[i] - left[i] - 1) * heights[i])
+	return maxArea
 }
 ```
 
@@ -510,3 +509,40 @@ var maxArea = function (height) {
 	return maxArea
 }
 ```
+
+### [239.==滑动窗口最大值 H==](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
+```javascript
+//brute force O(nk) - O(k)
+var maxSlidingWindow = function (nums, k) {
+	const len = nums.length
+	let slideWindow = [],
+		ret = []
+	//优化：能形成的最大窗口个数
+	for (let i = 0; i < len - k + 1; i++) {
+		for (let j = 0; j < k; j++) slideWindow.push(nums[i + j])
+		ret.push(Math.max(...slideWindow))
+		slideWindow.length = 0
+	}
+	return ret
+}
+
+//deque O(n) - O(n)，存下标，单调递减，第一个元素是第一大的index,依此类推
+//头尾尾头
+var maxSlidingWindow = function (nums, k) {
+	let deque = [],
+		ret = []
+	for (let i = 0, len = nums.length; i < len; i++) {
+		//队列满了移出去一个
+		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
+		if (deque.length && deque[0] < i - k + 1) deque.shift()
+		//维护递减队列
+		while (deque.length && nums[deque[deque.length - 1]] < nums[i]) deque.pop()
+		deque.push(i)
+		//开始检查结果
+		if (i >= k - 1) ret.push(nums[deque[0]])
+	}
+	return ret
+}
+```
+

@@ -188,35 +188,32 @@ var maxSlidingWindow = function (nums, k) {
 }
 ```
 
-### [438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+### [438.==找到字符串中所有字母异位词==](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 ```javascript {.line-numbers}
 var findAnagrams = function (s, p) {
 	let sLen = s.length,
 		pLen = p.length
 	if (sLen === 0 || pLen === 0 || pLen > sLen) return []
-	let left = 0,
-		right = 0,
+	let l = 0,
+		r = 0,
 		valid = 0,
 		need = {},
 		slideWindow = {},
 		ret = []
-
 	for (let c of p) need[c] ? need[c]++ : (need[c] = 1)
-	while (right < sLen) {
-		let rightChar = s[right++]
-		if (need[rightChar]) {
-			slideWindow[rightChar]
-				? slideWindow[rightChar]++
-				: (slideWindow[rightChar] = 1)
-			if (slideWindow[rightChar] === need[rightChar]) valid++
+	while (r < sLen) {
+		const rChar = s[r++]
+		if (need[rChar]) {
+			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
+			if (slideWindow[rChar] === need[rChar]) valid++
 		}
-		while (right - left >= pLen) {
-			if (valid === Object.keys(need).length) ret.push(left)
-			let leftChar = s[left++]
-			if (need[leftChar]) {
-				if (slideWindow[leftChar] === need[leftChar]) valid--
-				slideWindow[leftChar]--
+		while (r - l >= pLen) {
+			if (valid === Object.keys(need).length) ret.push(l)
+			const lChar = s[l++]
+			if (need[lChar]) {
+				if (slideWindow[lChar] === need[lChar]) valid--
+				slideWindow[lChar]--
 			}
 		}
 	}

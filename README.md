@@ -10,6 +10,7 @@ Some frequent leetcode questions implement by JavaScript
 - 最大矩形的面积
   - 固定高向两边扫一遍求最长底边
   - 单调递增栈
+    - 哨兵消除循环一遍后stack非空的逻辑
 - 接雨水
   - 固定i，左右扫
   - 单调递减栈
