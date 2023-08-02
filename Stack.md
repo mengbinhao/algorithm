@@ -478,3 +478,35 @@ var decodeString = function (s) {
 	return stack.join('')
 }
 ```
+
+### [11.==盛最多水的容器 M==](https://leetcode-cn.com/problems/container-with-most-water/)
+
+```javascript
+//brute force O(n^2) - O(1)
+var maxArea = function(height) {
+  const len = height.length
+  let maxArea = 0
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = i + 1; j < len; j++) {
+      maxArea = Math.max(ret, Math.min(height[i], height[j]) * (j - i))
+    }
+  }
+  return maxArea
+}
+
+//two pointer夹逼 O(n) - O(1)
+//若移动数字较大的那个指针，那么前者「两个指针指向的数字中较小值」不会增加，后者「指针之间的距离」会减小，那么这个乘积会减小。因此移动数字较大的那个指针是不合理的
+//若保持左指针的位置不变，那么无论右指针在哪里，这个容器的容量都不会超过 
+//min(x,y) ∗ t = x ∗ t
+//min(x,y) ≤ min(x,y)
+var maxArea = function (height) {
+	let l = 0,
+		r = height.length - 1,
+		maxArea = 0
+	while (l < r) {
+		maxArea = Math.max(maxArea, Math.min(height[l], height[r]) * (r - l))
+		height[l] < height[r] ? l++ : r--
+	}
+	return maxArea
+}
+```
