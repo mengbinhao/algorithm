@@ -148,8 +148,7 @@ var trap = function (height) {
 	//两边无法接雨水
 	//for (let i = 1; i < len - 1; i++) {
 	for (let i = 0; i < len; i++) {
-		let lMax = -Infinity,
-			rMax = -Infinity
+    let lMax = rMax = -Infinity
 		//左扫
 		for (let j = i; j >= 0; j--) lMax = Math.max(lMax, height[j])
 		//右扫
@@ -188,21 +187,17 @@ var trap = function (height) {
 // best version
 var trap = function (height) {
 	const len = height.length
-	if (len === 0) return 0
-	let l = 0,
+	let ret = 0,
+		l = 0,
 		r = len - 1,
-		ret = 0,
-		lMax = -Infinity,
-		rMax = -Infinity
+		lMax = height[0],
+		rMax = height[len - 1]
 	while (l < r) {
 		//会传递
 		lMax = Math.max(lMax, height[l])
 		rMax = Math.max(rMax, height[r])
-		if (lMax < rMax) {
-			ret += lMax - height[l++]
-		} else {
-			ret += rMax - height[r--]
-		}
+		if (height[l] < height[r]) ret += lMax - height[l++]
+		else ret += rMax - height[r--]
 	}
 	return ret
 }
@@ -213,21 +208,15 @@ var trap = function (height) {
 	if (len === 0) return 0
 	let ret = 0,
 		//提前存储每个height[i]对应的左右最大值
-		leftMax = [],
-		rightMax = []
-	leftMax[0] = height[0]
-	for (let i = 1; i < len; i++) {
-		//会传递
-		leftMax[i] = Math.max(height[i], leftMax[i - 1])
-	}
-	rightMax[len - 1] = height[len - 1]
-	for (let i = len - 2; i >= 0; i--) {
-		rightMax[i] = Math.max(height[i], rightMax[i + 1])
-	}
+		lMax = [],
+		rMax = []
+	lMax[0] = height[0]
+	for (let i = 1; i < len; i++) lMax[i] = Math.max(height[i], lMax[i - 1])
+	rMax[len - 1] = height[len - 1]
+	for (let i = len - 2; i >= 0; i--) rMax[i] = Math.max(height[i], rMax[i + 1])
 	//两边无法接雨水
-	for (let i = 1; i < len - 1; i++) {
-		ret += Math.min(leftMax[i], rightMax[i]) - height[i]
-	}
+	for (let i = 1; i < len - 1; i++)
+		ret += Math.min(lMax[i], rMax[i]) - height[i]
 	return ret
 }
 ```
