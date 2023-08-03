@@ -274,7 +274,7 @@ var largestRectangleArea = function (heights) {
 
 //stack  单调递增
 var largestRectangleArea = function (heights) {
-	let len = heights.length
+	const len = heights.length
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
 	let maxArea = 0, stack = []
@@ -282,8 +282,11 @@ var largestRectangleArea = function (heights) {
   //特殊情况2, 一遍遍历完成后，width = len即可以扩展到数组末尾
   //特殊情况3, 当新栈顶高度=旧栈顶，计算是错的，但是不影响最终计算结果，严谨性加上内层while
 	for (let i = 0; i < len; i++) {
+    //当前栈顶大于扫到的柱子时
 		while (stack.length && heights[stack[stack.length - 1]] > heights[i]) {
+      //拿到可以计算出栈顶的柱子高
 			const height = heights[stack.pop()]
+      //严谨性
 			while (stack.length && heights[stack[stack.length - 1]] === height)
 				stack.pop()
 			let width
