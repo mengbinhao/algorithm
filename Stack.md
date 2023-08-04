@@ -190,8 +190,8 @@ var trap = function (height) {
 	let ret = 0,
 		l = 0,
 		r = len - 1,
-		lMax = height[0],
-		rMax = height[len - 1]
+		lMax = -Infinity,
+		rMax = -Infinity
 	while (l < r) {
 		//会传递
 		lMax = Math.max(lMax, height[l])
