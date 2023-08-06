@@ -16,6 +16,12 @@ Some frequent leetcode questions implement by JavaScript
   - 单调递减栈
   - 双指针夹逼
 
+### 前缀和
+
+- 53
+- 238 前缀积
+- 560 前缀和 + hash
+
 ### 最长系列
 
 #### 最长公共前缀

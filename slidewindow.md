@@ -74,31 +74,26 @@ var minWindow = function (s, t) {
 		tLen = t.length
 	if (sLen === 0 || tLen === 0 || sLen < tLen) return ''
 	let slideWindow = {},
-		need = {},
-		begin = 0,
+    need = {}, //t中需要哪些字母及个数
+		valid = 0, //当t中某个字母找够了加1
 		l = 0,
 		r = 0,
+    begin = 0,
 		minLen = Infinity,
-		//窗口中满足need条件的字符个数,若valid和need.size的大小相同,则说明窗口已满足条件,已完全覆盖t
-		valid = 0
 	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
 	while (r < sLen) {
 		const rChar = s[r++]
-		//过滤需要的字符
 		if (need[rChar]) {
 			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
-			//某字符已找够
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
-		//t中所有字符已全覆盖,收缩左边界
+		//当前扫过的s字母已覆盖t中的所有字母,收缩左边界
 		while (valid === Object.keys(need).length) {
 			if (r - l < minLen) {
 				minLen = r - l
 				begin = l
 			}
-			//update left
 			const lChar = s[l++]
-			//过滤需要的字符,行为同上面加的时候，加的时候是满足个数加，减一样
 			if (need[lChar]) {
 				if (slideWindow[lChar] === need[lChar]) valid--
 				slideWindow[lChar]--
@@ -152,7 +147,7 @@ var minSubArrayLen = function (s, nums) {
 }
 ```
 
-### [239.==滑动窗口最大值 H==](https://leetcode-cn.com/problems/sliding-window-maximum/)
+### [239.==滑动窗口最大值==](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 ```javascript
 //brute force O(nk) - O(k)
@@ -197,8 +192,8 @@ var findAnagrams = function (s, p) {
 	if (sLen === 0 || pLen === 0 || pLen > sLen) return []
 	let l = 0,
 		r = 0,
-		valid = 0,
-		need = {},
+    need = {}, //p中需要哪些字母及个数
+		valid = 0, //当p中某个字母找够了加1
 		slideWindow = {},
 		ret = []
 	for (let c of p) need[c] ? need[c]++ : (need[c] = 1)
@@ -208,6 +203,7 @@ var findAnagrams = function (s, p) {
 			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
+    //收集结果, 这样写会不停update left
 		while (r - l >= pLen) {
 			if (valid === Object.keys(need).length) ret.push(l)
 			const lChar = s[l++]

@@ -447,6 +447,28 @@ var plusOne = function (digits) {
 ### [73.==矩阵置零==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
 
 ```javascript {.line-numbers}
+//暴力解法,copy一份，遍历这个副本修改原数组
+var setZeroes = function (matrix) {
+	const rows = matrix.length
+	const cols = matrix[0].length
+	let matrixCopy = Array.from({ length: rows }, () => new Array(cols))
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			matrixCopy[i][j] = matrix[i][j]
+		}
+	}
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (matrixCopy[i][j] == 0) {
+        //修改当前行
+				for (let p = 0; p < matrix[i].length; p++) matrix[i][p] = 0
+				//修改当前列
+        for (let q = 0; q < matrix.length; q++) matrix[q][j] = 0
+			}
+		}
+	}
+}
+
 //O(mn) - O(m + n) direct version
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
@@ -466,7 +488,7 @@ var setZeroes = function (matrix) {
 	}
 }
 
-//O(mn) - O(1)
+//O(mnm) - O(1)
 //advanced version
 var setZeroes = function (matrix) {
 	const rows = matrix.length,
@@ -495,42 +517,56 @@ var setZeroes = function (matrix) {
 		flagRow0 = false
 	//遍历第一列
 	for (let i = 0; i < m; i++) {
-		if (matrix[i][0] === 0) {
-			flagCol0 = true
-		}
+		if (matrix[i][0] === 0) flagCol0 = true
 	}
 	//遍历第一行
 	for (let j = 0; j < n; j++) {
-		if (matrix[0][j] === 0) {
-			flagRow0 = true
-		}
+		if (matrix[0][j] === 0) flagRow0 = true
 	}
 	//标记第一行与列
 	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			if (matrix[i][j] === 0) matrix[i][0] = matrix[0][j] = 0
+		}
+	}
+	//使用第一行与列反更新其他单元
+	for (let i = 1; i < m; i++) {
+		for (let j = 1; j < n; j++) {
+			if (matrix[i][0] === 0 || matrix[0][j] === 0) matrix[i][j] = 0
+		}
+	}
+	//根据标记变量处理第一行与第一列
+	if (flagCol0) {
+		for (let i = 0; i < m; i++) matrix[i][0] = 0
+	}
+	if (flagRow0) {
+		for (let j = 0; j < n; j++) matrix[0][j] = 0
+	}
+}
+
+//使用一个标记变量
+var setZeroes = function (matrix) {
+	const m = matrix.length,
+		n = matrix[0].length
+	let flagCol0 = false
+	for (let i = 0; i < m; i++) {
+    //标记第一列是否需转换
+		if (matrix[i][0] === 0) flagCol0 = true
+    //修改第一行和第一列
 		for (let j = 1; j < n; j++) {
 			if (matrix[i][j] === 0) {
 				matrix[i][0] = matrix[0][j] = 0
 			}
 		}
 	}
-	//使用第一行与列反更新其他单元
-	for (let i = 1; i < m; i++) {
+  //倒序根据第一行第一列处理其他单元，防止每一列的第一个元素被提前更新及matrix[i][0]
+	for (let i = m - 1; i >= 0; i--) {
 		for (let j = 1; j < n; j++) {
 			if (matrix[i][0] === 0 || matrix[0][j] === 0) {
 				matrix[i][j] = 0
 			}
 		}
-	}
-	//根据标记变量处理第一行与第一列
-	if (flagCol0) {
-		for (let i = 0; i < m; i++) {
-			matrix[i][0] = 0
-		}
-	}
-	if (flagRow0) {
-		for (let j = 0; j < n; j++) {
-			matrix[0][j] = 0
-		}
+		if (flagCol0) matrix[i][0] = 0
 	}
 }
 ```
@@ -732,19 +768,18 @@ var rotate = (nums, k) => {
 }
 
 //数组翻转 O(n) - O(1)
-var rotate = function (nums, k) {
+var rotate = (nums, k) => {
 	const len = nums.length
-	k %= len
-	if (k === 0) return
-	reverse(nums, 0, len - 1)
-	reverse(nums, 0, k - 1)
-	reverse(nums, k, len - 1)
-
-	function reverse(arr, l, r) {
-		while (l < r) {
-			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
-		}
-	}
+  k %= len //k mod成小于len的数
+  if (k === 0) return
+  const reverse = (arr, l, r) => {
+    while (l < r) {
+      [arr[l++], arr[r--]] = [arr[r], arr[l]]
+    }
+  }
+  reverse(nums, 0, len - 1)
+  reverse(nums, 0, k - 1)
+  reverse(nums, k, len - 1)
 }
 ```
 
@@ -879,6 +914,34 @@ var intersection = function (nums1, nums2) {
 		}
 	}
 	return ret
+}
+```
+
+### [560. ==和为 K 的子数组==](https://leetcode.cn/problems/subarray-sum-equals-k/)
+
+```javascript
+var subarraySum = function(nums, k) {
+  let cnt = 0
+  for (let i = 0, len = nums.length; i < len; i++) {
+    let sum = 0
+    for (let j = i; j >= 0; j--) {
+      sum += nums[j]
+      if (sum === k) cnt++
+    }
+  }
+  return cnt
+}
+
+//前缀和 + hash
+//pre[i] = pre[i - 1] + num[i] -> pre[i] - pre[i - 1] === k -> pre[j - 1] === pre[i] - k
+var subarraySum = function(nums, k) {
+  let cnt = 0, pre = 0, map = new Map([[0, 1]])
+  for (let num of nums) {
+    pre += num
+    if (map.has(pre - k)) cnt += map.get(pre - k)
+    map.has(pre) ? map.set(pre, map.get(pre) + 1) : map.set(pre, 1) 
+  }
+  return cnt
 }
 ```
 

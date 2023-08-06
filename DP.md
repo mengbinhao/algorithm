@@ -285,7 +285,7 @@ var isMatch = function (s, p) {
 }
 ```
 
-### 53. [最大子数组和](https://leetcode.cn/problems/maximum-subarray/)
+### 53. [==最大子数组和==](https://leetcode.cn/problems/maximum-subarray/)
 
 ```javascript {.line-numbers}
 //brute force
