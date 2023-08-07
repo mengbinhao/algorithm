@@ -203,7 +203,8 @@ var findAnagrams = function (s, p) {
 			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
-    //收集结果, 这样写会不停update left
+    //收集结果, 这样写会不停update left，区别于76最小覆盖子串的收集结果逻辑
+    //while (valid === Object.keys(need).length) {
 		while (r - l >= pLen) {
 			if (valid === Object.keys(need).length) ret.push(l)
 			const lChar = s[l++]

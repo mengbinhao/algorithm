@@ -439,21 +439,6 @@ var reverseBetween = function (head, left, right) {
 }
 ```
 
-### [106. 相交链表](https://leetcode-cn.com/problems/intersection-of-two-linked-lists/)
-
-```javascript {.line-numbers}
-var getIntersectionNode = function (headA, headB) {
-	if (headA == null || headB == null) return null
-	let pa = headA,
-		pb = headB
-	while (pa != pb) {
-		pa = pa == null ? headB : pa.next
-		pb = pb == null ? headA : pb.next
-	}
-	return pa
-}
-```
-
 ### [109. 有序链表转换二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/)
 
 ```javascript {.line-numbers}

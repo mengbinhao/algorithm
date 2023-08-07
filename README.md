@@ -18,9 +18,9 @@ Some frequent leetcode questions implement by JavaScript
 
 ### 前缀和
 
-- 53
-- 238 前缀积
-- 560 前缀和 + hash
+- 53 最大子数组和
+- 238 除自身以外数组的乘积 （前缀积）
+- 560 和为 K 的子数组 （前缀和 + hash）
 
 ### 最长系列
 

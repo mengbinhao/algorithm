@@ -274,12 +274,12 @@ var rotate = function (matrix) {
 	}
 }
 
-//原地旋转，找到4个旋转坐标规律
+//原地旋转，找到4个坐标旋转规律
 var rotate = function (matrix) {
 	const n = matrix.length
-	//matrix[i][j]变成 matrix[j][n - i - 1]
-	//当n为偶数，等分4个区域；当n为奇数，j多一位，中间格子无需转换
-	//i只需走一半
+	//关键等式1 matrix[row][col] ->  matrix[col][rows - i - 1]
+  //其他点带入 row = col 和 col = rows - row - 1
+	//遍历顺序：当n为偶数，等分4个区域；当n为奇数，j多一位，中间格子无需转换，i只需走一半
 	for (let i = 0; i < Math.floor(n / 2); i++) {
 		for (let j = 0; j < Math.floor((n + 1) / 2); j++) {
 			//左往右看同链表
@@ -459,11 +459,11 @@ var setZeroes = function (matrix) {
 	}
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
-			if (matrixCopy[i][j] == 0) {
+			if (matrixCopy[i][j] === 0) {
         //修改当前行
-				for (let p = 0; p < matrix[i].length; p++) matrix[i][p] = 0
+				for (let p = 0; p < cols; p++) matrix[i][p] = 0
 				//修改当前列
-        for (let q = 0; q < matrix.length; q++) matrix[q][j] = 0
+        for (let q = 0; q < rows; q++) matrix[q][j] = 0
 			}
 		}
 	}
@@ -511,36 +511,36 @@ var setZeroes = function (matrix) {
 
 //使用两个标记变量,使用matrix的第一行和第一列代替上面的两个数组
 var setZeroes = function (matrix) {
-	const m = matrix.length,
-		n = matrix[0].length
+	const rows = matrix.length,
+		cols = matrix[0].length
 	let flagCol0 = false,
 		flagRow0 = false
 	//遍历第一列
-	for (let i = 0; i < m; i++) {
+	for (let i = 0; i < rows; i++) {
 		if (matrix[i][0] === 0) flagCol0 = true
 	}
 	//遍历第一行
-	for (let j = 0; j < n; j++) {
+	for (let j = 0; j < cols; j++) {
 		if (matrix[0][j] === 0) flagRow0 = true
 	}
 	//标记第一行与列
-	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
+	for (let i = 1; i < rows; i++) {
+		for (let j = 1; j < cols; j++) {
 			if (matrix[i][j] === 0) matrix[i][0] = matrix[0][j] = 0
 		}
 	}
-	//使用第一行与列反更新其他单元
-	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; j++) {
+	//使用第一行与列反更新除第一行和第一列的其他单元
+	for (let i = 1; i < rows; i++) {
+		for (let j = 1; j < cols; j++) {
 			if (matrix[i][0] === 0 || matrix[0][j] === 0) matrix[i][j] = 0
 		}
 	}
 	//根据标记变量处理第一行与第一列
 	if (flagCol0) {
-		for (let i = 0; i < m; i++) matrix[i][0] = 0
+		for (let i = 0; i < rows; i++) matrix[i][0] = 0
 	}
 	if (flagRow0) {
-		for (let j = 0; j < n; j++) matrix[0][j] = 0
+		for (let j = 0; j < cols; j++) matrix[0][j] = 0
 	}
 }
 
@@ -738,7 +738,7 @@ var generate = function (numRows) {
 }
 ```
 
-### [189.==旋转数组 E==](https://leetcode-cn.com/problems/rotate-array/)
+### [189.==轮转数组 E==](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript {.line-numbers}
 //brute force O(nk) - O(1)
@@ -786,7 +786,7 @@ var rotate = (nums, k) => {
 ### [238.==除自身以外数组的乘积==](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 ```javascript {.line-numbers}
-//使用两个前缀数组
+//使用两个前缀数组 O(n)
 var productExceptSelf = (nums) => {
 	const len = nums.length
 	// L和R分别表示左右两侧的乘积列表
@@ -806,7 +806,7 @@ var productExceptSelf = (nums) => {
 	return ret
 }
 
-//使用一个数组
+//使用一个数组 O(n)
 var productExceptSelf = function (nums) {
 	const len = nums.length,
 		right = new Array(len),
@@ -835,10 +835,30 @@ var productExceptSelf = function (nums) {
 }
 ```
 
-### [240.搜索二维矩阵 II](https://leetcode.cn/problems/search-a-2d-matrix-ii/)
+### [240.==搜索二维矩阵 II==](https://leetcode.cn/problems/search-a-2d-matrix-ii/)
 
 ```javascript
+//brute force O(mn)
+
+//O(mlogn)
 var searchMatrix = function (matrix, target) {
+  const search = (nums, target) => {
+    let low = 0,
+      high = nums.length - 1
+    while (low <= high) {
+      const mid = Math.floor((high - low) / 2) + low
+      const num = nums[mid]
+      if (num === target) {
+        return mid
+      } else if (num > target) {
+        high = mid - 1
+      } else {
+        low = mid + 1
+      }
+    }
+    return -1
+  }
+	//一次舍弃半行
 	for (const row of matrix) {
 		const index = search(row, target)
 		if (index >= 0) return true
@@ -846,21 +866,23 @@ var searchMatrix = function (matrix, target) {
 	return false
 }
 
-const search = (nums, target) => {
-	let low = 0,
-		high = nums.length - 1
-	while (low <= high) {
-		const mid = Math.floor((high - low) / 2) + low
-		const num = nums[mid]
-		if (num === target) {
-			return mid
-		} else if (num > target) {
-			high = mid - 1
-		} else {
-			low = mid + 1
-		}
-	}
-	return -1
+//O(m + n)
+var searchMatrix = function(matrix, target) {
+    const m = matrix.length, n = matrix[0].length
+    let x = 0, y = n - 1
+    //一次舍弃一行或一列
+    //从右上角开始找
+    while (x < m && y >= 0) {
+        if (matrix[x][y] === target) {
+            return true;
+        }
+        if (matrix[x][y] > target) {
+            --y;
+        } else {
+            ++x;
+        }
+    }
+    return false;
 }
 ```
 
@@ -920,10 +942,14 @@ var intersection = function (nums1, nums2) {
 ### [560. ==和为 K 的子数组==](https://leetcode.cn/problems/subarray-sum-equals-k/)
 
 ```javascript
+//最low的是一重枚起点、一重枚终点、再一重枚相加结果
+
+
 var subarraySum = function(nums, k) {
   let cnt = 0
   for (let i = 0, len = nums.length; i < len; i++) {
     let sum = 0
+    //从后往前sum
     for (let j = i; j >= 0; j--) {
       sum += nums[j]
       if (sum === k) cnt++
