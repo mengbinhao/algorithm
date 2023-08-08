@@ -564,7 +564,7 @@ var hasCycle = function (head) {
 }
 ```
 
-### [142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/)
+### [142. ==环形链表 II==](https://leetcode.cn/problems/linked-list-cycle-ii/)
 
 ```javascript {.line-numbers}
 //标记法 O(n) - O(1)
@@ -684,7 +684,7 @@ var getIntersectionNode = function (headA, headB) {
 
 //O(n) - O(1)
 var getIntersectionNode = function (headA, headB) {
-	if (!headA || !headB) return null
+	//if (!headA || !headB) return null
 	let pA = headA,
 		pB = headB
 	while (pA !== pB) {
@@ -749,10 +749,10 @@ var reverseList = function (head) {
 ```javascript {.line-numbers}
 //convert ListNode to Array O(n) - O(n)
 var isPalindrome = function (head) {
-	const arr = []
-	while (head) {
-		arr.push(head.val)
-		head = head.next
+	let arr = [], cur = head
+	while (cur) {
+		arr.push(cur.val)
+		cur = cur.next
 	}
 	let l = 0,
 		r = arr.length - 1
@@ -762,18 +762,26 @@ var isPalindrome = function (head) {
 	return true
 }
 
-//recursion
+//recursion O(n) - O(n) 存在函数栈空间
 var isPalindrome = function (head) {
 	let first = head
 	const helper = (cur) => {
 		if (!cur) return true
 		if (!helper(cur.next)) return false
+    //归的时候一一对比并更新first
 		if (first.val !== cur.val) return false
 		first = first.next
 		return true
 	}
 	return helper(head)
 }
+
+//fast/slow O(n) - O(1)
+//1 找到前半部分链表的尾节点   fast/slow
+//2 反转后半部分链表
+//3 判断是否回文
+//4 恢复链表
+//5 返回结果
 ```
 
 ### [328. 奇偶链表](https://leetcode-cn.com/problems/odd-even-linked-list/)
