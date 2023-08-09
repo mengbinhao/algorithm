@@ -40,14 +40,14 @@ pre.next = pre.next.next
 
 ## 3 questions
 
-### [2. 两数相加](https://leetcode-cn.com/problems/add-two-numbers/)
+### [2. ==两数相加==](https://leetcode-cn.com/problems/add-two-numbers/)
 
 ```javascript {.line-numbers}
 var addTwoNumbers = function (l1, l2) {
 	let dummyNode = new ListNode(-1)
 	let cur = dummyNode,
 		carry = 0
-	while (l1 || l2) {
+	while (l1 || l2 || carry) {
 		const x = l1 ? l1.val : 0
 		const y = l2 ? l2.val : 0
 		const sum = x + y + carry
@@ -60,7 +60,7 @@ var addTwoNumbers = function (l1, l2) {
 		if (l2) l2 = l2.next
 	}
 	//最后的进位
-	if (carry) cur.next = new ListNode(1)
+	//if (carry) cur.next = new ListNode(1)
 	return dummyNode.next
 }
 ```
@@ -536,8 +536,7 @@ var copyRandomList = function (head) {
 ### [141. ==环形链表==](https://leetcode-cn.com/problems/linked-list-cycle/)
 
 ```javascript {.line-numbers}
-//标记法 O(n) - O(1)
-//或使用hash标记
+//标记法或使用hash标记
 var hasCycle = function (head) {
 	while (head) {
 		if (head.flag) {
@@ -551,6 +550,7 @@ var hasCycle = function (head) {
 }
 
 //fast and slow pointer O(n) - O(1)
+//better
 var hasCycle = function (head) {
 	let fast = head,
 		slow = head
@@ -580,10 +580,10 @@ var detectCycle = function (head) {
 }
 
 //fast and slow pointer O(n) - O(1)
-//f=2s （快指针每次2步，路程刚好2倍）
+//f = 2s （快指针每次2步，路程刚好2倍）
 //f = s + nb (相遇时，刚好多走了n圈）
-//推出：s = nb
-//从head结点走到入环点需要走 ： a + nb， 而slow已经走了nb，那么slow再走a步就是入环点了
+//推出 s = nb
+//从head结点走到入环点需要走 a + nb， 而slow已经走了nb，那么slow再走a步就是入环点了
 //如何知道slow刚好走了a步? 从head开始，和slow指针一起走，相遇时刚好就是a步
 var detectCycle = function (head) {
 	let slow = head,
