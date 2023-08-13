@@ -710,7 +710,7 @@ var merge = (nums1, m, nums2, n) => {
 
 ```javascript
 var generate = function (numRows) {
-	const ret = []
+	let ret = []
 	for (let i = 0; i < numRows; i++) {
 		const curRow = new Array(i + 1).fill(1)
 		for (let j = 1; j < curRow.length - 1; j++) {
@@ -722,16 +722,16 @@ var generate = function (numRows) {
 }
 
 var generate = function (numRows) {
-	const triangle = []
+	let triangle = []
 	for (let i = 0; i < numRows; i++) {
-		const curRow = []
+		let curRow = []
 		curRow[0] = 1
 		curRow[i] = 1
-		if (i > 1) {
+		//if (i > 1) {
 			for (let j = 1; j < i; j++) {
 				curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
 			}
-		}
+		//}
 		triangle.push(curRow)
 	}
 	return triangle

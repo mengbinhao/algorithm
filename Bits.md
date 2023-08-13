@@ -99,7 +99,7 @@ var singleNumber = function (nums) {
 ```javascript {.line-numbers}
 //HashMap,遍历输入数组,统计每个数字出现的次数,最后返回出现次数为 1 的数字
 var singleNumber = function (nums) {
-	const map = new Map()
+	let map = new Map()
 	for (let num of nums) {
 		if (!map.has(num)) {
 			map.set(num, 1)
@@ -112,27 +112,15 @@ var singleNumber = function (nums) {
 	}
 }
 
-//good version
+//答案的第i个二进制位就是数组中所有元素的第i个二进制位之和除以3的余数
 var singleNumber = function (nums) {
-	let seenOnce = 0,
-		seenTwice = 0
-
-	for (let num of nums) {
-		// first appearance:
-		// add num to seen_once
-		// don't add to seen_twice because of presence in seen_once
-
-		// second appearance:
-		// remove num from seen_once
-		// add num to seen_twice
-
-		// third appearance:
-		// don't add to seen_once because of presence in seen_twice
-		// remove num from seen_twice
-		seenOnce = ~seenTwice & (seenOnce ^ num)
-		seenTwice = ~seenOnce & (seenTwice ^ num)
+	let ret = 0
+	for (let i = 0; i < 32; i++) {
+		let total = 0
+		for (let num of nums) total += (num >> i) & 1
+		if (total % 3 !== 0) ret |= 1 << i
 	}
-	return seenOnce
+	return ret
 }
 ```
 
@@ -140,7 +128,7 @@ var singleNumber = function (nums) {
 
 ```javascript {.line-numbers}
 var singleNumber = function (nums) {
-	const map = new Map()
+	let map = new Map()
 	for (let num of nums) {
 		if (!map.has(num)) {
 			map.set(num, 1)
@@ -156,6 +144,7 @@ var singleNumber = function (nums) {
 	return ret
 }
 
+//better
 var singleNumber = function (nums) {
 	let bitMask = 0
 	//bitMask会保留只出现一次的两个数字之间的差异
@@ -163,7 +152,7 @@ var singleNumber = function (nums) {
 	//得到最右边的1,这个1要么来自x,要么来自y
 	const diff = bitMask & -bitMask
 	let x = 0
-	//从diff分离出x
+	//从diff分离出其中一个只出现一次的数，及把nums分成两组
 	for (let num of nums) {
 		if ((num & diff) !== 0) x ^= num
 	}

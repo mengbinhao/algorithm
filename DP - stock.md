@@ -39,13 +39,10 @@ var maxProfit = function (prices) {
 	if (!prices) return 0
 	const len = prices.length
 	if (len < 2) return 0
-	let maxProfit = 0,
-		profit
+	let maxProfit = 0
 	for (let i = 0; i < len - 1; i++) {
 		for (let j = i + 1; j < len; j++) {
-      //maxProfit = Math.max(maxProfit, prices[j] - prices[i])
-			profit = prices[j] - prices[i]
-			if (profit > maxProfit) maxProfit = profit
+      maxProfit = Math.max(maxProfit, prices[j] - prices[i])
 		}
 	}
 	return maxProfit

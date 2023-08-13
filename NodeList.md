@@ -269,29 +269,30 @@ var swapPairs = function (head) {
 
 ```javascript {.line-numbers}
 var reverseKGroup = function (head, k) {
+  const reverse = (a, b) => {
+    let prev = null, cur = a, next
+    while (cur !== b) {
+      next = cur.next
+      cur.next = prev
+      prev = cur
+      cur = next
+    }
+  	return prev
+  }
+  //每次新的一组的头节点
 	let a = head,
 		b = head
 	//遍历完b变成了下次翻转的头结点
 	for (let i = 0; i < k; i++) {
-		//不够数量直接返回
+		//不够数量直接返回不翻转
 		if (!b) return head
 		b = b.next
 	}
+  //左闭右开
 	const newHead = reverse(a, b)
+  //b是下次翻转的头节点
 	a.next = reverseKGroup(b, k)
 	return newHead
-}
-function reverse(a, b) {
-	let prev = null,
-		cur = a,
-		next
-	while (cur !== b) {
-		next = cur.next
-		cur.next = prev
-		prev = cur
-		cur = next
-	}
-	return prev
 }
 ```
 
@@ -469,6 +470,19 @@ var sortedListToBST = function (head) {
 ### [138. 复制带随机指针的链表](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
 
 ```javascript {.line-numbers}
+//回溯 + hash O(n) - O(n)
+var copyRandomList = function (head, cachedNode = new Map()) {
+	if (head === null) return null
+	if (!cachedNode.has(head)) {
+		cachedNode.set(head, { val: head.val })
+		Object.assign(cachedNode.get(head), {
+			next: copyRandomList(head.next, cachedNode),
+			random: copyRandomList(head.random, cachedNode),
+		})
+	}
+	return cachedNode.get(head)
+}
+
 //O(n) - O(n)
 var copyRandomList = function (head) {
 	const getCloneNode = (node) => {
@@ -482,7 +496,6 @@ var copyRandomList = function (head) {
 		}
 		return null
 	}
-
 	if (!head) return null
 	// Visited dictionary to hold old node reference as "key" and new node reference as the "value"
 	const visited = new Map()
@@ -492,44 +505,11 @@ var copyRandomList = function (head) {
 	while (oldNode) {
 		newNode.random = getCloneNode(oldNode.random)
 		newNode.next = getCloneNode(oldNode.next)
-
 		//move pointer forward,fill the attribute afterward
 		oldNode = oldNode.next
 		newNode = newNode.next
 	}
 	return visited.get(head)
-}
-
-//O(n) - O(1) 很难想出来
-var copyRandomList = function (head) {
-	if (!head) return null
-	let ptr = head
-	//A->A'->B->B'->C->C'
-	while (ptr != null) {
-		const newNode = new Node(ptr.val)
-		newNode.next = ptr.next
-		ptr.next = newNode
-		ptr = newNode.next
-	}
-	ptr = head
-	//link the random pointer
-	while (ptr != null) {
-		ptr.next.random = ptr.random != null ? ptr.random.next : null
-		ptr = ptr.next.next
-	}
-	// A->B->C
-	let ptrOldList = head,
-		// A'->B'->C'
-		ptrNewList = head.next
-	const headOld = head.next
-	//切断链接
-	while (ptrOldList != null) {
-		ptrOldList.next = ptrOldList.next.next
-		ptrNewList.next = ptrNewList.next != null ? ptrNewList.next.next : null
-		ptrOldList = ptrOldList.next
-		ptrNewList = ptrNewList.next
-	}
-	return headOld
 }
 ```
 

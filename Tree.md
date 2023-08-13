@@ -942,6 +942,7 @@ var isSymmetric = function (root) {
 //BFS
 var isSymmetric = function (root) {
 	if (!root) return true
+  //扩大参数
 	const queue = [root, root]
 	while (queue.length) {
 		//每次两两对比

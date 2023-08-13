@@ -104,8 +104,8 @@ var myPow = function (x, n) {
 ```javascript
 //brute force O(n^2)
 var majorityElement = function (nums) {
-	const len = nums.length,
-		count
+	const len = nums.length
+	count
 	for (let i = 0; i < len; i++) {
 		count = 0
 		for (let j = 0; j < len; j++) {
@@ -125,7 +125,7 @@ var majorityElement = function (nums) {
 
 //hash O(n)
 var majorityElement = function(nums) {
-  const map = {}
+  let map = {}
   const n = nums.length >> 1
   for(let i = 0; i < nums.length; i++){
       map[nums[i]] = map[nums[i]] !== undefined ? map[nums[i]] + 1 : 1
