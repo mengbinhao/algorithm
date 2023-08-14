@@ -620,15 +620,13 @@ var sortColors = function (nums) {
 	//前移0
 	for (let i = 0; i < len; i++) {
 		if (nums[i] === 0) {
-			;[nums[p], nums[i]] = [nums[i], nums[p]]
-			p++
+			;[nums[p++], nums[i]] = [nums[i], nums[p]]
 		}
 	}
 	//再前移1
 	for (let i = p; i < len; i++) {
 		if (nums[i] === 1) {
-			;[nums[p], nums[i]] = [nums[i], nums[p]]
-			p++
+			;[nums[p++], nums[i]] = [nums[i], nums[p]]
 		}
 	}
 	return nums
@@ -674,7 +672,7 @@ var removeDuplicates = function (nums) {
 ### [88.==合并两个有序数组 E==](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
-//可以使用额外的m+n空间像合并链表一样一个一个复制
+//可以使用额外的O(m + n)空间像合并链表一样一个一个复制
 
 //最直观的方法是先将数组合并再排序
 var merge = function (nums1, m, nums2, n) {
@@ -701,7 +699,7 @@ var merge = (nums1, m, nums2, n) => {
 		p2 = n - 1,
 		k = m + n - 1
 	//nums2全部复制完
-	//不能写成nums1[p] < nums2[q] ? nums2[q--] : nums1[p--] 死循环
+	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--]
 	while (p2 >= 0) nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
 }
 ```

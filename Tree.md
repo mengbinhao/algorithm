@@ -470,7 +470,7 @@ var largestValues = function (root) {
 }
 ```
 
-##### [199.二叉树的右视图](https://leetcode-cn.com/problems/binary-tree-right-side-view/)
+##### [199.==二叉树的右视图==](https://leetcode-cn.com/problems/binary-tree-right-side-view/)
 
 ```javascript {.line-numbers}
 //use queue
@@ -578,7 +578,7 @@ var isValidBST = function (root) {
 		root = stack.pop()
 		if (root.val <= prev) return false
 		//update prev
-		//if store node, prev.val maybe throw error
+		//if store node, root.val maybe throw error
 		prev = root.val
 		root = root.right
 	}
@@ -1226,7 +1226,7 @@ var widthOfBinaryTree = function (root) {
 }
 ```
 
-##### [543.二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
+##### [543.==二叉树的直径==](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
 
 ```javascript {.line-numbers}
 //每一条二叉树的「直径」长度，就是一个节点的左右子树的最大深度之和
@@ -1334,8 +1334,7 @@ var lowestCommonAncestor = function (root, p, q) {
 	if (root === p || root === q) return root
 	const lSon = lowestCommonAncestor(root.left, p, q)
 	const rSon = lowestCommonAncestor(root.right, p, q)
-	//下面两句合二为一
-	//return left === null ? right : right === null ? left : root
+	//return lSon === null ? rSon : rSon === null ? lSon : root
 	if (lSon && rSon) return root
 	return !lSon ? rSon : lSon
 }
@@ -1413,12 +1412,12 @@ var sumOfLeftLeaves = function (root) {
 ##### [112.==路径总和==](https://leetcode-cn.com/problems/path-sum/)
 
 ```javascript {.line-numbers}
-var hasPathSum = function (root, sum) {
+var hasPathSum = function (root, targetSum) {
 	if (!root) return false
-	if (!root.left && !root.right) return root.val === sum
+	if (!root.left && !root.right) return root.val === targetSum
 	return (
-		hasPathSum(root.left, sum - root.val) ||
-		hasPathSum(root.right, sum - root.val)
+		hasPathSum(root.left, targetSum - root.val) ||
+		hasPathSum(root.right, targetSum - root.val)
 	)
 }
 
@@ -1448,19 +1447,19 @@ var hasPathSum = function (root, sum) {
 ##### [113.==路径总和 II==](https://leetcode-cn.com/problems/path-sum-ii/)
 
 ```javascript {.line-numbers}
-var pathSum = function (root, sum) {
+var pathSum = function (root, targetSum) {
 	let ret = []
-	const dfs = (root, sum, path) => {
+	const dfs = (root, targetSum, path) => {
 		if (!root) return
 		path.push(root.val)
 		//due to array pass reference so add a copy
-		if (!root.left && !root.right && sum === root.val) ret.push([...path])
-		dfs(root.left, sum - root.val, path)
-		dfs(root.right, sum - root.val, path)
+		if (!root.left && !root.right && targetSum === root.val) ret.push([...path])
+		dfs(root.left, targetSum - root.val, path)
+		dfs(root.right, targetSum - root.val, path)
 		//backtrack
 		path.pop()
 	}
-	dfs(root, sum, [])
+	dfs(root, targetSum, [])
 	return ret
 }
 ```
@@ -1471,12 +1470,13 @@ var pathSum = function (root, sum) {
 var pathSum = function (root, sum) {
 	const dfs = (root, sum) => {
 		if (!root) return 0
-		let ret = 0
+		let cnt = 0
 		if (sum === root.val) ret++
-		ret += dfs(root.left, sum - root.val)
-		ret += dfs(root.right, sum - root.val)
-		return ret
+		cnt += dfs(root.left, sum - root.val)
+		cnt += dfs(root.right, sum - root.val)
+		return cnt
 	}
+  //双递归
 	return !root
 		? 0
 		: dfs(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum)
@@ -1490,7 +1490,7 @@ var maxPathSum = function (root) {
 	let ret = Number.MIN_SAFE_INTEGER
 	const dfs = (root) => {
 		if (!root) return 0
-		//if negative, then return 0 to outerSum
+		//只有在最大贡献值大于 0 时，才会选取对应子节点
 		const left = Math.max(dfs(root.left), 0)
 		const right = Math.max(dfs(root.right), 0)
 		//update innerSum = left + right + root.val
@@ -1525,7 +1525,7 @@ var buildTree = function (preorder, inorder) {
 	const preLen = preorder.length,
 		inLen = inorder.length
 	if (preLen !== inLen) throw new TypeError('invalid params')
-	const map = new Map()
+	let map = new Map()
 	//space for time
 	//get inorder idx from preorder value
 	//note question: no same value Node, which means can form just one specific tree
@@ -1667,25 +1667,21 @@ var constructMaximumBinaryTree = function (nums) {
 }
 ```
 
-##### [114.二叉树展开为链表](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/)
+##### [114.==二叉树展开为链表==](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/)
 
 ```javascript {.line-numbers}
 var flatten = function (root) {
 	if (!root) return
 	flatten(root.left)
 	flatten(root.right)
-
 	const left = root.left
+  //原本的right
 	const right = root.right
-
 	root.left = null
 	root.right = left
-
 	//原先右子树接到当前右子树的末端
 	let p = root
-	while (p.right) {
-		p = p.right
-	}
+	while (p.right) p = p.right
 	p.right = right
 }
 ```
