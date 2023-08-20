@@ -571,46 +571,6 @@ var setZeroes = function (matrix) {
 }
 ```
 
-### [74.搜索二维矩阵](https://leetcode.cn/problems/search-a-2d-matrix/)
-
-```javascript
-var searchMatrix = function (matrix, target) {
-	const rowIndex = binarySearchFirstColumn(matrix, target)
-	if (rowIndex < 0) return false
-	return binarySearchRow(matrix[rowIndex], target)
-}
-
-const binarySearchFirstColumn = (matrix, target) => {
-	let low = 0,
-		high = matrix.length - 1
-	while (low <= high) {
-		const mid = Math.floor((high + low) / 2)
-		if (matrix[mid][0] <= target) {
-			low = mid + 1
-		} else {
-			high = mid - 1
-		}
-	}
-	return high
-}
-
-const binarySearchRow = (row, target) => {
-	let low = 0,
-		high = row.length - 1
-	while (low <= high) {
-		const mid = Math.floor((high - low) / 2) + low
-		if (row[mid] == target) {
-			return true
-		} else if (row[mid] > target) {
-			high = mid - 1
-		} else {
-			low = mid + 1
-		}
-	}
-	return false
-}
-```
-
 ### [75.==颜色分类 M==](https://leetcode-cn.com/problems/sort-colors/)
 
 ```javascript

@@ -281,9 +281,14 @@ var search = function (nums, target) {
 }
 ```
 
-#### [34.在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+#### [34.==在排序数组中查找元素的第一个和最后一个位置==](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
 ```javascript {.line-numbers}
+//brute force  O(n) - O(1)
+//遍历一次，检查遍历元素是否等于target，第一个遇到的就是开始的位置
+//再遍历一次，检查遍历元素刚好不等于target，这个元素的前一个位置就是结束的位置
+
+
 const binarySearch = (nums, target, lower) => {
 	let l = 0,
 		r = nums.length - 1,
@@ -301,9 +306,9 @@ const binarySearch = (nums, target, lower) => {
 }
 
 var searchRange = function (nums, target) {
-	const ret = [-1, -1]
-	const leftIdx = binarySearch(nums, target, true)
-	const rightIdx = binarySearch(nums, target, false) - 1
+	let ret = [-1, -1]
+	let leftIdx = binarySearch(nums, target, true)
+	let rightIdx = binarySearch(nums, target, false) - 1
 	if (
 		leftIdx <= rightIdx &&
 		rightIdx < nums.length &&
@@ -313,6 +318,94 @@ var searchRange = function (nums, target) {
 		ret = [leftIdx, rightIdx]
 	}
 	return ret
+}
+
+//Not pass!!!
+var searchRange = function (nums, target) {
+	const findFirstPosition = (nums, target) => {
+		let l = 0,
+			r = nums.length - 1,
+			mid
+		while (l < r) {
+			mid = Math.floor((l + r) / 2)
+			if (nums[mid] < target) {
+				//下轮搜索[mid + 1, r]
+				l = mid + 1
+			} else if (nums[mid] < target) {
+				//下轮搜索[l, mid]
+				r = mid
+			} else {
+				//下轮搜索[l, mid - 1]
+				r = mid - 1
+			}
+		}
+		if (nums[l] === target) return l
+		return -1
+	}
+
+	const findLastPosition = (nums, target) => {
+		let l = 0,
+			r = nums.length - 1,
+			mid
+		while (l < r) {
+			mid = Math.floor((l + r + 1) / 2)
+			if (nums[mid] < target) {
+				//下轮搜索[mid + 1, r]
+				l = mid + 1
+			} else if (nums[mid] < target) {
+				//下轮搜索[mid, r]
+				l = mid
+			} else {
+				//下轮搜索[l, mid - 1]
+				r = mid - 1
+			}
+		}
+		return l
+	}
+	let ret = [-1, -1]
+	const len = nums.length
+	if (len === 0) return ret
+	const firstPosition = findFirstPosition(nums, target)
+	if (firstPosition === -1) return ret
+	const lastPosition = findLastPosition(nums, target)
+	return [firstPosition, lastPosition]
+}
+```
+
+#### [35. ==搜索插入位置==](https://leetcode.cn/problems/search-insert-position/)
+
+```javascript
+var searchInsert = function (nums, target) {
+	const len = nums.length
+	let l = 0,
+		r = len - 1,
+		mid
+	while (l <= r) {
+		mid = ((r - l) >> 1) + l
+		if (nums[mid] === target) {
+			return mid
+		} else if (nums[mid] > target) {
+			r = mid - 1
+		} else {
+			l = mid + 1
+		}
+	}
+	return l
+}
+
+var searchInsert = function(nums, target) {
+  const len = nums.length
+  let l = 0, r = len - 1, ret
+  while (l <= r) {
+    mid = Math.floor((l + r) / 2)
+    if (nums[mid] >= target) {
+      ret = mid
+      r = mid - 1
+    } else {
+      l = mid + 1
+    }
+  }
+  return l
 }
 ```
 
@@ -336,6 +429,66 @@ var mySqrt = function (x) {
 	}
 	//返回较小值
 	return r
+}
+```
+
+#### [74.==搜索二维矩阵==](https://leetcode.cn/problems/search-a-2d-matrix/)
+
+```javascript
+//对矩阵的第一列的元素二分查找，找到最后一个不大于目标值的元素
+//然后在该元素所在行中二分查找目标值是否存在
+var searchMatrix = function (matrix, target) {
+	const rowIndex = binarySearchFirstColumn(matrix, target)
+	if (rowIndex < 0) return false
+	return binarySearchRow(matrix[rowIndex], target)
+}
+
+const binarySearchFirstColumn = (matrix, target) => {
+	let low = 0,
+		high = matrix.length - 1
+	while (low <= high) {
+		const mid = Math.floor((high + low) / 2)
+		if (matrix[mid][0] <= target) {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	return high
+}
+
+const binarySearchRow = (row, target) => {
+	let low = 0,
+		high = row.length - 1
+	while (low <= high) {
+    //??????????????
+		const mid = Math.floor((high - low) / 2) + low
+		if (row[mid] == target) {
+			return true
+		} else if (row[mid] > target) {
+			high = mid - 1
+		} else {
+			low = mid + 1
+		}
+	}
+	return false
+}
+
+//左下角坐标轴法 better
+var findNumberIn2DArray = function (matrix, target) {
+	if (!matrix.length) return false
+	let x = matrix.length - 1,
+		y = 0
+	while (x >= 0 && y < matrix[0].length) {
+		if (matrix[x][y] === target) {
+			return true
+		} else if (matrix[x][y] > target) {
+			x--
+		} else {
+			y++
+		}
+	}
+	return false
 }
 ```
 
@@ -403,10 +556,9 @@ var findMin = function (nums) {
 
 //better
 var findMin = function (nums) {
-	let l = 0
-	let r = nums.length - 1
+	let l = 0, r = nums.length - 1, mid
 	while (l < r) {
-		const mid = l + Math.floor((r - l) / 2)
+		mid = l + Math.floor((r - l) / 2)
 		//所有数据不重复，即不存在(nums[mid] === nums[r]的情况
 		//看右边
 		if (nums[mid] < nums[r]) {

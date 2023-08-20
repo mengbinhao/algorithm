@@ -447,18 +447,17 @@ var calculate = function (s) {
 
 ```javascript {.line-numbers}
 var decodeString = function (s) {
-	const isNumber = (val) => typeof +val === 'number' && val === val
+  //第二个判断repeatCount的时候排除NaN
+	const isNumber = (val) => typeof val === 'number' && val === val
 	const stack = []
 	for (let c of s) {
 		if (c === ']') {
 			let repeatStr = '',
 				repeatCount = ''
-			//一直加到[
 			while (stack.length > 0 && stack[stack.length - 1] !== '[')
 				repeatStr = stack.pop() + repeatStr
 			//pop [
 			stack.pop()
-			//['aaa', '2' ...]
 			while (stack.length > 0 && isNumber(+stack[stack.length - 1]))
 				repeatCount = stack.pop() + repeatCount
 			stack.push(repeatStr.repeat(+repeatCount))
@@ -533,6 +532,30 @@ var maxSlidingWindow = function (nums, k) {
 		deque.push(i)
 		//开始检查结果
 		if (i >= k - 1) ret.push(nums[deque[0]])
+	}
+	return ret
+}
+```
+
+[739.==每日温度==](https://leetcode.cn/problems/daily-temperatures/)
+
+```javascript
+//brute force O(n2)
+
+//stack 单调递减栈
+var dailyTemperatures = function (temperatures) {
+	const len = temperatures.length
+	let ret = new Array(len).fill(0),
+		stack = []
+	for (let i = 0; i < len; i++) {
+		while (
+			stack.length &&
+			temperatures[i] > temperatures[stack[stack.length - 1]]
+		) {
+			const idx = stack.pop()
+			ret[idx] = i - idx
+		}
+		stack.push(i)
 	}
 	return ret
 }

@@ -288,6 +288,7 @@ var permute = function (nums) {
 			path.pop()
 		}
 	}
+  //签名可以是dfs(nums, []), terminate是path.length >= nums.length
 	dfs(0, [])
 	return ret
 }
@@ -322,6 +323,53 @@ var permuteUnique = function (nums) {
 	}
 	dfs(nums, 0, [], visited)
 	return ret
+}
+```
+
+### [79.==单词搜索==](https://leetcode.cn/problems/word-search)
+
+```javascript
+var exist = function (board, word) {
+	const rows = board.length
+	const cols = board[0].length
+	let directions = [
+		[0, 1],
+		[0, -1],
+		[1, 0],
+		[-1, 0],
+	]
+	let visited = Array.from({ length: rows }, () => new Array(cols).fill(false))
+	const search = (i, j, k) => {
+		if (board[i][j] !== word[k]) {
+			return false
+		} else if (k === word.length - 1) {
+			return true
+		}
+		visited[i][j] = true
+		let result = false
+		for (let [x, y] of directions) {
+			let newi = i + x,
+				newy = j + y
+			if (newi >= 0 && newi < rows && newy >= 0 && newy < cols) {
+				if (!visited[newi][newy]) {
+					if (search(newi, newy, k + 1)) {
+						result = true
+						break
+					}
+				}
+			}
+		}
+		//backtrack
+		visited[i][j] = false
+		return result
+	}
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			//找到第一个解即返回
+			if (search(i, j, 0)) return true
+		}
+	}
+	return false
 }
 ```
 
@@ -565,6 +613,43 @@ var solve = function (board) {
 		dfs(board, i, j + 1, row, col)
 	}
 	return board
+}
+```
+
+### [131.==分割回文串==](https://leetcode.cn/problems/palindrome-partitioning/)
+
+```javascript
+var partition = function (s) {
+	const dfs = (i, path) => {
+		if (i === len) {
+			ret.push([...path])
+			return
+		}
+		for (let j = i; j < len; ++j) {
+			if (isPalindrome(i, j) === 1) {
+				path.push(s.slice(i, j + 1))
+				dfs(j + 1, path)
+				path.pop()
+			}
+		}
+	}
+	// 记忆化搜索中，cache[i][j] = 0 表示未搜索，1 表示是回文串，-1 表示不是回文串
+	const isPalindrome = (i, j) => {
+		if (cache[i][j] !== 0) return cache[i][j]
+		if (i >= j) {
+			cache[i][j] = 1
+		} else if (s[i] === s[j]) {
+			cache[i][j] = isPalindrome(i + 1, j - 1)
+		} else {
+			cache[i][j] = -1
+		}
+		return cache[i][j]
+	}
+	const len = s.length
+	let ret = []
+	let cache = new Array(len).fill(0).map(() => new Array(len).fill(0))
+	dfs(0, [])
+	return ret
 }
 ```
 
