@@ -155,7 +155,7 @@ MinStack.prototype.getMin = function () {
 }
 ```
 
-### [208.实现 Trie](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+### [208.==实现 Trie== - 前缀树](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```javascript {.line-numbers}
 var TrieNode = function () {
@@ -170,24 +170,23 @@ var Trie = function () {
 }
 
 Trie.prototype.insert = function (word) {
-	if (!word) return false
+	if (!word) return
 	let node = this.root
-	for (let i = 0; i < word.length; i++) {
-		if (!node.next[word[i]]) node.next[word[i]] = new TrieNode()
-		node = node.next[word[i]]
+	for (let c of word) {
+		if (!node.next[c]) node.next[c] = new TrieNode()
+		node = node.next[c]
 	}
 	node.isEnd = true
-	return true
 }
 
 Trie.prototype.search = function (word) {
 	if (!word) return false
 	let node = this.root
-	for (let i = 0; i < word.length; i++) {
-		if (node.next[word[i]]) {
-			node = node.next[word[i]]
-		} else {
+	for (let c of word) {
+		if (!node.next[c]) {
 			return false
+		} else {
+			node = node.next[c]
 		}
 	}
 	return node.isEnd
@@ -196,11 +195,11 @@ Trie.prototype.search = function (word) {
 Trie.prototype.startsWith = function (prefix) {
 	if (!prefix) return true
 	let node = this.root
-	for (let i = 0; i < prefix.length; i++) {
-		if (node.next[prefix[i]]) {
-			node = node.next[prefix[i]]
-		} else {
+	for (let c of prefix) {
+		if (!node.next[c]) {
 			return false
+		} else {
+			node = node.next[c]
 		}
 	}
 	return true

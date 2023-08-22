@@ -228,10 +228,10 @@ var jump = function (nums) {
 		start = 0,
 		end = 1
 	while (end < len) {
-		let maxPos = 0
-		for (let i = start; i < end; i++) maxPos = Math.max(maxPos, i + nums[i])
+		let maxPosion = 0
+		for (let i = start; i < end; i++) maxPosion = Math.max(maxPosion, i + nums[i])
 		start = end // 下一次起跳点开始格子
-		end = maxPos + 1 //此步避免多跳一次
+		end = maxPosion + 1 //此步避免多跳一次
 		steps++
 	}
 	return steps
@@ -686,38 +686,6 @@ var merge = (nums1, m, nums2, n) => {
 	//nums2全部复制完
 	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--]
 	while (p2 >= 0) nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
-}
-```
-
-### [118. ==杨辉三角==](https://leetcode-cn.com/problems/pascals-triangle/)
-
-```javascript
-var generate = function (numRows) {
-	let ret = []
-	for (let i = 0; i < numRows; i++) {
-		const curRow = new Array(i + 1).fill(1)
-		for (let j = 1; j < curRow.length - 1; j++) {
-			curRow[j] = ret[i - 1][j - 1] + ret[i - 1][j]
-		}
-		ret.push(curRow)
-	}
-	return ret
-}
-
-var generate = function (numRows) {
-	let triangle = []
-	for (let i = 0; i < numRows; i++) {
-		let curRow = []
-		curRow[0] = 1
-		curRow[i] = 1
-		//if (i > 1) {
-			for (let j = 1; j < i; j++) {
-				curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
-			}
-		//}
-		triangle.push(curRow)
-	}
-	return triangle
 }
 ```
 

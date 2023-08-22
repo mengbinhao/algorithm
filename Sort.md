@@ -137,8 +137,7 @@ const quick = (arr) => {
 	const len = arr.length
 	if (len < 2) return arr
 	const partition = (arr, l, r) => {
-		//设最右边为pivot
-		//const pivot = r
+		//const pivot = r   另一种解法
     const pivot = arr[r]
 		let index = l
 		for (let i = index; i < r; i++) {

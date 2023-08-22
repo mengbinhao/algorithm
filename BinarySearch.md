@@ -49,7 +49,7 @@ const binarySearch = (arr, target) => {
 	//Note 2
 	while (l <= r) {
 		//Maybe note
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		if (arr[mid] === target) {
 			return mid
 		} else if (arr[mid] < target) {
@@ -75,7 +75,7 @@ const binarySearchLeftBound = (arr, target) => {
 		r = len - 1,
      mid
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -106,7 +106,7 @@ const binarySearch = (arr, target) => {
 		r = len - 1,
       mid
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -133,7 +133,7 @@ const binarySearch = (arr, target) => {
 		r = arr.length - 1,
 		mid
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		if (arr[mid] >= target) {
 			if (mid === 0 || arr[mid - 1] < target) {
 				return mid
@@ -157,7 +157,7 @@ const binarySearch = (arr, target) => {
 		r = len - 1,
 		mid
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		if (arr[mid] <= target) {
 			if (mid === len - 1 || arr[mid + 1] > target) {
 				return mid
@@ -184,7 +184,7 @@ const leftBound = (arr, target) => {
       mid
 	//Note 2
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		if (arr[mid] < target) {
 			//Note 3
 			l = mid + 1
@@ -230,7 +230,7 @@ const rightBound = (arr, target) => {
 		r = arr.length - 1,
       mid
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		if (arr[mid] < target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
@@ -288,39 +288,60 @@ var search = function (nums, target) {
 //遍历一次，检查遍历元素是否等于target，第一个遇到的就是开始的位置
 //再遍历一次，检查遍历元素刚好不等于target，这个元素的前一个位置就是结束的位置
 
-
-const binarySearch = (nums, target, lower) => {
+//template version
+const findFirstPosition = (arr, target) => {
 	let l = 0,
-		r = nums.length - 1,
-		ret = nums.length
+		r = len - 1,
+		mid
 	while (l <= r) {
-		const mid = Math.floor((l + r) / 2)
-		if (nums[mid] > target || (lower && nums[mid] >= target)) {
-			r = mid - 1
-			ret = mid
-		} else {
+		mid = Math.floor((r - l) / 2 + l)
+		if (arr[mid] < target) {
 			l = mid + 1
+		} else if (arr[mid] > target) {
+			r = mid - 1
+		} else {
+			if (mid === 0 || arr[mid - 1] !== target) {
+				return mid
+			} else {
+				r = mid - 1
+			}
 		}
 	}
-	return ret
+	return -1
+}
+
+const findLastPosition = (arr, target) => {
+	let l = 0,
+		r = len - 1,
+		mid
+	while (l <= r) {
+		mid = Math.floor((r - l) / 2 + l)
+		if (arr[mid] < target) {
+			l = mid + 1
+		} else if (arr[mid] > target) {
+			r = mid - 1
+		} else {
+			if (mid === len - 1 || arr[mid + 1] !== target) {
+				return mid
+			} else {
+				l = mid + 1
+			}
+		}
+	}
+	return -1
 }
 
 var searchRange = function (nums, target) {
 	let ret = [-1, -1]
-	let leftIdx = binarySearch(nums, target, true)
-	let rightIdx = binarySearch(nums, target, false) - 1
-	if (
-		leftIdx <= rightIdx &&
-		rightIdx < nums.length &&
-		nums[leftIdx] === target &&
-		nums[rightIdx] === target
-	) {
-		ret = [leftIdx, rightIdx]
-	}
-	return ret
+	const len = nums.length
+	if (len === 0) return ret
+	const firstPosition = findFirstPosition(nums, target)
+	if (firstPosition === -1) return ret
+	const lastPosition = findLastPosition(nums, target)
+	return [firstPosition, lastPosition]
 }
 
-//Not pass!!!
+//official version
 var searchRange = function (nums, target) {
 	const findFirstPosition = (nums, target) => {
 		let l = 0,
@@ -331,7 +352,7 @@ var searchRange = function (nums, target) {
 			if (nums[mid] < target) {
 				//下轮搜索[mid + 1, r]
 				l = mid + 1
-			} else if (nums[mid] < target) {
+			} else if (nums[mid] === target) {
 				//下轮搜索[l, mid]
 				r = mid
 			} else {
@@ -352,7 +373,7 @@ var searchRange = function (nums, target) {
 			if (nums[mid] < target) {
 				//下轮搜索[mid + 1, r]
 				l = mid + 1
-			} else if (nums[mid] < target) {
+			} else if (nums[mid] === target) {
 				//下轮搜索[mid, r]
 				l = mid
 			} else {
@@ -393,9 +414,10 @@ var searchInsert = function (nums, target) {
 	return l
 }
 
+//better
 var searchInsert = function(nums, target) {
   const len = nums.length
-  let l = 0, r = len - 1, ret
+  let l = 0, r = len - 1, ret = len
   while (l <= r) {
     mid = Math.floor((l + r) / 2)
     if (nums[mid] >= target) {
@@ -461,8 +483,7 @@ const binarySearchRow = (row, target) => {
 	let low = 0,
 		high = row.length - 1
 	while (low <= high) {
-    //??????????????
-		const mid = Math.floor((high - low) / 2) + low
+		const mid = Math.floor((high + low) / 2)
 		if (row[mid] == target) {
 			return true
 		} else if (row[mid] > target) {
@@ -474,7 +495,7 @@ const binarySearchRow = (row, target) => {
 	return false
 }
 
-//左下角坐标轴法 better
+//better 左下角坐标轴法 
 var findNumberIn2DArray = function (matrix, target) {
 	if (!matrix.length) return false
 	let x = matrix.length - 1,
@@ -540,7 +561,7 @@ var findMin = function (nums) {
 	//in case array is a sorted array
 	if (nums[r] > nums[l]) return nums[0]
 	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
+		mid = Math.floor((r - l) / 2 + l)
 		//judge according to nums[mid]
 		if (nums[mid] < nums[mid - 1]) return nums[mid]
 		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]

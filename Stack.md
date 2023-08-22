@@ -537,7 +537,7 @@ var maxSlidingWindow = function (nums, k) {
 }
 ```
 
-[739.==每日温度==](https://leetcode.cn/problems/daily-temperatures/)
+### [739.==每日温度==](https://leetcode.cn/problems/daily-temperatures/)
 
 ```javascript
 //brute force O(n2)
@@ -549,7 +549,7 @@ var dailyTemperatures = function (temperatures) {
 		stack = []
 	for (let i = 0; i < len; i++) {
 		while (
-			stack.length &&
+			stack.length > 0 &&
 			temperatures[i] > temperatures[stack[stack.length - 1]]
 		) {
 			const idx = stack.pop()

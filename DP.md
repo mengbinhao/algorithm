@@ -175,7 +175,7 @@ var longestValidParentheses = function (s) {
 	let ret = 0
 	//dp[i] 表示以下标i字符结尾的最长有效括号的长度
 	//初始化成0也符合base case，比如当前字符为左括号肯定是0
-	const dp = new Array(len).fill(0)
+	let dp = new Array(len).fill(0)
 	for (let i = 1; i < len; i++) {
 		//符合语义再推
 		if (s[i] === ')') {
@@ -557,17 +557,18 @@ var minimumTotal = function (triangle) {
 var maxProduct = function (nums) {
 	let len = nums.length
 	if (len === 0) return 0
-	const maxDP = [...nums],
-		minDP = [...nums]
+  //let maxDP = [...nums],
+	//minDP = [...nums]
+	let maxDP = new Array(len)
+  maxDP[0] = nums[0]
+	let minDP = new Array(len)
+  minDP[0] = nums[0]
 	for (let i = 1; i < len; i++) {
-		//由本次乘积，最小dp乘nums[i]，nums[i]共同推出
 		maxDP[i] = Math.max(maxDP[i - 1] * nums[i], nums[i], minDP[i - 1] * nums[i])
 		minDP[i] = Math.min(minDP[i - 1] * nums[i], nums[i], maxDP[i - 1] * nums[i])
 	}
 	let ret = maxDP[0]
-	for (let i = 1; i < len; i++) {
-		ret = Math.max(ret, maxDP[i])
-	}
+	for (let i = 1; i < len; i++) ret = Math.max(ret, maxDP[i])
 	return ret
 }
 
@@ -627,9 +628,8 @@ var lengthOfLIS = function (nums) {
 	if (len === 0) return 0
 	//定义dp[i]以nums[i]結尾最长递增子序列的长度
 	//nums[i]必须被选取,所以初始化为1
-	const dp = new Array(len).fill(1)
-	let ret = 1
-	//dp[i]=max(dp[0…i−1])+1,其中0≤j<i且num[j]<num[i]
+	let dp = new Array(len).fill(1), ret = 1
+	//dp[i] = max(dp[0…i−1]) + 1,其中0 ≤ j < i且num[j] < num[i]
 	for (let i = 1; i < len; i++) {
 		for (let j = 0; j < i; j++) {
 			if (nums[i] > nums[j]) dp[i] = Math.max(dp[i], dp[j] + 1)
@@ -801,11 +801,9 @@ var rob = function (nums) {
 	if (len === 0) return 0
 	if (len === 1) return nums[0]
 	//dp[i] 表示考虑下标i所能偷窃到的最高总金额
-	const dp = new Array(len)
+	let dp = new Array(len)
 	;(dp[0] = nums[0]), (dp[1] = Math.max(nums[0], nums[1]))
-	for (let i = 2; i < len; i++) {
-		dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i])
-	}
+	for (let i = 2; i < len; i++) dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i])
 	return dp[len - 1]
 }
 
@@ -927,6 +925,23 @@ var longestPalindromeSubseq = function (s) {
 
 # 背包 DP
 
+### 279. [==完全平方数==](https://leetcode.cn/problems/perfect-squares/)
+
+```javascript
+var numSquares = function (n) {
+  //正整数n类比背包
+  //1、4、9、、16...类比物品
+	let dp = [...Array(n + 1)].map((_) => Infinity)
+  dp[0] = 0
+	for (let i = 1; i * i <= n; i++) {
+		for (let j = i * i; j <= n; j++) {
+			dp[j] = Math.min(dp[j], dp[j - i * i] + 1)
+		}
+	}
+	return dp[n]
+}
+```
+
 ### [322. ==零钱兑换==](https://leetcode-cn.com/problems/coin-change/)
 
 ```javascript {.line-numbers}
@@ -1009,7 +1024,7 @@ const coinChange = (coins, amount) => {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
 	//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数即可,防止歧义初始化成Infinity
-	const dp = Array(amount + 1).fill(Infinity)
+	let dp = Array(amount + 1).fill(Infinity)
 	//当i = 0时无法用硬币组成
 	dp[0] = 0
 	for (let i = 0; i < coins.length; i++) {
@@ -1052,8 +1067,9 @@ var canPartition = function (nums) {
 	//和为奇数时，不可能划分成两个和相等的集合
 	if (sum & 1) return false
 	sum = sum / 2
-	const dp = Array(sum + 1).fill(0)
+	let dp = Array(sum + 1).fill(0)
 	for (let i = 0, len = nums.length; i < len; i++) {
+    //背包倒序遍历
 		for (let j = sum; j >= nums[i]; j--) {
 			dp[j] = Math.max(dp[j], dp[j - nums[i]] + nums[i])
 		}
@@ -1239,7 +1255,7 @@ var climbStairs = function (n) {
 	if (n <= 2) return n
 	//dp[i]表示爬到第i级台阶的方案数
 	//直接忽视dp[0]的定义，从3开始循环更符合人类的思维模式
-	const dp = new Array(n + 1)
+	let dp = new Array(n + 1)
 	dp[1] = 1
 	dp[2] = 2
 	for (let i = 3; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2]
@@ -1248,7 +1264,6 @@ var climbStairs = function (n) {
 
 //O(n) - O(1)
 var climbStairs = function (n) {
-	//特判
 	if (n <= 2) return n
 	let first = 1,
 		second = 2,
@@ -1259,6 +1274,36 @@ var climbStairs = function (n) {
 		second = third
 	}
 	return third
+}
+```
+
+### [118. ==杨辉三角==](https://leetcode-cn.com/problems/pascals-triangle/)
+
+```javascript
+var generate = function (numRows) {
+	let ret = []
+	for (let i = 0; i < numRows; i++) {
+		let curRow = new Array(i + 1).fill(1)
+		for (let j = 1; j < curRow.length - 1; j++) curRow[j] = ret[i - 1][j - 1] + ret[i - 1][j]
+		ret.push(curRow)
+	}
+	return ret
+}
+
+var generate = function (numRows) {
+	let triangle = []
+	for (let i = 0; i < numRows; i++) {
+		let curRow = []
+		curRow[0] = 1
+		curRow[i] = 1
+		//if (i > 1) {
+			for (let j = 1; j < i; j++) {
+				curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
+			}
+		//}
+		triangle.push(curRow)
+	}
+	return triangle
 }
 ```
 

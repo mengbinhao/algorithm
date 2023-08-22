@@ -677,69 +677,63 @@ var findTargetSumWays = function (nums, target) {
 
 ```javascript {.line-numbers}
 //DFS
-var numIslands = function (grid) {
-	let ret = 0
-	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
-	const row = grid.length,
-		col = grid[0].length
-	const dfs = (grid, i, j, row, col) => {
-		if (i < 0 || j < 0 || i >= row || j >= col || grid[i][j] === '0') return
-		//marked as zero
-		grid[i][j] = '0'
-		dfs(grid, i + 1, j, row, col)
-		dfs(grid, i, j + 1, row, col)
-		dfs(grid, i - 1, j, row, col)
-		dfs(grid, i, j - 1, row, col)
-	}
-	for (let i = 0; i < row; i++) {
-		for (let j = 0; j < col; j++) {
-			if (grid[i][j] === '1') {
-				ret++
-				dfs(grid, i, j, row, col)
-			}
-		}
-	}
-	return ret
+var numIslands = function(grid) {
+  const rows = grid.length
+  const cols = grid[0].length
+  let cnt = 0
+  const dfs = (grid , i, j) => {
+    if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] === '0') return
+    //marked as zero, in case endless
+    grid[i][j] = '0'
+    dfs(grid, i + 1, j)
+    dfs(grid, i, j + 1)
+    dfs(grid, i - 1, j)
+    dfs(grid, i, j - 1)
+  }
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (grid[i][j] === '1') {
+        dfs(grid, i, j)
+        cnt++
+      }
+    }
+  }
+  return cnt
 }
 
 //BFS
 var numIslands = function (grid) {
 	let ret = 0
 	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
-	const m = grid.length,
-		n = grid[0].length
-	for (let i = 0; i < m; i++) {
-		for (let j = 0; j < n; j++) {
+	const rows = grid.length,
+		cols = grid[0].length
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
 			if (grid[i][j] === '1') {
 				ret++
-				//marked as zero
 				grid[i][j] = 0
 				//store each level's item
-				const queue = []
+				let queue = []
 				//二维转一维
-				//queue.add(i * n + j)
+				//queue.add(i * rows + j)
 				queue.push([i, j])
 				while (queue.length > 0) {
 					const cur = queue.shift(),
 						x = cur[0],
 						y = cur[1]
-					//往左
 					if (x - 1 >= 0 && grid[x - 1][y] === 1) {
 						queue.push([x - 1, y])
 						grid[x - 1][y] = 0
 					}
-					//往右
-					if (x + 1 < m && grid[x + 1][y] === 1) {
+					if (x + 1 < rows && grid[x + 1][y] === 1) {
 						queue.push([x + 1, y])
 						grid[x + 1][y] = 0
 					}
-					//往上
 					if (y - 1 >= 0 && grid[x][y - 1] === 1) {
 						queue.push([x, y - 1])
 						grid[x][y - 1] = 0
 					}
-					//往下
-					if (y + 1 < n && grid[x][y + 1] === 1) {
+					if (y + 1 < cols && grid[x][y + 1] === 1) {
 						queue.push([x, y + 1])
 						grid[x][y + 1] = 0
 					}
