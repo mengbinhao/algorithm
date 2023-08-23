@@ -107,7 +107,7 @@ var longestPalindrome = function (s) {
 	if (len < 2) return s
 	//dp[i][j] 表示从i到j的子串是否是回文
 	//初始化成符合语义的false
-	const dp = Array.from({ length: len }, () => new Array(len).fill(false))
+	let dp = Array.from({ length: len }, () => new Array(len).fill(false))
 	let begin = 0,
 		maxLen = 1
 	//对角线等于true的case未用到,下列可以忽略不写
@@ -358,18 +358,11 @@ var minPathSum = function (grid) {
 		cols = grid[0].length
 	if (rows === 0 || cols === 0) return 0
 	//dp[i][j]表示从(i,j)走到(m-1, n-1)点的最小路径和,初始化成大数
-	const dp = Array.from({ length: rows }, () => new Array(cols).fill(Infinity))
+	let dp = Array.from({ length: rows }, () => new Array(cols).fill(Infinity))
 	//base case
 	dp[0][0] = grid[0][0]
-	//第一列
-	for (let i = 1; i < rows; i++) {
-		dp[i][0] = dp[i - 1][0] + grid[i][0]
-	}
-	//第一行
-	for (let j = 1; j < cols; j++) {
-		dp[0][j] = dp[0][j - 1] + grid[0][j]
-	}
-	//其他单元格
+	for (let i = 1; i < rows; i++) dp[i][0] = dp[i - 1][0] + grid[i][0]
+	for (let j = 1; j < cols; j++) dp[0][j] = dp[0][j - 1] + grid[0][j]
 	for (let i = 1; i < rows; i++) {
 		for (let j = 1; j < cols; j++) {
 			dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
@@ -385,7 +378,7 @@ var minPathSum = function (grid) {
 		cols = grid[0].length
 	if (!rows || !cols) return 0
 	//滚动行
-	const dp = new Array(cols).fill(Infinity)
+	let dp = new Array(cols).fill(Infinity)
 	dp[0] = grid[0][0]
 	//先更新行，再更新每行第一列，再更新其他行和列
 	for (let i = 0; i < rows; i++) {
@@ -413,7 +406,7 @@ var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
 	//dp[i][j] 表示word1的前i - 1个字母和word2的前j - 1个字母之间的最少操作次数
-	const dp = Array.from({ length: m + 1 }, () => new Array(n + 1))
+	let dp = Array.from({ length: m + 1 }, () => new Array(n + 1))
 	//一个空串和一个非空串的编辑距离为dp[i][0] = i、dp[0][j] = j,dp[i][0]相当于对word1执行i次删除操作
 	for (let i = 0; i <= m; i++) dp[i][0] = i
 	//dp[0][j]相当于对word1执行j次插入操作
@@ -436,7 +429,7 @@ var minDistance = function (word1, word2) {
 	const m = word1.length,
 		n = word2.length
 	//滚动列
-	const dp = new Array(n + 1)
+	let dp = new Array(n + 1)
 	//第一列
 	for (let j = 0; j <= n; j++) dp[j] = j
 	for (let i = 1; i <= m; i++) {
@@ -550,7 +543,7 @@ var minimumTotal = function (triangle) {
 }
 ```
 
-### [152. 乘积最大子数组](https://leetcode-cn.com/problems/maximum-product-subarray/)
+### [152. ==乘积最大子数组==](https://leetcode-cn.com/problems/maximum-product-subarray/)
 
 ```javascript {.line-numbers}
 //O(n) - O(n)
@@ -559,6 +552,7 @@ var maxProduct = function (nums) {
 	if (len === 0) return 0
   //let maxDP = [...nums],
 	//minDP = [...nums]
+  //根据递推公式需维护两个状态数组
 	let maxDP = new Array(len)
   maxDP[0] = nums[0]
 	let minDP = new Array(len)
@@ -619,7 +613,7 @@ var maximalSquare = (matrix) => {
 }
 ```
 
-### [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+### [300. ==最长递增子序列==](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
 ```javascript {.line-numbers}
 //O(n^2) - O(n)
@@ -630,7 +624,9 @@ var lengthOfLIS = function (nums) {
 	//nums[i]必须被选取,所以初始化为1
 	let dp = new Array(len).fill(1), ret = 1
 	//dp[i] = max(dp[0…i−1]) + 1,其中0 ≤ j < i且num[j] < num[i]
+  //起点
 	for (let i = 1; i < len; i++) {
+    //结束点
 		for (let j = 0; j < i; j++) {
 			if (nums[i] > nums[j]) dp[i] = Math.max(dp[i], dp[j] + 1)
 		}
@@ -774,7 +770,7 @@ var longestCommonSubsequence = function (text1, text2) {
 	const m = text2.length
 	//dp[i][j]表示text1[0:i - 1]和text2[0:j - 1]的最長公共子序列的長度
 	//直接第一行和第一列赋值base case为0,第一行第一列代表的是空,下面也不需要判断越界
-	const dp = Array.from(new Array(n + 1), () => new Array(m + 1).fill(0))
+	let dp = Array.from(new Array(n + 1), () => new Array(m + 1).fill(0))
 	for (let i = 1; i <= n; i++) {
 		for (let j = 1; j <= m; j++) {
 			//dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j])
@@ -814,11 +810,11 @@ var rob = function (nums) {
 	if (len === 1) return nums[0]
 	let first = nums[0],
 		second = Math.max(nums[0], nums[1]),
-		temp
+		third
 	for (let i = 2; i < len; i++) {
-		temp = second
-		second = Math.max(second, first + nums[i])
-		first = temp
+		third = Math.max(second, first + nums[i])
+		first = second
+		second = third
 	}
 	return second
 }
@@ -1019,7 +1015,7 @@ var coinChange = function (coins, amount) {
 	return dfs(coins, amount)
 }
 
-//dp1 自底向上 better
+//dp1 自底向上 better 完全背包
 const coinChange = (coins, amount) => {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
@@ -1057,7 +1053,7 @@ var coinChange = function (coins, amount) {
 }
 ```
 
-### [416.分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/)
+### [416.==分割等和子集==](https://leetcode.cn/problems/partition-equal-subset-sum/)
 
 ```javascript
 // better version
@@ -1139,15 +1135,15 @@ var uniquePaths = function (m, n) {
 //O(mn) - O(mn)
 var uniquePaths = function (m, n) {
 	//走到dp[i][j]有多少种路径
-	const dp = Array.from({ length: m }, () => new Array(n).fill(0))
+	let dp = Array.from({ length: m }, () => new Array(n).fill(0))
 	//base case第一列
-	for (let i = 0; i < m; i++) dp[m][0] = 1
+	for (let i = 0; i < m; i++) dp[i][0] = 1
 	//base case第一行
-	for (let i = 0; i < n; i++) dp[0][n] = 1
+	for (let i = 0; i < n; i++) dp[0][i] = 1
 	//dp[0][0]没用上，随便定义不影响最终结果
 	//dp[0][0] = 0
 	for (let i = 1; i < m; i++) {
-		for (let j = 1; j < n; i++) {
+		for (let j = 1; j < n; j++) {
 			dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
 		}
 	}
@@ -1281,13 +1277,15 @@ var climbStairs = function (n) {
 
 ```javascript
 var generate = function (numRows) {
-	let ret = []
+	let triangle = []
 	for (let i = 0; i < numRows; i++) {
-		let curRow = new Array(i + 1).fill(1)
+    //let curRow = new Array(i + 1).fill(1)
+		let curRow = new Array(i + 1)
+    curRow[0] = curRow[i] = 1
 		for (let j = 1; j < curRow.length - 1; j++) curRow[j] = ret[i - 1][j - 1] + ret[i - 1][j]
-		ret.push(curRow)
+		triangle.push(curRow)
 	}
-	return ret
+	return triangle
 }
 
 var generate = function (numRows) {
