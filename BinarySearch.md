@@ -244,11 +244,120 @@ const rightBound = (arr, target) => {
 }
 ```
 
-### questions
+### 旋转数组系列
+
+#### [189.==旋转数组==](https://leetcode.cn/problems/rotate-array/)
+
+```javascript
+//brute force O(nk) - O(1)
+var rotate = function (nums, k) {
+	const len = nums.length
+	//旋转次数
+	for (let i = 0; i < k % len; i++) {
+		let previous = nums[len - 1]
+		//每次向前滚一下
+		for (let j = 0; j < len; j++) {
+			;[nums[j], previous] = [previous, nums[j]]
+		}
+	}
+}
+
+//额外数组 O(n) - O(n)
+var rotate = (nums, k) => {
+	const len = nums.length,
+		tmp = new Array(len)
+	//元素的新位置为(i + k) % len 的位置
+	for (let i = 0; i < len; i++) {
+		//旋转后的位置
+		tmp[(i + k) % len] = nums[i]
+	}
+	for (let i = 0; i < len; i++) nums[i] = tmp[i]
+}
+
+//数组翻转 O(n) - O(1)
+var rotate = (nums, k) => {
+	const len = nums.length
+  k %= len //k mod成小于len的数
+  if (k === 0) return
+  const reverse = (arr, l, r) => {
+    while (l < r) {
+      [arr[l++], arr[r--]] = [arr[r], arr[l]]
+    }
+  }
+  reverse(nums, 0, len - 1)
+  reverse(nums, 0, k - 1)
+  reverse(nums, k, len - 1)
+}
+```
+
+#### [153.==寻找旋转排序数组中的最小值==](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
+
+```javascript
+var findMin = function (nums) {
+	const len = nums.length
+	if (len === 0) return null
+	if (len === 1) return nums[0]
+	let l = 0,
+		r = len - 1,
+		mid
+	//in case array is a sorted array
+	if (nums[r] > nums[l]) return nums[0]
+	while (l <= r) {
+		mid = Math.floor((r - l) / 2 + l)
+		//judge according to nums[mid]
+		if (nums[mid] < nums[mid - 1]) return nums[mid]
+		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]
+		//看右边
+		if (nums[mid] < nums[len - 1]) {
+			r = mid - 1
+		} else {
+			l = mid + 1
+		}
+	}
+	return null
+}
+
+//better
+var findMin = function (nums) {
+	let l = 0, r = nums.length - 1, mid
+	while (l < r) {
+		mid = l + Math.floor((r - l) / 2)
+		//所有数据不重复，即不存在(nums[mid] === nums[r]的情况
+		//看右边
+		if (nums[mid] < nums[r]) {
+			r = mid
+		} else {
+			l = mid + 1
+		}
+	}
+	return nums[l]
+}
+```
+
+#### [154.==寻找旋转排序数组中的最小值 II==](https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/)
+
+```javascript
+var findMin = function (nums) {
+	let l = 0,
+		r = nums.length - 1
+	while (l < r) {
+		const pivot = l + Math.floor((r - l) / 2)
+		if (nums[pivot] < nums[r]) {
+			r = pivot
+		} else if (nums[pivot] > nums[r]) {
+			l++
+    //当nums[pivot] === nums[r]，缩减右端点
+		} else {
+			r--
+		}
+	}
+	return nums[l]
+}
+```
 
 #### [33.==搜索旋转排序数组==](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
 
-```javascript {.line-numbers}
+```javascript
 var search = function (nums, target) {
 	const len = nums.length
 	if (len === 0) return -1
@@ -260,10 +369,10 @@ var search = function (nums, target) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return mid
 		//看左边
-    //in case mid === l 即下标相等
-		if (nums[0] <= nums[mid]) {
+    //in case mid === l
+		if (nums[l] <= nums[mid]) {
        //[l, mid - 1]有序
-			if (nums[0] <= target && target < nums[mid]) {
+			if (nums[l] <= target && target < nums[mid]) {
 				r = mid - 1
 			} else {
 				l = mid + 1
@@ -280,6 +389,79 @@ var search = function (nums, target) {
 	return -1
 }
 ```
+
+#### [81.搜索旋转排序数组 II](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
+
+```javascript
+var search = function (nums, target) {
+	const len = nums.length
+	if (len === 0) return false
+	let l = 0,
+		r = len - 1,
+		mid
+	while (l <= r) {
+		mid = Math.floor(l + (r - l) / 2)
+		if (nums[mid] === target) return true
+		//move left pointer to exclude repeat item, or we can not define the monotonic section
+		if (nums[l] === nums[mid]) {
+			l++
+			continue
+		}
+		if (nums[mid] >= nums[l]) {
+			if (nums[l] <= target && target < nums[mid]) {
+				r = mid - 1
+			} else {
+				l = mid + 1
+			}
+		} else {
+			if (nums[mid] < target && target <= nums[len - 1]) {
+				l = mid + 1
+			} else {
+				r = mid - 1
+			}
+		}
+	}
+	return false
+}
+```
+
+#### [==10.3 搜索旋转数组==](https://leetcode.cn/problems/search-rotate-array-lcci/)
+
+```javascript
+var search = function (arr, target) {
+	let l = 0,
+		r = arr.length - 1,
+		mid
+	while (l <= r) {
+		mid = Math.floor((r + l) / 2)
+		//[5, 5, 5, 1, 2, 5]
+		if (l != r && arr[l] == arr[r]) {
+			//排除第一个数和最后一个相等的情况
+			r--
+			continue
+		}
+		if (target == arr[mid] && (mid == 0 || target != arr[mid - 1])) return mid
+		if (arr[l] <= arr[mid]) {
+			//[l, mid - 1]有序, 注意第二个条件的等号存在重复item
+			if (arr[l] <= target && target <= arr[mid]) {
+				r = mid - 1
+			} else {
+				l = mid + 1
+			}
+		} else {
+			// [mid + 1, r]有序
+			if (arr[mid] <= target && target <= arr[r]) {
+				l = mid + 1
+			} else {
+				r = mid - 1
+			}
+		}
+	}
+	return -1
+}
+```
+
+### questions
 
 #### [34.==在排序数组中查找元素的第一个和最后一个位置==](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
@@ -510,85 +692,6 @@ var findNumberIn2DArray = function (matrix, target) {
 		}
 	}
 	return false
-}
-```
-
-#### [81.搜索旋转排序数组 II](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
-
-```javascript {.line-numbers}
-var search = function (nums, target) {
-	const len = nums.length
-	if (len === 0) return false
-	let l = 0,
-		r = len - 1,
-		mid
-	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
-		if (nums[mid] === target) return true
-		//move left pointer to exclude repeat item, or we can not define the monotonic section
-		if (nums[l] === nums[mid]) {
-			l++
-			continue
-		}
-		if (nums[mid] >= nums[l]) {
-			if (target < nums[mid] && target >= nums[l]) {
-				r = mid - 1
-			} else {
-				l = mid + 1
-			}
-		} else {
-			if (target > nums[mid] && target <= nums[r]) {
-				l = mid + 1
-			} else {
-				r = mid - 1
-			}
-		}
-	}
-	return false
-}
-```
-
-#### [153.==寻找旋转排序数组中的最小值==](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
-
-```javascript {.line-numbers}
-var findMin = function (nums) {
-	const len = nums.length
-	if (len === 0) return null
-	if (len === 1) return nums[0]
-	let l = 0,
-		r = len - 1,
-		mid
-	//in case array is a sorted array
-	if (nums[r] > nums[l]) return nums[0]
-	while (l <= r) {
-		mid = Math.floor((r - l) / 2 + l)
-		//judge according to nums[mid]
-		if (nums[mid] < nums[mid - 1]) return nums[mid]
-		if (nums[mid] > nums[mid + 1]) return nums[mid + 1]
-		//看右边
-		if (nums[mid] < nums[len - 1]) {
-			r = mid - 1
-		} else {
-			l = mid + 1
-		}
-	}
-	return null
-}
-
-//better
-var findMin = function (nums) {
-	let l = 0, r = nums.length - 1, mid
-	while (l < r) {
-		mid = l + Math.floor((r - l) / 2)
-		//所有数据不重复，即不存在(nums[mid] === nums[r]的情况
-		//看右边
-		if (nums[mid] < nums[r]) {
-			r = mid
-		} else {
-			l = mid + 1
-		}
-	}
-	return nums[l]
 }
 ```
 
