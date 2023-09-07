@@ -128,6 +128,7 @@ MinStack.prototype.push = function (val) {
 	if (val < min) this.min = val
 	//存的是真实值与"上一次"的最小min的差
   //若当次push的是小值则存的是负数
+  // 3 - Infinity = -Infinity
 	this.stack.push(val - min)
 }
 
@@ -143,6 +144,8 @@ MinStack.prototype.pop = function () {
 MinStack.prototype.top = function () {
 	const val = this.stack[this.stack.length - 1]
 	const min = this.min
+  //stack为空
+  if (val === undefined) return void 0
   //真实值 = min
 	if (val < 0) return min
 	//还原数据，注意是"上一个"最小值
@@ -270,8 +273,9 @@ MyQueue.prototype.in2out = function () {
 
 ### [622.设计循环队列](https://leetcode.cn/problems/design-circular-queue/)
 
-> 在循环队列中，当队列为空，`front=rear`；而当所有队列空间全占满时，也有`front=rear`。为了区别这两种情况，假设队列使用的数组有`capacity`个存储空间，则此时规定循环队列最多只能有`capacity−1`个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。综上，队列判空条件是 
-> `front=rear`，而队列判满00条件是 **`front=(rear + 1) mod capacity`**
+> 在循环队列中，当队列为空，`front=rear`；而当所有队列空间全占满时，也有`front=rear`。为了区别这两种情况，假设队列使用的数组有`capacity`个存储空间，则此时规定循环队列最多只能有`capacity−1`个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。
+>
+> 综上，队列判空条件是 **`front = rear`**，而队列判满条件是 **`front = (rear + 1) mod capacity`**
 > 对于一个固定大小的数组，只要知道队尾`rear`与队首`front`，可计算出队列长度：
 > **`(rear − front + capacity) mod capacity`**
 >
@@ -286,9 +290,9 @@ MyQueue.prototype.in2out = function () {
 var MyCircularQueue = function (k) {
   //多开一个空间不存储数据
 	this.capacity = k + 1
-	this.elements = new Array(this.capacity).fill(0)
-	this.rear = 0
-	this.front = 0
+	this.elements = new Array(this.capacity)
+  this.front = 0
+  this.rear = 0
 }
 
 MyCircularQueue.prototype.enQueue = function (value) {
@@ -298,6 +302,7 @@ MyCircularQueue.prototype.enQueue = function (value) {
 	return true
 }
 
+//直接update front
 MyCircularQueue.prototype.deQueue = function () {
 	if (this.isEmpty()) return false
 	this.front = (this.front + 1) % this.capacity
@@ -309,13 +314,14 @@ MyCircularQueue.prototype.Front = function () {
 	return this.elements[this.front]
 }
 
+//rear在[0, capacity - 1]循环，当-1为负数需加个this.capacity
 MyCircularQueue.prototype.Rear = function () {
 	if (this.isEmpty()) return -1
 	return this.elements[(this.rear - 1 + this.capacity) % this.capacity]
 }
 
 MyCircularQueue.prototype.isEmpty = function () {
-	return this.rear == this.front
+	return this.front == this.rear
 }
 
 MyCircularQueue.prototype.isFull = function () {

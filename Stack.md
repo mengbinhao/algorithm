@@ -196,8 +196,11 @@ var trap = function (height) {
 		//会传递
 		lMax = Math.max(lMax, height[l])
 		rMax = Math.max(rMax, height[r])
-		if (height[l] < height[r]) ret += lMax - height[l++]
-		else ret += rMax - height[r--]
+	  if (height[l] < height[r]) {
+      ret += lMax - height[l++]
+    } else {
+      ret += rMax - height[r--]
+    }
 	}
 	return ret
 }

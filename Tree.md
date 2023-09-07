@@ -1093,28 +1093,23 @@ var minDepth = function (root) {
 ##### [110.平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
 ```javascript {.line-numbers}
+//自底向上  better
 var isBalanced = function (root) {
-	//后序遍历
-	// 1. 确定递归函数参数以及返回值
-	const getDepth = function (node) {
-		// 2. 确定递归函数终止条件
+	const height = function (node) {
 		if (node === null) return 0
-		// 3. 确定单层递归逻辑
-		let leftDepth = getDepth(node.left) //左子树高度
-		// 当判定左子树不为平衡二叉树时,即可直接返回-1
-		if (leftDepth === -1) return -1
-		let rightDepth = getDepth(node.right) //右子树高度
-		// 当判定右子树不为平衡二叉树时,即可直接返回-1
-		if (rightDepth === -1) return -1
-		if (Math.abs(leftDepth - rightDepth) > 1) {
-			return -1
-		} else {
-			return 1 + Math.max(leftDepth, rightDepth)
+		let leftDepth = height(node.left)
+		let rightDepth = height(node.right)
+		if (leftDepth === -1 || rightDepth === -1 || Math.abs(leftDepth - rightDepth) > 1) {
+       return -1
+    //子树平衡返回的是非数整数
+    } else {
+			return Math.max(leftDepth, rightDepth) + 1
 		}
 	}
-	return !(getDepth(root) === -1)
+	return height(root) >= 0
 }
 
+//自顶向下 每个root depth有重复计算情况
 var isBalanced = function (root) {
 	const depth = (root) => {
 		return !root ? 0 : Math.max(depth(root.left), depth(root.right)) + 1

@@ -435,14 +435,14 @@ var search = function (arr, target) {
 	while (l <= r) {
 		mid = Math.floor((r + l) / 2)
 		//[5, 5, 5, 1, 2, 5]
-		if (l != r && arr[l] == arr[r]) {
+		if (l != r && arr[l] === arr[r]) {
 			//排除第一个数和最后一个相等的情况
 			r--
 			continue
 		}
-		if (target == arr[mid] && (mid == 0 || target != arr[mid - 1])) return mid
+		if (target === arr[mid] && (mid === 0 || target !== arr[mid - 1])) return mid
 		if (arr[l] <= arr[mid]) {
-			//[l, mid - 1]有序, 注意第二个条件的等号存在重复item
+			//[l, mid - 1]有序, 注意第二个等号存在重复item
 			if (arr[l] <= target && target <= arr[mid]) {
 				r = mid - 1
 			} else {

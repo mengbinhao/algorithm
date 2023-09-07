@@ -668,7 +668,7 @@ var merge = function (nums1, m, nums2, n) {
 //三指针 从前往后 O(n + m) - O(m)
 var merge = (nums1, m, nums2, n) => {
 	//原数组前面可能会被覆盖所以copy一份
-	const nums1Copy = nums1.slice(0, m)
+	let nums1Copy = nums1.slice(0, m)
 	let p1 = 0,
 		p2 = 0,
 		p = 0
