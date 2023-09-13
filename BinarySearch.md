@@ -201,8 +201,41 @@ const leftBound = (arr, target) => {
   //case 1: [1,2,2,2,3], 4
   //case 2: [2,3,3,3,4], 1
 	if (l >= len || arr[l] !== target) return -1
+  //l是插入点
 	return l
 }
+
+//左边界simple版本
+let leftBound = (arr, target) => {
+	let left = 0
+	let right = arr.length
+	while (left < right) {
+		let mid = Math.floor((left + right) / 2)
+		if (arr[mid] >= target) {
+			right = mid
+		} else {
+			left = mid + 1
+		}
+	}
+	return left
+}
+
+//右边界simple版本
+let rightBound = (arr, target) => {
+	let left = 0
+	let right = arr.length
+	while (left < right) {
+		let mid = Math.floor((left + right) / 2)
+		if (arr[mid] > target) {
+			right = mid
+		} else {
+			left = mid + 1
+		}
+	}
+	return left
+}
+
+
 
 const leftBound = (arr, target) => {
   const len = arr.length
