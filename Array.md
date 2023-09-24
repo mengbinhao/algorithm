@@ -193,7 +193,7 @@ var removeElement = (nums, val) => {
 }
 ```
 
-### 31.[==下一个排列==](https://leetcode.cn/problems/next-permutation/)
+### 31.[下一个排列](https://leetcode.cn/problems/next-permutation/)
 
 ```javascript
 //注意到下一个排列总是比当前排列要大，除非该排列已经是最大的排列。求找到一个大于当前序列的新序列，且变大的幅度尽可能小
@@ -786,57 +786,6 @@ var productExceptSelf = function (nums) {
 }
 ```
 
-### [240.==搜索二维矩阵 II==](https://leetcode.cn/problems/search-a-2d-matrix-ii/)
-
-```javascript
-//brute force O(mn)
-
-//O(mlogn)
-var searchMatrix = function (matrix, target) {
-  const search = (nums, target) => {
-    let low = 0,
-      high = nums.length - 1
-    while (low <= high) {
-      const mid = Math.floor((high - low) / 2) + low
-      const num = nums[mid]
-      if (num === target) {
-        return mid
-      } else if (num > target) {
-        high = mid - 1
-      } else {
-        low = mid + 1
-      }
-    }
-    return -1
-  }
-	//一次舍弃半行
-	for (const row of matrix) {
-		const index = search(row, target)
-		if (index >= 0) return true
-	}
-	return false
-}
-
-//O(m + n)
-var searchMatrix = function(matrix, target) {
-    const m = matrix.length, n = matrix[0].length
-    let x = 0, y = n - 1
-    //一次舍弃一行或一列
-    //从右上角开始找
-    while (x < m && y >= 0) {
-        if (matrix[x][y] === target) {
-            return true;
-        }
-        if (matrix[x][y] > target) {
-            --y;
-        } else {
-            ++x;
-        }
-    }
-    return false;
-}
-```
-
 ### [283.==移动零==](https://leetcode-cn.com/problems/move-zeroes/)
 
 ```javascript {.line-numbers}
@@ -877,8 +826,8 @@ var intersection = function (nums1, nums2) {
 
 //good version
 var intersection = function (nums1, nums2) {
-	const map = {}
-	const ret = []
+	let map = {}
+	let ret = []
 	for (let i = 0; i < nums1.length; i++) map[nums1[i]] = true
 	for (let i = 0; i < nums2.length; i++) {
 		if (map[nums2[i]]) {
@@ -894,7 +843,6 @@ var intersection = function (nums1, nums2) {
 
 ```javascript
 //最low的是一重枚起点、一重枚终点、再一重枚相加结果
-
 
 var subarraySum = function(nums, k) {
   let cnt = 0

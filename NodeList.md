@@ -1,14 +1,14 @@
 ## 1 心得
 
-- 一个原则: 画图
+- 一个原则: **画图**
 - 两种题型: 指针的修改、链表的拼接
 - 三个注意: 环、边界、递归
 - 四个技巧:
-  - 虚拟头
-    - 若题目的头节点可能被移除/会变，则可以使用虚拟头节点，这样头节点就变成了中间节点，就不需要为头节点做特殊判断
+  - **虚拟头**
+    - 若题目的头节点可能被移除、会变，则可使用虚拟头节点，这样头节点就变成了中间节点，就不需要为头节点做特殊判断
     - 通过在合适的时候断开链接，返回链表的中间节点
-  - 快慢指针
-  - 穿针引线（==穿的时候先找到next，变更next的prev==）
+  - **快慢指针**
+  - 穿针引线（**穿的时候先找到next，变更next的prev**）
   - 先穿再排后判空
 - Other: 若你想递归和迭代都写, 推荐前序遍历,因为前序遍历很容易改成迭代,准确的说前序遍历容易改成不需要栈的递归,而后续遍历则需要借助栈来完成
 - Summary: 如果是单链表,我们无法在`O(1)`的时间拿到前驱节点,这也是为什么我们遍历的时候老是维护一个前驱节点`pre`的原因。但是本质原因其实是链表的增删操作都依赖前驱节点。这是链表的基本操作,是链表的特性天生决定的
@@ -52,9 +52,7 @@ var addTwoNumbers = function (l1, l2) {
 		const y = l2 ? l2.val : 0
 		const sum = x + y + carry
 		carry = sum >= 10 ? 1 : 0
-		const val = sum % 10
-		cur.next = new ListNode(val)
-		// update cur
+		cur.next = new ListNode(sum % 10)
 		cur = cur.next
 		if (l1) l1 = l1.next
 		if (l2) l2 = l2.next
@@ -82,7 +80,7 @@ var removeNthFromEnd = function (head, n) {
 	const len = getLen(head)
   const dummyHead = new ListNode(-1, head)
 	let cur = dummyHead
-  //找到删除节点的pre
+  //找到要删除节点的pre
 	for (let i = 0; i < len - n; i++) cur = cur.next
 	cur.next = cur.next.next
 	return dummyHead.next
@@ -98,7 +96,7 @@ var removeNthFromEnd = function (head, n) {
 	while (n-- >= 0) fast = fast.next
 	//删除的是头结点
 	if (!fast) return head.next
-	//同步走，slow走到要删除节点的前驱节点
+	//同步走，slow走到要删除节点的pre
 	while (fast) {
 		fast = fast.next
 		slow = slow.next
@@ -547,7 +545,7 @@ var hasCycle = function (head) {
 ### [142. ==环形链表 II==](https://leetcode.cn/problems/linked-list-cycle-ii/)
 
 ```javascript {.line-numbers}
-//标记法 O(n) - O(1)
+//标记法 O(n) - O(n)
 //或使用hash标记
 var detectCycle = function (head) {
 	let visited = new Set()

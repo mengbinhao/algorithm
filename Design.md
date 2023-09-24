@@ -117,7 +117,6 @@ MinStack.prototype.getMin = function () {
 //O(n) - O(1) better
 var MinStack = function () {
 	this.stack = []
-  //Note: initial value
 	this.min = Infinity
 }
 
@@ -158,7 +157,7 @@ MinStack.prototype.getMin = function () {
 }
 ```
 
-### [208.==实现 Trie== - 前缀树](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+### [208.==实现 Trie(前缀树)==](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```javascript {.line-numbers}
 var TrieNode = function () {
@@ -412,13 +411,12 @@ MyLinkedList.prototype.addAtTail = function (val) {
 }
 
 MyLinkedList.prototype.addAtIndex = function (index, val) {
-  //可以在size最后这个位置添加
 	if (index < 0 || index > this.size) return
 	let prev = this.head
 	while (index-- > 0) prev = prev.next
-	const toAdd = new ListNode(val)
-	toAdd.next = prev.next
-	prev.next = toAdd
+	const newNode = new ListNode(val)
+	newNode.next = prev.next
+	prev.next = newNode
 	this.size++
 }
 

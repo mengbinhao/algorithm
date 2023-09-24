@@ -188,69 +188,17 @@ const leftBound = (arr, target) => {
 		if (arr[mid] < target) {
 			//Note 3
 			l = mid + 1
-		} else if (arr[mid] > target) {
-			//Note 3
-			r = mid - 1
-		} else if (arr[mid] === target) {
+		} else if (arr[mid] >= target) {
 			//Note 3
 			r = mid - 1
 		}
 	}
 	//Note 4
 	//检查出界情况
-  //case 1: [1,2,2,2,3], 4
-  //case 2: [2,3,3,3,4], 1
+  //case 1: [1,2,2,2,3], 4, l = len
+  //case 2: [2,3,3,3,4], 1, l = 0
 	if (l >= len || arr[l] !== target) return -1
   //l是插入点
-	return l
-}
-
-//左边界simple版本
-let leftBound = (arr, target) => {
-	let left = 0
-	let right = arr.length
-	while (left < right) {
-		let mid = Math.floor((left + right) / 2)
-		if (arr[mid] >= target) {
-			right = mid
-		} else {
-			left = mid + 1
-		}
-	}
-	return left
-}
-
-//右边界simple版本
-let rightBound = (arr, target) => {
-	let left = 0
-	let right = arr.length
-	while (left < right) {
-		let mid = Math.floor((left + right) / 2)
-		if (arr[mid] > target) {
-			right = mid
-		} else {
-			left = mid + 1
-		}
-	}
-	return left
-}
-
-
-
-const leftBound = (arr, target) => {
-  const len = arr.length
-	let l = 0,
-		r = len - 1,
-      mid
-	while (l <= r) {
-		mid = Math.floor(l + (r - l) / 2)
-		if (arr[mid] < target) {
-			l = mid + 1
-		} else if (arr[mid] >= target) {
-			r = mid - 1
-		}
-	}
-	if (l >= len || arr[l] !== target) return -1
 	return l
 }
 ```
@@ -264,15 +212,14 @@ const rightBound = (arr, target) => {
       mid
 	while (l <= r) {
 		mid = Math.floor((r - l) / 2 + l)
-		if (arr[mid] < target) {
+		if (arr[mid] <= target) {
 			l = mid + 1
 		} else if (arr[mid] > target) {
 			r = mid - 1
-		} else if (arr[mid] === target) {
-			l = mid + 1
 		}
 	}
 	if (r < 0 || arr[r] !== target) return -1
+  //r是插入点
 	return r
 }
 ```
@@ -285,10 +232,8 @@ const rightBound = (arr, target) => {
 //brute force O(nk) - O(1)
 var rotate = function (nums, k) {
 	const len = nums.length
-	//旋转次数
 	for (let i = 0; i < k % len; i++) {
 		let previous = nums[len - 1]
-		//每次向前滚一下
 		for (let j = 0; j < len; j++) {
 			;[nums[j], previous] = [previous, nums[j]]
 		}
@@ -299,9 +244,8 @@ var rotate = function (nums, k) {
 var rotate = (nums, k) => {
 	const len = nums.length,
 		tmp = new Array(len)
-	//元素的新位置为(i + k) % len 的位置
+	//元素的新位置为(i + k) % len
 	for (let i = 0; i < len; i++) {
-		//旋转后的位置
 		tmp[(i + k) % len] = nums[i]
 	}
 	for (let i = 0; i < len; i++) nums[i] = tmp[i]
@@ -468,7 +412,7 @@ var search = function (arr, target) {
 	while (l <= r) {
 		mid = Math.floor((r + l) / 2)
 		//[5, 5, 5, 1, 2, 5]
-		if (l != r && arr[l] === arr[r]) {
+		if (l !== r && arr[l] === arr[r]) {
 			//排除第一个数和最后一个相等的情况
 			r--
 			continue
@@ -626,23 +570,8 @@ var searchInsert = function (nums, target) {
 			l = mid + 1
 		}
 	}
+  //l插入点
 	return l
-}
-
-//better
-var searchInsert = function(nums, target) {
-  const len = nums.length
-  let l = 0, r = len - 1, ret = len
-  while (l <= r) {
-    mid = Math.floor((l + r) / 2)
-    if (nums[mid] >= target) {
-      ret = mid
-      r = mid - 1
-    } else {
-      l = mid + 1
-    }
-  }
-  return l
 }
 ```
 
@@ -672,42 +601,44 @@ var mySqrt = function (x) {
 #### [74.==搜索二维矩阵==](https://leetcode.cn/problems/search-a-2d-matrix/)
 
 ```javascript
-//对矩阵的第一列的元素二分查找，找到最后一个不大于目标值的元素
-//然后在该元素所在行中二分查找目标值是否存在
-var searchMatrix = function (matrix, target) {
-	const rowIndex = binarySearchFirstColumn(matrix, target)
-	if (rowIndex < 0) return false
-	return binarySearchRow(matrix[rowIndex], target)
-}
-
+//对矩阵的第一列二分查找，找到最后一个不大于目标值的元素
+//然后在该元素所在行二分查找目标值是否存在
 const binarySearchFirstColumn = (matrix, target) => {
-	let low = 0,
-		high = matrix.length - 1
-	while (low <= high) {
-		const mid = Math.floor((high + low) / 2)
+	let l = 0,
+		r = matrix.length - 1,
+		mid
+	while (l <= r) {
+		mid = Math.floor((r + l) / 2)
 		if (matrix[mid][0] <= target) {
-			low = mid + 1
+			l = mid + 1
 		} else {
-			high = mid - 1
+			r = mid - 1
 		}
 	}
-	return high
+	return r
 }
 
 const binarySearchRow = (row, target) => {
-	let low = 0,
-		high = row.length - 1
-	while (low <= high) {
-		const mid = Math.floor((high + low) / 2)
-		if (row[mid] == target) {
+	let l = 0,
+		r = row.length - 1,
+		mid
+	while (l <= r) {
+		mid = Math.floor((r + l) / 2)
+		if (row[mid] === target) {
 			return true
 		} else if (row[mid] > target) {
-			high = mid - 1
+			r = mid - 1
 		} else {
-			low = mid + 1
+			l = mid + 1
 		}
 	}
 	return false
+}
+
+var searchMatrix = function (matrix, target) {
+	const rowIdx = binarySearchFirstColumn(matrix, target)
+	if (rowIdx < 0) return false
+	return binarySearchRow(matrix[rowIdx], target)
 }
 
 //better 左下角坐标轴法 
@@ -725,6 +656,56 @@ var findNumberIn2DArray = function (matrix, target) {
 		}
 	}
 	return false
+}
+```
+
+##### [240.搜索二维矩阵 II](https://leetcode.cn/problems/search-a-2d-matrix-ii/)
+
+```javascript
+//brute force O(mn)
+
+//O(mlogn)
+var searchMatrix = function (matrix, target) {
+  const search = (nums, target) => {
+    let low = 0,
+      high = nums.length - 1
+    while (low <= high) {
+      const mid = Math.floor((high - low) / 2) + low
+      const num = nums[mid]
+      if (num === target) {
+        return mid
+      } else if (num > target) {
+        high = mid - 1
+      } else {
+        low = mid + 1
+      }
+    }
+    return -1
+  }
+	//一次舍弃半行
+	for (const row of matrix) {
+		const index = search(row, target)
+		if (index >= 0) return true
+	}
+	return false
+}
+
+//O(m + n)
+var searchMatrix = function(matrix, target) {
+    const m = matrix.length, n = matrix[0].length
+    let x = 0, y = n - 1
+    //从右上角开始找
+    while (x < m && y >= 0) {
+        if (matrix[x][y] === target) {
+            return true;
+        }
+        if (matrix[x][y] > target) {
+            --y;
+        } else {
+            ++x;
+        }
+    }
+    return false;
 }
 ```
 
@@ -749,7 +730,7 @@ var isPerfectSquare = function (num) {
 	return false
 }
 
-//数学
+//Math
 var isPerfectSquare = function (num) {
 	let x = 1,
 		square = 1
