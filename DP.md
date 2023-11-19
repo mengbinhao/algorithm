@@ -550,13 +550,13 @@ var minimumTotal = function (triangle) {
 var maxProduct = function (nums) {
 	let len = nums.length
 	if (len === 0) return 0
-  //let maxDP = [...nums],
+	//let maxDP = [...nums],
 	//minDP = [...nums]
-  //根据递推公式需维护两个状态数组
+	//根据递推公式需维护两个状态数组
 	let maxDP = new Array(len)
-  maxDP[0] = nums[0]
+	maxDP[0] = nums[0]
 	let minDP = new Array(len)
-  minDP[0] = nums[0]
+	minDP[0] = nums[0]
 	for (let i = 1; i < len; i++) {
 		maxDP[i] = Math.max(maxDP[i - 1] * nums[i], nums[i], minDP[i - 1] * nums[i])
 		minDP[i] = Math.min(minDP[i - 1] * nums[i], nums[i], maxDP[i - 1] * nums[i])
@@ -620,13 +620,14 @@ var maximalSquare = (matrix) => {
 var lengthOfLIS = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
-	//定义dp[i]以nums[i]結尾最长递增子序列的长度
+	//dp[i]以nums[i]为结尾的最长递增子序列的长度
 	//nums[i]必须被选取,所以初始化为1
-	let dp = new Array(len).fill(1), ret = 1
+	let dp = new Array(len).fill(1),
+		ret = 1
 	//dp[i] = max(dp[0…i−1]) + 1,其中0 ≤ j < i且num[j] < num[i]
-  //起点
+	//终点
 	for (let i = 1; i < len; i++) {
-    //结束点
+		//起点
 		for (let j = 0; j < i; j++) {
 			if (nums[i] > nums[j]) dp[i] = Math.max(dp[i], dp[j] + 1)
 		}
@@ -718,13 +719,14 @@ var findLengthOfLCIS = function (nums) {
 
 ```javascript {.line-numbers}
 var findLength = function (nums1, nums2) {
-	let m = nums1.length,
-		n = nums2.length,
+	let n1 = nums1.length,
+		n2 = nums2.length,
 		ret = 0,
-		//dp[i][j]表示已[i - 1][j - 1]为结尾的最长重复子数组的长度，省两行初始化代码
-		dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0))
-	for (let i = 1; i <= m; i++) {
-		for (let j = 1; j <= n; j++) {
+		//dp[i][j]表示以nums1[i - 1]nums2[j - 1]为结尾的最长重复子数组的长度，这样定义可省第一行和第二行的初始化代码
+		//第一行和第一列是无意义的初始化成0
+		dp = Array.from({ length: n1 + 1 }, () => new Array(n2 + 1).fill(0))
+	for (let i = 1; i <= n1; i++) {
+		for (let j = 1; j <= n2; j++) {
 			if (nums1[i - 1] === nums2[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1
 			ret = Math.max(ret, dp[i][j])
 		}
@@ -925,10 +927,10 @@ var longestPalindromeSubseq = function (s) {
 
 ```javascript
 var numSquares = function (n) {
-  //正整数n类比背包
-  //1、4、9、、16...类比物品
+	//正整数n类比背包
+	//1、4、9、、16...类比物品
 	let dp = [...Array(n + 1)].map((_) => Infinity)
-  dp[0] = 0
+	dp[0] = 0
 	for (let i = 1; i * i <= n; i++) {
 		for (let j = i * i; j <= n; j++) {
 			dp[j] = Math.min(dp[j], dp[j - i * i] + 1)
@@ -1065,7 +1067,7 @@ var canPartition = function (nums) {
 	sum = sum / 2
 	let dp = Array(sum + 1).fill(0)
 	for (let i = 0, len = nums.length; i < len; i++) {
-    //背包倒序遍历
+		//背包倒序遍历
 		for (let j = sum; j >= nums[i]; j--) {
 			dp[j] = Math.max(dp[j], dp[j - nums[i]] + nums[i])
 		}
@@ -1279,10 +1281,11 @@ var climbStairs = function (n) {
 var generate = function (numRows) {
 	let triangle = []
 	for (let i = 0; i < numRows; i++) {
-    //let curRow = new Array(i + 1).fill(1)
+		//let curRow = new Array(i + 1).fill(1)
 		let curRow = new Array(i + 1)
-    curRow[0] = curRow[i] = 1
-		for (let j = 1; j < curRow.length - 1; j++) curRow[j] = ret[i - 1][j - 1] + ret[i - 1][j]
+		curRow[0] = curRow[i] = 1
+		for (let j = 1; j < curRow.length - 1; j++)
+			curRow[j] = ret[i - 1][j - 1] + ret[i - 1][j]
 		triangle.push(curRow)
 	}
 	return triangle
@@ -1295,9 +1298,9 @@ var generate = function (numRows) {
 		curRow[0] = 1
 		curRow[i] = 1
 		//if (i > 1) {
-			for (let j = 1; j < i; j++) {
-				curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
-			}
+		for (let j = 1; j < i; j++) {
+			curRow[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
+		}
 		//}
 		triangle.push(curRow)
 	}
