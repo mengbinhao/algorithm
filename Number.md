@@ -105,9 +105,8 @@ var myPow = function (x, n) {
 //brute force O(n^2)
 var majorityElement = function (nums) {
 	const len = nums.length
-	count
 	for (let i = 0; i < len; i++) {
-		count = 0
+		let count = 0
 		for (let j = 0; j < len; j++) {
 			if (nums[i] === nums[j]) {
 				if (++count > Math.floor(len / 2)) return nums[i]
@@ -126,10 +125,9 @@ var majorityElement = function (nums) {
 //hash O(n)
 var majorityElement = function(nums) {
   let map = {}
-  const n = nums.length >> 1
-  for(let i = 0; i < nums.length; i++){
+  for(let i = 0, len = nums.length; i < len; i++){
       map[nums[i]] = map[nums[i]] !== undefined ? map[nums[i]] + 1 : 1
-      if(map[nums[i]] > n) return nums[i]
+      if(map[nums[i]] > len / 2) return nums[i]
   }
 }
 
@@ -138,7 +136,7 @@ var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
 	for (let i = 1; i < nums.length; i++) {
-		//note check sequence!
+		//Note check sequence!
 		if (count === 0) {
       ret = nums[i]
 			count++

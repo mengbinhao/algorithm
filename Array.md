@@ -166,6 +166,19 @@ var threeSum = function (nums) {
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
+	//第一个必留
+	let slow = fast = 1
+	while (fast < len) {
+		if (nums[fast] !== nums[fast - 1]) nums[slow++] = nums[fast]
+		fast++
+	}
+	return slow
+}
+
+//more effective
+var removeDuplicates = function (nums) {
+	const len = nums.length
+	if (len === 0) return 0
 	let slow = 0,
 		fast = 1
 	while (fast < len) {
@@ -643,9 +656,8 @@ var sortColors = function (nums) {
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len <= 2) return len
-	//前两个必保留,从2开始
-	let slow = 2,
-		fast = 2
+	//前两个必保留
+	let fast = slow = 2
 	while (fast < len) {
 		if (nums[slow - 2] !== nums[fast]) nums[slow++] = nums[fast]
 		fast++
@@ -682,17 +694,36 @@ var merge = (nums1, m, nums2, n) => {
 var merge = (nums1, m, nums2, n) => {
 	let p1 = m - 1,
 		p2 = n - 1,
+		//nums1末尾
+		k = m + n - 1
+	//nums2全部复制完
+	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--]
+	while (p1 >= 0 && p2 >= 0) {
+		nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
+	}
+  
+	while (p2 >= 0) {
+		nums1[k--] = nums2[p2--]
+	}
+}
+
+var merge = (nums1, m, nums2, n) => {
+	let p1 = m - 1,
+		p2 = n - 1,
+    //nums1末尾
 		k = m + n - 1
 	//nums2全部复制完
 	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--]
 	while (p2 >= 0) nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
 }
+
+
 ```
 
 ### [189.==轮转数组 E==](https://leetcode-cn.com/problems/rotate-array/)
 
 ```javascript {.line-numbers}
-//brute force O(nk) - O(1)
+//brute force O(nk) - O(1) TLE
 var rotate = function (nums, k) {
 	const len = nums.length
 	//翻转次数
