@@ -34,7 +34,7 @@
 ### [121. 买股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```javascript {.line-numbers}
-//brute force O(n^2) - O(1) 两两暴力搜索
+//brute force O(n^2) - O(1) 两两暴搜
 var maxProfit = function (prices) {
 	if (!prices) return 0
 	const len = prices.length
@@ -53,6 +53,7 @@ var maxProfit = function (prices) {
 	if (!prices) return 0
 	const len = prices.length
 	if (len < 2) return 0
+  //维护最小值和最大利润
 	let maxProfit = 0,
 		minPrice = Infinity
 	for (let i = 0; i < len; i++) {
@@ -120,17 +121,16 @@ var maxProfit = function (prices) {
 //Greedy
 //计算的过程并不是实际的交易过程，收益被分成了若干个阶段
 var maxProfit = function (prices) {
-	let ret = 0
+	let profit = 0
 	let len = prices.length
 	if (len < 2) return 0
 	for (let i = 1; i < len; i++) {
-		//profit += Math.max(prices[i] - prices[i - 1], 0);
 		// if (prices[i] > prices[i - 1]) {
 		// 	profit += prices[i] - prices[i - 1]
 		// }
-		ret += Math.max(prices[i] - prices[i - 1], 0)
+		profit += Math.max(prices[i] - prices[i - 1], 0)
 	}
-	return ret
+	return profit
 }
 
 //DP O(n)-O(n)

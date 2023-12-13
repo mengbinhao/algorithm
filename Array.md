@@ -694,17 +694,10 @@ var merge = (nums1, m, nums2, n) => {
 var merge = (nums1, m, nums2, n) => {
 	let p1 = m - 1,
 		p2 = n - 1,
-		//nums1末尾
+		//nums1后面开始复制的位置
 		k = m + n - 1
-	//nums2全部复制完
-	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--]
-	while (p1 >= 0 && p2 >= 0) {
-		nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
-	}
-  
-	while (p2 >= 0) {
-		nums1[k--] = nums2[p2--]
-	}
+	while (p1 >= 0 && p2 >= 0) nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
+	while (p2 >= 0) nums1[k--] = nums2[p2--]
 }
 
 var merge = (nums1, m, nums2, n) => {

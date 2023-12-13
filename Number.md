@@ -124,10 +124,10 @@ var majorityElement = function (nums) {
 
 //hash O(n)
 var majorityElement = function(nums) {
-  let map = {}
-  for(let i = 0, len = nums.length; i < len; i++){
-      map[nums[i]] = map[nums[i]] !== undefined ? map[nums[i]] + 1 : 1
-      if(map[nums[i]] > len / 2) return nums[i]
+  let hash = {}
+  for (let i = 0, len = nums.length; i < len; i++) {
+    hash[nums[i]] = hash[nums[i]] !== undefined ? hash[nums[i]] + 1 : 1
+    if (hash[nums[i]] > Math.floor(len / 2)) return nums[i]
   }
 }
 
@@ -135,7 +135,7 @@ var majorityElement = function(nums) {
 var majorityElement = function (nums) {
 	let ret = nums[0],
 		count = 1
-	for (let i = 1; i < nums.length; i++) {
+	for (let i = 1, len = nums.length; i < len; i++) {
 		//Note check sequence!
 		if (count === 0) {
       ret = nums[i]
