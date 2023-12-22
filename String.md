@@ -33,9 +33,8 @@ var longestCommonPrefix = function (strs) {
 	for (let i = 0, s0Len = strs[0].length; i < s0Len; i++) {
 		for (let j = 1, strsLen = strs.length; j < strsLen; j++) {
 			//strs[j]已经到头了
-			if (i === strs[j].length || strs[j][i] !== strs[0][i]) {
+			if (i === strs[j].length || strs[j][i] !== strs[0][i])
 				return strs[0].substring(0, i)
-			}
 		}
 	}
 	//strs[0]都找完了
@@ -44,6 +43,12 @@ var longestCommonPrefix = function (strs) {
 
 //横向扫描 O(mn) - O(1)
 var longestCommonPrefix = function (strs) {
+	const getLCP = (s1, s2) => {
+		const length = Math.min(s1.length, s2.length)
+		let idx = 0
+		while (idx < length && s1[idx] === s2[idx]) idx++
+		return s1.substring(0, idx)
+	}
 	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
 	let prefix = strs[0]
 	for (let i = 1, len = strs.length; i < len; i++) {
@@ -52,13 +57,58 @@ var longestCommonPrefix = function (strs) {
 		if (prefix.length === 0) break
 	}
 	return prefix
+}
+```
 
-	function getLCP(s1, s2) {
-		const length = Math.min(s1.length, s2.length)
-		let idx = 0
-		while (idx < length && s1[idx] === s2[idx]) idx++
-		return s1.substring(0, idx)
+### [28. 找出字符串中第一个匹配项的下标](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/)
+
+```javascript {.line-numbers}
+//O(m * n)
+var strStr = function (haystack, needle) {
+	const hLen = haystack.length,
+		nLen = needle.length
+	for (let i = 0; i <= hLen - nLen; i++) {
+		let isMatched = true
+		for (let j = 0; j < nLen; j++) {
+			if (haystack[i + j] !== needle[j]) {
+				isMatched = false
+				break
+			}
+		}
+		if (isMatched) return i
 	}
+	return -1
+}
+
+//KMP进阶 O(m + n)
+//haystack = 'aabaabaaf'
+//needle = 'aabaaf'
+var strStr = function (haystack, needle) {
+	const needleLen = needle.length
+	if (needleLen === 0) return 0
+	const getNext = (needle) => {
+		let next = []
+		//i指向后缀末尾位置
+		//j指向前缀末尾位置，也表示最长前缀的长度
+		//next[i] 表示i(包括i)之前最长相等的前后缀长度(其实就是j)
+		let j = 0
+		next.push(j)
+		for (let i = 1; i < needleLen; i++) {
+			//不相等的情况,j不停回退
+			while (j > 0 && needle[i] !== needle[j]) j = next[j - 1]
+			//相等情况，最长相等前缀+1
+			if (needle[i] === needle[j]) j++
+			next.push(j)
+		}
+		return next
+	}
+	const next = getNext(needle)
+	for (let i = 0, j = 0, len = haystack.length; i < len; i++) {
+		while (j > 0 && haystack[i] !== needle[j]) j = next[j - 1]
+		if (haystack[i] === needle[j]) j++
+		if (j === needleLen) return i - needleLen + 1
+	}
+	return -1
 }
 ```
 
@@ -121,7 +171,7 @@ var reverseWords = function (s) {
 		let c = s[l]
 		if (c !== ' ') {
 			word += c
-			//排除单词间有多个空格的情况,否则返回如example    good a
+			//排除单词间有多个空格的情况,如example    good a
 		} else if (c === ' ' && word) {
 			queue.unshift(word)
 			word = ''
@@ -211,16 +261,15 @@ var firstUniqChar = function (s) {
 }
 ```
 
-### [392. 判断子序列](https://leetcode-cn.com/problems/is-subsequence/)
+### [392. ==判断子序列==](https://leetcode-cn.com/problems/is-subsequence/)
 
 ```javascript {.line-numbers}
 //two pointer
 var isSubsequence = function (s, t) {
-	let i = 0,
-		j = 0,
-		sLen = s.length,
+	const sLen = s.length,
 		tLen = t.length
-
+	if (sLen > tLen) return false
+	let i = (j = 0)
 	while (i < sLen && j < tLen) {
 		if (s[i] === t[j]) i++
 		j++

@@ -22,14 +22,15 @@ var twoSum = function (nums, target) {
 
 //两次哈希 O(n) - O(n)
 //obj or map
-var twoSum = function(nums, target) {
-  const len = nums.length
-  let hash = {}
-  for (let i = 0; i < len; i++) hash[target - nums[i]] = i
-  for (let j = 0; j < len; j++) {
-    //exclude hash[nums[j]] is falsy and same item
-    if (hash[nums[j]] !== undefined && hash[nums[j]] !== j) return [j, hash[nums[j]]]
-  }
+var twoSum = function (nums, target) {
+	const len = nums.length
+	let hash = {}
+	for (let i = 0; i < len; i++) hash[target - nums[i]] = i
+	for (let j = 0; j < len; j++) {
+		//exclude hash[nums[j]] is falsy and same item
+		if (hash[nums[j]] !== undefined && hash[nums[j]] !== j)
+			return [j, hash[nums[j]]]
+	}
 }
 
 //一次哈希 optimal,先判断要找的值在不在hash里面，再放要找的值则不需要判重
@@ -48,18 +49,22 @@ var twoSum = function (nums, target) {
 
 ```javascript
 //brute force O(n^2) - O(1)
-var maxArea = function(height) {
-  const len = height.length
-  let maxArea = 0
-  for (let i = 0; i < len - 1; i++) {
-    for (let j = i + 1; j < len; j++) {
-      maxArea = Math.max(ret, Math.min(height[i], height[j]) * (j - i))
-    }
-  }
-  return maxArea
+var maxArea = function (height) {
+	const len = height.length
+	let maxArea = 0
+	for (let i = 0; i < len - 1; i++) {
+		for (let j = i + 1; j < len; j++) {
+			maxArea = Math.max(ret, Math.min(height[i], height[j]) * (j - i))
+		}
+	}
+	return maxArea
 }
 
 //two pointer夹逼 O(n) - O(1)
+//若移动数字较大的那个指针，那么前者「两个指针指向的数字中较小值」不会增加，后者「指针之间的距离」会减小，那么这个乘积会减小。因此移动数字较大的那个指针是不合理的
+//若保持左指针的位置不变，那么无论右指针在哪里，这个容器的容量都不会超过 
+//min(x,y) ∗ t = x ∗ t
+//min(x,y) ≤ min(x,y)
 var maxArea = function (height) {
 	let l = 0,
 		r = height.length - 1,
@@ -105,7 +110,7 @@ var threeSum = function (nums) {
 	if (!nums) return arr
 	const len = nums.length
 	if (len < 3) return arr
-	//precondition!!!!!!
+	//precondition
 	nums.sort((a, b) => a - b)
 	for (var i = 0; i < len - 2; i++) {
 		if (nums[i] > 0) break
@@ -131,31 +136,33 @@ var threeSum = function (nums) {
 
 var threeSum = function (nums) {
 	const len = nums.length
-  let ret = []
-  //precondition!
-  nums.sort((a, b) => a - b)
-  //不重复的三个数
-  for (let i = 0; i < len - 2; i++) {
-    if (nums[i] > 0) break
-    if (i > 0 && nums[i] === nums[i - 1]) continue
-    let l = i + 1, r = len - 1
-    while (l < r) {
-      const sum = nums[i] + nums[l] + nums[r]
-      if (sum === 0) {
-        ret.push([nums[i], nums[l], nums[r]])
-        //l < len - 4至少保证3个相加的数
-        while (l < len - 4 && nums[l + 1] === nums[l]) l++
-        l++ //跳到不重复的那个数
-        while (r > 3 && nums[r - 1] === nums[r]) r--
-        r-- //同上
-      } else if (sum > 0) {
-        r--
-      } else {
-        l++
-      }
-    }
-  }
-  return ret
+	let ret = []
+	//precondition!
+	nums.sort((a, b) => a - b)
+	//不重复的三个数
+	for (let i = 0; i < len - 2; i++) {
+    //剪枝i
+		if (nums[i] > 0) break
+		if (i > 0 && nums[i] === nums[i - 1]) continue
+		let l = i + 1,
+			r = len - 1
+		while (l < r) {
+			const sum = nums[i] + nums[l] + nums[r]
+			if (sum === 0) {
+				ret.push([nums[i], nums[l], nums[r]])
+				//l < len - 4至少保证3个相加的数
+				while (l < len - 4 && nums[l + 1] === nums[l]) l++
+				l++ //跳到不重复的那个数
+				while (r > 3 && nums[r - 1] === nums[r]) r--
+				r-- //同上
+			} else if (sum > 0) {
+				r--
+			} else {
+				l++
+			}
+		}
+	}
+	return ret
 }
 ```
 
@@ -165,9 +172,7 @@ var threeSum = function (nums) {
 //slow - fast pointer
 var removeDuplicates = function (nums) {
 	const len = nums.length
-	if (len === 0) return 0
-	//第一个必留
-	let slow = fast = 1
+	let slow = (fast = 1)
 	while (fast < len) {
 		if (nums[fast] !== nums[fast - 1]) nums[slow++] = nums[fast]
 		fast++
@@ -178,9 +183,7 @@ var removeDuplicates = function (nums) {
 //more effective
 var removeDuplicates = function (nums) {
 	const len = nums.length
-	if (len === 0) return 0
-	let slow = 0,
-		fast = 1
+	let slow = (fast = 1)
 	while (fast < len) {
 		if (nums[slow] !== nums[fast]) {
 			//[0,1,2,3,4,5] 避免原地复制
@@ -234,22 +237,6 @@ var nextPermutation = function (nums) {
 ### [45.==跳跃游戏 II M==](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```javascript
-//basic
-var jump = function (nums) {
-	const len = nums.length
-	let steps = 0,
-		start = 0,
-		end = 1
-	while (end < len) {
-		let maxPosion = 0
-		for (let i = start; i < end; i++) maxPosion = Math.max(maxPosion, i + nums[i])
-		start = end // 下一次起跳点开始格子
-		end = maxPosion + 1 //此步避免多跳一次
-		steps++
-	}
-	return steps
-}
-
 //optimize
 var jump = function (nums) {
 	let steps = 0,
@@ -264,6 +251,23 @@ var jump = function (nums) {
 			end = maxPosition
 			steps++
 		}
+	}
+	return steps
+}
+
+//basic
+var jump = function (nums) {
+	const len = nums.length
+	let steps = 0,
+		start = 0,
+		end = 1
+	while (end < len) {
+		let maxPosition = 0
+		for (let i = start; i < end; i++)
+			maxPosition = Math.max(maxPosition, i + nums[i])
+		start = end // 下一次起跳点开始格子
+		end = maxPosition + 1 //此步避免多跳一次
+		steps++
 	}
 	return steps
 }
@@ -316,7 +320,7 @@ var rotate = function (matrix) {
 var rotate = function (matrix) {
 	const n = matrix.length
 	//关键等式1 matrix[row][col] ->  matrix[col][rows - i - 1]
-  //其他点带入 row = col 和 col = rows - row - 1
+	//其他点带入 row = col 和 col = rows - row - 1
 	//遍历顺序：当n为偶数，等分4个区域；当n为奇数，j多一位，中间格子无需转换，i只需走一半
 	for (let i = 0; i < Math.floor(n / 2); i++) {
 		for (let j = 0; j < Math.floor((n + 1) / 2); j++) {
@@ -498,10 +502,10 @@ var setZeroes = function (matrix) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (matrixCopy[i][j] === 0) {
-        //修改当前行
+				//修改当前行
 				for (let p = 0; p < cols; p++) matrix[i][p] = 0
 				//修改当前列
-        for (let q = 0; q < rows; q++) matrix[q][j] = 0
+				for (let q = 0; q < rows; q++) matrix[q][j] = 0
 			}
 		}
 	}
@@ -537,8 +541,10 @@ var setZeroes = function (matrix) {
 		for (let j = 0; j < cols; j++) {
 			if (matrix[i][j] === 0) {
 				//对于不为1的单元进行标记，要先标记下次遍历再转换
-				for (let m = 0; m < rows; m++) if (matrix[m][j] !== 0) matrix[m][j] = marked
-				for (let n = 0; n < cols; n++) if (matrix[i][n] !== 0) matrix[i][n] = marked
+				for (let m = 0; m < rows; m++)
+					if (matrix[m][j] !== 0) matrix[m][j] = marked
+				for (let n = 0; n < cols; n++)
+					if (matrix[i][n] !== 0) matrix[i][n] = marked
 			}
 		}
 	}
@@ -588,16 +594,16 @@ var setZeroes = function (matrix) {
 		n = matrix[0].length
 	let flagCol0 = false
 	for (let i = 0; i < m; i++) {
-    //标记第一列是否需转换
+		//标记第一列是否需转换
 		if (matrix[i][0] === 0) flagCol0 = true
-    //修改第一行和第一列
+		//修改第一行和第一列
 		for (let j = 1; j < n; j++) {
 			if (matrix[i][j] === 0) {
 				matrix[i][0] = matrix[0][j] = 0
 			}
 		}
 	}
-  //倒序根据第一行第一列处理其他单元，防止每一列的第一个元素被提前更新及matrix[i][0]
+	//倒序根据第一行第一列处理其他单元，防止每一列的第一个元素被提前更新及matrix[i][0]
 	for (let i = m - 1; i >= 0; i--) {
 		for (let j = 1; j < n; j++) {
 			if (matrix[i][0] === 0 || matrix[0][j] === 0) {
@@ -656,10 +662,9 @@ var sortColors = function (nums) {
 var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len <= 2) return len
-	//前两个必保留
-	let fast = slow = 2
+	let fast = (slow = 2)
 	while (fast < len) {
-		if (nums[slow - 2] !== nums[fast]) nums[slow++] = nums[fast]
+		if (nums[fast] !== nums[slow - 2]) nums[slow++] = nums[fast]
 		fast++
 	}
 	return slow
@@ -669,9 +674,9 @@ var removeDuplicates = function (nums) {
 ### [88.==合并两个有序数组 E==](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
-//可以使用额外的O(m + n)空间像合并链表一样一个一个复制
+//直观：使用额外的O(m + n)空间像合并链表一样一个一个复制
 
-//最直观的方法是先将数组合并再排序
+//先将数组合并再排序
 var merge = function (nums1, m, nums2, n) {
 	nums1.splice(m, nums1.length - m, ...nums2)
 	nums1.sort((a, b) => a - b)
@@ -694,23 +699,14 @@ var merge = (nums1, m, nums2, n) => {
 var merge = (nums1, m, nums2, n) => {
 	let p1 = m - 1,
 		p2 = n - 1,
-		//nums1后面开始复制的位置
-		k = m + n - 1
-	while (p1 >= 0 && p2 >= 0) nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
-	while (p2 >= 0) nums1[k--] = nums2[p2--]
-}
-
-var merge = (nums1, m, nums2, n) => {
-	let p1 = m - 1,
-		p2 = n - 1,
-    //nums1末尾
-		k = m + n - 1
+		//nums1末尾
+		p = m + n - 1
+	//下句可省略
+	//while (p1 >= 0 && p2 >= 0) nums1[p--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
+	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--], 死循环
 	//nums2全部复制完
-	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--]
-	while (p2 >= 0) nums1[k--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
+	while (p2 >= 0) nums1[p--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
 }
-
-
 ```
 
 ### [189.==轮转数组 E==](https://leetcode-cn.com/problems/rotate-array/)
@@ -731,30 +727,27 @@ var rotate = function (nums, k) {
 
 //额外数组 O(n) - O(n)
 var rotate = (nums, k) => {
-	const len = nums.length,
-		tmp = new Array(len)
-	//元素的新位置为(i+k) % len 的位置
-	for (let i = 0; i < len; i++) {
-		//旋转后的位置
-		tmp[(i + k) % len] = nums[i]
-	}
-	//复制回去
+	const len = nums.length
+	let tmp = new Array(len)
+	//元素的新位置在(i+k) % len
+	for (let i = 0; i < len; i++) tmp[(i + k) % len] = nums[i]
 	for (let i = 0; i < len; i++) nums[i] = tmp[i]
 }
 
 //数组翻转 O(n) - O(1)
 var rotate = (nums, k) => {
 	const len = nums.length
-  k %= len //k mod成小于len的数
-  if (k === 0) return
-  const reverse = (arr, l, r) => {
-    while (l < r) {
-      [arr[l++], arr[r--]] = [arr[r], arr[l]]
-    }
-  }
-  reverse(nums, 0, len - 1)
-  reverse(nums, 0, k - 1)
-  reverse(nums, k, len - 1)
+	//需要2句特判
+	k %= len
+	if (k === 0) return
+	const reverse = (nums, l, r) => {
+		while (l < r) {
+			;[nums[l++], nums[r--]] = [nums[r], nums[l]]
+		}
+	}
+	reverse(nums, 0, len - 1)
+	reverse(nums, 0, k - 1)
+	reverse(nums, k, len - 1)
 }
 ```
 
@@ -765,9 +758,9 @@ var rotate = (nums, k) => {
 var productExceptSelf = (nums) => {
 	const len = nums.length
 	// L和R分别表示左右两侧的乘积列表
-	const left = new Array(len)
-	const right = new Array(len)
-	const ret = new Array(len)
+	let left = new Array(len)
+	let right = new Array(len)
+	let ret = new Array(len)
 	// left[i] 为索引i左侧所有元素的乘积
 	// 对于索引为0的元素，因为左侧没有元素，所以 left[0] = 1
 	left[0] = 1
@@ -797,11 +790,9 @@ var productExceptSelf = function (nums) {
 //best  O(1)
 var productExceptSelf = function (nums) {
 	const len = nums.length,
-		ret = new Array(len)
+	let ret = new Array(len), r = 1
 	ret[0] = 1
 	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]
-	let r = 1
-	//从最后一个开始更新答案
 	for (let i = len - 1; i >= 0; i--) {
 		ret[i] = ret[i] * r
 		r *= nums[i]
@@ -829,10 +820,7 @@ var moveZeroes = function (nums) {
 	let slow = 0
 	for (let fast = 0, len = nums.length; fast < len; fast++) {
 		if (nums[fast] !== 0) {
-			;[nums[slow++], nums[fast]] = [
-				nums[fast],
-				nums[slow],
-			]
+			;[nums[slow++], nums[fast]] = [nums[fast], nums[slow]]
 		}
 	}
 }
@@ -868,29 +856,31 @@ var intersection = function (nums1, nums2) {
 ```javascript
 //最low的是一重枚起点、一重枚终点、再一重枚相加结果
 
-var subarraySum = function(nums, k) {
-  let cnt = 0
-  for (let i = 0, len = nums.length; i < len; i++) {
-    let sum = 0
-    //从后往前sum
-    for (let j = i; j >= 0; j--) {
-      sum += nums[j]
-      if (sum === k) cnt++
-    }
-  }
-  return cnt
+var subarraySum = function (nums, k) {
+	let cnt = 0
+	for (let i = 0, len = nums.length; i < len; i++) {
+		let sum = 0
+		//从后往前sum
+		for (let j = i; j >= 0; j--) {
+			sum += nums[j]
+			if (sum === k) cnt++
+		}
+	}
+	return cnt
 }
 
 //前缀和 + hash
 //pre[i] = pre[i - 1] + num[i] -> pre[i] - pre[i - 1] === k -> pre[j - 1] === pre[i] - k
-var subarraySum = function(nums, k) {
-  let cnt = 0, pre = 0, map = new Map([[0, 1]])
-  for (let num of nums) {
-    pre += num
-    if (map.has(pre - k)) cnt += map.get(pre - k)
-    map.has(pre) ? map.set(pre, map.get(pre) + 1) : map.set(pre, 1) 
-  }
-  return cnt
+var subarraySum = function (nums, k) {
+	let cnt = 0,
+		pre = 0,
+		map = new Map([[0, 1]])
+	for (let num of nums) {
+		pre += num
+		if (map.has(pre - k)) cnt += map.get(pre - k)
+		map.has(pre) ? map.set(pre, map.get(pre) + 1) : map.set(pre, 1)
+	}
+	return cnt
 }
 ```
 

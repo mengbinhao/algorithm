@@ -29,9 +29,7 @@
 
 5. 举例推导 dp 数组(打印 dp 数组)
 
-## 股票系列问题
-
-### [121. 买股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+## [121. 买股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```javascript {.line-numbers}
 //brute force O(n^2) - O(1) 两两暴搜
@@ -94,29 +92,10 @@ var maxProfit = function (prices) {
 }
 ```
 
-### [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+## [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```javascript {.line-numbers}
 //DFS TLE
-var maxProfit = function (prices) {
-	let len = prices.length
-	if (len < 2) return 0
-	let ret = 0
-	//idx当前是第几天，从 0 开始
-	//status 0 表示不持有股票，1表示持有股票
-	//curProfit当前收益
-	const dfs = (prices, idx, status, profit) => {
-		if (idx >= prices.length) if (profit > ret) ret = profit
-		dfs(prices, idx + 1, status, profit)
-		if (status === 0) {
-			dfs(prices, idx + 1, 1, profit - prices[idx])
-		} else {
-			dfs(prices, idx + 1, 0, profit + prices[idx])
-		}
-	}
-	dfs(prices, 0, 0, 0)
-	return ret
-}
 
 //Greedy
 //计算的过程并不是实际的交易过程，收益被分成了若干个阶段
@@ -178,7 +157,7 @@ var maxProfit = function (prices) {
 }
 ```
 
-### [123. 买卖股票的最佳时机 III](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/)
+## [123. 买卖股票的最佳时机 III](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/)
 
 ```javascript {.line-numbers}
 var maxProfit = function (prices) {
@@ -220,7 +199,7 @@ var maxProfit = function (prices) {
 }
 ```
 
-### [188. ==买卖股票的最佳时机== IV](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv/)
+## [188. ==买卖股票的最佳时机== IV](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv/)
 
 ```javascript {.line-numbers}
 var maxProfit = function (k, prices) {
@@ -250,7 +229,7 @@ var maxProfit = function (k, prices) {
 }
 ```
 
-### [309. 最佳买卖股票时机含冷冻期](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+## [309. 最佳买卖股票时机含冷冻期](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
 
 ```javascript {.line-numbers}
 var maxProfit = function (prices) {
@@ -285,7 +264,7 @@ var maxProfit = function (prices) {
 }
 ```
 
-### [714. 买卖股票的最佳时机含手续费](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
+## [714. 买卖股票的最佳时机含手续费](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
 ```javascript {.line-numbers}
 var maxProfit = function (prices, fee) {

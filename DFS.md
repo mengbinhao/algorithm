@@ -106,7 +106,6 @@ var isValidSudoku = function (board) {
 	const rows = {}, //记录每行数字
 		columns = {}, //记录每列数字
 		boxes = {} //记录每个小数独对应的key
-
 	for (let i = 0; i < 9; i++) {
 		for (let j = 0; j < 9; j++) {
 			const num = board[i][j]

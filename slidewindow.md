@@ -32,21 +32,19 @@
 ### [3.==无重复字符的最长子串==](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
 ```javascript {.line-numbers}
-//window version   better
-var lengthOfLongestSubstring = function (s) {
-	const slideWindow = {},
-		len = s.length
-	let l = 0,
-		r = 0,
-		ret = 0
-	while (r < len) {
-		const rChar = s[r++]
-		slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
-		//缩小window左边界，l一直缩到window里当前rChar不重复的位置
-		while (slideWindow[rChar] > 1) slideWindow[s[l++]]--
-		ret = Math.max(ret, r - l)
-	}
-	return ret
+//window version better
+var lengthOfLongestSubstring = function(s) {
+  const len = s.length
+  let start = end = 0, maxLen = 0
+  let slideWindow = {}
+  while (end < len) {
+    const rChar = s[end++]
+    slideWindow[rChar] ? slideWindow[rChar]++ : slideWindow[rChar] = 1
+    //缩小window左边界，l一直缩到window里当前rChar不重复的位置
+    while (slideWindow[rChar] > 1) slideWindow[s[start++]]--
+    maxLen = Math.max(maxLen, end - start)
+  }
+  return maxLen
 }
 
 var lengthOfLongestSubstring = function (s) {
@@ -66,7 +64,7 @@ var lengthOfLongestSubstring = function (s) {
 }
 ```
 
-### [76.==最小覆盖子串==](https://leetcode-cn.com/problems/minimum-window-substring/)
+### [76.==最小覆盖子串 H==](https://leetcode-cn.com/problems/minimum-window-substring/)
 
 ```javascript {.line-numbers}
 var minWindow = function (s, t) {
@@ -74,26 +72,26 @@ var minWindow = function (s, t) {
 		tLen = t.length
 	if (sLen === 0 || tLen === 0 || sLen < tLen) return ''
 	let slideWindow = {},
-    need = {}, //t中需要哪些字母及个数
+		need = {}, //t中需要哪些字母及个数
 		valid = 0, //当t中某个字母找够了加1
-		l = 0,
-		r = 0,
-    begin = 0,
-		minLen = Infinity,
+		start = 0,
+		end = 0,
+		begin = 0,
+		minLen = Infinity
 	for (let c of t) need[c] ? need[c]++ : (need[c] = 1)
-	while (r < sLen) {
-		const rChar = s[r++]
+	while (end < sLen) {
+		const rChar = s[end++]
 		if (need[rChar]) {
 			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
 		//当前扫过的s字母已覆盖t中的所有字母,收缩左边界
 		while (valid === Object.keys(need).length) {
-			if (r - l < minLen) {
-				minLen = r - l
-				begin = l
+			if (end - start < minLen) {
+				minLen = end - start
+				begin = start
 			}
-			const lChar = s[l++]
+			const lChar = s[start++]
 			if (need[lChar]) {
 				if (slideWindow[lChar] === need[lChar]) valid--
 				slideWindow[lChar]--
@@ -104,47 +102,44 @@ var minWindow = function (s, t) {
 }
 ```
 
-### [209.长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
+### [209.==长度最小的子数组==](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
 
 ```javascript {.line-numbers}
 // 1 brute force O(n^2) - O(1)
-var minSubArrayLen = function (s, nums) {
-	if (nums.length === 0) return 0
-	let len = nums.length,
-		ret = Infinity
-	for (let i = 0; i < len; i++) {
-		let sum = 0
-		for (let j = i; j < len; j++) {
-			sum += nums[j]
-			if (sum >= s) {
-				ret = Math.min(ret, j - i + 1)
-				//找最短,找到即返回
-				break
-			}
-		}
-	}
-	return ret === Infinity ? 0 : ret
+var minSubArrayLen = function(target, nums) {
+  const len = nums.length
+  let minLen = Infinity
+  for (let i = 0; i < len; i++) {
+    let sum = 0 
+    for (let j = i; j < len; j++) {
+      sum += nums[j]
+      if (sum >= target) {
+        minLen = Math.min(minLen, j - i + 1)
+        //找最短,找到即返回
+        break
+      }
+    }
+  }
+  return minLen === Infinity ? 0 : minLen
 }
 
 // 2 前缀和 + 二分查找
 
 // 3 双指针滑动窗口  O(n) - O(1)
-var minSubArrayLen = function (s, nums) {
-	const len = nums.length
-	if (len === 0) return 0
-	let ret = Infinity,
-		l = 0, //滑动窗口起始位置
-		r = 0, //滑动窗口结束位置
-		sum = 0
-	while (r < len) {
-		sum += nums[r++]
-		while (sum >= s) {
-			ret = Math.min(ret, r - l)
-			sum -= nums[l++]
-		}
-	}
-	return ret === Infinity ? 0 : ret
-}
+var minSubArrayLen = function(target, nums) {
+  const len = nums.length
+  //滑动窗口起始、结束位置
+  let start = end = sum = 0
+  let minLen = Infinity
+  while (end < len) {
+    sum += nums[end++]
+    while (sum >= target) {
+      minLen = Math.min(minLen, end - start)
+      sum -= nums[start++]
+    }
+  }
+  return minLen === Infinity ? 0 : minLen
+};
 ```
 
 ### [239.==滑动窗口最大值==](https://leetcode-cn.com/problems/sliding-window-maximum/)
@@ -155,7 +150,7 @@ var maxSlidingWindow = function (nums, k) {
 	const len = nums.length
 	let slideWindow = [],
 		ret = []
-	//优化：能形成的最大窗口个数，注意结束条件
+	//优化结束条件
 	for (let i = 0; i < len - k + 1; i++) {
 		for (let j = 0; j < k; j++) slideWindow.push(nums[i + j])
 		ret.push(Math.max(...slideWindow))
@@ -204,7 +199,7 @@ var findAnagrams = function (s, p) {
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
     //收集结果, 这样写会不停update left，区别于76最小覆盖子串的收集结果逻辑
-    //while (valid === Object.keys(need).length) {
+    //while (valid === Object.keys(need).length)
 		while (r - l >= pLen) {
 			if (valid === Object.keys(need).length) ret.push(l)
 			const lChar = s[l++]

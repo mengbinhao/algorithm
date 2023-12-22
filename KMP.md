@@ -6,17 +6,20 @@
 
 ## 前缀&后缀
 
-- 前缀是指不包含最后一个字符的所有以第一个字符开头的连续子串
-- 后缀是指不包含第一个字符的所有以最后一个字符结尾的连续子串
+- 前缀是指不包含最后一个字符的所有以第一个字符开头的连续子串`aabaaf -> a、aa、aab、aaba、aabaa`
+- 后缀是指不包含第一个字符的所有以最后一个字符结尾的连续子串`aabaaf -> f、af、aaf、baaf、abaaf`
 
-## 前缀表（next数组）
+## 前缀表（==next数组==）
 
 - 定义：记录下标i之前（包括i）的字符串中，有多大长度的相同前缀后缀
-- 作用：前缀表是用来回退的，它记录了模式串与主串(文本串)不匹配的时候，模式串应该从哪里开始重新匹配
+
+  ![](./images/kmp-1.png)
+
+- 作用：前缀表是用来回退的，它记录了模式串与主串不匹配的时候，模式串应该从哪里开始重新匹配， 主串指针不回退
 
 ## 时间复杂度分析O(m + n)
 
-## 构造next数组(计算模式串前缀表的过程)
+## 构造next数组(计算模式串前缀表的过程O(m))    
 
 1. 初始化
 2. 处理前后缀不相同的情况
@@ -33,22 +36,21 @@ var strStr = function (haystack, needle) {
 	const getNext = (needle) => {
 		let next = []
 		//i指向后缀末尾位置
-		//j指向前缀末尾位置
+		//j指向前缀末尾位置，也表示最长前缀的长度
 		//next[i] 表示i(包括i)之前最长相等的前后缀长度(其实就是j)
 		let j = 0
 		next.push(j)
 		for (let i = 1; i < needleLen; i++) {
 			//不相等的情况,j不停回退
 			while (j > 0 && needle[i] !== needle[j]) j = next[j - 1]
-			//相等情况
+			//相等情况，最长相等前缀+1
 			if (needle[i] === needle[j]) j++
 			next.push(j)
 		}
 		return next
 	}
 	const next = getNext(needle)
-	let j = 0
-	for (let i = 0, len = haystack.length; i < len; i++) {
+	for (let i = 0, j = 0, len = haystack.length; i < len; i++) {
 		while (j > 0 && haystack[i] !== needle[j]) j = next[j - 1]
 		if (haystack[i] === needle[j]) j++
 		if (j === needleLen) return i - needleLen + 1

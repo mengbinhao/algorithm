@@ -7,10 +7,10 @@
 var reverse = function (x) {
 	let ret = 0
 	while (x) {
-    //x % 10无需管正负
+		//x % 10无需管正负
 		ret = ret * 10 + (x % 10)
-    if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(-2, 31)) return 0
-    //强转32位有符号整数，正数向下取整，负数向上取整
+		if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(-2, 31)) return 0
+		//强转32位有符号整数，正数向下取整，负数向上取整
 		x = (x / 10) | 0
 	}
 	return ret
@@ -58,6 +58,46 @@ var isPalindrome = function (x) {
 }
 ```
 
+### [12.整数转罗马数字](https://leetcode.cn/problems/integer-to-roman/)
+
+```javascript {.line-numbers}
+var intToRoman = function(num) {
+  //从大到小排列
+  const pairs =[[1000, "M"], [900, "CM"], [500, "D"], [400, "CD"], [100, "C"], [90, "XC"], [50, "L"], [40, "XL"], [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]]
+  const ret = []
+  for (let [val, symbol] of pairs) {
+    while (num >= val) {
+      num -= val
+      ret.push(symbol)
+    }
+    if (val === 0) break
+  }
+  return ret.join('')
+}
+```
+
+### [13.罗马数字转整数](https://leetcode.cn/problems/roman-to-integer/)
+
+```javascript {.line-numbers}
+var romanToInt = function(s) {
+  let hash = new Map()
+  hash.set('I', 1)
+  hash.set('V', 5)
+  hash.set('X', 10)
+  hash.set('L', 50)
+  hash.set('C', 100)
+  hash.set('D', 500)
+  hash.set('M', 1000)
+  let ret = 0
+  for (let i = 0, len = s.length; i < len; i++) {
+    const val = hash.get(s[i])
+    if (i < len - 1 && val < hash.get(s[i + 1])) ret -= val
+    else ret += val
+  }
+  return ret
+}
+```
+
 ### [50.==Pow(x, n) M==](https://leetcode-cn.com/problems/powx-n/)
 
 ```javascript
@@ -70,7 +110,7 @@ var myPow = function (x, n) {
 	for (let i = 1; i <= n; i++) ret *= x
 	return ret
 }
-
+1
 //recursion
 var myPow = function (x, n) {
 	if (n === 0) return 1
@@ -123,12 +163,12 @@ var majorityElement = function (nums) {
 }
 
 //hash O(n)
-var majorityElement = function(nums) {
-  let hash = {}
-  for (let i = 0, len = nums.length; i < len; i++) {
-    hash[nums[i]] = hash[nums[i]] !== undefined ? hash[nums[i]] + 1 : 1
-    if (hash[nums[i]] > Math.floor(len / 2)) return nums[i]
-  }
+var majorityElement = function (nums) {
+	let hash = {}
+	for (let i = 0, len = nums.length; i < len; i++) {
+		hash[nums[i]] = hash[nums[i]] !== undefined ? hash[nums[i]] + 1 : 1
+		if (hash[nums[i]] > Math.floor(len / 2)) return nums[i]
+	}
 }
 
 //best 投票算法 O(n) - O(1)
@@ -138,7 +178,7 @@ var majorityElement = function (nums) {
 	for (let i = 1, len = nums.length; i < len; i++) {
 		//Note check sequence!
 		if (count === 0) {
-      ret = nums[i]
+			ret = nums[i]
 			count++
 		} else if (nums[i] === ret) {
 			count++

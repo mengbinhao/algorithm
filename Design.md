@@ -270,6 +270,43 @@ MyQueue.prototype.in2out = function () {
 }
 ```
 
+### [380.O(1) 时间插入、删除和获取随机元素](https://leetcode.cn/problems/insert-delete-getrandom-o1/)
+
+```javascript {.line-numbers}
+var RandomizedSet = function () {
+	//search O(1)
+	this.nums = []
+	//add、delete O(1)
+  //key -> val, val -> idx
+	this.hash = new Map()
+}
+
+RandomizedSet.prototype.insert = function (val) {
+	if (this.hash.has(val)) return false
+	//插入到最后一个位置
+	const idx = this.nums.length
+	this.nums.push(val)
+	this.hash.set(val, idx)
+	return true
+}
+
+RandomizedSet.prototype.remove = function (val) {
+	if (!this.hash.has(val)) return false
+  //nums最后一个位置移到要删除的位置，删除nums最后一个元素
+	let idx = this.hash.get(val)
+	this.nums[idx] = this.nums[this.nums.length - 1]
+	this.hash.set(this.nums[idx], idx)
+	this.nums.pop()
+	this.hash.delete(val)
+	return true
+}
+
+RandomizedSet.prototype.getRandom = function () {
+	const randomIdx = Math.floor(Math.random() * this.nums.length)
+	return this.nums[randomIdx]
+}
+```
+
 ### [622.设计循环队列](https://leetcode.cn/problems/design-circular-queue/)
 
 > 在循环队列中，当队列为空，`front=rear`；而当所有队列空间全占满时，也有`front=rear`。为了区别这两种情况，假设队列使用的数组有`capacity`个存储空间，则此时规定循环队列最多只能有`capacity−1`个队列元素，当循环队列中只剩下一个空存储单元时，则表示队列已满。
