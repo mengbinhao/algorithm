@@ -18,7 +18,7 @@ Some frequent leetcode questions implement by JavaScript
 
 ### 前缀和
 
-- 53 最大子数组和
+- 53 最大子数组和 （Brute Force、DP、Kadane）
 - 238 除自身以外数组的乘积 （前缀积）
 - 560 和为 K 的子数组 （前缀和 + hash）
 
@@ -61,3 +61,6 @@ Some frequent leetcode questions implement by JavaScript
 - 最长公共子序列
 - 最长重复子数组
 - 连续子数组的最大和
+- 最长有效括号
+- 最长回文子串
+- 最大子数组和

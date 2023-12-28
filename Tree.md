@@ -516,7 +516,6 @@ var rightSideView = function (root) {
 	if (!root) return []
 	const ret = [],
 		queue = [root]
-
 	while (queue.length > 0) {
 		const size = queue.length
 		for (let i = 0; i < size; i++) {
@@ -846,7 +845,7 @@ var generateTrees = function (n) {
 }
 ```
 
-##### [108.==将有序数组转换为二叉搜索树==](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
+##### [108.==将有序数组转换为二叉搜索树（分治）==](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
 
 ```javascript {.line-numbers}
 var sortedArrayToBST = function (nums) {
@@ -1164,7 +1163,7 @@ var isBalanced = function (root) {
 
 ```javascript {.line-numbers}
 var countNodes = function (root) {
-	if (root == null) return 0
+	if (!root) return 0
 	let l = root,
 		r = root
 	let lh = 0,
@@ -1474,7 +1473,6 @@ var hasPathSum = function (root, sum) {
 	}
 	return false
 }
-
 ```
 
 ##### [113.==路径总和 II==](https://leetcode-cn.com/problems/path-sum-ii/)
@@ -1503,8 +1501,9 @@ var pathSum = function (root, targetSum) {
 var pathSum = function (root, sum) {
 	const dfs = (root, sum) => {
 		if (!root) return 0
+    //当前层下面所有的符合项
 		let cnt = 0
-		if (sum === root.val) ret++
+		if (sum === root.val) cnt++
 		cnt += dfs(root.left, sum - root.val)
 		cnt += dfs(root.right, sum - root.val)
 		return cnt
@@ -1527,7 +1526,7 @@ var maxPathSum = function (root) {
 		const left = Math.max(dfs(root.left), 0)
 		const right = Math.max(dfs(root.right), 0)
 		//update innerSum = left + right + root.val
-		ret = Math.max(retMax, left + right + root.val)
+		ret = Math.max(ret, left + right + root.val)
 		return Math.max(left, right) + root.val
 	}
 	dfs(root)
@@ -1598,20 +1597,16 @@ var buildTree = function (inorder, postorder) {
 		postLen = postorder.length
 	if (inLen !== postLen) throw new TypeError('invalid params')
 	const map = new Map()
-
 	//space for time
 	//get root idx in inorder
 	//note question: no same value Node, which means can form a specific tree
 	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
-
 	return helper(postorder, 0, postLen - 1, map, 0, inLen - 1)
-
 	function helper(postorder, postLeft, postRight, map, inLeft, inRight) {
 		if (inLeft > inRight || postLeft > postRight) return null
 		const rootVal = postorder[postRight],
 			root = new TreeNode(rootVal),
 			pIndex = map.get(rootVal)
-
 		root.left = helper(
 			postorder,
 			postLeft,
@@ -1703,6 +1698,28 @@ var constructMaximumBinaryTree = function (nums) {
 ##### [114.==二叉树展开为链表==](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/)
 
 ```javascript {.line-numbers}
+var flatten = function (root) {
+	const list = []
+	const stack = []
+	let node = root
+	while (node !== null || stack.length) {
+		while (node !== null) {
+			list.push(node)
+			stack.push(node)
+			node = node.left
+		}
+		node = stack.pop()
+		node = node.right
+	}
+	const size = list.length
+	for (let i = 1; i < size; i++) {
+		const prev = list[i - 1],
+			curr = list[i]
+		prev.left = null
+		prev.right = curr
+	}
+}
+
 var flatten = function (root) {
 	if (!root) return
 	flatten(root.left)

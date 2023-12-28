@@ -227,17 +227,17 @@ var trap = function (height) {
 ### [71.简化路径](https://leetcode.cn/problems/simplify-path/)
 
 ```javascript {.line-numbers}
-var simplifyPath = function (path) {
-	const names = path.split('/')
-	const stack = []
-	for (let name of names) {
-		if (name === '..') {
-			if (stack.length > 0) stack.pop()
-		} else if (name.length && name !== '.') {
-			stack.push(name)
-		}
-	}
-	return '/' + stack.join('/')
+var simplifyPath = function(path) {
+  let names = path.split('/')
+  let stack = []
+  for (let name of names) {
+    if (name === '..') {
+      if (stack.length) stack.pop()
+    } else if (name.length > 0 && name !== '.') {
+      stack.push(name)
+    }
+  }
+  return `/${stack.join('/')}`
 }
 ```
 

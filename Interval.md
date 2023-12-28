@@ -1,7 +1,6 @@
 ### [56.==合并区间==](https://leetcode.cn/problems/merge-intervals/)
 
 ```javascript
-//version 1
 var merge = function (intervals) {
 	//precondition, 按起点排序
 	intervals.sort((a, b) => a[0] - b[0])
@@ -9,6 +8,7 @@ var merge = function (intervals) {
 	for (let i = 1, len = intervals.length; i < len; i++) {
 		const L = intervals[i][0],
 			R = intervals[i][1]
+    //新区间
 		if (ret[ret.length - 1][1] < L) {
 			ret.push([L, R])
 		} else {
@@ -36,5 +36,28 @@ var merge = function (intervals) {
 		i = j
 	}
 	return ret
+}
+```
+
+### [228.==汇总区间==](https://leetcode.cn/problems/summary-ranges/)
+
+```javascript
+var summaryRanges = function(nums) {
+  const len = nums.length
+  let i = 0
+  let ret = []
+  while (i < len) {
+    const low = i
+    i++
+    while (i < len && nums[i] === nums[i - 1] + 1) i++
+    const high = i - 1
+    let tmp = ['' + nums[low]]
+    if (high > low) {
+      tmp.push('->')
+      tmp.push('' + nums[high])
+    }
+    ret.push(tmp.join(''))
+  }
+  return ret
 }
 ```

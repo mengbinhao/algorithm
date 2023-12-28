@@ -150,7 +150,7 @@ var isPalindrome = function (s) {
 }
 ```
 
-### [151. ==翻转字符串里的单词 M==](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
+### [151. ==反转字符串里的单词 M==](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
 
 ```javascript {.line-numbers}
 //使用系统函数
@@ -398,7 +398,7 @@ const reverse = (arr, l, r) => {
 ```javascript {.line-numbers}
 //自己写split和reverse
 var reverseWords = function (s) {
-	function mySplit(s) {
+	const mySplit = s => {
 		let words = [],
 			word = ''
 		for (let i = 0; i < s.length; i++) {
@@ -412,19 +412,14 @@ var reverseWords = function (s) {
 		words.push(word)
 		return words
 	}
-	function myReverse(word) {
+	const myReverse = word => {
 		let ret = ''
-		for (let i = word.length - 1; i >= 0; i--) {
-			ret += word[i]
-		}
+		for (let i = word.length - 1; i >= 0; i--) ret += word[i]
 		return ret
 	}
 	let words = mySplit(s),
 		ret = ''
-
-	for (let word of words) {
-		ret += myReverse(word) + ' '
-	}
+	for (let word of words) ret += myReverse(word) + ' '
 	return ret.substring(0, ret.length - 1)
 }
 

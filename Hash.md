@@ -3,7 +3,7 @@
 ```javascript
 //obj version
 var groupAnagrams = function (strs) {
-	const hash = {}
+	let hash = {}
 	for (let str of strs) {
 		//sort后相同的字母组成的不同的字符串排序相同
 		const key = [...str].sort().toString()
@@ -32,8 +32,9 @@ var groupAnagrams = function (strs) {
 ### [128.==最长连续序列==](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 
 ```javascript
+//hash
 var longestConsecutive = function (nums) {
-	const set = new Set(nums)
+	let set = new Set(nums)
 	let ret = 0
 	for (let num of nums) {
 		//当不存在num - 1时才从num开始枚举以跳过重复枚举的情况
@@ -48,6 +49,48 @@ var longestConsecutive = function (nums) {
 		}
 	}
 	return ret
+}
+```
+
+### [202.==快乐数==](https://leetcode-cn.com/problems/happy-number/)
+
+```javascript {.line-numbers}
+//hash
+const getN = n => {
+	//if (n === 1 || n === 0) return n
+	let res = 0
+	while (n > 0) {
+    let d = n % 10
+		res += d * d
+		n = parseInt(n / 10)
+	}
+	return res
+}
+
+var isHappy = function (n) {
+	let set = new Set()
+	while (n !== 1 && !set.has(n)) {
+		set.add(n)
+		n = getN(n)
+	}
+	return n === 1
+}
+```
+
+### [205.同构字符串](https://leetcode.cn/problems/isomorphic-strings/)
+
+```javascript {.line-numbers}
+var isIsomorphic = function (s, t) {
+	let s2t = {}
+	let t2s = {}
+	const len = s.length
+	for (let i = 0; i < len; i++) {
+		const x = s[i], y = t[i]
+		if ((s2t[x] && s2t[x] !== y) || (t2s[y] && t2s[y] !== x)) return false
+		s2t[x] = y
+		t2s[y] = x
+	}
+	return true
 }
 ```
 
@@ -71,6 +114,7 @@ var isAnagram = function (s, t) {
 		if (hash[c]) {
 			hash[c]--
 			//meet return immediately
+      //include hash[c] <= 0
 		} else {
 			return false
 		}
@@ -89,6 +133,46 @@ var isAnagram = function (s, t) {
 	for (let i = 0; i < len; i++)
 		if (--arr[t.charCodeAt(i) - baseCode] < 0) return false
 	return true
+}
+```
+
+### [290.单词规律](https://leetcode.cn/problems/word-pattern/)
+
+```javascript {.line-numbers}
+var wordPattern = function (pattern, s) {
+  //不能用obj,会关联到原型链属性
+	let w2c = new Map()
+	let c2w = new Map()
+	let words = s.split(' ')
+	if (pattern.length !== words.length) return false
+	for (let [i, word] of words.entries()) {
+		const c = pattern[i]
+		if ((w2c.has(word) && w2c.get(word) !== c) || (c2w.has(c) && c2w.get(c) !== word))
+			return false
+		w2c.set(word, c)
+		c2w.set(c, word)
+	}
+	return true
+}
+```
+
+### [383.赎金信](https://leetcode.cn/problems/ransom-note/)
+
+```javascript {.line-numbers}
+var canConstruct = function(ransomNote, magazine) {
+  const rLen = ransomNote.length
+  const mLen = magazine.length
+  if (rLen > mLen) return false
+  let hash = {}
+  for (let c of magazine) hash[c] ? hash[c]++ : hash[c] = 1
+  for (let c of ransomNote) {
+    if (!hash[c]) {
+      return false
+    } else {
+      if (--hash[c] < 0) return false
+    }
+  }
+  return true
 }
 ```
 

@@ -290,7 +290,7 @@ var isMatch = function (s, p) {
 ```javascript {.line-numbers}
 //brute force
 var maxSubArray = function (nums) {
-	let max = -Infinity,
+	let max = -Infinity
 	const len = nums.length
 	let sum = 0
 	for (let i = 0; i < len; i++) {
@@ -308,6 +308,7 @@ var maxSubArray = function (nums) {
 //只需要遍历一次计算出所有的 S(i), 其中 i = 0,1,2....,n-1.然后我们再减去之前的S(k),其中 k = 0，1，i - 1,中的最小值即可
 //O(n) - O(1)
 var maxSubArray = function(nums) {
+  //Note initial value
   let preSum = 0, maxPreSum = nums[0], minPreSum = 0
   for (let num of nums) {
     preSum += num
@@ -334,18 +335,15 @@ var maxSubArray = function (nums) {
 }
 
 //dp优化 O(n) - O(1)
-var maxSubArray = function (nums) {
-	const len = nums.length
-	if (len === 0) return 0
-	let prev = nums[0],
-		ret = nums[0],
-		cur
-	for (let i = 1; i < len; i++) {
-		cur = Math.max(prev + nums[i], nums[i])
-		ret = Math.max(ret, cur)
-		prev = cur
-	}
-	return ret
+var maxSubArray = function(nums) {
+  const len = nums.length
+  let pre = 0
+  let ret = nums[0]
+  for (let i = 0; i < len; i++) {
+    pre = Math.max(pre + nums[i], nums[i])
+    ret = Math.max(ret, pre)
+  }
+  return ret
 }
 ```
 
@@ -530,9 +528,7 @@ var minimumTotal = function (triangle) {
 	if (height === 0) return 0
 	const dp = new Array(height)
 	// base case 是最后一行
-	for (let i = 0; i < height; i++) {
-		dp[i] = triangle[height - 1][i]
-	}
+	for (let i = 0; i < height; i++) dp[i] = triangle[height - 1][i]
 	for (let i = height - 2; i >= 0; i--) {
 		//每次更新比上一行少一个
 		for (let j = 0; j <= i; j++) {
@@ -621,7 +617,7 @@ var lengthOfLIS = function (nums) {
 	const len = nums.length
 	if (len === 0) return 0
 	//dp[i]以nums[i]为结尾的最长递增子序列的长度
-	//nums[i]必须被选取,所以初始化为1
+	//nums[i]必须被选取,初始化为1
 	let dp = new Array(len).fill(1),
 		ret = 1
 	//dp[i] = max(dp[0…i−1]) + 1,其中0 ≤ j < i且num[j] < num[i]
@@ -980,7 +976,6 @@ var coinChange = function (coins, amount) {
 	let ret = Infinity
 	const dfs = (coins, remain, count) => {
 		if (remain < 0) return
-		// means successful
 		if (remain === 0) {
 			ret = Math.min(ret, count)
 			return

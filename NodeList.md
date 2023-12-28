@@ -47,6 +47,7 @@ var addTwoNumbers = function (l1, l2) {
 	let dummyNode = new ListNode(-1)
 	let cur = dummyNode,
 		carry = 0
+  //短路
 	while (l1 || l2 || carry) {
 		const x = l1 ? l1.val : 0
 		const y = l2 ? l2.val : 0
@@ -303,8 +304,8 @@ var rotateRight = function (head, k) {
 		cur = head
 	//get length
 	while (cur.next) {
+     len++
 		cur = cur.next
-		len++
 	}
 	// 当k大于长度时, 又是一个轮回, 对长度取余
 	const num = k % len
@@ -330,12 +331,11 @@ var deleteDuplicates = function (head) {
 	if (!head) return head
 	let dummyHead = new ListNode(-1, head)
 	let cur = dummyHead
+  //每次检查下两个
 	while (cur.next && cur.next.next) {
 		if (cur.next.val === cur.next.next.val) {
 			const x = cur.next.val
-			while (cur.next && cur.next.val === x) {
-				cur.next = cur.next.next
-			}
+			while (cur.next && cur.next.val === x) cur.next = cur.next.next
 		} else {
 			cur = cur.next
 		}
@@ -343,7 +343,7 @@ var deleteDuplicates = function (head) {
 	return dummyHead.next
 }
 
-//dxc version
+//daxuecai version
 var deleteDuplicates = function(head) {
   let dummyNode = new ListNode(-1, head)
   let p = dummyNode
@@ -421,13 +421,14 @@ var partition = function (head, x) {
 ### [92. 反转链表 II](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
 
 ```javascript {.line-numbers}
-//loop once
 var reverseBetween = function (head, left, right) {
 	const dummyHead = new ListNode(-1, head)
 	let pre = dummyHead
+  //待翻转的前驱
 	for (let i = 0; i < left - 1; i++) pre = pre.next
 	let cur = pre.next
 	for (let i = 0; i < right - left; i++) {
+    //cur每次后移一位,故next相应后移一位
 		const next = cur.next
 		//按顺序穿
 		cur.next = next.next
@@ -470,7 +471,7 @@ var sortedListToBST = function (head) {
 ```javascript {.line-numbers}
 //回溯 + hash O(n) - O(n)
 var copyRandomList = function (head, cachedNode = new Map()) {
-	if (head === null) return null
+	if (!head) return null
 	if (!cachedNode.has(head)) {
 		cachedNode.set(head, { val: head.val })
 		Object.assign(cachedNode.get(head), {

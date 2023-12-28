@@ -267,7 +267,7 @@ var rotate = (nums, k) => {
 }
 ```
 
-#### [153.==寻找旋转排序数组中的最小值==](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
+#### [153.==寻找旋转排序数组中的最小值（<模板）==](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 ```javascript
 var findMin = function (nums) {
@@ -450,7 +450,7 @@ var search = function (arr, target) {
 //template version
 const findFirstPosition = (arr, target) => {
 	let l = 0,
-		r = len - 1,
+		r = arr.length - 1,
 		mid
 	while (l <= r) {
 		mid = Math.floor((r - l) / 2 + l)
@@ -470,6 +470,7 @@ const findFirstPosition = (arr, target) => {
 }
 
 const findLastPosition = (arr, target) => {
+  const len = arr.length
 	let l = 0,
 		r = len - 1,
 		mid
@@ -492,8 +493,7 @@ const findLastPosition = (arr, target) => {
 
 var searchRange = function (nums, target) {
 	let ret = [-1, -1]
-	const len = nums.length
-	if (len === 0) return ret
+	if (nums.length === 0) return ret
 	const firstPosition = findFirstPosition(nums, target)
 	if (firstPosition === -1) return ret
 	const lastPosition = findLastPosition(nums, target)
@@ -659,7 +659,7 @@ var findNumberIn2DArray = function (matrix, target) {
 }
 ```
 
-##### [240.搜索二维矩阵 II](https://leetcode.cn/problems/search-a-2d-matrix-ii/)
+#### [240.搜索二维矩阵 II](https://leetcode.cn/problems/search-a-2d-matrix-ii/)
 
 ```javascript
 //brute force O(mn)

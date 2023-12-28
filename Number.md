@@ -98,7 +98,7 @@ var romanToInt = function(s) {
 }
 ```
 
-### [50.==Pow(x, n) M==](https://leetcode-cn.com/problems/powx-n/)
+### [50.Pow(x, n) M](https://leetcode-cn.com/problems/powx-n/)
 
 ```javascript
 //brute force
@@ -110,7 +110,7 @@ var myPow = function (x, n) {
 	for (let i = 1; i <= n; i++) ret *= x
 	return ret
 }
-1
+
 //recursion
 var myPow = function (x, n) {
 	if (n === 0) return 1
@@ -190,19 +190,9 @@ var majorityElement = function (nums) {
 }
 ```
 
-### [172.==阶乘后的零==](https://leetcode-cn.com/problems/factorial-trailing-zeroes/)
+### [172.阶乘后的零](https://leetcode-cn.com/problems/factorial-trailing-zeroes/)
 
 ```javascript {.line-numbers}
-//O(logN) - O(1) simplest version
-var trailingZeroes = function (n) {
-	let ret = 0
-	while (n > 0) {
-		n = (n / 5) | 0
-		ret += n
-	}
-	return ret
-}
-
 //O(n) - O(1)
 const trailingZeroes = (n) => {
 	let zeroCount = 0
@@ -216,43 +206,40 @@ const trailingZeroes = (n) => {
 	}
 	return zeroCount
 }
+
+//O(logN) - O(1) advanced version
+var trailingZeroes = function (n) {
+	let ret = 0
+	while (n > 0) {
+		n = (n / 5) | 0
+		ret += n
+	}
+	return ret
+}
 ```
 
 ### [202.==快乐数==](https://leetcode-cn.com/problems/happy-number/)
 
 ```javascript {.line-numbers}
-function getN(n) {
-	if (n == 1 || n == 0) return n
+//hash
+const getN = n => {
+	//if (n === 1 || n === 0) return n
 	let res = 0
-	while (n) {
-		res += (n % 10) * (n % 10)
+	while (n > 0) {
+    let d = n % 10
+		res += d * d
 		n = parseInt(n / 10)
 	}
 	return res
 }
 
 var isHappy = function (n) {
-	const set = new Set()
+	let set = new Set()
 	while (n !== 1 && !set.has(n)) {
 		set.add(n)
 		n = getN(n)
 	}
 	return n === 1
-}
-
-//solution 2
-var isHappy = function (n) {
-	let set = new Set()
-	let totalCount
-	while (totalCount !== 1) {
-		let arr = ('' + (totalCount || n)).split('')
-		totalCount = arr.reduce((total, num) => {
-			return total + num * num
-		}, 0)
-		if (set.has(totalCount)) return false
-		set.add(totalCount)
-	}
-	return true
 }
 ```
 
