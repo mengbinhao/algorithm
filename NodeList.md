@@ -768,22 +768,15 @@ var isPalindrome = function (head) {
 ```javascript {.line-numbers}
 var oddEvenList = function (head) {
 	if (!head || !head.next) return head
-
-	const dummyHead1 = new ListNode(-1)
-	dummyHead1.next = head
-	const dummyHead2 = new ListNode(-1)
-	dummyHead2.next = head.next
-
+	const dummyHead1 = new ListNode(-1, head)
+	const dummyHead2 = new ListNode(-1, head.next)
 	let odd = dummyHead1.next
 	let even = dummyHead2.next
-
 	while (odd && odd.next && even && even.next) {
 		const oddNext = odd.next.next
 		const evenNext = even.next.next
-
 		odd.next = oddNext
 		even.next = evenNext
-
 		odd = oddNext
 		even = evenNext
 	}

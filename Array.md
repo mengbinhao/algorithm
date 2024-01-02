@@ -789,7 +789,7 @@ var productExceptSelf = function (nums) {
 
 //best  O(1)
 var productExceptSelf = function (nums) {
-	const len = nums.length,
+	const len = nums.length
 	let ret = new Array(len), r = 1
 	ret[0] = 1
 	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]

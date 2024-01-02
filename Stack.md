@@ -540,6 +540,31 @@ var maxSlidingWindow = function (nums, k) {
 }
 ```
 
+### [735.小行星碰撞](https://leetcode.cn/problems/asteroid-collision/)
+
+```javascript
+var asteroidCollision = function (asteroids) {
+	let stack = []
+	for (let aster of asteroids) {
+		let alive = true
+		while (
+			alive &&
+			aster < 0 &&
+			stack.length > 0 &&
+			stack[stack.length - 1] > 0
+		) {
+			alive = stack[stack.length - 1] < -aster // aster 是否存在
+			if (stack[stack.length - 1] <= -aster) stack.pop() //栈顶行星爆炸
+		}
+		if (alive) stack.push(aster)
+	}
+	//const size = stack.length
+	//let ret = new Array(size).fill(0)
+	//for (let i = size - 1; i >= 0; i--) ret[i] = stack.pop()
+	return stack
+}
+```
+
 ### [739.==每日温度==](https://leetcode.cn/problems/daily-temperatures/)
 
 ```javascript

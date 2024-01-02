@@ -249,6 +249,24 @@ var reverseString = function (s) {
 }
 ```
 
+### [345. 反转字符串中的元音字母 E](https://leetcode.cn/problems/reverse-vowels-of-a-string/)
+
+```javascript {.line-numbers}
+var reverseVowels = function (s) {
+	const isVowel = (c) => 'aeiouAEIOU'.indexOf(c) >= 0
+	const len = s.length
+	let i = 0,
+		j = len - 1
+	let arr = [...s]
+	while (i < j) {
+		while (i < len && !isVowel(arr[i])) i++
+		while (j > 0 && !isVowel(arr[j])) j--
+		if (i < j) [arr[i++], arr[j--]] = [arr[j], arr[i]]
+	}
+	return arr.join('')
+}
+```
+
 ### [387. ==字符串中的第一个唯一字符 E==](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
 
 ```javascript {.line-numbers}

@@ -751,7 +751,7 @@ var searchBST = function (root, val) {
 }
 
 var searchBST = function (root, val) {
-	while (root !== null) {
+	while (root) {
 		if (root.val > val) {
 			root = root.left
 		} else if (root.val < val) {
