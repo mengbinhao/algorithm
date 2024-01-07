@@ -40,9 +40,12 @@ pre.next = pre.next.next
 
 ## 3 questions
 
-### [2. ==两数相加==](https://leetcode-cn.com/problems/add-two-numbers/)
+### [2. ==两数相加==](https://leetcode-cn.com/problems/add-two-numbers/)(引申大数相加)
 
 ```javascript {.line-numbers}
+//1 分别将链表转换成数字，再相加
+
+//2 直接对应数字相加
 var addTwoNumbers = function (l1, l2) {
 	let dummyNode = new ListNode(-1)
 	let cur = dummyNode,
@@ -59,7 +62,7 @@ var addTwoNumbers = function (l1, l2) {
 		if (l2) l2 = l2.next
 	}
 	//最后的进位
-	//if (carry) cur.next = new ListNode(1)
+	//if (carry) cur.next = new ListNode(carry)
 	return dummyNode.next
 }
 ```

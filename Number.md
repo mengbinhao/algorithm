@@ -1,11 +1,53 @@
 > ==无论什么语言整数操作都需要考虑溢出==
+>
+> 计算机中所有数据的存储和运算都是以"二进制补码"进行的
 
 ### [7.==整数反转==](https://leetcode-cn.com/problems/reverse-integer/)
 
 ```javascript {.line-numbers}
-//simple version
+//brute force
 var reverse = function (x) {
+	const sign = x > 0 ? 1 : -1
+	//x都按整数处理
+	x = x < 0 ? -x : x
+	//1 整数转字符串，在转数组
+	const arr = [...(x + '')]
+	const len = arr.length
+	const tmp = new Array(len)
+	//2 反向遍历将元素放到新数组中
+	for (let i = len - 1; i >= 0; i--) tmp[len - 1 - i] = arr[i]
+	//3 将新数组转成字符串，在转整数输出
+	//+会自动处理前导零
+	const ret = +tmp.join('')
+	if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(2, -31)) return 0
+	return ret * sign
+}
+
+//two pointer
+var reverse = function (x) {
+	const sign = x > 0 ? 1 : -1
+	//x都按整数处理
+	x = x < 0 ? -x : x
+	//1 整数转字符串，在转数组
+	const arr = [...(x + '')]
+	let l = 0, r = arr.length - 1
+	//2 交换两边值
+	while (l < r) {
+    [arr[l++], arr[r--]] = [arr[r], arr[l]]
+  }
+	//3 将原数组转成字符串，在转整数输出
+	//+会自动处理前导零
+	const ret = +arr.join('')
+	if (ret > Math.pow(2, 31) - 1 || ret < Math.pow(2, -31)) return 0
+	return ret * sign
+}
+
+// math way
+var reverse = function (x) {
+  const sign = x > 0 ? 1 : -1
+  x = x < 0 ? -x : x
 	let ret = 0
+  //最高位/10 === 0 or 最高位%10 === 最高位
 	while (x) {
 		//x % 10无需管正负
 		ret = ret * 10 + (x % 10)
@@ -13,20 +55,7 @@ var reverse = function (x) {
 		//强转32位有符号整数，正数向下取整，负数向上取整
 		x = (x / 10) | 0
 	}
-	return ret
-}
-
-//advanced version
-var reverse = function (x) {
-	let ret = 0
-	while (x !== 0) {
-		//x % 10无需管正负
-		ret = ret * 10 + (x % 10)
-		//强转32位有符号整数，正数向下取整，负数向上取整
-		x = (x / 10) | 0
-	}
-	//超过32位的整数转换结果不等于自身，用作溢出判断
-	return (ret | 0) === ret ? ret : 0
+	return ret * sign
 }
 ```
 

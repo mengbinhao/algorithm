@@ -210,7 +210,7 @@ var hammingWeight = function(n) {
     if (n >> i & 1) ret++
   }
   return ret
-};
+}
 ```
 
 ### [201.数字范围按位与](https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/)
