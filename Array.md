@@ -169,6 +169,22 @@ var threeSum = function (nums) {
 ### [26.==删除排序数组重复项 E==](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
 ```javascript
+//brute force
+var removeDuplicates = function (nums) {
+	let len = nums.length
+	for (let i = 0; i < len; ) {
+		if (nums[i] !== nums[i + 1]) {
+			i++
+		} else {
+			for (let j = i + 1; j < len; j++) {
+				nums[j] = nums[j + 1]
+			}
+			len--
+		}
+	}
+	return len
+}
+
 //slow - fast pointer
 var removeDuplicates = function (nums) {
 	const len = nums.length
@@ -178,6 +194,18 @@ var removeDuplicates = function (nums) {
 		fast++
 	}
 	return slow
+}
+
+var removeDuplicates = function (nums) {
+	const len = nums.length
+	let slow = 0, fast = 1
+	while (fast < len) {
+		if (nums[fast] !== nums[fast - 1]) {
+      if (++slow !== fast) nums[slow] = nums[fast]
+    }
+		fast++
+	}
+	return slow + 1
 }
 
 //more effective
@@ -931,3 +959,60 @@ var relativeSortArray = function (arr1, arr2) {
 	})
 }
 ```
+
+### [==汉诺塔问题==](https://leetcode.cn/problems/hanota-lcci/description/)
+
+```javascript
+// 1 找到最小的圆盘，移动到下一个柱子上
+// 2 另外两根柱子上可以移动的圆盘移到新的柱子上，当两根柱子都非空时，移动较小的那个圆盘
+var hanota = function (A, B, C) {
+	const len = A.length
+	let pillars = new Array(3)
+	pillars[0] = A
+	//1 确定盘子摆放顺序
+	if (len % 2 === 0) {
+		pillars[1] = B
+		pillars[2] = C
+	} else {
+		pillars[1] = C
+		pillars[2] = B
+	}
+	//最小盘子所在柱子下标
+	let minIdx = 0
+	while (C.length < len) {
+		let cur = pillars[minIdx]
+		//编号最小盘子所在柱子的下一个柱子
+		minIdx = (minIdx + 1) % 3
+		let next = pillars[minIdx]
+		//编号最小盘子所在柱子的上一个柱子
+		let pre = pillars[(minIdx + 1) % 3]
+		//最小的圆盘移动到下一个柱子
+		next.push(cur.pop())
+		//另外两根柱子上可以移动的圆盘移到新的柱子上，当两根柱子都非空时，移动较小的那个圆盘
+		let plateMove1 = pre.length === 0 ? Infinity : pre[pre.length - 1]
+		let plateMove2 = cur.length === 0 ? Infinity : cur[cur.length - 1]
+		plateMove1 < plateMove2 ? cur.push(pre.pop()) : pre.push(cur.pop())
+	}
+	console.log(C)
+}
+
+//recursion
+//f(n, A, B,C) => f(n - 1, A, C, B) + M(A, C) + f(n - 1, B, A, C)
+var hanota = function (A, B, C) {
+	const helper = (c, from, tmp, to) => {
+		//terminate
+		if (c === 1) {
+			to.push(from.pop())
+			return
+		}
+		//将n - 1个盘子从第一个柱子移动到第二个柱子
+		helper(c - 1, from, to, tmp)
+		//将第n个盘子从第一个柱子移动到第三个柱子
+		to.push(from.pop())
+		//将n - 1个盘子从第二个柱子移动到第三个柱子
+		helper(c - 1, tmp, from, to)
+	}
+	helper(A.length, A, B, C)
+}
+```
+

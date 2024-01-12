@@ -601,61 +601,99 @@ var mySqrt = function (x) {
 #### [74.==搜索二维矩阵==](https://leetcode.cn/problems/search-a-2d-matrix/)
 
 ```javascript
-//对矩阵的第一列二分查找，找到最后一个不大于目标值的元素
-//然后在该元素所在行二分查找目标值是否存在
-const binarySearchFirstColumn = (matrix, target) => {
-	let l = 0,
-		r = matrix.length - 1,
-		mid
-	while (l <= r) {
-		mid = Math.floor((r + l) / 2)
-		if (matrix[mid][0] <= target) {
-			l = mid + 1
-		} else {
-			r = mid - 1
-		}
-	}
-	return r
-}
+//brute force
+//遍历每个元素
 
-const binarySearchRow = (row, target) => {
-	let l = 0,
-		r = row.length - 1,
-		mid
-	while (l <= r) {
-		mid = Math.floor((r + l) / 2)
-		if (row[mid] === target) {
-			return true
-		} else if (row[mid] > target) {
-			r = mid - 1
-		} else {
-			l = mid + 1
-		}
-	}
-	return false
-}
-
+//对每一行都使用一次二分查找
 var searchMatrix = function (matrix, target) {
-	const rowIdx = binarySearchFirstColumn(matrix, target)
-	if (rowIdx < 0) return false
-	return binarySearchRow(matrix[rowIdx], target)
+	if (matrix.length == 0 || matrix[0].length == 0) return false
+	for (const row of matrix) {
+		if (search(row, target) >= 0) return true
+	}
+	return false
 }
 
-//better 左下角坐标轴法 
-var findNumberIn2DArray = function (matrix, target) {
-	if (!matrix.length) return false
-	let x = matrix.length - 1,
-		y = 0
-	while (x >= 0 && y < matrix[0].length) {
-		if (matrix[x][y] === target) {
-			return true
-		} else if (matrix[x][y] > target) {
-			x--
+const search = (nums, target) => {
+	let low = 0,
+		high = nums.length - 1
+	while (low <= high) {
+		const mid = Math.floor((high - low) / 2) + low
+		const num = nums[mid]
+		if (num === target) {
+			return mid
+		} else if (num > target) {
+			high = mid - 1
 		} else {
-			y++
+			low = mid + 1
+		}
+	}
+	return -1
+}
+
+//better 左下角或右上角坐标轴法 
+var findNumberIn2DArray = function (matrix, target) {
+	if (matrix.length == 0 || matrix[0].length == 0) return false
+	let row = matrix.length - 1,
+		col = 0
+	while (row >= 0 && col < matrix[0].length) {
+		if (matrix[row][col] === target) {
+			return true
+		} else if (matrix[row][col] > target) {
+			row--
+		} else {
+			col++
 		}
 	}
 	return false
+}
+
+//分治
+var searchMatrix = function (matrix, target) {
+	const helper = (matrix, target, startRow, startCol, endRow, endCol) => {
+    //元素小于1或分割的矩阵最小元素大于目标值
+		if (
+			startRow > endRow ||
+			startCol > endCol ||
+			matrix[startRow][startCol] > target
+		)
+			return false
+    //对角线长度，囊括正方形和长方形
+		const diagonal_length = Math.min(
+			endRow - startRow + 1,
+			endCol - startCol + 1
+		)
+    //基于对角线找目标元素
+		for (let i = 0; i < diagonal_length; i++) {
+			if (matrix[startRow + i][startCol + i] === target) return true
+      //找到分界点，分治查找左下和右上
+			if (
+				i === diagonal_length - 1 ||
+				matrix[startRow + i + 1][startCol + i + 1] > target
+			) {
+				return (
+					helper(
+						matrix,
+						target,
+						startRow,
+						startCol + i + 1,
+						startRow + i,
+						endCol
+					) ||
+					helper(
+						matrix,
+						target,
+						startRow + i + 1,
+						startCol,
+						endRow,
+						startCol + i
+					)
+				)
+			}
+		}
+		return false
+	}
+	if (matrix.length == 0 || matrix[0].length == 0) return false
+	return helper(matrix, target, 0, 0, matrix.length - 1, matrix[0].length - 1)
 }
 ```
 

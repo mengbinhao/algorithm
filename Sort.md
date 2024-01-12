@@ -58,6 +58,25 @@ const insert = (arr) => {
 	}
 	return arr
 }
+
+const insert = (arr) => {
+	if (!arr || !Array.isArray(arr)) return
+	const len = arr.length
+	if (len < 2) return arr
+	for (let i = 1; i < len; i++) {
+		const cur = arr[i]
+		for (let j = i - 1; j >= 0; j--) {
+      if (arr[j] > cur) {
+        arr[j + 1] = arr[j]
+        if (j === 0) arr[j] = cur
+      } else {
+        arr[j + 1] = cur
+        break
+      }
+    }
+	}
+	return arr
+}
 ```
 
 ### 3 select

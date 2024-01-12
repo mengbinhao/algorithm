@@ -544,6 +544,17 @@ var hasCycle = function (head) {
 	}
 	return false
 }
+
+var hasCycle = function(head) {
+  if (!head) return false
+  let slow = head, fast = head.next
+  while (fast && fast.next) {
+    if (slow === fast) return true
+    slow = slow.next
+    fast = fast.next.next
+  }
+  return false
+}
 ```
 
 ### [142. ==环形链表 II==](https://leetcode.cn/problems/linked-list-cycle-ii/)

@@ -589,3 +589,100 @@ var dailyTemperatures = function (temperatures) {
 }
 ```
 
+### [1021.删除最外层的括号](https://leetcode.cn/problems/remove-outermost-parentheses/)
+
+```javascript
+//brute force
+var removeOuterParentheses = function (s) {
+	//store原语子串
+	const arr = []
+	//l统计左括号, r统计右括号,last原语的开始位置
+	let l = (r = last = 0),
+		ret = ''
+	for (let i = 0, len = s.length; i < len; i++) {
+		s[i] === '(' ? l++ : r++
+		//find原语
+		if (l === r) {
+			const end = i + 1
+			arr.push(s.substring(last, end))
+			last = end
+		}
+	}
+	for (let str of arr) {
+		ret += str.substring(1, str.length - 1)
+	}
+	return ret
+}
+
+//brute force optimize
+var removeOuterParentheses = function (s) {
+	let l = (r = last = 0),
+		ret = ''
+	for (let i = 0, len = s.length; i < len; i++) {
+		s[i] === '(' ? l++ : r++
+		//find原语
+		if (l === r) {
+			ret += s.substring(++last, i)
+			last = i + 1
+		}
+	}
+	return ret
+}
+
+//stack
+var removeOuterParentheses = function (s) {
+	let last = 0,
+		ret = ''
+	const stack = []
+	for (let i = 0, len = s.length; i < len; i++) {
+		const c = s[i]
+		c === '(' ? stack.push(c) : stack.pop()
+		if (stack.length === 0) {
+			ret += s.substring(++last, i)
+			last = i + 1
+		}
+	}
+	return ret
+}
+
+//stack better
+var removeOuterParentheses = function (s) {
+	let idx = -1,
+		ret = ''
+	const stack = []
+	for (let i = 0, len = s.length; i < len; i++) {
+		const c = s[i]
+		if (c === '(') {
+			//1 读取到左括号：此前有数据，其必属于原语
+			if (idx > -1) ret += c
+			stack[++idx] = c
+		} else {
+			stack[idx--] = undefined
+			//2 读取到右括号：匹配后不为零，其必属于原语
+			if (idx > -1) ret += c
+		}
+	}
+	return ret
+}
+
+//stack best
+var removeOuterParentheses = function (s) {
+	//所有括号
+	let cnt = 0,
+		ret = ''
+	for (let i = 0, len = s.length; i < len; i++) {
+		const c = s[i]
+		if (c === '(') {
+			//1 读取到左括号：此前有数据，其必属于原语
+			if (cnt > 0) ret += c
+			cnt++
+		} else {
+			cnt--
+			//2 读取到右括号：匹配后不为零，其必属于原语
+			if (cnt > 0) ret += c
+		}
+	}
+	return ret
+}
+```
+
