@@ -1,3 +1,5 @@
+## 比较排序
+
 ### 1 bubble
 
 > 最好时间复杂度 O(n),最坏时间复杂度 O(n^2),平均时间复杂度也是 O(n^2)
@@ -244,6 +246,37 @@ const merge = (arr) => {
 	}
 	return helper(arr, 0, len - 1, [])
 }
+
+const helper = (l, r) => {
+	let ret = new Array(l.length + r.length)
+	let lIdx = (rIdx = 0)
+	for (let i = 0; i < ret.length; i++) {
+		if (lIdx < l.length && rIdx < r.length) {
+			if (l[lIdx] <= r[rIdx]) {
+				ret[i] = l[lIdx++]
+			} else {
+				ret[i] = r[rIdx++]
+			}
+		} else if (lIdx >= l.length) {
+			ret[i] = r[rIdx++]
+		} else {
+			ret[i] = l[lIdx++]
+		}
+	}
+	return ret
+}
+var merge = function (arr) {
+	const len = arr.length
+	if (len < 2) return arr
+	const mid = Math.floor(len / 2)
+	let l = arr.filter((val, idx) => idx < mid)
+	//console.log(l)
+	l = merge(l)
+	let r = arr.filter((val, idx) => idx >= mid)
+	//console.log(r)
+	r = merge(r)
+	return helper(l, r)
+}
 ```
 
 ### 6 heap
@@ -311,3 +344,31 @@ const heap = (arr) => {
 > 3. 删除最小值 heap[1] = heap[size]; size--; down(1)
 > 4. 删除任意一个元素 heap[k] = heap[size]; size--; down(k); up(k)
 > 5. 修改任意一个元素 heap[k] = x; size--; down(k); up(k)
+
+## 非比较
+
+### 计数排序
+
+```javascript
+var countSort = function (arr) {
+	const len = arr.length
+	let min = Infinity,
+		max = -Infinity
+	for (let i = 0; i < len; i++) {
+		min = Math.min(min, arr[i])
+		max = Math.max(max, arr[i])
+	}
+	let counts = new Array(max - min + 1).fill(0)
+  //对应位置存放最小值出现次数
+	for (let i = 0; i < len; i++) counts[arr[i] - min]++
+	let idx = 0
+	for (let i = 0; i < counts.length; i++) {
+    //略过计数数组的零位
+		for (let j = 1; j <= counts[i]; j++) {
+			arr[idx++] = i + min
+		}
+	}
+	return arr
+}
+```
+

@@ -589,6 +589,32 @@ var dailyTemperatures = function (temperatures) {
 }
 ```
 
+### [921.使括号有效的最少添加](https://leetcode.cn/problems/minimum-add-to-make-parentheses-valid/)
+
+```javascript
+var minAddToMakeValid = function (s) {
+	let ret = 0
+	let leftCount = 0
+	let length = s.length
+	for (let i = 0; i < length; i++) {
+		const c = s[i]
+		if (c === '(') {
+			leftCount++
+		} else {
+			if (leftCount > 0) {
+				leftCount--
+			} else {
+				ret++
+			}
+		}
+	}
+	//leftCount为需要补的右括号数
+	//ret为需要补的右括号数
+	ret += leftCount
+	return ret
+}
+```
+
 ### [1021.删除最外层的括号](https://leetcode.cn/problems/remove-outermost-parentheses/)
 
 ```javascript
@@ -685,4 +711,3 @@ var removeOuterParentheses = function (s) {
 	return ret
 }
 ```
-

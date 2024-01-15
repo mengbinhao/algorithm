@@ -95,7 +95,26 @@ var maxProfit = function (prices) {
 ## [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```javascript {.line-numbers}
-//DFS TLE
+//DFS brute force TLE
+var maxProfit = function(prices) {
+  const dfs = (prices, day) => {
+    if (day >= prices.length) return 0
+    let max = 0
+    //从i天开始每一天的最大利润
+    for (let i = day; i < prices.length; i++) {
+      let curMax = 0
+      for (let j = i + 1; j < prices.length; j++) {
+        if (prices[j] > prices[i]) {
+          let profit = dfs(prices, j + 1) + prices[j] - prices[i]
+          curMax = Math.max(curMax, profit)
+        }
+      }
+      max = Math.max(max, curMax)
+    }
+    return max
+  }
+  return dfs(prices, 0)
+}
 
 //Greedy
 //计算的过程并不是实际的交易过程，收益被分成了若干个阶段

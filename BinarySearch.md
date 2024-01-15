@@ -347,8 +347,10 @@ var search = function (nums, target) {
 		if (nums[mid] === target) return mid
 		//看左边
     //in case mid === l
+    //nums[0] <= nums[mid]
 		if (nums[l] <= nums[mid]) {
        //[l, mid - 1]有序
+      //nums[0] <= target && target < nums[mid]
 			if (nums[l] <= target && target < nums[mid]) {
 				r = mid - 1
 			} else {
@@ -384,7 +386,7 @@ var search = function (nums, target) {
 			l++
 			continue
 		}
-		if (nums[mid] >= nums[l]) {
+		if (nums[l] <= nums[mid]) {
 			if (nums[l] <= target && target < nums[mid]) {
 				r = mid - 1
 			} else {
@@ -628,6 +630,34 @@ const search = (nums, target) => {
 		}
 	}
 	return -1
+}
+
+//二分，把二维数组matrix[m][n]逻辑上当做一维数组arr[m*n]
+//把二维数组matrix中row行col列对应arr中row*n + col
+//arr中下标x换算matrix行列关系：row=x/n col=x%n
+var searchMatrix = function (matrix, target) {
+	let rows = matrix.length
+	if (rows === 0) return false
+	let cols = matrix[0].length
+	if (cols === 0) return false
+	let l = 0,
+		r = rows * cols - 1
+  //一维中间节点，对应的二位数组中的值
+	let pivotIdx, pivotData
+	while (l <= r) {
+		pivotIdx = Math.floor((l + r) / 2)
+		pivotData = matrix[Math.floor(pivotIdx / cols)][pivotIdx % cols]
+		if (target === pivotData) {
+			return true
+		} else {
+			if (target < pivotData) {
+				r = pivotIdx - 1
+			} else {
+				l = pivotIdx + 1
+			}
+		}
+	}
+	return false
 }
 
 //better 左下角或右上角坐标轴法 
