@@ -212,15 +212,12 @@ var inorderTraversal = function (root) {
 			//exNode为当前root左走一步，然后一直右走直到走不了
 			exNode = root.left
 			//因会连辅助线，加第二个判断
-			while (exNode.right && exNode.right !== root) {
-				exNode = exNode.right
-			}
+			while (exNode.right && exNode.right !== root) exNode = exNode.right
 			//没有辅助线增加，否则断开继续查询右子树
 			if (!exNode.right) {
 				//exNode右指针指向root,增加辅助线，继续遍历左子树
 				exNode.right = root
 				root = root.left
-				//左子树已遍历完，断开辅助线，继续遍历右子树
 			} else {
 				ret.push(root.val)
 				exNode.right = null
