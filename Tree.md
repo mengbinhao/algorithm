@@ -50,7 +50,7 @@
     - **回溯算法属于遍历的思路，它的关注点在节点间的「树枝」**
     - **DFS 算法属于遍历的思路，它的关注点在单个「节点」**
 
-# 解题要素 1
+# 解题要素
 
 - 一个中心:遍历
 - 两个基本点:DFS(`preorder/inorder/postorder ` 使用 stack)、BFS(迭代，使用 queue)
@@ -218,6 +218,7 @@ var inorderTraversal = function (root) {
 				//exNode右指针指向root,增加辅助线，继续遍历左子树
 				exNode.right = root
 				root = root.left
+				//说明左子树已遍历完，断开辅助线，继续遍历右子树
 			} else {
 				ret.push(root.val)
 				exNode.right = null
