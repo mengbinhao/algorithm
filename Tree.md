@@ -43,15 +43,14 @@
     ![](./images/avl.png)
 
   - Trie(字典树或前缀树，它是用来处理字符串匹配问题的数据结构，以及用来解决集合中查找固定前缀字符串的数据结构，高效的存储和查找字符串)
-  
-  - **DFS算法/回溯算法/动态规划算都可以看做二叉树问题的扩展**
-  
+
+  - **DFS 算法/回溯算法/动态规划算都可以看做二叉树问题的扩展**
+
     - **动态规划算法属于分解问题的思路，它的关注点在整棵「子树」**
     - **回溯算法属于遍历的思路，它的关注点在节点间的「树枝」**
     - **DFS 算法属于遍历的思路，它的关注点在单个「节点」**
-  
 
-# 解题要素
+# 解题要素 1
 
 - 一个中心:遍历
 - 两个基本点:DFS(`preorder/inorder/postorder ` 使用 stack)、BFS(迭代，使用 queue)
@@ -87,7 +86,7 @@
 var preorderTraversal = function (root) {
 	const ret = []
 	const traversal = (root) => {
-    //同if (root) {xxx}
+		//同if (root) {xxx}
 		if (!root) return
 		ret.push(root.val)
 		traversal(root.left)
@@ -263,7 +262,7 @@ var postorderTraversal = function (root) {
 	const stack = []
 	while (root || stack.length > 0) {
 		while (root) {
-       //反装 + 左右颠倒
+			//反装 + 左右颠倒
 			ret.unshift(root.val)
 			stack.push(root)
 			root = root.right
@@ -663,7 +662,7 @@ var recoverTree = function (root) {
 		prev = root
 		root = root.right
 	}
-  //判断更严谨
+	//判断更严谨
 	if (first && second) {
 		;[first.val, second.val] = [second.val, first.val]
 	}
@@ -933,7 +932,7 @@ var convertBST = function (root) {
 	const dfs = (root) => {
 		if (!root) return null
 		dfs(root.right)
-    //记录累加sum,下一句更新到当前节点上
+		//记录累加sum,下一句更新到当前节点上
 		sum += root.val
 		root.val = sum
 		dfs(root.left)
@@ -979,7 +978,7 @@ var isSymmetric = function (root) {
 //BFS
 var isSymmetric = function (root) {
 	if (!root) return true
-  //扩大参数
+	//扩大参数
 	const queue = [root, root]
 	while (queue.length) {
 		//每次两两对比
@@ -1032,7 +1031,6 @@ var invertTree = function (root) {
 	return root
 }
 
-
 //BFS 自上往下
 var invertTree = function (root) {
 	if (!root) return root
@@ -1060,19 +1058,20 @@ var maxDepth = function (root) {
 }
 
 //labuladong version
-var maxDepth = function(root) {
-  let ret = 0, depth = 0
-  const hepler = root => {
-    if (!root) return
-    depth++
-    if (!root.left && !root.right) ret = Math.max(ret, depth)
-    hepler(root.left)
-    hepler(root.right)
-    //reverse
-    depth--
-  }
-  hepler(root)
-  return ret
+var maxDepth = function (root) {
+	let ret = 0,
+		depth = 0
+	const hepler = (root) => {
+		if (!root) return
+		depth++
+		if (!root.left && !root.right) ret = Math.max(ret, depth)
+		hepler(root.left)
+		hepler(root.right)
+		//reverse
+		depth--
+	}
+	hepler(root)
+	return ret
 }
 
 //BFS
@@ -1087,7 +1086,7 @@ var maxDepth = function (root) {
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
-    depth++
+		depth++
 	}
 	return depth
 }
@@ -1121,7 +1120,7 @@ var minDepth = function (root) {
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
-    depth++
+		depth++
 	}
 	return depth
 }
@@ -1136,10 +1135,14 @@ var isBalanced = function (root) {
 		if (node === null) return 0
 		let leftDepth = height(node.left)
 		let rightDepth = height(node.right)
-		if (leftDepth === -1 || rightDepth === -1 || Math.abs(leftDepth - rightDepth) > 1) {
-       return -1
-    //子树平衡返回的是非数整数
-    } else {
+		if (
+			leftDepth === -1 ||
+			rightDepth === -1 ||
+			Math.abs(leftDepth - rightDepth) > 1
+		) {
+			return -1
+			//子树平衡返回的是非数整数
+		} else {
 			return Math.max(leftDepth, rightDepth) + 1
 		}
 	}
@@ -1339,7 +1342,7 @@ var binaryTreePaths = function (root) {
 	if (!root) return []
 	let ret = [],
 		queue = [root],
-    queuePath = [root.val + '']
+		queuePath = [root.val + '']
 	while (queue.length) {
 		const cur = queue.shift(),
 			curPath = queuePath.shift()
@@ -1501,14 +1504,14 @@ var pathSum = function (root, targetSum) {
 var pathSum = function (root, sum) {
 	const dfs = (root, sum) => {
 		if (!root) return 0
-    //当前层下面所有的符合项
+		//当前层下面所有的符合项
 		let cnt = 0
 		if (sum === root.val) cnt++
 		cnt += dfs(root.left, sum - root.val)
 		cnt += dfs(root.right, sum - root.val)
 		return cnt
 	}
-  //双递归
+	//双递归
 	return !root
 		? 0
 		: dfs(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum)
@@ -1725,7 +1728,7 @@ var flatten = function (root) {
 	flatten(root.left)
 	flatten(root.right)
 	const left = root.left
-  //原本的right
+	//原本的right
 	const right = root.right
 	root.left = null
 	root.right = left
