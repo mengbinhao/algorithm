@@ -127,6 +127,99 @@ var solve = function (board) {
 }
 ```
 
+#### [329.矩阵中的最长递增路径](https://leetcode.cn/problems/longest-increasing-path-in-a-matrix/)
+
+```javascript
+var longestIncreasingPath = function (matrix) {
+	const dfs = (matrix, row, col) => {
+		const isValid = (matrix, row, col, newRow, newCol) => {
+			return (
+				newRow >= 0 &&
+				newRow < matrix.length &&
+				newCol >= 0 &&
+				newCol < matrix[0].length &&
+				matrix[newRow][newCol] > matrix[row][col]
+			)
+		}
+		let ret = 1
+		for (let direction of directions) {
+			const newRow = row + direction[0]
+			const newCol = col + direction[1]
+			if (isValid(matrix, row, col, newRow, newCol)) {
+				const curRet = dfs(matrix, newRow, newCol) + 1
+				ret = Math.max(ret, curRet)
+			}
+		}
+		return ret
+	}
+	const rows = matrix.length
+	const cols = matrix[0].length
+	const directions = [
+		[0, 1],
+		[1, 0],
+		[0, -1],
+		[-1, 0],
+	]
+	let ret = 1
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			const curLIP = dfs(matrix, i, j)
+			ret = Math.max(ret, curLIP)
+		}
+	}
+	return ret
+}
+
+//optimize
+var longestIncreasingPath = function (matrix) {
+	const dfs = (matrix, row, col) => {
+		const isValid = (matrix, row, col, newRow, newCol) => {
+			return (
+				newRow >= 0 &&
+				newRow < matrix.length &&
+				newCol >= 0 &&
+				newCol < matrix[0].length &&
+				matrix[newRow][newCol] > matrix[row][col]
+			)
+		}
+		longestPath[row][col] = 1
+		for (let direction of directions) {
+			const newRow = row + direction[0]
+			const newCol = col + direction[1]
+			if (isValid(matrix, row, col, newRow, newCol)) {
+				const curRet = dfs(matrix, newRow, newCol) + 1
+				const path = longestPath[row][col]
+				longestPath[row][col] = path > curRet ? path : curRet
+			}
+		}
+		return longestPath[row][col]
+	}
+	const rows = matrix.length
+	const cols = matrix[0].length
+	const directions = [
+		[0, 1],
+		[1, 0],
+		[0, -1],
+		[-1, 0],
+	]
+	//存储每个节点的LIP
+	const longestPath = Array.from({ length: rows }, () =>
+		new Array(cols).fill(0)
+	)
+	let ret = 1
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			const curLIP = dfs(matrix, i, j)
+			ret = Math.max(ret, curLIP)
+		}
+	}
+	return ret
+}
+
+```
+
+
+
 #### [463.岛屿的周长](https://leetcode-cn.com/problems/island-perimeter/)
 
 ```javascript {.line-numbers}
@@ -223,6 +316,8 @@ var findCircleNum = function (M) {
 ```
 
 ### BFS
+
+#### [433. 最小基因变化](https://leetcode.cn/problems/minimum-genetic-mutation/)
 
 ```javascript {.line-numbers}
 /*
