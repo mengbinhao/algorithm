@@ -134,6 +134,8 @@ var longestPalindrome = function (s) {
 	}
 	return s.substring(begin, begin + maxLen)
 }
+
+//马拉车
 ```
 
 ### [32.==最长有效括号==](https://leetcode-cn.com/problems/longest-valid-parentheses/)
@@ -307,15 +309,17 @@ var maxSubArray = function (nums) {
 //S(i)表示以 0(包括 0)开始加到 i(包括 i)的前缀和,那么S(j) - S(i - 1)就等于从i开始(包括 i)加到j(包括 j)的前缀和
 //只需要遍历一次计算出所有的 S(i), 其中 i = 0,1,2....,n-1.然后我们再减去之前的S(k),其中 k = 0，1，i - 1,中的最小值即可
 //O(n) - O(1)
-var maxSubArray = function(nums) {
-  //Note initial value
-  let preSum = 0, maxPreSum = nums[0], minPreSum = 0
-  for (let num of nums) {
-    preSum += num
-    maxPreSum = Math.max(maxPreSum, preSum - minPreSum)
-    minPreSum = Math.min(minPreSum, preSum)
-  }
-  return maxPreSum
+var maxSubArray = function (nums) {
+	//Note initial value
+	let preSum = 0,
+		maxPreSum = nums[0],
+		minPreSum = 0
+	for (let num of nums) {
+		preSum += num
+		maxPreSum = Math.max(maxPreSum, preSum - minPreSum)
+		minPreSum = Math.min(minPreSum, preSum)
+	}
+	return maxPreSum
 }
 
 //dp[i]表示nums中以nums[i]结尾的最大子数组序和
@@ -335,15 +339,15 @@ var maxSubArray = function (nums) {
 }
 
 //dp优化 O(n) - O(1)
-var maxSubArray = function(nums) {
-  const len = nums.length
-  let pre = 0
-  let ret = nums[0]
-  for (let i = 0; i < len; i++) {
-    pre = Math.max(pre + nums[i], nums[i])
-    ret = Math.max(ret, pre)
-  }
-  return ret
+var maxSubArray = function (nums) {
+	const len = nums.length
+	let pre = 0
+	let ret = nums[0]
+	for (let i = 0; i < len; i++) {
+		pre = Math.max(pre + nums[i], nums[i])
+		ret = Math.max(ret, pre)
+	}
+	return ret
 }
 ```
 
@@ -1267,6 +1271,78 @@ var climbStairs = function (n) {
 		second = third
 	}
 	return third
+}
+```
+
+### [093. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/Q91FMA/)
+
+```javascript {.line-numbers}
+//brute force
+var lenLongestFibSubseq = function (arr) {
+	const len = arr.length
+	const set = new Set()
+	let ret = 0
+	for (let item of arr) set.add(item)
+	for (let i = 0; i < len; i++) {
+		for (let j = i + 1; j < len; j++) {
+			let x = arr[j]
+			let y = arr[i] + arr[j]
+			let curLen = 2
+			while (set.has(y)) {
+				let tmp = y
+				y += x
+				x = tmp
+				ret = Math.max(ret, ++curLen)
+			}
+		}
+	}
+	return ret
+}
+
+//dp
+var lenLongestFibSubseq = function (arr) {
+	const indices = new Map()
+	const len = arr.length
+	for (let i = 0; i < len; i++) indices.set(arr[i], i)
+	const dp = new Array(len).fill(0).map(() => new Array(len).fill(0))
+	let ans = 0
+	for (let i = 0; i < len; i++) {
+		for (let j = len - 1; j >= 0; j--) {
+			if (arr[j] * 2 <= arr[i]) break
+			if (indices.has(arr[i] - arr[j])) {
+				const k = indices.get(arr[i] - arr[j])
+				dp[j][i] = Math.max(dp[k][j] + 1, 3)
+				ans = Math.max(ans, dp[j][i])
+			}
+		}
+	}
+	return ans
+}
+```
+
+### [509. ==斐波那契数==](https://leetcode-cn.com/problems/fibonacci-number/)
+
+```javascript {.line-numbers}
+//brute force
+var lenLongestFibSubseq = function (arr) {
+	const len = arr.length
+	const set = new Set()
+	let ret = 0
+	for (let item of arr) set.add(item)
+	for (let i = 0; i < len; i++) {
+		for (let j = i + 1; j < len; j++) {
+			let x = arr[j]
+			let y = arr[i] + arr[j]
+			let curLen = 2
+			while (set.has(y)) {
+				let tmp = y
+				y += x
+				x = tmp
+				ret = Math.max(ret, ++curLen)
+			}
+		}
+	}
+	return ret
 }
 ```
 

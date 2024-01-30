@@ -1,7 +1,7 @@
 ## concept
 
 - **回溯法解决的问题都可以抽象为树形结构**
-- 使用邻接表或邻接矩阵表示一个图
+- 使用**邻接表**或**邻接矩阵**表示一个图
 - 有向图、无向图、权重、同构
 - 最短路径、环
 - BFS、DFS
@@ -47,8 +47,8 @@ var numIslands = function (grid) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			if (grid[i][j] === '1') {
-				ret++
-				grid[i][j] = 0
+				//marked,实际不建议
+				grid[i][j] = '0'
 				//store each level's item
 				let queue = []
 				//二维转一维
@@ -58,28 +58,73 @@ var numIslands = function (grid) {
 					const cur = queue.shift(),
 						x = cur[0],
 						y = cur[1]
-					if (x - 1 >= 0 && grid[x - 1][y] === 1) {
+					if (x - 1 >= 0 && grid[x - 1][y] === '1') {
 						queue.push([x - 1, y])
 						grid[x - 1][y] = 0
 					}
-					if (x + 1 < rows && grid[x + 1][y] === 1) {
+					if (x + 1 < rows && grid[x + 1][y] === '1') {
 						queue.push([x + 1, y])
 						grid[x + 1][y] = 0
 					}
-					if (y - 1 >= 0 && grid[x][y - 1] === 1) {
+					if (y - 1 >= 0 && grid[x][y - 1] === '1') {
 						queue.push([x, y - 1])
 						grid[x][y - 1] = 0
 					}
-					if (y + 1 < cols && grid[x][y + 1] === 1) {
+					if (y + 1 < cols && grid[x][y + 1] === '1') {
 						queue.push([x, y + 1])
 						grid[x][y + 1] = 0
 					}
 				}
+				ret++
 			}
 		}
 	}
 	return ret
 }
+
+var numIslands = function (grid) {
+	let ret = 0
+	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret
+	const rows = grid.length,
+		cols = grid[0].length
+  const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (grid[i][j] === '1') {
+				//marked,实际不建议
+				grid[i][j] = '0'
+				//store each level's item
+				let queue = []
+				//二维转一维 
+         //存：val = i * 常量 + j   取： i = val / const, j = val % const
+         //const如何设计，要求i,j不越界, i最大m - 1,j最大n - 1
+         // i * n + j 最大: (m - 1) * n + n - 1 -> m * n - 1
+				//queue.add(i * rows + j)
+				queue.push([i, j])
+				while (queue.length > 0) {
+					const cur = queue.shift(),
+						x = cur[0],
+						y = cur[1]
+          for (let dirction of directions) {
+            const newRow = x + dirction[0]
+            const newCol = y + dirction[1]
+            if (newRow < rows && newRow >= 0 && newCol < cols && newCol >= 0 && grid[newRow][newCol] === '1') {
+              queue.push([newRow, newCol])
+              grid[newRow][newCol] = '0'
+            }
+          }
+				}
+				ret++
+			}
+		}
+	}
+	return ret
+}
+
+//Union/Find Set
+//init: 把每个元素所在集合初始化成其自身
+//路径压缩
+//按秩合并
 ```
 
 #### [130.==被围绕的区域==](https://leetcode-cn.com/problems/surrounded-regions/)
@@ -215,7 +260,6 @@ var longestIncreasingPath = function (matrix) {
 	}
 	return ret
 }
-
 ```
 
 
@@ -315,6 +359,30 @@ var findCircleNum = function (M) {
 }
 ```
 
+#### [765.情侣牵手](https://leetcode.cn/problems/couples-holding-hands/)
+
+```javascript {.line-numbers}
+var minSwapsCouples = function(row) {
+  const len = row.length
+  let times = 0
+  for (let i = 0; i < len; i += 2) {
+    const A = row[i]
+    //const B = x ^ 1
+    const B = A % 2 === 0 ? A + 1 : A - 1
+    if (row[i + 1] === B) continue
+    for(let j = i + 2; j < len; j++) {
+      if (row[j] === B) {
+        row[j] = row[i + 1]
+        row[i + 1] = B
+        break
+      }
+    }
+    times++
+  }
+  return times
+}
+```
+
 ### BFS
 
 #### [433. 最小基因变化](https://leetcode.cn/problems/minimum-genetic-mutation/)
@@ -363,3 +431,52 @@ var minMutation = function (start, end, bank) {
 }
 ```
 
+### simulation
+
+#### [765.情侣牵手](https://leetcode.cn/problems/couples-holding-hands/)
+
+```javascript {.line-numbers}
+var minSwapsCouples = function (row) {
+	const len = row.length
+	let times = 0
+	for (let i = 0; i < len; i += 2) {
+		const curA = row[i]
+		//const curB = x ^ 1
+		const curB = curA % 2 === 0 ? curA + 1 : curA - 1
+		//剪枝
+		if (row[i + 1] === curB) continue
+		for (let j = i + 2; j < len; j++) {
+			if (row[j] === curB) {
+				row[j] = row[i + 1]
+				row[i + 1] = curB
+				break
+			}
+		}
+		times++
+	}
+	return times
+}
+
+//hash优化
+var minSwapsCouples = function(row) {
+  const len = row.length
+  let times = 0
+  //提前存储每个元素的位置
+  const hash = new Array(len)
+  for (let i = 0; i < len; i++) hash[row[i]] = i
+  for (let i = 0; i < len; i += 2) {
+    const curA = row[i]
+    const curB = x ^ 1
+    if (row[i + 1] === curB) continue
+    const bIdx = hash[curB]
+    row[bIdx] = row[i + 1]
+    row[i + 1] = curB
+    //update hash
+    hash[row[bIdx]] = bIdx
+    times++
+  }
+  return times
+}
+
+//Union
+```

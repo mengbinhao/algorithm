@@ -484,6 +484,7 @@ var restoreIpAddresses = function (s) {
 var solveNQueens = function (n) {
 	if (n < 1) return []
 	const solutions = [],
+     //不使用Set时，可以遍历三次查看当前列、右上、左上是否存在Q
 		cols = new Set(), //垂直线攻击位置
 		pies = new Set(), //左对角线攻击位置
 		nas = new Set() //右对角线攻击位置
