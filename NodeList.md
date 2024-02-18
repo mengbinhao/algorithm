@@ -74,10 +74,10 @@ var addTwoNumbers = function (l1, l2) {
 //获取链表长度,循环len-n找到preNode
 var removeNthFromEnd = function (head, n) {
   const getLen = head = {
-    let len = 0
-    while (head) {
+    let len = 0, cur = head
+    while (cur) {
       len++
-      head = head.next
+      cur = cur.next
     }
   	return len
   }
