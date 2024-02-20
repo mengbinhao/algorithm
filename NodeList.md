@@ -81,12 +81,12 @@ var removeNthFromEnd = function (head, n) {
     }
   	return len
   }
-	const dummyHead = new ListNode(-1, head)
 	const len = getLen(head)
-	let cur = dummyHead
+	const dummyHead = new ListNode(-1, head)
+	let pre = dummyHead
   //找到要删除节点的pre
-	for (let i = 0; i < len - n; i++) cur = cur.next
-	cur.next = cur.next.next
+	for (let i = 0; i < len - n; i++) pre = pre.next
+	pre.next = pre.next.next
 	return dummyHead.next
 }
 
