@@ -621,15 +621,15 @@ var isValidBST = function (root) {
 
 //tricky
 var isValidBST = function (root) {
-	const helper = (root, low, high) => {
+	const helper = (root, high, low) => {
 		if (!root) return true
-		if (root.val <= low || root.val >= high) return false
+		if (root.val >= high || root.val <= low) return false
 		return (
-			helper(root.left, low, root.val) && helper(root.right, root.val, high)
+			helper(root.left, root.val, low) && helper(root.right, high, root.val)
 		)
 	}
-	//扩展参数，向下传递
-	return helper(root, -Infinity, Infinity)
+  //扩展参数，向下传递
+	return helper(root, Infinity, -Infinity)
 }
 ```
 
