@@ -1108,19 +1108,18 @@ var minDepth = function (root) {
 var minDepth = function (root) {
 	if (!root) return 0
 	let queue = [root],
-		depth = 0
+		depth = 1
 	while (queue.length > 0) {
 		const size = queue.length
 		for (let i = 0; i < size; i++) {
 			const cur = queue.shift()
-			//若左右节点都是null(在遇见的第一个leaf节点上)，则该节点深度最小
+			//minDepth是在遇见的第一个leaf节点上
 			if (cur.left == null && cur.right == null) return depth
 			if (cur.left) queue.push(cur.left)
 			if (cur.right) queue.push(cur.right)
 		}
 		depth++
 	}
-	return depth
 }
 ```
 
