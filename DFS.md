@@ -303,8 +303,8 @@ var permuteUnique = function (nums) {
 	const visited = Array.from({ length: len }, () => false)
 	//升序或者降序都可以，剪枝前提
 	nums.sort((a, b) => a - b)
-	const dfs = (nums, depth, path, visited) => {
-		if (depth === nums.length) {
+	const dfs = (nums, level, path, visited) => {
+		if (level === nums.length) {
 			ret.push([...path])
 			return
 		}
@@ -314,7 +314,7 @@ var permuteUnique = function (nums) {
 			if (i > 0 && nums[i] === nums[i - 1] && !visited[i - 1]) continue
 			path.push(nums[i])
 			visited[i] = true
-			dfs(nums, depth + 1, path, visited)
+			dfs(nums, level + 1, path, visited)
 			visited[i] = false
 			path.pop()
 		}
@@ -328,6 +328,41 @@ var permuteUnique = function (nums) {
 
 ```javascript
 var exist = function (board, word) {
+	const dfs = (board, visited, word, level, i, j) => {
+		if (level >= word.length) return true
+		if (
+			i >= board.length ||
+			i < 0 ||
+			j >= board[0].length ||
+			j < 0 ||
+			visited[i][j] ||
+			board[i][j] !== word[level]
+		)
+			return false
+		visited[i][j] = true
+		if (
+			dfs(board, visited, word, level + 1, i + 1, j) ||
+			dfs(board, visited, word, level + 1, i - 1, j) ||
+			dfs(board, visited, word, level + 1, i, j + 1) ||
+			dfs(board, visited, word, level + 1, i, j - 1)
+		)
+			return true
+		visited[i][j] = false
+	}
+	const rows = board.length
+	const cols = board[0].length
+	const visited = Array.from({ length: rows }, () =>
+		new Array(cols).fill(false)
+	)
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (dfs(board, visited, word, 0, i, j)) return true
+		}
+	}
+	return false
+}
+
+var exist = function (board, word) {
 	const rows = board.length
 	const cols = board[0].length
 	let directions = [
@@ -337,28 +372,27 @@ var exist = function (board, word) {
 		[-1, 0],
 	]
 	let visited = Array.from({ length: rows }, () => new Array(cols).fill(false))
-	const search = (i, j, k) => {
-		if (board[i][j] !== word[k]) {
+	const search = (i, j, level) => {
+		if (board[i][j] !== word[level]) {
 			return false
-		} else if (k === word.length - 1) {
+		} else if (level === word.length - 1) {
 			return true
 		}
 		visited[i][j] = true
 		let result = false
-    //四周扩
 		for (let [x, y] of directions) {
 			let newi = i + x,
 				newy = j + y
 			if (newi >= 0 && newi < rows && newy >= 0 && newy < cols) {
 				if (!visited[newi][newy]) {
-					if (search(newi, newy, k + 1)) {
+					if (search(newi, newy, level + 1)) {
 						result = true
 						break
 					}
 				}
 			}
 		}
-		//backtrack
+		//四周扩散完还未满足条件backtrack
 		visited[i][j] = false
 		return result
 	}
@@ -454,26 +488,28 @@ var subsetsWithDup = function (nums) {
 ```javascript {.line-numbers}
 var restoreIpAddresses = function (s) {
 	let ret = []
-	const dfs = (startIdx, path) => {
+	const dfs = (s, level, path) => {
 		const len = path.length
-		//剪递归深度：切割出第五个不合法
+		//剪递归深度
 		if (len > 4) return
-		//切成四段且全部切完
-		if (len === 4 && startIdx === s.length) {
+		//切成四段且s切完
+		if (len === 4 && level === s.length) {
 			ret.push(path.join('.'))
 			return
 		}
 		//开始切的位置
-		for (let i = startIdx; i < s.length; i++) {
+		for (let i = level; i < s.length; i++) {
 			//从开始往后挨着切
-			const str = s.substring(startIdx, i + 1)
+			const str = s.substring(level, i + 1)
 			//剪树枝
 			if (str.length > 3 || +str > 255) break
 			if (str.length > 1 && str[0] === '0') break
-			dfs(i + 1, [...path, str])
+			path.push(str)
+			dfs(s, i + 1, path)
+			path.pop()
 		}
 	}
-	dfs(0, [])
+	dfs(s, 0, [])
 	return ret
 }
 ```
@@ -574,7 +610,7 @@ var totalNQueens = function (n) {
 }
 ```
 
-### [131.==分割回文串==](https://leetcode.cn/problems/palindrome-partitioning/)
+### [131.分割回文串](https://leetcode.cn/problems/palindrome-partitioning/)
 
 ```javascript
 var partition = function (s) {

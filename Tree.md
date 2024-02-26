@@ -1487,7 +1487,7 @@ var pathSum = function (root, targetSum) {
 		if (!root.left && !root.right && targetSum === root.val) ret.push([...path])
 		dfs(root.left, targetSum - root.val, path)
 		dfs(root.right, targetSum - root.val, path)
-		//backtrack
+		//backtrack, 回到上一节点
 		path.pop()
 	}
 	dfs(root, targetSum, [])
@@ -1501,7 +1501,7 @@ var pathSum = function (root, targetSum) {
 var pathSum = function (root, sum) {
 	const dfs = (root, sum) => {
 		if (!root) return 0
-		//当前层下面所有的符合项
+		//统计当前节点下所有的符合项
 		let cnt = 0
 		if (sum === root.val) cnt++
 		cnt += dfs(root.left, sum - root.val)
@@ -1522,10 +1522,10 @@ var maxPathSum = function (root) {
 	let ret = Number.MIN_SAFE_INTEGER
 	const dfs = (root) => {
 		if (!root) return 0
-		//只有在最大贡献值大于 0 时，才会选取对应子节点
+		//只有在最大贡献值大于0时，才会选取对应子节点
 		const left = Math.max(dfs(root.left), 0)
 		const right = Math.max(dfs(root.right), 0)
-		//update innerSum = left + right + root.val
+		//update innerCycle
 		ret = Math.max(ret, left + right + root.val)
 		return Math.max(left, right) + root.val
 	}
@@ -1701,22 +1701,20 @@ var constructMaximumBinaryTree = function (nums) {
 var flatten = function (root) {
 	const list = []
 	const stack = []
-	let node = root
-	while (node !== null || stack.length) {
-		while (node !== null) {
-			list.push(node)
-			stack.push(node)
-			node = node.left
+	while (root || stack.length) {
+		while (root) {
+			list.push(root)
+			stack.push(root)
+			root = root.left
 		}
-		node = stack.pop()
-		node = node.right
+		root = stack.pop()
+		root = root.right
 	}
-	const size = list.length
-	for (let i = 1; i < size; i++) {
-		const prev = list[i - 1],
-			curr = list[i]
+	for (let i = 1, len = list.length; i < len; i++) {
+		const prev = list[i - 1]
+		const cur = list[i]
 		prev.left = null
-		prev.right = curr
+		prev.right = cur
 	}
 }
 
