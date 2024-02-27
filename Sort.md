@@ -153,6 +153,7 @@ const quick = (arr) => {
 	return helper(arr, 0, len - 1)
 }
 
+//right version
 const quick = (arr) => {
 	if (!arr || !Array.isArray(arr)) return
 	const len = arr.length
@@ -184,6 +185,30 @@ const quick = (arr) => {
 		return arr
 	}
 	return helper(arr, 0, arr.length - 1)
+}
+
+//left version
+const quickSort = (arr) => {
+	const partition = (arr, l, r) => {
+		const piviot = arr[l]
+		let idx = l + 1
+		for (let i = l + 1; i <= r; i++) {
+			if (arr[i] < piviot) {
+				;[arr[i], arr[idx]] = [arr[idx], arr[i]]
+				idx++
+			}
+		}
+		;[arr[idx - 1], arr[l]] = [arr[l], arr[idx - 1]]
+		return idx - 1
+	}
+	const hepler = (arr, l, r) => {
+		if (l >= r) return
+		const idx = partition(arr, l, r)
+		hepler(arr, l, idx - 1)
+		hepler(arr, idx + 1, r)
+		return arr
+	}
+	return hepler(arr, 0, arr.length - 1)
 }
 
 //快选
