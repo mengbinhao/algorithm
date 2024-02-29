@@ -16,7 +16,7 @@ var isValid = function (s) {
 		if (hash[c]) {
 			stack.push(hash[c])
 		} else {
-			//囊括stack为空弹出undefined的case
+			//囊括stack为空弹出undefined的case, 如)()(
 			if (c !== stack.pop()) return false
 		}
 	}
@@ -29,6 +29,18 @@ var isValid = function (s) {
 ```javascript {.line-numbers}
 //brute force O(n^3)
 var longestValidParentheses = function (s) {
+  const	isValid = str => {
+		let balance = 0
+		for (let c of str) {
+			if (c === '(') {
+				balance++
+			} else {
+				balance--
+				if (balance < 0) return false
+			}
+		}
+		return balance === 0
+	}
 	const len = s.length
 	if (len < 2) return 0
 	//获取字符串截取截止坐标
@@ -40,19 +52,6 @@ var longestValidParentheses = function (s) {
 			//找到即是最长的
 			if (isValid(s.substring(j, j + i))) return i
 		}
-	}
-
-	function isValid(str) {
-		let balance = 0
-		for (let c of str) {
-			if (c === '(') {
-				balance++
-			} else {
-				balance--
-				if (balance < 0) return false
-			}
-		}
-		return balance === 0
 	}
 }
 
@@ -85,7 +84,7 @@ var longestValidParentheses = function (s) {
 	return maxLen
 }
 
-//正向逆向结合 O(n) - O(1)
+//正向逆向结合 O(n) - O(1)  best
 var longestValidParentheses = function (s) {
 	const len = s.length
 	if (len < 2) return 0

@@ -41,6 +41,14 @@ var longestPalindrome = function (s) {
 
 //中心扩展法 O(n^2) - O(1) easy version
 var longestPalindrome = function (s) {
+	const palindrome = (s, l, r) => {
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			l--
+			r++
+		}
+		//slice截的是[l...r)
+		return s.slice(l + 1, r)
+	}
 	if (!s) return ''
 	const len = s.length
 	if (len < 2) return s
@@ -61,19 +69,17 @@ var longestPalindrome = function (s) {
 		}
 	}
 	return maxStr
-
-	function palindrome(s, l, r) {
-		while (l >= 0 && r < s.length && s[l] === s[r]) {
-			l--
-			r++
-		}
-		//slice截的是[l...r)
-		return s.slice(l + 1, r)
-	}
 }
 
 //中心扩展法 O(n^2) - O(1) better version
 var longestPalindrome = function (s) {
+	const palindrome = (s, l, r) => {
+		while (l >= 0 && r < s.length && s[l] === s[r]) {
+			l--
+			r++
+		}
+		return r - l - 1
+	}
 	if (!s) return ''
 	const len = s.length
 	if (len < 2) return s
@@ -90,14 +96,6 @@ var longestPalindrome = function (s) {
 		}
 	}
 	return s.substring(begin, begin + maxLen)
-
-	function palindrome(s, l, r) {
-		while (l >= 0 && r < s.length && s[l] === s[r]) {
-			l--
-			r++
-		}
-		return r - l - 1
-	}
 }
 
 //DP  O(n^2) - O(n^2)
@@ -143,6 +141,18 @@ var longestPalindrome = function (s) {
 ```javascript {.line-numbers}
 //brute force O(n^3)
 var longestValidParentheses = function (s) {
+  const isValid = str => {
+		let balance = 0
+		for (let c of str) {
+			if (c === '(') {
+				balance++
+			} else {
+				balance--
+				if (balance < 0) return false
+			}
+		}
+		return balance === 0
+	}
 	const len = s.length
 	if (len < 2) return 0
 	//获取字符串截取截止坐标
@@ -154,19 +164,6 @@ var longestValidParentheses = function (s) {
 			//找到即是最长的
 			if (isValid(s.substring(j, j + i))) return i
 		}
-	}
-
-	function isValid(str) {
-		let balance = 0
-		for (let c of str) {
-			if (c === '(') {
-				balance++
-			} else {
-				balance--
-				if (balance < 0) return false
-			}
-		}
-		return balance === 0
 	}
 }
 
@@ -485,8 +482,7 @@ var numDecodings = function (s) {
 ```javascript {.line-numbers}
 //DFS O(2^n)
 const minimumTotal = (triangle) => {
-	return dfs(0, 0) + triangle[0][0]
-	function dfs(i, j) {
+	const dfs = (i, j) => {
 		if (i >= triangle.length - 1) return 0
 		// 往左下节点走
 		const leftSum = dfs(i + 1, j) + triangle[i + 1][j]
@@ -495,6 +491,7 @@ const minimumTotal = (triangle) => {
 		// 记录每个节点往左和往右遍历的路径和的最小值
 		return Math.min(leftSum, rightSum)
 	}
+  return dfs(0, 0) + triangle[0][0]
 }
 
 //O(n^2) - O(n^2)
@@ -1124,7 +1121,7 @@ var change = function (amount, coins) {
 ```javascript {.line-numbers}
 //DFS O(2^(m + n - 1) - 1)
 var uniquePaths = function (m, n) {
-	function dfs(i, j, m, n) {
+	const dfs = (i, j, m, n) => {
 		if (i >= m || j >= n) return 0
 		// 找到一种方法,相当于找到了叶子节点
 		if (i === m - 1 && j === n - 1) return 1

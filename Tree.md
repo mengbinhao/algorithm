@@ -1554,16 +1554,7 @@ var sumNumbers = function (root, preSum) {
 
 ```javascript {.line-numbers}
 var buildTree = function (preorder, inorder) {
-	const preLen = preorder.length,
-		inLen = inorder.length
-	if (preLen !== inLen) throw new TypeError('invalid params')
-	let map = new Map()
-	//space for time
-	//get inorder idx from preorder value
-	//note question: no same value Node, which means can form just one specific tree
-	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
-	return helper(preorder, 0, preLen - 1, map, 0, inLen - 1)
-	function helper(preorder, preLeft, preRight, map, inLeft, inRight) {
+  const helper = (preorder, preLeft, preRight, map, inLeft, inRight) => {
 		if (preLeft > preRight || inLeft > inRight) return null
 		const rootVal = preorder[preLeft],
 			root = new TreeNode(rootVal),
@@ -1586,6 +1577,15 @@ var buildTree = function (preorder, inorder) {
 		)
 		return root
 	}
+	const preLen = preorder.length,
+		inLen = inorder.length
+	if (preLen !== inLen) throw new TypeError('invalid params')
+	let map = new Map()
+	//space for time
+	//get inorder idx from preorder value
+	//note question: no same value Node, which means can form just one specific tree
+	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
+	return helper(preorder, 0, preLen - 1, map, 0, inLen - 1)
 }
 ```
 
@@ -1593,16 +1593,7 @@ var buildTree = function (preorder, inorder) {
 
 ```javascript {.line-numbers}
 var buildTree = function (inorder, postorder) {
-	const inLen = inorder.length,
-		postLen = postorder.length
-	if (inLen !== postLen) throw new TypeError('invalid params')
-	const map = new Map()
-	//space for time
-	//get root idx in inorder
-	//note question: no same value Node, which means can form a specific tree
-	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
-	return helper(postorder, 0, postLen - 1, map, 0, inLen - 1)
-	function helper(postorder, postLeft, postRight, map, inLeft, inRight) {
+  const helper = (postorder, postLeft, postRight, map, inLeft, inRight) => {
 		if (inLeft > inRight || postLeft > postRight) return null
 		const rootVal = postorder[postRight],
 			root = new TreeNode(rootVal),
@@ -1625,6 +1616,15 @@ var buildTree = function (inorder, postorder) {
 		)
 		return root
 	}
+	const inLen = inorder.length,
+		postLen = postorder.length
+	if (inLen !== postLen) throw new TypeError('invalid params')
+	const map = new Map()
+	//space for time
+	//get root idx in inorder
+	//note question: no same value Node, which means can form a specific tree
+	for (let i = 0; i < inLen; i++) map.set(inorder[i], i)
+	return helper(postorder, 0, postLen - 1, map, 0, inLen - 1)
 }
 ```
 

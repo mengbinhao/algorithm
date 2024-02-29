@@ -216,7 +216,7 @@ var reverseWords = function (s) {
 	return res.substring(0, res.length - 1)
 }
 
-//use queue
+//use queue simple
 var reverseWords = function (s) {
 	let l = 0,
 		r = s.length - 1,
@@ -247,7 +247,7 @@ var reverseWords = function (s) {
 ### [165. ==比较版本号==](https://leetcode.cn/problems/compare-version-numbers/)
 
 ```javascript {.line-numbers}
-//O(n + m) - O(n + m)
+//O(n + m) - O(n + m) simple
 var compareVersion = function (version1, version2) {
 	const v1 = version1.split('.')
 	const v2 = version2.split('.')
@@ -300,12 +300,12 @@ var reverseString = function (s) {
 
 //recursion
 var reverseString = function (s) {
-	helper(s, 0, s.length - 1)
-	function helper(s, left, right) {
+	const helper = (s, left, right) => {
 		if (left >= right) return
 		;[s[left++], s[right--]] = [s[right], s[left]]
 		helper(s, left, right)
 	}
+  helper(s, 0, s.length - 1)
 }
 ```
 
@@ -380,6 +380,24 @@ var addStrings = function (num1, num2) {
 ### [43. 字符串相乘](https://leetcode-cn.com/problems/multiply-strings/)
 
 ```javascript {.line-numbers}
+const addStrings = (num1, num2) => {
+	let i = num1.length - 1,
+		j = num2.length - 1,
+		curry = 0,
+		ret = []
+
+	while (i >= 0 || j >= 0 || curry) {
+		const x = i >= 0 ? num1.charAt(i) - 0 : 0
+		const y = j >= 0 ? num2.charAt(j) - 0 : 0
+		const tmp = x + y + curry
+		ret.push(tmp % 10)
+		curry = Math.floor(tmp / 10)
+		i--
+		j--
+	}
+	return ret.reverse().join('')
+}
+
 var multiply = function (num1, num2) {
 	if (num1 === '0' || num2 === '0') {
 		return '0'
@@ -406,24 +424,6 @@ var multiply = function (num1, num2) {
 		ans = addStrings(ans, cur.split('').reverse().join(''))
 	}
 	return ans
-}
-
-function addStrings(num1, num2) {
-	let i = num1.length - 1,
-		j = num2.length - 1,
-		curry = 0,
-		ret = []
-
-	while (i >= 0 || j >= 0 || curry) {
-		const x = i >= 0 ? num1.charAt(i) - 0 : 0
-		const y = j >= 0 ? num2.charAt(j) - 0 : 0
-		const tmp = x + y + curry
-		ret.push(tmp % 10)
-		curry = Math.floor(tmp / 10)
-		i--
-		j--
-	}
-	return ret.reverse().join('')
 }
 ```
 
@@ -562,17 +562,7 @@ var countSubstrings = function (s) {
 
 //brute force
 var countSubstrings = function (s) {
-	let len = s.length,
-		ret = 0
-	for (let i = 0; i < len; i++) {
-		for (let j = i; j < len; j++) {
-			if (isPalindrome(s.substring(i, j + 1))) ret++
-		}
-	}
-
-	return ret
-
-	function isPalindrome(s) {
+	const isPalindrome = s => {
 		let l = 0,
 			r = s.length - 1
 		while (l < r) {
@@ -582,6 +572,15 @@ var countSubstrings = function (s) {
 		}
 		return true
 	}
+	let len = s.length,
+		ret = 0
+	for (let i = 0; i < len; i++) {
+		for (let j = i; j < len; j++) {
+			if (
+        isPalindrome(s.substring(i, j + 1))) ret++
+		}
+	}
+	return ret
 }
 
 //DP
@@ -678,7 +677,7 @@ var replaceSpace = function (s) {
 
 ```javascript {.line-numbers}
 var reverseLeftWords = function (s, n) {
-	function swap(arr, l, r) {
+	const swap = (arr, l, r) => {
 		while (l < r) {
 			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
 		}

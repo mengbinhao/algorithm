@@ -55,7 +55,7 @@ var findKthLargest = function (nums, k) {
 
 ```javascript
 //基于堆排序的选择方法
-function findKthLargest(nums, k) {
+const findKthLargest = (nums, k) => {
 	let len = nums.length
 	const down = (arr, i) => {
 		const lSon = 2 * i + 1,
