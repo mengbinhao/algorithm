@@ -64,7 +64,78 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 2 查找第一个值等于给定值的元素(左边界)
+#### 2 寻找左侧边界
+
+```javascript
+var binarySearchLeftBound = (arr, target) => {
+	const len = arr.length
+	let l = 0,
+		r = len - 1
+	let ret = -1
+	while (l <= r) {
+		const mid = Math.floor(l + (r - l) / 2)
+		if (arr[mid] === target) {
+			ret = mid
+			r = mid - 1
+		} else if (arr[mid] > target) {
+			r = mid - 1
+		} else {
+			l = mid + 1
+		}
+	}
+	return ret
+}
+```
+
+#### 3 寻找右侧边界
+
+```javascript
+var binarySearchRightBound = (arr, target) => {
+	const len = arr.length
+	let l = 0,
+		r = len - 1
+	let ret = -1
+	while (l <= r) {
+		const mid = Math.floor(l + (r - l) / 2)
+		if (arr[mid] === target) {
+			ret = mid
+			l = mid + 1
+		} else if (arr[mid] > target) {
+			r = mid - 1
+		} else {
+			l = mid + 1
+		}
+	}
+	return ret
+}
+```
+
+#### 4 寻找插入位置
+
+```javascript
+var searchInsert = function (nums, target) {
+	const len = nums.length
+	let l = 0,
+		r = len - 1,
+		mid
+	while (l <= r) {
+		mid = ((r - l) >> 1) + l
+		if (nums[mid] === target) {
+			return mid
+		} else if (nums[mid] > target) {
+			r = mid - 1
+		} else {
+			l = mid + 1
+		}
+	}
+  //l插入点 l init = 0, 一直往左走结束就是 0 + 1,一直往右走结束条件 l > r 即4
+	return l
+}
+```
+
+
+
+#### 5 查找第一个值等于给定值的元素(左边界)
 
 ```javascript {.line-numbers}
 //返回索引,arr必须提前排序
@@ -95,7 +166,7 @@ const binarySearchLeftBound = (arr, target) => {
 }
 ```
 
-#### 3 查找最后一个值等于给定值的元素(右边界)
+#### 6 查找最后一个值等于给定值的元素(右边界)
 
 ```javascript {.line-numbers}
 //返回索引,arr必须提前排序
@@ -125,7 +196,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 4 查找第一个大于等于给定值的元素
+#### 7 查找第一个大于等于给定值的元素
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
@@ -148,7 +219,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 5 查找最后一个小于等于给定值的元素
+#### 8 查找最后一个小于等于给定值的元素
 
 ```javascript {.line-numbers}
 const binarySearch = (arr, target) => {
@@ -172,7 +243,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 6 寻找左侧边界的二分搜索(labuladuo version,同2, better)
+#### 9 寻找左侧边界的二分搜索(labuladuo version,同2, better)
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
@@ -203,7 +274,7 @@ const leftBound = (arr, target) => {
 }
 ```
 
-#### 7 寻找右侧边界的二分搜索(labuladuo version,同3, better)
+#### 10 寻找右侧边界的二分搜索(labuladuo version,同3, better)
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
@@ -572,7 +643,7 @@ var searchInsert = function (nums, target) {
 			l = mid + 1
 		}
 	}
-  //l插入点
+  //l插入点 l init = 0, 一直往左走结束就是 0 + 1,一直往右走结束条件 l > r 即4
 	return l
 }
 ```
