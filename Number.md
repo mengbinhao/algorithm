@@ -10,7 +10,7 @@ var reverse = function (x) {
 	const sign = x > 0 ? 1 : -1
 	//x都按整数处理
 	x = x < 0 ? -x : x
-	//1 整数转字符串，在转数组
+	//1 整数转字符串，再转数组
 	const arr = [...(x + '')]
 	const len = arr.length
 	const tmp = new Array(len)

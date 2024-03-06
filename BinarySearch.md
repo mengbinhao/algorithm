@@ -67,6 +67,7 @@ const binarySearch = (arr, target) => {
 #### 2 寻找左侧边界
 
 ```javascript
+//arr已排序
 var binarySearchLeftBound = (arr, target) => {
 	const len = arr.length
 	let l = 0,
@@ -90,6 +91,7 @@ var binarySearchLeftBound = (arr, target) => {
 #### 3 寻找右侧边界
 
 ```javascript
+//arr已排序
 var binarySearchRightBound = (arr, target) => {
 	const len = arr.length
 	let l = 0,
@@ -113,6 +115,7 @@ var binarySearchRightBound = (arr, target) => {
 #### 4 寻找插入位置
 
 ```javascript
+//arr已排序
 var searchInsert = function (nums, target) {
 	const len = nums.length
 	let l = 0,
@@ -132,8 +135,6 @@ var searchInsert = function (nums, target) {
 	return l
 }
 ```
-
-
 
 #### 5 查找第一个值等于给定值的元素(左边界)
 
@@ -243,7 +244,7 @@ const binarySearch = (arr, target) => {
 }
 ```
 
-#### 9 寻找左侧边界的二分搜索(labuladuo version,同2, better)
+#### 9 寻找左侧边界的二分搜索(labuladuo version)
 
 ```javascript {.line-numbers}
 const leftBound = (arr, target) => {
@@ -274,7 +275,7 @@ const leftBound = (arr, target) => {
 }
 ```
 
-#### 10 寻找右侧边界的二分搜索(labuladuo version,同3, better)
+#### 10 寻找右侧边界的二分搜索(labuladuo version)
 
 ```javascript {.line-numbers}
 const rightBound = (arr, target) => {
@@ -338,7 +339,7 @@ var rotate = (nums, k) => {
 }
 ```
 
-#### [153.==寻找旋转排序数组中的最小值（<模板）==](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
+#### [153.==寻找旋转排序数组中的最小值==](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 ```javascript
 var findMin = function (nums) {
@@ -389,12 +390,12 @@ var findMin = function (nums) {
 	let l = 0,
 		r = nums.length - 1
 	while (l < r) {
-		const pivot = l + Math.floor((r - l) / 2)
-		if (nums[pivot] < nums[r]) {
-			r = pivot
-		} else if (nums[pivot] > nums[r]) {
+		const mid = l + Math.floor((r - l) / 2)
+		if (nums[mid] < nums[r]) {
+			r = mid
+		} else if (nums[mid] > nums[r]) {
 			l++
-    //当nums[pivot] === nums[r]，缩减右端点
+    //当nums[mid] === nums[r]，缩减右端点
 		} else {
 			r--
 		}
@@ -513,7 +514,7 @@ var search = function (arr, target) {
 
 ### questions
 
-#### [34.==在排序数组中查找元素的第一个和最后一个位置==](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+#### [34.在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
 ```javascript {.line-numbers}
 //brute force  O(n) - O(1)
