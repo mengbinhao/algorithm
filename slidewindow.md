@@ -37,18 +37,20 @@
 //2 优化直接在双循环中求最长
 
 //window version better
-var lengthOfLongestSubstring = function(s) {
-  const len = s.length
-  let start = end = 0, maxLen = 0
-  let slideWindow = {}
-  while (end < len) {
-    const rChar = s[end++]
-    slideWindow[rChar] ? slideWindow[rChar]++ : slideWindow[rChar] = 1
-    //缩小window左边界，l一直缩到window里当前rChar不重复的位置
-    while (slideWindow[rChar] > 1) slideWindow[s[start++]]--
-    maxLen = Math.max(maxLen, end - start)
-  }
-  return maxLen
+var lengthOfLongestSubstring = function (s) {
+	const len = s.length
+	let l = 0,
+		r = 0,
+		maxLen = 0
+	let slideWindow = {}
+	while (r < len) {
+		const rChar = s[r++]
+		slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
+		//缩小window左边界，l一直缩到window里当前rChar不重复的位置
+		while (slideWindow[rChar] > 1) slideWindow[s[l++]]--
+		maxLen = Math.max(maxLen, r - l)
+	}
+	return maxLen
 }
 
 var lengthOfLongestSubstring = function (s) {
@@ -182,7 +184,7 @@ var maxSlidingWindow = function (nums, k) {
 }
 ```
 
-### [438.==找到字符串中所有字母异位词==](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+### [438.找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 ```javascript {.line-numbers}
 var findAnagrams = function (s, p) {
