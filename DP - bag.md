@@ -121,7 +121,7 @@ const bag01 = (weight, value, bagWeight) => {
 	for (let j = weight[0]; j <= bagWeight; j++) dp[0][j] = value[0]
 	//先遍历物品，再遍历背包更易于理解
 	for (let i = 1; i < len; i++) {
-    //for (let j = weight[i]; j <= bagWeight; j++) {  下面判断可省略
+    //for (let j = weight[i]; j <= bagWeight; j++) 下面判断可省略
 		for (let j = 1; j <= bagWeight; j++) {
 			if (j < weight[i]) {
 				dp[i][j] = dp[i - 1][j]
