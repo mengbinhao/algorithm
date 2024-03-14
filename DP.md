@@ -1317,37 +1317,11 @@ var lenLongestFibSubseq = function (arr) {
 }
 ```
 
-### [509. ==斐波那契数==](https://leetcode-cn.com/problems/fibonacci-number/)
-
-```javascript {.line-numbers}
-//brute force
-var lenLongestFibSubseq = function (arr) {
-	const len = arr.length
-	const set = new Set()
-	let ret = 0
-	for (let item of arr) set.add(item)
-	for (let i = 0; i < len; i++) {
-		for (let j = i + 1; j < len; j++) {
-			let x = arr[j]
-			let y = arr[i] + arr[j]
-			let curLen = 2
-			while (set.has(y)) {
-				let tmp = y
-				y += x
-				x = tmp
-				ret = Math.max(ret, ++curLen)
-			}
-		}
-	}
-	return ret
-}
-```
-
 ### [118. ==杨辉三角==](https://leetcode-cn.com/problems/pascals-triangle/)
 
 ```javascript
 var generate = function (numRows) {
-	let triangle = []
+	const triangle = []
 	for (let i = 0; i < numRows; i++) {
 		//let curRow = new Array(i + 1).fill(1)
 		let curRow = new Array(i + 1)
