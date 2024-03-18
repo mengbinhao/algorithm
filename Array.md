@@ -134,6 +134,26 @@ var threeSum = function (nums) {
 	return arr
 }
 
+//有重复
+var threeSum = function (nums) {
+	const len = nums.length
+	const map = new Map()
+	const ret = []
+	for (let i = 0; i < len - 2; i++) {
+		const first = nums[i]
+		for (let j = i + 1; j < len; j++) {
+			const second = nums[j]
+			const third = 0 - first - second
+			if (map.has(third)) {
+				ret.push([first, second, third])
+			}
+			map.set(second, j)
+		}
+		map.clear()
+	}
+	return ret
+}
+
 var threeSum = function (nums) {
 	const len = nums.length
 	let ret = []

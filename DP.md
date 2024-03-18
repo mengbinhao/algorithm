@@ -674,11 +674,14 @@ var findTargetSumWays = function (nums, target) {
 const findTargetSumWays = (nums, target) => {
 	const sum = nums.reduce((a, b) => a + b)
 	if (Math.abs(target) > sum) return 0
+  //不能整除即凑不出target
 	if ((target + sum) % 2) return 0
 	const halfSum = (target + sum) / 2
+  //dp[j]表示装满j有dp[j]种方法
 	let dp = new Array(halfSum + 1).fill(0)
 	dp[0] = 1
 	for (let i = 0; i < nums.length; i++) {
+    //每个物品只能用一次即倒序
 		for (let j = halfSum; j >= nums[i]; j--) {
 			dp[j] += dp[j - nums[i]]
 		}
@@ -937,7 +940,7 @@ var numSquares = function (n) {
 }
 ```
 
-### [322. ==零钱兑换==](https://leetcode-cn.com/problems/coin-change/)
+### [322. ==零钱兑换（01背包）==](https://leetcode-cn.com/problems/coin-change/)
 
 ```javascript {.line-numbers}
 //Greedy
@@ -981,8 +984,9 @@ var coinChange = function (coins, amount) {
 			ret = Math.min(ret, count)
 			return
 		}
-		for (let i = 0, len = coins.length; i < len; i++)
-			dfs(coins, remain - coins[i], count + 1)
+		for (let i = 0, len = coins.length; i < len; i++) {
+    	dfs(coins, remain - coins[i], count + 1)
+    }
 	}
 	dfs(coins, amount, 0)
 	return ret === Infinity ? -1 : ret
@@ -999,11 +1003,11 @@ var coinChange = function (coins, amount) {
 		if (remain === 0) return 0
 		if (cache[remain]) return cache[remain]
 		//当前层需要取下面所有情况的最小值
-		//F(X) = min(F(0)....F(X - 1))
+		//F(X) = min(F(0)....F(X - 1)) + 1
 		let min = Infinity
 		for (let i = 0, len = coins.length; i < len; i++) {
 			const ret = dfs(coins, remain - coins[i])
-			//加1是加上得到ret那个步骤中兑换的那枚硬币
+			//加1是加上当前枚举的这枚硬币
 			//下层返回需有意义且是下层需要最少的硬币数,再更新cache[remain]
 			if (ret >= 0 && ret < min) min = ret + 1
 		}
@@ -1023,6 +1027,7 @@ const coinChange = (coins, amount) => {
 	dp[0] = 0
 	for (let i = 0; i < coins.length; i++) {
 		for (let j = coins[i]; j <= amount; j++) {
+      //dp[i] = min(F(1−1),F(1−2),F(1−5)) + 1
 			dp[j] = Math.min(dp[j - coins[i]] + 1, dp[j])
 		}
 	}
@@ -1034,16 +1039,12 @@ const coinChange = (coins, amount) => {
 var coinChange = function (coins, amount) {
 	if (coins.length === 0) return -1
 	if (amount < 1) return 0
-	//dp[i]:组成金额i所需最少的硬币数量,初始化成不可能的数,防止后面被覆盖
 	dp = new Array(amount + 1).fill(Infinity)
-	//当i = 0时无法用硬币组成
 	dp[0] = 0
 	for (let i = 1; i <= amount; i++) {
-		//背包
-		//dp[i] = min(F(1−1),F(1−2),F(1−5)) + 1
+		//先背包
 		for (let j = 0, len = coins.length; j < len; j++) {
-			//物品
-			//数组越界,语义上是当前剩余面值需要大于硬币价值才有意义
+			//再物品，数语法上数组越界,语义上是当前剩余面值需要大于硬币价值才有意义
 			if (i - coins[j] >= 0) dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1)
 		}
 	}
@@ -1104,7 +1105,9 @@ var change = function (amount, coins) {
 	//若调整状态遍历顺序则计算的是排列数
 	for (const coin of coins) {
 		//dp[j] += dp[j - nums[j]]
-		for (let j = coin; j <= amount; j++) dp[j] += dp[j - coin]
+		for (let j = coin; j <= amount; j++) {
+      dp[j] += dp[j - coin]
+    }
 	}
 	return dp[amount]
 }
@@ -1363,12 +1366,9 @@ var fib = function (n) {
 var fib = function (n) {
 	const map = new Map()
 	const helper = (n) => {
-		if (n < 2) {
-			map.set(n, n)
-			return map.get(n)
-		}
+		if (n < 2) return n
 		if (map.has(n)) return map.get(n)
-		map.set(n, fib(n - 1) + fib(n - 2))
+		map.set(n, helper(n - 1) + helper(n - 2))
 		return map.get(n)
 	}
 	return helper(n)
@@ -1377,22 +1377,24 @@ var fib = function (n) {
 //DP
 var fib = function (n) {
 	let dp = [0, 1]
-	for (let i = 2; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2]
+	for (let i = 2; i <= n; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2]
+  }
 	return dp[n]
 }
 
 //DP 状态压缩 O(1)
 var fib = function (n) {
 	if (n < 2) return n
-	let pre1 = 1,
-		pre2 = 0,
-		tmp
+	let first = 0,
+		second = 1,
+		third
 	for (let i = 2; i <= n; i++) {
-		tmp = pre1
-		pre1 = pre1 + pre2
-		pre2 = tmp
+    third = first + second
+    first = second
+    second = third
 	}
-	return pre1
+	return third
 }
 ```
 
