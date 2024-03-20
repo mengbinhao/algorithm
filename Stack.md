@@ -148,9 +148,7 @@ var trap = function (height) {
 	//for (let i = 1; i < len - 1; i++) {
 	for (let i = 0; i < len; i++) {
     let lMax = rMax = -Infinity
-		//左扫
 		for (let j = i; j >= 0; j--) lMax = Math.max(lMax, height[j])
-		//右扫
 		for (let j = i; j < len; j++) rMax = Math.max(rMax, height[j])
 		//若当前轮自己最高，结果是0
 		ret += Math.min(lMax, rMax) - height[i]
@@ -269,9 +267,9 @@ var largestRectangleArea = function (heights) {
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
 	let maxArea = 0, stack = []
-  //特殊情况1, stack空了width = i即可以延展到数组开头
-  //特殊情况2, 一遍遍历完成后，width = len即可以扩展到数组末尾
-  //特殊情况3, 当新栈顶高度=旧栈顶，计算是错的，但是不影响最终计算结果，严谨性加上内层while
+  //特殊情况1, 出栈后栈为空则width = i即可以延展到数组开头
+  //特殊情况2, 一遍遍历完成后，栈顶元素width = len即可以扩展到数组末尾
+  //特殊情况3, 当新栈顶高度 = 旧栈顶，计算是错的，但是不影响最终计算结果，因为下次循环正确的答案会覆盖错误的答案，严谨性加上内层while
 	for (let i = 0; i < len; i++) {
     //当前栈顶大于扫到的柱子时
 		while (stack.length && heights[stack[stack.length - 1]] > heights[i]) {
@@ -282,7 +280,7 @@ var largestRectangleArea = function (heights) {
 				stack.pop()
 			let width
 			if (!stack.length) {
-				width = i
+				width = i //可以延伸到数组末尾
 			} else {
 				width = i - stack[stack.length - 1] - 1
 			}
@@ -296,7 +294,7 @@ var largestRectangleArea = function (heights) {
 			stack.pop()
 		let width
 		if (!stack.length) {
-			width = len
+			width = len //可以延伸到数组开头
 		} else {
 			width = len - stack[stack.length - 1] - 1
 		}
@@ -312,10 +310,11 @@ var largestRectangleArea = function (heights) {
 	if (len === 0) return 0
 	if (len === 1) return heights[0]
 	let maxArea = 0
-  //前面哨兵保证栈非空，后面哨兵保证heights循环完所有元素都可被计算，即heights原本有效元素都会出栈
+  //前面哨兵跟初始化的stack配合保证栈非空，后面哨兵保证heights循环完所有元素都可被计算，即heights原本有效元素都会出栈
 	let tmp = [0, ...heights, 0]
 	len += 2
 	heights = tmp
+  //Note
 	let stack = [0]
 	for (let i = 1; i < len; i++) {
 		while (heights[stack[stack.length - 1]] > heights[i]) {
