@@ -290,6 +290,36 @@ var permute = function (nums) {
 	dfs(0, [])
 	return ret
 }
+
+//swap方法 省空间
+var Solution = function () {
+	this.result = []
+	this.permute = function (nums) {
+		this.backtrack(nums, 0)
+		return this.result
+	}
+	this.backtrack = function (nums, start) {
+		if (start === nums.length) {
+			var list = []
+			for (var num of nums) list.push(num)
+			this.result.push(list)
+			return
+		}
+		for (var i = start; i < nums.length; i++) {
+			// 做选择
+			this.swap(nums, start, i)
+			// 递归调用，传入 start + 1
+			this.backtrack(nums, start + 1)
+			// 撤销选择
+			this.swap(nums, start, i)
+		}
+	}
+	this.swap = function (nums, i, j) {
+		var temp = nums[i]
+		nums[i] = nums[j]
+		nums[j] = temp
+	}
+}
 ```
 
 ### [47.全排列 2 M](https://leetcode-cn.com/problems/permutations-ii/)
