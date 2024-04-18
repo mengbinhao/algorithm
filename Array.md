@@ -170,7 +170,7 @@ var threeSum = function (nums) {
 			const sum = nums[i] + nums[l] + nums[r]
 			if (sum === 0) {
 				ret.push([nums[i], nums[l], nums[r]])
-				//l < len - 4至少保证3个相加的数
+				//l < len - 4，l置多可以右移的位置，考虑下面那个l++
 				while (l < len - 4 && nums[l + 1] === nums[l]) l++
 				l++ //跳到不重复的那个数
 				while (r > 3 && nums[r - 1] === nums[r]) r--
@@ -250,7 +250,7 @@ var removeDuplicates = function (nums) {
 //slow - fast pointer
 var removeElement = (nums, val) => {
 	let slow = 0
-	for (let fast = 0; fast < nums.length; fast++) {
+	for (let fast = 0, len = nums.length; fast < len; fast++) {
 		if (nums[fast] !== val) nums[slow++] = nums[fast]
 	}
 	return slow

@@ -1,16 +1,16 @@
-Function.prototype.before = function (fun) {
+Function.prototype.before = function (fn) {
 	var self = this
 	return function () {
-		fun.apply(this, arguments)
+		fn.apply(this, arguments)
 		return self.apply(this, arguments)
 	}
 }
 
-Function.prototype.after = function (fun) {
+Function.prototype.after = function (fn) {
 	var self = this
 	return function () {
 		let agent = self.apply(this, arguments)
-		fun.apply(this, arguments)
+		fn.apply(this, arguments)
 		return agent
 	}
 }
