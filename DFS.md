@@ -237,7 +237,7 @@ var combinationSum2 = function (candidates, target) {
 	const len = candidates.length,
 		ret = []
 	if (len === 0) return ret
-	//precondition!!!!!!!
+	//precondition!!!
 	candidates.sort((a, b) => a - b)
 	const dfs = (candidates, remain, startIdx, path) => {
 		if (remain === 0) {

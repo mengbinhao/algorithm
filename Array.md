@@ -196,6 +196,7 @@ var removeDuplicates = function (nums) {
 		if (nums[i] !== nums[i + 1]) {
 			i++
 		} else {
+      //前移，数组会越界但不影响结果
 			for (let j = i + 1; j < len; j++) {
 				nums[j] = nums[j + 1]
 			}
@@ -206,41 +207,14 @@ var removeDuplicates = function (nums) {
 }
 
 //slow - fast pointer
-var removeDuplicates = function (nums) {
-	const len = nums.length
-	let slow = (fast = 1)
-	while (fast < len) {
-		if (nums[fast] !== nums[fast - 1]) nums[slow++] = nums[fast]
-		fast++
-	}
-	return slow
-}
-
-var removeDuplicates = function (nums) {
-	const len = nums.length
-	let slow = 0, fast = 1
-	while (fast < len) {
-		if (nums[fast] !== nums[fast - 1]) {
-      if (++slow !== fast) nums[slow] = nums[fast]
+var removeDuplicates = function(nums) {
+  let slow = 1
+  for (let fast = 1, len =nums.length; fast < len; fast++) {
+    if (nums[fast] !== nums[fast - 1]) {
+      nums[slow++] = nums[fast]
     }
-		fast++
-	}
-	return slow + 1
-}
-
-//more effective
-var removeDuplicates = function (nums) {
-	const len = nums.length
-	let slow = (fast = 1)
-	while (fast < len) {
-		if (nums[slow] !== nums[fast]) {
-			//[0,1,2,3,4,5] 避免原地复制
-			if (fast - slow > 1) nums[slow + 1] = nums[fast]
-			slow++
-		}
-		fast++
-	}
-	return slow + 1
+  }
+  return slow
 }
 ```
 
@@ -248,12 +222,14 @@ var removeDuplicates = function (nums) {
 
 ```javascript
 //slow - fast pointer
-var removeElement = (nums, val) => {
-	let slow = 0
-	for (let fast = 0, len = nums.length; fast < len; fast++) {
-		if (nums[fast] !== val) nums[slow++] = nums[fast]
-	}
-	return slow
+var removeElement = function(nums, val) {
+  let slow = 0
+  for (let fast = 0, len = nums.length; fast < len; fast++) {
+    if (nums[fast] !== val) {
+      nums[slow++] = nums[fast]
+    }
+  }
+  return slow
 }
 ```
 
@@ -288,6 +264,7 @@ var nextPermutation = function (nums) {
 //optimize
 var jump = function (nums) {
 	let steps = 0,
+    //当前能跳到的最远位置
 		end = 0,
 		maxPosition = 0
 	//若访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
@@ -321,7 +298,7 @@ var jump = function (nums) {
 }
 ```
 
-### [48.==旋转图像==](https://leetcode.cn/problems/rotate-image/)
+### [48.==旋转图像（2维）==](https://leetcode.cn/problems/rotate-image/)
 
 ```javascript
 //非原地旋转
@@ -383,7 +360,7 @@ var rotate = function (matrix) {
 }
 ```
 
-### [54.==螺旋矩阵==](https://leetcode-cn.com/problems/spiral-matrix/)
+### [54.==螺旋矩阵（2维）==](https://leetcode-cn.com/problems/spiral-matrix/)
 
 ```javascript {.line-numbers}
 //O(n) - O(n) 偏移量
@@ -534,10 +511,10 @@ var plusOne = function (digits) {
 }
 ```
 
-### [73.==矩阵置零==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
+### [73.==矩阵置零（2维）==](https://leetcode-cn.com/problems/set-matrix-zeroes/)
 
 ```javascript {.line-numbers}
-//暴力解法,copy一份，遍历这个副本修改原数组
+//brute force,copy一份,遍历这个副本修改原数组
 var setZeroes = function (matrix) {
 	const rows = matrix.length
 	const cols = matrix[0].length
