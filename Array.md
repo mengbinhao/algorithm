@@ -171,7 +171,7 @@ var threeSum = function (nums) {
 			if (sum === 0) {
 				ret.push([nums[i], nums[l], nums[r]])
 				//l < len - 4，l置多可以右移的位置，考虑下面那个l++
-				while (l < len - 4 && nums[l + 1] === nums[l]) l++
+				while (l < len - 3 && nums[l + 1] === nums[l]) l++
 				l++ //跳到不重复的那个数
 				while (r > 3 && nums[r - 1] === nums[r]) r--
 				r-- //同上
@@ -196,10 +196,8 @@ var removeDuplicates = function (nums) {
 		if (nums[i] !== nums[i + 1]) {
 			i++
 		} else {
-      //前移，数组会越界但不影响结果
-			for (let j = i + 1; j < len; j++) {
-				nums[j] = nums[j + 1]
-			}
+      //整体前移，数组会越界但不影响结果
+			for (let j = i + 1; j < len; j++) nums[j] = nums[j + 1]
 			len--
 		}
 	}
@@ -209,10 +207,8 @@ var removeDuplicates = function (nums) {
 //slow - fast pointer
 var removeDuplicates = function(nums) {
   let slow = 1
-  for (let fast = 1, len =nums.length; fast < len; fast++) {
-    if (nums[fast] !== nums[fast - 1]) {
-      nums[slow++] = nums[fast]
-    }
+  for (let fast = 1, len = nums.length; fast < len; fast++) {
+    if (nums[fast] !== nums[fast - 1]) nums[slow++] = nums[fast]
   }
   return slow
 }
@@ -225,9 +221,7 @@ var removeDuplicates = function(nums) {
 var removeElement = function(nums, val) {
   let slow = 0
   for (let fast = 0, len = nums.length; fast < len; fast++) {
-    if (nums[fast] !== val) {
-      nums[slow++] = nums[fast]
-    }
+    if (nums[fast] !== val) nums[slow++] = nums[fast]
   }
   return slow
 }
@@ -688,6 +682,8 @@ var removeDuplicates = function (nums) {
 	const len = nums.length
 	if (len <= 2) return len
 	let fast = (slow = 2)
+  //slow已经处理出的数组的长度
+  //fast已经检查过的数组的长度
 	while (fast < len) {
 		if (nums[fast] !== nums[slow - 2]) nums[slow++] = nums[fast]
 		fast++
@@ -994,7 +990,7 @@ var hanota = function (A, B, C) {
 }
 
 //recursion
-//f(n, A, B,C) => f(n - 1, A, C, B) + M(A, C) + f(n - 1, B, A, C)
+//f(n, A, B, C) => f(n - 1, A, C, B) + M(A, C) + f(n - 1, B, A, C)
 var hanota = function (A, B, C) {
 	const helper = (c, from, tmp, to) => {
 		//terminate
