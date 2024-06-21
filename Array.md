@@ -233,7 +233,6 @@ var removeElement = function(nums, val) {
 //注意到下一个排列总是比当前排列要大，除非该排列已经是最大的排列。求找到一个大于当前序列的新序列，且变大的幅度尽可能小
 //1 将一个左边的「较小数」与一个右边的「较大数」交换，以能够让当前排列变大，从而得到下一个排列
 //2 同时要让这个「较小数」尽量靠右，而「较大数」尽可能小。当交换完成后，「较大数」右边的数需要按照升序重新排列。这样可以在保证新排列大于原来排列的情况下，使变大的幅度尽可能小
-
 var nextPermutation = function (nums) {
 	const len = nums.length
 	let i = len - 2
@@ -257,18 +256,18 @@ var nextPermutation = function (nums) {
 ```javascript
 //optimize
 var jump = function (nums) {
-	let steps = 0,
-    //当前能跳到的最远位置
-		end = 0,
-		maxPosition = 0
-	//若访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
+	let steps = 0
+  //上次能跳到的最远位置
+	let lastEnd = 0
+	let maxPosition = 0
+  //若访问最后一个元素，在边界正好为最后一个位置的情况下，会多一次「不必要的跳跃次数」
 	for (let i = 0, len = nums.length; i < len - 1; i++) {
-		//更新当前位置能跳到的最远位置
+    //更新当前位置能跳到的最远位置
 		maxPosition = Math.max(maxPosition, nums[i] + i)
-		//跳到"上一次"能跳到的最远位置更新边界
-		if (i === end) {
-			end = maxPosition
+    //跳到"上一次"能跳到的最远位置更新边界
+		if (i === lastEnd) {
 			steps++
+			lastEnd = maxPosition
 		}
 	}
 	return steps
@@ -362,8 +361,8 @@ var spiralOrder = function (matrix) {
 	const rows = matrix.length,
 		cols = matrix[0].length,
 		total = rows * cols
-	//let visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
-	let visited = Array.from({ length: rows }, () => new Array(cols)),
+	//const visited = new Array(rows).fill(0).map(() => new Array(columns).fill(0))
+	const visited = Array.from({ length: rows }, () => new Array(cols)),
 		//key param
 		directions = [
 			[0, 1],
@@ -655,6 +654,7 @@ var sortColors = function (nums) {
 	return nums
 }
 
+//better
 var sortColors = function (nums) {
 	let cur = 0,
 		p1 = 0,
@@ -720,11 +720,11 @@ var merge = (nums1, m, nums2, n) => {
 var merge = (nums1, m, nums2, n) => {
 	let p1 = m - 1,
 		p2 = n - 1,
-		//nums1末尾
+		//nums1开始放置的末尾
 		p = m + n - 1
 	//下句可省略
 	//while (p1 >= 0 && p2 >= 0) nums1[p--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
-	//不能写成nums1[k--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--], 死循环
+	//不能写成nums1[p--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--], 死循环
 	//nums2全部复制完
 	while (p2 >= 0) nums1[p--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
 }
@@ -749,7 +749,7 @@ var rotate = function (nums, k) {
 //额外数组 O(n) - O(n)
 var rotate = (nums, k) => {
 	const len = nums.length
-	let tmp = new Array(len)
+	const tmp = new Array(len)
 	//元素的新位置在(i+k) % len
 	for (let i = 0; i < len; i++) tmp[(i + k) % len] = nums[i]
 	for (let i = 0; i < len; i++) nums[i] = tmp[i]
@@ -758,7 +758,7 @@ var rotate = (nums, k) => {
 //数组翻转 O(n) - O(1)
 var rotate = (nums, k) => {
 	const len = nums.length
-	//需要2句特判
+	//特判
 	k %= len
 	if (k === 0) return
 	const reverse = (nums, l, r) => {
@@ -875,7 +875,19 @@ var intersection = function (nums1, nums2) {
 ### [560. ==和为 K 的子数组==](https://leetcode.cn/problems/subarray-sum-equals-k/)
 
 ```javascript
-//最low的是一重枚起点、一重枚终点、再一重枚相加结果
+//最low的是一重枚起点、一重枚终点、再一重枚相加结果 O(N^3)
+var subarraySum = function (nums, k) {
+	const len = nums.length
+	let c = 0
+	for (let start = 0; start < len; start++) {
+		for (let end = start; end < len; end++) {
+			let sum = 0
+			for (let i = start; i <= end; i++) sum += nums[i]
+			if (sum === k) c++
+		}
+	}
+	return c
+}
 
 var subarraySum = function (nums, k) {
 	let cnt = 0
@@ -891,7 +903,7 @@ var subarraySum = function (nums, k) {
 }
 
 //前缀和 + hash
-//pre[i] = pre[i - 1] + num[i] -> pre[i] - pre[i - 1] === k -> pre[j - 1] === pre[i] - k
+//pre[i] = pre[i - 1] + num[i] -> pre[i] - pre[i - 1] === k -> pre[i - 1] === pre[i] - k
 var subarraySum = function (nums, k) {
 	let cnt = 0,
 		pre = 0,
@@ -953,7 +965,7 @@ var relativeSortArray = function (arr1, arr2) {
 }
 ```
 
-### [==汉诺塔问题==](https://leetcode.cn/problems/hanota-lcci/description/)
+### [==汉诺塔==](https://leetcode.cn/problems/hanota-lcci/description/)
 
 ```javascript
 // 1 找到最小的圆盘，移动到下一个柱子上
