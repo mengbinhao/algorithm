@@ -567,7 +567,9 @@ var setZeroes = function (matrix) {
 		}
 	}
 	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) if (matrix[i][j] === marked) matrix[i][j] = 0
+		for (let j = 0; j < cols; j++) {
+      if (matrix[i][j] === marked) matrix[i][j] = 0
+    }
 	}
 }
 
@@ -696,6 +698,32 @@ var removeDuplicates = function (nums) {
 
 ```javascript
 //直观：使用额外的O(m + n)空间像合并链表一样一个一个复制
+var merge = function (nums1, m, nums2, n) {
+	const ret = []
+	let i = (j = 0)
+	while (i < m || j < n) {
+		if (i === m) {
+			ret.push(nums2[j])
+			j++
+			continue
+		}
+		if (j === n) {
+			ret.push(nums1[i])
+			i++
+			continue
+		}
+		const a = nums1[i]
+		const b = nums2[j]
+		if (a > b) {
+			ret.push(nums2[j])
+			j++
+		} else {
+			ret.push(nums1[i])
+			i++
+		}
+	}
+	for (let i = 0; i < ret.length; i++) nums1[i] = ret[i]
+}
 
 //先将数组合并再排序
 var merge = function (nums1, m, nums2, n) {
@@ -727,6 +755,30 @@ var merge = (nums1, m, nums2, n) => {
 	//不能写成nums1[p--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--], 死循环
 	//nums2全部复制完
 	while (p2 >= 0) nums1[p--] = nums1[p1] > nums2[p2] ? nums1[p1--] : nums2[p2--]
+}
+
+//三指针 从后往前 better
+var merge = function (nums1, m, nums2, n) {
+	let cur = m + n - 1
+	while (cur >= 0) {
+		// nums2已扫描完,注意下面是--n
+		if (n === 0) return
+    /*
+		if (m < 1) {
+			nums1[cur--] = nums2[--n]
+			continue
+		}
+		if (n < 1) {
+			nums1[cur--] = nums1[--m]
+			continue
+		}
+		*/
+		if (nums1[m - 1] > nums2[n - 1]) {
+			nums1[cur--] = nums1[--m]
+		} else {
+			nums1[cur--] = nums2[--n]
+		}
+	}
 }
 ```
 
@@ -859,8 +911,8 @@ var intersection = function (nums1, nums2) {
 
 //good version
 var intersection = function (nums1, nums2) {
-	let map = {}
-	let ret = []
+	const map = {}
+	const ret = []
 	for (let i = 0; i < nums1.length; i++) map[nums1[i]] = true
 	for (let i = 0; i < nums2.length; i++) {
 		if (map[nums2[i]]) {
