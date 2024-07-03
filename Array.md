@@ -697,32 +697,26 @@ var removeDuplicates = function (nums) {
 ### [88.==合并两个有序数组 E==](https://leetcode-cn.com/problems/merge-sorted-array/)
 
 ```javascript
-//直观：使用额外的O(m + n)空间像合并链表一样一个一个复制
+//直观：使用额外的O(m + n)空间像合链表一样一个一个复制
 var merge = function (nums1, m, nums2, n) {
 	const ret = []
-	let i = (j = 0)
-	while (i < m || j < n) {
-		if (i === m) {
-			ret.push(nums2[j])
-			j++
+	let p1 = (p2 = 0)
+	while (p1 < m || p2 < n) {
+		if (p1 === m) {
+			ret.push(nums2[p2++])
 			continue
 		}
-		if (j === n) {
-			ret.push(nums1[i])
-			i++
+		if (p2 === n) {
+			ret.push(nums1[p1++])
 			continue
 		}
-		const a = nums1[i]
-		const b = nums2[j]
-		if (a > b) {
-			ret.push(nums2[j])
-			j++
+		if (nums1[p1] < nums2[p2]) {
+			ret.push(nums1[p1++])
 		} else {
-			ret.push(nums1[i])
-			i++
+			ret.push(nums2[p2++])
 		}
 	}
-	for (let i = 0; i < ret.length; i++) nums1[i] = ret[i]
+	for (let i = 0, len = ret.length; i < len; i++) nums1[i] = ret[i]
 }
 
 //先将数组合并再排序
@@ -827,13 +821,13 @@ var rotate = (nums, k) => {
 ### [238.==除自身以外数组的乘积==](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 ```javascript {.line-numbers}
-//使用两个前缀数组 O(n)
+//使用两个前缀数组 O(n) - O(2n)
 var productExceptSelf = (nums) => {
 	const len = nums.length
 	// L和R分别表示左右两侧的乘积列表
-	let left = new Array(len)
-	let right = new Array(len)
-	let ret = new Array(len)
+	const left = new Array(len)
+	const right = new Array(len)
+	const ret = new Array(len)
 	// left[i] 为索引i左侧所有元素的乘积
 	// 对于索引为0的元素，因为左侧没有元素，所以 left[0] = 1
 	left[0] = 1
@@ -847,7 +841,7 @@ var productExceptSelf = (nums) => {
 	return ret
 }
 
-//使用一个数组 O(n)
+//使用一个数组 O(n) - O(2n)
 var productExceptSelf = function (nums) {
 	const len = nums.length,
 		right = new Array(len),
@@ -860,14 +854,14 @@ var productExceptSelf = function (nums) {
 	return ret
 }
 
-//best  O(1)
+//best  O(n) - O(1)
 var productExceptSelf = function (nums) {
 	const len = nums.length
 	let ret = new Array(len), r = 1
 	ret[0] = 1
 	for (let i = 1; i < len; i++) ret[i] = ret[i - 1] * nums[i - 1]
 	for (let i = len - 1; i >= 0; i--) {
-		ret[i] = ret[i] * r
+		ret[i] *= r
 		r *= nums[i]
 	}
 	return ret
@@ -911,11 +905,11 @@ var intersection = function (nums1, nums2) {
 
 //good version
 var intersection = function (nums1, nums2) {
-	const map = {}
+	const hash = {}
 	const ret = []
-	for (let i = 0; i < nums1.length; i++) map[nums1[i]] = true
+	for (let i = 0; i < nums1.length; i++) hash[nums1[i]] = true
 	for (let i = 0; i < nums2.length; i++) {
-		if (map[nums2[i]]) {
+		if (hash[nums2[i]]) {
 			ret.push(nums2[i])
 			map[nums2[i]] = false
 		}
@@ -942,16 +936,17 @@ var subarraySum = function (nums, k) {
 }
 
 var subarraySum = function (nums, k) {
-	let cnt = 0
-	for (let i = 0, len = nums.length; i < len; i++) {
+	let c = 0
+	for (let end = 0, len = nums.length; end < len; end++) {
 		let sum = 0
-		//从后往前sum
-		for (let j = i; j >= 0; j--) {
-			sum += nums[j]
-			if (sum === k) cnt++
+		//必须从后往前sum
+		//若知道 [j,i] 子数组的和，就能 O(1) 推出 [j−1,i] 的和
+		for (let start = end; start >= 0; start--) {
+			sum += nums[start]
+			if (sum === k) c++
 		}
 	}
-	return cnt
+	return c
 }
 
 //前缀和 + hash
@@ -959,11 +954,11 @@ var subarraySum = function (nums, k) {
 var subarraySum = function (nums, k) {
 	let cnt = 0,
 		pre = 0,
-		map = new Map([[0, 1]])
+		hash = new Map([[0, 1]])
 	for (let num of nums) {
 		pre += num
-		if (map.has(pre - k)) cnt += map.get(pre - k)
-		map.has(pre) ? map.set(pre, map.get(pre) + 1) : map.set(pre, 1)
+		if (hash.has(pre - k)) cnt += hash.get(pre - k)
+		hash.has(pre) ? hash.set(pre, hash.get(pre) + 1) : hash.set(pre, 1)
 	}
 	return cnt
 }
