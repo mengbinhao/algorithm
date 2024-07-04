@@ -921,7 +921,7 @@ var intersection = function (nums1, nums2) {
 ### [560. ==和为 K 的子数组==](https://leetcode.cn/problems/subarray-sum-equals-k/)
 
 ```javascript
-//最low的是一重枚起点、一重枚终点、再一重枚相加结果 O(N^3)
+//最low的是一重枚起点、一重枚终点、再一重枚相加结果 O(N^3) - O(1)
 var subarraySum = function (nums, k) {
 	const len = nums.length
 	let c = 0
@@ -935,32 +935,57 @@ var subarraySum = function (nums, k) {
 	return c
 }
 
+//O(N^2) - O(1)
 var subarraySum = function (nums, k) {
+	const len = nums.length
 	let c = 0
-	for (let end = 0, len = nums.length; end < len; end++) {
+  //先固定左边界，然后枚举右边界
+	for (let left = 0; left < len; left++) {
 		let sum = 0
-		//必须从后往前sum
-		//若知道 [j,i] 子数组的和，就能 O(1) 推出 [j−1,i] 的和
-		for (let start = end; start >= 0; start--) {
-			sum += nums[start]
+		for (let right = left; right < len; right++) {
+			sum += nums[right]
 			if (sum === k) c++
 		}
 	}
 	return c
 }
 
-//前缀和 + hash
-//pre[i] = pre[i - 1] + num[i] -> pre[i] - pre[i - 1] === k -> pre[i - 1] === pre[i] - k
+//前缀和   O(N^2) - O(n)
 var subarraySum = function (nums, k) {
-	let cnt = 0,
-		pre = 0,
+	const len = nums.length
+	let c = 0
+  //Note: 下标偏移
+	const preSum = new Array(len + 1)
+	preSum[0] = 0
+	for (let i = 0; i < len; i++) preSum[i + 1] = nums[i] + preSum[i]
+	for (let left = 0; left < len; left++) {
+		for (let right = left; right < len; right++) {
+			if (preSum[right + 1] - preSum[left] === k) c++
+		}
+	}
+	return c
+}
+
+//前缀和 + hash   O(n) - O(n)
+//由于只关心次数，不关心具体的解，我们可以使用哈希表加速运算
+//由于保存了之前相同前缀和的个数，计算区间总数的时候不是一个一个地加，时间复杂度降到了 O(N)
+var subarraySum = function (nums, k) {
+	let c = 0,
+		preSum = 0,
+		// key：前缀和，value：key 对应的前缀和的个数
+		// 对于下标为 0 的元素，前缀和为 0，个数为 1
 		hash = new Map([[0, 1]])
 	for (let num of nums) {
-		pre += num
-		if (hash.has(pre - k)) cnt += hash.get(pre - k)
-		hash.has(pre) ? hash.set(pre, hash.get(pre) + 1) : hash.set(pre, 1)
+		preSum += num
+		// 先获得前缀和为 preSum - k 的个数，加到计数变量里
+		// 判断 hash.has(preSum - k) 的原因是当我们找到一个前缀和为 preSum - k 时，说明从之前的某个位置到当前位置的子数组和为 k
+		if (hash.has(preSum - k)) c += hash.get(preSum - k)
+		// 然后维护 hash 的定义
+		hash.has(preSum)
+			? hash.set(preSum, hash.get(preSum) + 1)
+			: hash.set(preSum, 1)
 	}
-	return cnt
+	return c
 }
 ```
 
@@ -1050,19 +1075,23 @@ var hanota = function (A, B, C) {
 
 //recursion
 //f(n, A, B, C) => f(n - 1, A, C, B) + M(A, C) + f(n - 1, B, A, C)
+// n = 1 时，直接把盘子从 A 移到 C；
+// n > 1 时
+//   先把上面 n - 1 个盘子从 A 移到 B（子问题，递归）
+//   再将最大的盘子从 A 移到 C；
+//   再将 B 上 n - 1 个盘子从 B 移到 C（子问题，递归）
 var hanota = function (A, B, C) {
-	const helper = (c, from, tmp, to) => {
-		//terminate
-		if (c === 1) {
+	const helper = (n, from, tmp, to) => {
+		if (n === 1) {
 			to.push(from.pop())
 			return
 		}
 		//将n - 1个盘子从第一个柱子移动到第二个柱子
-		helper(c - 1, from, to, tmp)
+		helper(n - 1, from, to, tmp)
 		//将第n个盘子从第一个柱子移动到第三个柱子
 		to.push(from.pop())
 		//将n - 1个盘子从第二个柱子移动到第三个柱子
-		helper(c - 1, tmp, from, to)
+		helper(n - 1, tmp, from, to)
 	}
 	helper(A.length, A, B, C)
 }
