@@ -1,22 +1,17 @@
 ### [8. ==字符串转换整数(atoi)M==](https://leetcode-cn.com/problems/string-to-integer-atoi/)
 
 ```javascript {.line-numbers}
-var myAtoi = function (str) {
-	const len = str.length,
-		max = 2 ** 31 - 1,
-		min = -(2 ** 31)
-	let ret = 0,
-		flag = 1,
-		idx = 0
-	while (idx < len && str[idx] === ' ') idx++
-	if (str[idx] === '+' || str[idx] === '-') {
-		flag = str[idx] === '+' ? 1 : -1
-		idx++
-	}
-	while (idx < len && !Number.isNaN(parseInt(str[idx], 10))) {
-		ret = ret * 10 + +str[idx]
-		idx++
-	}
+var myAtoi = function (s) {
+	const len = s.length
+	const max = 2 ** 31 - 1
+	const min = -(2 ** 31)
+	let idx = 0
+	let flag = 1
+	let ret = 0
+	while (idx < len && s[idx] === ' ') idx++
+	if (s[idx] === '+' || s[idx] === '-') flag = s[idx++] === '+' ? 1 : -1
+	while (idx < len && !Number.isNaN(parseInt(s[idx], 10)))
+		ret = ret * 10 + parseInt(s[idx++], 10)
 	if (ret > max || ret < min) return flag === 1 ? max : min
 	return flag * ret
 }
@@ -25,28 +20,25 @@ var myAtoi = function (str) {
 ### [14. ==最长公共前缀==](https://leetcode-cn.com/problems/longest-common-prefix/)
 
 ```javascript {.line-numbers}
-//纵向扫描 O(mn) - O(1)
+//竖扫 O(mn) - O(1)
 //best version
 var longestCommonPrefix = function (strs) {
 	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
-	//枚strs[0]每个char
 	for (let i = 0, s0Len = strs[0].length; i < s0Len; i++) {
 		for (let j = 1, strsLen = strs.length; j < strsLen; j++) {
-			//strs[j]已经到头了
 			if (i === strs[j].length || strs[j][i] !== strs[0][i])
 				return strs[0].substring(0, i)
 		}
 	}
-	//strs[0]都找完了
 	return strs[0]
 }
 
-//横向扫描 O(mn) - O(1)
+//横扫 O(mn) - O(1)
 var longestCommonPrefix = function (strs) {
 	const getLCP = (s1, s2) => {
-		const length = Math.min(s1.length, s2.length)
+		const minLen = Math.min(s1.length, s2.length)
 		let idx = 0
-		while (idx < length && s1[idx] === s2[idx]) idx++
+		while (idx < minLen && s1[idx] === s2[idx]) idx++
 		return s1.substring(0, idx)
 	}
 	if (!strs || !Array.isArray(strs) || strs.length === 0) return ''
@@ -176,33 +168,6 @@ var reverseWords = function (s) {
 
 //two pointer
 var reverseWords = function (s) {
-	if (!s || !s.trim().length) return ''
-	const len = s.length
-	const arr = new Array(len)
-	let l = (r = -1),
-		idx = 0
-	for (let i = len - 1; i >= 0; i--) {
-		if (s[i] !== ' ') {
-			//未使用或被还原
-			if (r === -1) r = i
-			if (i === 0) l = i
-		} else {
-			if (r !== -1) l = i + 1
-		}
-		if (l >= 0 && r >= 0) {
-			if (idx > 0) arr[idx++] = ' '
-			while (l <= r) {
-				arr[idx++] = s[l]
-				l++
-			}
-			l = r = -1
-		}
-	}
-	return arr.join('')
-}
-
-//two pointer better
-var reverseWords = function (s) {
 	s = s.trim() // 删除首尾空格
 	let r = s.length - 1,
 		l = r
@@ -211,9 +176,26 @@ var reverseWords = function (s) {
 		while (l >= 0 && s[l] !== ' ') l-- // 搜索首个空格
 		res += s.substring(l + 1, r + 1) + ' ' // 添加单词
 		while (l >= 0 && s[l] === ' ') l-- // 跳过单词间空格
-		r = l // j 指向下个单词的尾字符
-	}
+		r = l // 指向下个单词的尾字符
+0	}
 	return res.substring(0, res.length - 1)
+}
+
+var reverseWords = function (s) {
+	const len = s.length
+	let l = 0,
+		r = len - 1,
+		ret = ''
+	while (l < len && s[l] === ' ') l++
+	while (r >= 0 && s[r] === ' ') r--
+	let wordEnd = r
+	while (r >= l) {
+		while (r >= l && s[r] !== ' ') r--
+		ret += s.substring(r + 1, wordEnd + 1) + ' '
+		while (r >= l && s[r] === ' ') r--
+		wordEnd = r
+	}
+	return ret.substring(0, ret.length - 1)
 }
 
 //use queue simple
@@ -229,7 +211,7 @@ var reverseWords = function (s) {
 		let c = s[l]
 		if (c !== ' ') {
 			word += c
-			//排除单词间有多个空格的情况,如example    good a
+			//排除单词间有多个空格的情况
 		} else {
       if (word) {
         queue.unshift(word)
@@ -247,17 +229,15 @@ var reverseWords = function (s) {
 ### [165. ==比较版本号==](https://leetcode.cn/problems/compare-version-numbers/)
 
 ```javascript {.line-numbers}
-//O(n + m) - O(n + m) simple
+//O(n + m) - O(n + m)
 var compareVersion = function (version1, version2) {
 	const v1 = version1.split('.')
 	const v2 = version2.split('.')
 	for (let i = 0; i < v1.length || i < v2.length; i++) {
-		let x = 0,
-			y = 0
-		if (i < v1.length) x = parseInt(v1[i]) //parseInt已处理前导零
-		if (i < v2.length) y = parseInt(v2[i])
-		if (x > y) return 1
-		if (x < y) return -1
+		let x = (y = 0)
+		if (i < v1.length) x = parseInt(v1[i], 10) //parseInt会处理前导零
+		if (i < v2.length) y = parseInt(v2[i], 10)
+		if (x !== y) return x > y ? 1 : -1
 	}
 	return 0
 }
@@ -272,12 +252,12 @@ var compareVersion = function (version1, version2) {
 		//比对每一段,默认是0
 		let x = 0
 		for (; i < len1 && version1[i] !== '.'; i++) {
-			x = x * 10 + version1[i].charCodeAt() - '0'.charCodeAt()
+			x = x * 10 + version1[i].charCodeAt(0) - '0'.charCodeAt(0)
 		}
 		i++ // 跳过点号
 		let y = 0
 		for (; j < len2 && version2.charAt(j) !== '.'; j++) {
-			y = y * 10 + version2[j].charCodeAt() - '0'.charCodeAt()
+			y = y * 10 + version2[j].charCodeAt(0) - '0'.charCodeAt(0)
 		}
 		j++ // 跳过点号
 		if (x !== y) return x > y ? 1 : -1
@@ -300,12 +280,12 @@ var reverseString = function (s) {
 
 //recursion
 var reverseString = function (s) {
-	const helper = (s, left, right) => {
-		if (left >= right) return
-		;[s[left++], s[right--]] = [s[right], s[left]]
-		helper(s, left, right)
+	const helper = (s, l, r) => {
+		if (l >= r) return
+		;[s[l++], s[r--]] = [s[r], s[l]]
+		helper(s, l, r)
 	}
-  helper(s, 0, s.length - 1)
+	helper(s, 0, s.length - 1)
 }
 ```
 
@@ -332,9 +312,11 @@ var reverseVowels = function (s) {
 ```javascript {.line-numbers}
 //hash
 var firstUniqChar = function (s) {
-	const obj = {}
-	for (let c of s) obj[c] ? obj[c]++ : (obj[c] = 1)
-	for (let i = 0; i < s.length; i++) if (obj[s[i]] === 1) return i
+	const hash = {}
+	for (let c of s) hash[c] ? hash[c]++ : (hash[c] = 1)
+	for (let i = 0, len = s.length; i < len; i++) {
+    if (hash[s[i]] === 1) return i
+  }
 	return -1
 }
 ```
@@ -458,16 +440,15 @@ var repeatedSubstringPattern = function (s) {
 var reverseStr = function (s, k) {
 	const len = s.length
 	const arr = [...s]
+  const reverse = (arr, l, r) => {
+    while (l < r) {
+      ;[arr[l++], arr[r--]] = [arr[r], arr[l]]
+    }
+	} 
 	for (let i = 0; i < len; i += 2 * k) {
 		reverse(arr, i, Math.min(i + k, len) - 1)
 	}
 	return arr.join('')
-}
-
-const reverse = (arr, l, r) => {
-	while (l < r) {
-		;[arr[l++], arr[r--]] = [arr[r], arr[l]]
-	}
 }
 ```
 
@@ -619,10 +600,9 @@ var reverseOnlyLetters = function (S) {
 
 //two point O(n) - O(1)
 var reverseOnlyLetters = function (s) {
-	const len = s.length
+	let l = 0
+	let r = s.length - 1
 	const arr = [...s]
-	let l = 0,
-		r = len - 1
 	while (true) {
 		while (l < r && !/^[a-zA-Z]+$/.test(s[l])) l++
 		while (l < r && !/^[a-zA-Z]+$/.test(s[r])) r--
@@ -638,9 +618,9 @@ var reverseOnlyLetters = function (s) {
 ```javascript {.line-numbers}
 //better
 var replaceSpace = function (s) {
+  const len = s.length
 	let count = 0
 	for (let c of s) if (c === ' ') count++
-	const len = s.length
 	const arr = new Array(len + 2 * count)
 	//从后往前赋值
 	for (let i = len - 1, j = arr.length - 1; i >= 0; i--, j--) {
@@ -656,9 +636,9 @@ var replaceSpace = function (s) {
 }
 
 var replaceSpace = function (s) {
+  const len = s.length
 	let count = 0
 	for (let c of s) if (c === ' ') count++
-	const len = s.length
 	const arr = new Array(len + 2 * count)
 	for (let i = 0, j = 0; i < len; i++) {
 		if (s[i] !== ' ') {
@@ -682,8 +662,8 @@ var reverseLeftWords = function (s, n) {
 			;[arr[l++], arr[r--]] = [arr[r], arr[l]]
 		}
 	}
-	let arr = s.split('')
-	let len = arr.length
+	const arr = s.split('')
+	const len = arr.length
 	//先翻转前n个
 	swap(arr, 0, n - 1)
 	//再翻转n后面的
