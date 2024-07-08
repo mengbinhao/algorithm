@@ -598,7 +598,7 @@ var reverseOnlyLetters = function (S) {
 	return ret
 }
 
-//two point O(n) - O(1)
+//two point O(n) - O(n)
 var reverseOnlyLetters = function (s) {
 	let l = 0
 	let r = s.length - 1
