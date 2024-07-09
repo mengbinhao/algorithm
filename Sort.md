@@ -192,6 +192,7 @@ const quickSort = (arr) => {
 	const partition = (arr, l, r) => {
 		const piviot = arr[l]
 		let idx = l + 1
+    //pivot坐标后面更新idx
 		for (let i = l + 1; i <= r; i++) {
 			if (arr[i] < piviot) {
 				;[arr[i], arr[idx]] = [arr[idx], arr[i]]
@@ -308,9 +309,9 @@ var merge = function (arr) {
 
 - 堆就是利用完全二叉树的结构来维护的一维数组
 
-- **大顶堆**：每个结点的值都大于或等于其左右孩子结点的值
+- **大顶堆**：每个结点的值都**>=**其左右孩子结点的值
 
-- **小顶堆**：每个结点的值都小于或等于其左右孩子结点的值
+- **小顶堆**：每个结点的值都**<=**其左右孩子结点的值
 
 - 一般我们说 `topK` 问题，就可以用大顶堆或小顶堆来实现
   **最大的 K 个**：小顶堆
@@ -383,7 +384,7 @@ var countSort = function (arr) {
 		min = Math.min(min, arr[i])
 		max = Math.max(max, arr[i])
 	}
-	let counts = new Array(max - min + 1).fill(0)
+	const counts = new Array(max - min + 1).fill(0)
   //对应位置存放最小值出现次数
 	for (let i = 0; i < len; i++) counts[arr[i] - min]++
 	let idx = 0
