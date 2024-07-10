@@ -280,7 +280,7 @@ var largestRectangleArea = function (heights) {
 				stack.pop()
 			let width
 			if (!stack.length) {
-				width = i //可以延伸到数组末尾
+				width = i //可以延伸到数组开头
 			} else {
 				width = i - stack[stack.length - 1] - 1
 			}
@@ -294,7 +294,7 @@ var largestRectangleArea = function (heights) {
 			stack.pop()
 		let width
 		if (!stack.length) {
-			width = len //可以延伸到数组开头
+			width = len //可以延伸到数组两头
 		} else {
 			width = len - stack[stack.length - 1] - 1
 		}
@@ -448,7 +448,7 @@ var calculate = function (s) {
 
 ```javascript {.line-numbers}
 var decodeString = function (s) {
-  //第二个判断repeatCount的时候排除NaN
+  //排除NaN
 	const isNumber = (val) => typeof val === 'number' && val === val
 	const stack = []
 	for (let c of s) {
@@ -522,16 +522,16 @@ var maxSlidingWindow = function (nums, k) {
 //deque O(n) - O(n)，存下标，单调递减，第一个元素是第一大的index,依此类推
 //头尾尾头
 var maxSlidingWindow = function (nums, k) {
-	let deque = [],
+	const deque = [],
 		ret = []
 	for (let i = 0, len = nums.length; i < len; i++) {
 		//队列满了移出去一个
-		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,如果不在则需要弹出队首的值
+		//L,R 来标记窗口的左边界和右边界,当窗口大小形成时,L 和 R 一起向右移,每次移动时,判断队首的值的数组下标是否在 [L,R] 中,若不在则需要弹出队首的值
 		if (deque.length && deque[0] < i - k + 1) deque.shift()
 		//维护递减队列
 		while (deque.length && nums[deque[deque.length - 1]] < nums[i]) deque.pop()
 		deque.push(i)
-		//开始检查结果
+		//检查结果
 		if (i >= k - 1) ret.push(nums[deque[0]])
 	}
 	return ret
@@ -567,11 +567,46 @@ var asteroidCollision = function (asteroids) {
 
 ```javascript
 //brute force O(n2)
+var dailyTemperatures = function (temperatures) {
+	const len = temperatures.length
+	const ret = new Array(len).fill(0)
+	for (let i = 0; i < len; i++) {
+		let cur = temperatures[i]
+		//if (cur < 100) {
+		for (let j = i + 1; j < len; j++) {
+			if (temperatures[j] > cur) {
+				ret[i] = j - i
+				break
+			}
+		}
+		//}
+	}
+	return ret
+}
+
+var dailyTemperatures2 = function (temperatures) {
+	const len = temperatures.length
+	const ret = new Array(len).fill(0)
+	for (let i = len - 2; i >= 0; i--) {
+		// j+= result[j]是利用已有的结果进行跳跃
+		for (let j = i + 1; j < len; j += ret[j]) {
+			if (temperatures[j] > temperatures[i]) {
+				ret[i] = j - i
+				break
+			} else if (ret[j] == 0) {
+				//遇到0表示后面不会有更大的值，那当然当前值就应该也为0
+				ret[i] = 0
+				break
+			}
+		}
+	}
+	return ret
+}
 
 //stack 单调递减栈
 var dailyTemperatures = function (temperatures) {
 	const len = temperatures.length
-	let ret = new Array(len).fill(0),
+	const ret = new Array(len).fill(0),
 		stack = []
 	for (let i = 0; i < len; i++) {
 		while (
