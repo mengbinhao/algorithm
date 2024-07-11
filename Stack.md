@@ -510,7 +510,7 @@ var maxSlidingWindow = function (nums, k) {
 	const len = nums.length
 	let slideWindow = [],
 		ret = []
-	//优化：能形成的最大窗口个数
+	//能形成的最大窗口个数
 	for (let i = 0; i < len - k + 1; i++) {
 		for (let j = 0; j < k; j++) slideWindow.push(nums[i + j])
 		ret.push(Math.max(...slideWindow))
