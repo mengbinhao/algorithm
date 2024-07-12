@@ -98,7 +98,7 @@ var removeNthFromEnd = function (head, n) {
 		slow = dummyHead
 	//移完后fast和slow之间的距离是n
 	while (n-- >= 0) fast = fast.next
-	//删除的是头结点
+	//特判：删除的是头结点
 	if (!fast) return head.next
 	//同步走，slow走到要删除节点的pre
 	while (fast) {
