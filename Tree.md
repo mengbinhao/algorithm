@@ -26,7 +26,7 @@
 
   - ==满二叉树==：除了叶结点外每一个结点都有左右孩子且叶子结点都处在最底层的二叉树
 
-  - ==二叉搜索树==：左孩子节点值均==小于==该节点值、右孩子节点值均==大于==该节点值，该节点的左、右子树也分别为二叉搜索树
+  - ==二叉搜索树==：左孩子节点值均<该节点值、右孩子节点值均>该节点值，该节点的左、右子树也分别为二叉搜索树
 
   - 平衡二叉搜索树(AVL)：既满足左右子树高度差不大于 1， 又满足任意节点值大于它的左孩子节点值，小于它右孩子节点值
 
@@ -628,7 +628,7 @@ var isValidBST = function (root) {
 			helper(root.left, root.val, low) && helper(root.right, high, root.val)
 		)
 	}
-  //扩展参数，向下传递
+  //扩展参数
 	return helper(root, Infinity, -Infinity)
 }
 ```
@@ -723,17 +723,17 @@ var recoverTree = function (root) {
 
 ```javascript {.line-numbers}
 var trimBST = function (root, low, high) {
-	if (!root) return null
+	if (!root) return root
 	if (root.val > high) return trimBST(root.left, low, high)
 	if (root.val < low) return trimBST(root.right, low, high)
-	//需要连接,所以需要返回递归的头结点
+	//递完再连接
 	root.left = trimBST(root.left, low, high)
 	root.right = trimBST(root.right, low, high)
 	return root
 }
 ```
 
-##### [700.二叉搜索树中的搜索](https://leetcode-cn.com/problems/search-in-a-binary-search-tree/)
+##### [700.==二叉搜索树中的搜索==](https://leetcode-cn.com/problems/search-in-a-binary-search-tree/)
 
 ```javascript {.line-numbers}
 var searchBST = function (root, val) {
@@ -771,7 +771,6 @@ var insertIntoBST = function (root, val) {
 	} else {
 		root.left = insertIntoBST(root.left, val)
 	}
-	//需要连接,所以需要返回递归的头结点
 	return root
 }
 ```
@@ -1453,25 +1452,27 @@ var hasPathSum = function (root, targetSum) {
 	)
 }
 
-var hasPathSum = function (root, sum) {
-	if (!root) return false
-	//一个统计节点，一个统计节点值
-	let queueNode = [root],
-		queueVal = [root.val]
-	while (queueNode.length > 0) {
-		let cur = queueNode.shift()
-		let accVal = queueVal.shift()
-		if (!cur.left && !cur.right) if (accVal === sum) return true
-		if (cur.left) {
-			queueNode.push(cur.left)
-			queueVal.push(cur.left.val + accVal)
-		}
-		if (cur.right) {
-			queueNode.push(cur.right)
-			queueVal.push(cur.right.val + accVal)
-		}
-	}
-	return false
+var hasPathSum = function(root, targetSum) {
+  if (!root) return false
+  //一个统计节点，一个统计节点值
+  //const queue = [root, root.val]
+  const queueNode = [root]
+  const queueVal = [root.val]
+  while (queueNode.length > 0) {
+    const cur = queueNode.shift()
+    const accVal = queueVal.shift()
+    //不能直接返回accVal === targetSum，还要往下走
+    if (!cur.left && !cur.right) if (accVal === targetSum) return true
+    if (cur.left) {
+      queueNode.push(cur.left)
+      queueVal.push(accVal + cur.left.val)
+    }
+    if (cur.right) {
+      queueNode.push(cur.right)
+      queueVal.push(accVal + cur.right.val)
+    }
+  }
+  return false
 }
 ```
 
@@ -1479,11 +1480,12 @@ var hasPathSum = function (root, sum) {
 
 ```javascript {.line-numbers}
 var pathSum = function (root, targetSum) {
-	let ret = []
+	const ret = []
 	const dfs = (root, targetSum, path) => {
 		if (!root) return
 		path.push(root.val)
 		//due to array pass reference so add a copy
+    //不能return，打印path看
 		if (!root.left && !root.right && targetSum === root.val) ret.push([...path])
 		dfs(root.left, targetSum - root.val, path)
 		dfs(root.right, targetSum - root.val, path)
@@ -1522,11 +1524,12 @@ var maxPathSum = function (root) {
 	let ret = Number.MIN_SAFE_INTEGER
 	const dfs = (root) => {
 		if (!root) return 0
-		//只有在最大贡献值大于0时，才会选取对应子节点
+		//当最大贡献值大于0时，才会选取对应子节点
 		const left = Math.max(dfs(root.left), 0)
 		const right = Math.max(dfs(root.right), 0)
-		//update innerCycle
+		//innerCycle
 		ret = Math.max(ret, left + right + root.val)
+    //outterCycle
 		return Math.max(left, right) + root.val
 	}
 	dfs(root)
@@ -1580,7 +1583,7 @@ var buildTree = function (preorder, inorder) {
 	const preLen = preorder.length,
 		inLen = inorder.length
 	if (preLen !== inLen) throw new TypeError('invalid params')
-	let map = new Map()
+	const map = new Map()
 	//space for time
 	//get inorder idx from preorder value
 	//note question: no same value Node, which means can form just one specific tree

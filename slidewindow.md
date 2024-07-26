@@ -42,7 +42,7 @@ var lengthOfLongestSubstring = function (s) {
 	let l = 0,
 		r = 0,
 		maxLen = 0
-	let slideWindow = {}
+	const slideWindow = {}
 	while (r < len) {
 		const rChar = s[r++]
 		slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
@@ -112,40 +112,40 @@ var minWindow = function (s, t) {
 
 ```javascript {.line-numbers}
 // 1 brute force O(n^2) - O(1)
-var minSubArrayLen = function(target, nums) {
-  const len = nums.length
-  let minLen = Infinity
-  for (let i = 0; i < len; i++) {
-    let sum = 0 
-    for (let j = i; j < len; j++) {
-      sum += nums[j]
-      if (sum >= target) {
-        minLen = Math.min(minLen, j - i + 1)
+var minSubArrayLen = function (s, nums) {
+	const len = nums.length
+	let minLen = Infinity
+	for (let i = 0; i < len; i++) {
+		let sum = 0
+		for (let j = i; j < len; j++) {
+			sum += nums[j]
+			if (sum >= s) {
+				minLen = Math.min(minLen, j - i + 1)
         //找最短,找到即返回
-        break
-      }
-    }
-  }
-  return minLen === Infinity ? 0 : minLen
+				break
+			}
+		}
+	}
+	return minLen === Infinity ? 0 : minLen
 }
 
 // 2 前缀和 + 二分查找
 
 // 3 双指针滑动窗口  O(n) - O(1)
-var minSubArrayLen = function(target, nums) {
-  const len = nums.length
-  //滑动窗口起始、结束位置
-  let start = end = sum = 0
-  let minLen = Infinity
-  while (end < len) {
-    sum += nums[end++]
-    while (sum >= target) {
-      minLen = Math.min(minLen, end - start)
-      sum -= nums[start++]
-    }
-  }
-  return minLen === Infinity ? 0 : minLen
-};
+var minSubArrayLen = function (s, nums) {
+	const len = nums.length
+	//滑动窗口起始、结束位置
+	let l = (r = sum = 0)
+	let minLen = Infinity
+	while (r < len) {
+		sum += nums[r++]
+		while (sum >= s) {
+			minLen = Math.min(minLen, r - l)
+			sum -= nums[l++]
+		}
+	}
+	return minLen === Infinity ? 0 : minLen
+}
 ```
 
 ### [239.==滑动窗口最大值==](https://leetcode-cn.com/problems/sliding-window-maximum/)
@@ -168,7 +168,7 @@ var maxSlidingWindow = function (nums, k) {
 //deque O(n) - O(n)，存下标，单调递减，第一个元素是第一大的index,依此类推
 //头尾尾头
 var maxSlidingWindow = function (nums, k) {
-	let deque = [],
+	const deque = [],
 		ret = []
 	for (let i = 0, len = nums.length; i < len; i++) {
 		//队列满了移出去一个
@@ -204,7 +204,7 @@ var findAnagrams = function (s, p) {
 			slideWindow[rChar] ? slideWindow[rChar]++ : (slideWindow[rChar] = 1)
 			if (slideWindow[rChar] === need[rChar]) valid++
 		}
-    //收集结果, 这样写会不停update left，区别于76最小覆盖子串的收集结果逻辑
+    //收集结果, 如下写会不停update left，区别于76最小覆盖子串的收集结果逻辑
     //while (valid === Object.keys(need).length)
 		while (r - l >= pLen) {
 			if (valid === Object.keys(need).length) ret.push(l)
