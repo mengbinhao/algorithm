@@ -85,7 +85,7 @@ LRUCache.prototype.put = function (key, value) {
 ### [155.==最小栈 E==](https://leetcode-cn.com/problems/min-stack/)
 
 ```javascript {.line-numbers}
-//使用辅助栈
+//使用辅助栈 O(n) - O(n)
 var MinStack = function () {
 	this.stack = []
 	//Note:add an initial value
@@ -114,7 +114,7 @@ MinStack.prototype.getMin = function () {
 }
 
 
-//O(n) - O(1) better
+//O(n) - O(1)
 var MinStack = function () {
 	this.stack = []
 	this.min = Infinity
@@ -282,13 +282,13 @@ MyQueue.prototype.push = function (x) {
 	this.inStack.push(x)
 }
 
-//返回的是outStack，故先反装一下
+//返回的是outStack，先反装一下
 MyQueue.prototype.pop = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack.pop()
 }
 
-//返回的是outStack，故先反装一下
+//返回的是outStack，先反装一下
 MyQueue.prototype.peek = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack[this.outStack.length - 1]
