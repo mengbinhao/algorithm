@@ -160,7 +160,52 @@ MinStack.prototype.getMin = function () {
 ### [208.==实现 Trie(前缀树)==](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```javascript {.line-numbers}
-//simple verison
+var TrieNode = function () {
+	//next[i]保存着下一个字符i的节点引用
+	this.children = {}
+	//当前节点是否可以作为一个单词的结束位置
+	this.isEnd = false
+}
+
+var Trie = function () {
+	this.root = new TrieNode()
+}
+
+Trie.prototype.insert = function (word) {
+	if (!word) return
+	let node = this.root
+	for (let c of word) {
+		if (!node.children[c]) node.children[c] = new TrieNode()
+		node = node.children[c]
+	}
+	node.isEnd = true
+}
+
+Trie.prototype.search = function (word) {
+	if (!word) return
+	const node = this.searchPrefix(word)
+	return node && node.isEnd
+}
+
+Trie.prototype.startsWith = function (prefix) {
+	if (!prefix) return
+	const node = this.searchPrefix(prefix)
+	return node ? true : false
+}
+
+Trie.prototype.searchPrefix = function (prefix) {
+	let node = this.root
+	for (let c of prefix) {
+		if (!node.children[c]) {
+			return false
+		} else {
+			node = node.children[c]
+		}
+	}
+	return node
+}
+
+//simple verison, not AC
 var Trie = function () {
 	this.children = {}
 }
@@ -191,55 +236,6 @@ Trie.prototype.search = function (word) {
 
 Trie.prototype.startsWith = function (prefix) {
 	return this.searchPrefix(prefix)
-}
-
-
-//solution 2
-var TrieNode = function () {
-	//next[i]保存着下一个字符i的节点引用
-	this.children = {}
-	//当前节点是否可以作为一个单词的结束位置
-	this.isEnd = false
-}
-
-var Trie = function () {
-	this.root = new TrieNode()
-}
-
-Trie.prototype.insert = function (word) {
-	if (!word) return
-	let node = this.root
-	for (let c of word) {
-		if (!node.children[c]) node.children[c] = new TrieNode()
-		node = node.children[c]
-	}
-	node.isEnd = true
-}
-
-Trie.prototype.search = function (word) {
-	if (!word) return false
-	let node = this.root
-	for (let c of word) {
-		if (!node.children[c]) {
-			return false
-		} else {
-			node = node.children[c]
-		}
-	}
-	return node.isEnd
-}
-
-Trie.prototype.startsWith = function (prefix) {
-	if (!prefix) return true
-	let node = this.root
-	for (let c of prefix) {
-		if (!node.children[c]) {
-			return false
-		} else {
-			node = node.children[c]
-		}
-	}
-	return true
 }
 ```
 
@@ -282,13 +278,13 @@ MyQueue.prototype.push = function (x) {
 	this.inStack.push(x)
 }
 
-//返回的是outStack，先反装一下
+//返回的是outStack
 MyQueue.prototype.pop = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack.pop()
 }
 
-//返回的是outStack，先反装一下
+//返回的是outStack
 MyQueue.prototype.peek = function () {
 	if (!this.outStack.length) this.in2out()
 	return this.outStack[this.outStack.length - 1]

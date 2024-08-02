@@ -13,7 +13,7 @@
 
 - ==求 n 的第 k 位数字: n >> k & 1==
 - ==`x = x & (x - 1)`打掉最低位的 1，即将最右边的 1 设为 0==
-- ==`x & -x` lowbit(n) 得到最低位的 1, `-x`得到反码再加 1==
+- ==`x & -x` lowbit(n) 得到最低位的 1 (`-x`得到反码再加 1)==
 - 异或(相同为 0,不同为 1)
 
   - `x ^ 0 = x`
@@ -21,9 +21,9 @@
   - `x ^ y ^ x = y`
   - `x ^ y ^ x = (x ^ y) ^ x = x ^ (y ^ x)`
 - 去除小数
-  - 位运算数值范围，当![n \geqslant  2^{31}](https://juejin.cn/equation?tex=n \geqslant  2^{31})或者 ![n < - 2^{31}](https://juejin.cn/equation?tex=n%20%3C%20-%202%5E%7B31%7D)(第32位是符号位)时，使用位运算得到的结果就是错的。只有 ![-2^{31} \leqslant n < 2^{31}](https://juejin.cn/equation?tex=-2%5E%7B31%7D%20%5Cleqslant%20n%20%3C%202%5E%7B31%7D)时使用位运算符才能得到正确的结果
-  - \~\~则是利用了~运算的第一步`转换成32位的二进制整数`时抹去了小数点后的有效数，从而达成了取整的目的
-  - 当n>=0时,是向下取整，当n<0时，是向上取整,失败时返回0
+  - 位运算数值范围，当 n > 2^31^或者 n < -2^31^ (第32位是符号位)时，使用位运算得到的结果就是错的。只有  -2^31^ < n <  2^31^时使用位运算符才能得到正确的结果
+  - \~\~则是利用了~运算的第一步转换成32位的二进制整数时抹去了小数点后的有效数，从而达成了取整的目的
+  - 当n>=0时,是向下取整，当n<0时，是向上取整，失败时返回0
 
 ```javascript
 console.log(~~6.83)    //6
@@ -70,13 +70,13 @@ console.log(6.83 >>> 0)   //6
 - 不增加变量实现两数交换
 
   ```javascript
-  //1
+  //solution 1
   ;[a, b] = [b, a]
-  //2
+  //solution 2
   a = a + b
   b = a - b
   a = a - b
-  //3
+  //solution 3
   a = a ^ b
   b = a ^ b
   a = a ^ b
@@ -165,7 +165,7 @@ var singleNumber = function (nums) {
 ```javascript {.line-numbers}
 var titleToNumber = function (columnTitle) {
 	let ret = 0
-	for (let i = 0; i < columnTitle.length; i++) {
+	for (let i = 0, len = columnTitle.length; i < len; i++) {
 		const num = columnTitle.charCodeAt(i) - 65 + 1
     //覆盖不是累加
 		ret = ret * 26 + num

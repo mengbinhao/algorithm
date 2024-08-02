@@ -28,10 +28,10 @@
 
 ![](./images/binarySearch.png)
 
-> 1. 分析二分查找代码时,最好不要出现 else,全部展开成 else if 方便理解
+> 1. 分析二分查找代码时,最好不要出现 `else`,全部展开成 `else if`方便理解
 > 2. 注意「搜索区间」和 while 的终止条件,若存在漏掉的元素,记得在**最后检查**
-> 3. 如需定义**左闭右开**的「搜索区间」搜索左右边界,只要在 `nums[mid] == target` 时做修改即可,搜索右侧时需要减一
-> 4. 如果将「搜索区间」全都统一成两端都闭,只要稍改 `nums[mid] == target` 条件处的代码和返回的逻辑即可
+> 3. 若定义**左闭右开**的「搜索区间」,只要在 `nums[mid] == target` 时做修改即可,搜索右侧时需要减一
+> 4. 若定义**左闭右闭**的「搜索区间」,只要稍改 `nums[mid] == target` 条件处的代码和返回的逻辑即可
 
 ### some templates
 
@@ -131,7 +131,7 @@ var searchInsert = function (nums, target) {
 			l = mid + 1
 		}
 	}
-  //l插入点 l init = 0, 一直往左走结束就是 0 + 1,一直往右走结束条件 l > r 即4
+  //l插入点 l init = 0, 一直往左走结束就是0,一直往右走就是len
 	return l
 }
 ```
@@ -316,7 +316,7 @@ var rotate = function (nums, k) {
 var rotate = (nums, k) => {
 	const len = nums.length,
 		tmp = new Array(len)
-	//元素的新位置为(i + k) % len
+	//元素的新位置(i + k) % len
 	for (let i = 0; i < len; i++) {
 		tmp[(i + k) % len] = nums[i]
 	}
@@ -326,7 +326,8 @@ var rotate = (nums, k) => {
 //数组翻转 O(n) - O(1)
 var rotate = (nums, k) => {
 	const len = nums.length
-  k %= len //k mod成小于len的数
+  k %= len
+  //特判
   if (k === 0) return
   const reverse = (arr, l, r) => {
     while (l < r) {
@@ -370,8 +371,8 @@ var findMin = function (nums) {
 var findMin = function (nums) {
 	let l = 0, r = nums.length - 1, mid
 	while (l < r) {
-		mid = l + Math.floor((r - l) / 2)
-		//所有数据不重复，即不存在(nums[mid] === nums[r]的情况
+		mid = Math.floor(l + (r - l) / 2)
+		//所有数据不重复，即不存在nums[mid] === nums[r]的情况
 		//看右边
 		if (nums[mid] < nums[r]) {
 			r = mid
@@ -387,14 +388,15 @@ var findMin = function (nums) {
 
 ```javascript
 var findMin = function (nums) {
-	let l = 0,
-		r = nums.length - 1
+	let l = 0
+	let r = nums.length - 1
+	let mid
 	while (l < r) {
-		const mid = l + Math.floor((r - l) / 2)
+		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] < nums[r]) {
 			r = mid
 		} else if (nums[mid] > nums[r]) {
-			l++
+			l = mid + 1
     //当nums[mid] === nums[r]，缩减右端点
 		} else {
 			r--
@@ -454,11 +456,10 @@ var search = function (nums, target) {
 		mid = Math.floor(l + (r - l) / 2)
 		if (nums[mid] === target) return true
 		//move left pointer to exclude repeat item, or we can not define the monotonic section
-		if (nums[l] === nums[mid]) {
-			l++
-			continue
-		}
-		if (nums[l] <= nums[mid]) {
+		if (nums[l] === nums[mid] && nums[mid] === nums[r]) {
+      l++
+      r--
+		} else	if (nums[l] <= nums[mid]) {
 			if (nums[l] <= target && target < nums[mid]) {
 				r = mid - 1
 			} else {
@@ -479,6 +480,7 @@ var search = function (nums, target) {
 #### [==10.3 搜索旋转数组==](https://leetcode.cn/problems/search-rotate-array-lcci/)
 
 ```javascript
+//arr有重复
 var search = function (arr, target) {
 	let l = 0,
 		r = arr.length - 1,
@@ -644,7 +646,7 @@ var searchInsert = function (nums, target) {
 			l = mid + 1
 		}
 	}
-  //l插入点 l init = 0, 一直往左走结束就是 0 + 1,一直往右走结束条件 l > r 即4
+  //l插入点 l init = 0, 一直往左走结束就是0,一直往右走就是len
 	return l
 }
 ```
@@ -688,17 +690,17 @@ var searchMatrix = function (matrix, target) {
 }
 
 const search = (nums, target) => {
-	let low = 0,
-		high = nums.length - 1
-	while (low <= high) {
-		const mid = Math.floor((high - low) / 2) + low
+	let l = 0,
+		r = nums.length - 1
+	while (l <= r) {
+		const mid = Math.floor((r - l) / 2) + l
 		const num = nums[mid]
 		if (num === target) {
 			return mid
 		} else if (num > target) {
-			high = mid - 1
+			r = mid - 1
 		} else {
-			low = mid + 1
+			l = mid + 1
 		}
 	}
 	return -1
