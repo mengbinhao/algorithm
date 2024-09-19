@@ -59,5 +59,51 @@ var strStr = function (haystack, needle) {
 }
 ```
 
+```javascript
+//better
+const kmpSearch = (haystack, needle) => {
+	const buildNext = (needle) => {
+		const next = [0] //初始化
+		let prefixLen = 0 //当前共同前后缀的长度
+		let i = 1
+		while (i < needle.length) {
+			if (needle[prefixLen] === needle[i]) {
+				prefixLen++
+				next.push(prefixLen)
+				i++
+			} else {
+				if (prefixLen === 0) {
+					next.push(0)
+					i++
+				} else {
+					//查表是否存在更短的前后缀
+					prefixLen = next[prefixLen - 1]
+				}
+			}
+		}
+		return next
+	}
+	const next = buildNext(needle)
+	let i = 0 //主串指针
+	let j = 0 //子串指针
+	while (i < haystack.length) {
+		if (haystack[i] === needle[j]) {
+			//字符匹配，指针后移
+			i++
+			j++
+		} else if (j > 0) {
+			// 字符匹配失败, 根据next跳过子串前面的字符
+			j = next[j - 1]
+		} else {
+			//子串第一个字符匹配失败
+			i++
+		}
+		//匹配成功
+		if (j === needle.length) return i - j
+	}
+	return -1
+}
+```
+
 
 
