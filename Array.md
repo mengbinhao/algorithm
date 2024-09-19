@@ -193,6 +193,7 @@ var threeSum = function (nums) {
 var removeDuplicates = function (nums) {
 	let len = nums.length
 	for (let i = 0; i < len; ) {
+    //不能加i + 1 < len,需要跟undefined对比
 		if (nums[i] !== nums[i + 1]) {
 			i++
 		} else {
@@ -473,13 +474,13 @@ var canJump = function (nums) {
 	const len = nums.length
 	let maxPosition = 0
 	for (let i = 0; i < len; i++) {
-		if (i > maxPosition) return false
-		else {
+		if (i > maxPosition) {
+      return false
+    } else {
 			maxPosition = Math.max(maxPosition, nums[i] + i)
 			if (maxPosition >= len - 1) return true
 		}
 	}
-	return true
 }
 ```
 
@@ -653,13 +654,12 @@ var sortColors = function (nums) {
 			;[nums[p++], nums[i]] = [nums[i], nums[p]]
 		}
 	}
-	return nums
 }
 
 //better
 var sortColors = function (nums) {
 	let cur = 0,
-		p1 = 0,
+		p0 = 0,
 		p2 = nums.length - 1
 	while (cur <= p2) {
 		//2放后，再看换过来的这个数
@@ -667,12 +667,11 @@ var sortColors = function (nums) {
 			;[nums[cur], nums[p2--]] = [nums[p2], nums[cur]]
 			//0放前，cur、p1同步走
 		} else if (nums[cur] === 0) {
-			;[nums[cur++], nums[p1++]] = [nums[p1], nums[cur]]
+			;[nums[cur++], nums[p0++]] = [nums[p0], nums[cur]]
 		} else {
 			cur++
 		}
 	}
-	return nums
 }
 ```
 
@@ -911,7 +910,7 @@ var intersection = function (nums1, nums2) {
 	for (let i = 0; i < nums2.length; i++) {
 		if (hash[nums2[i]]) {
 			ret.push(nums2[i])
-			map[nums2[i]] = false
+			hash[nums2[i]] = false
 		}
 	}
 	return ret
