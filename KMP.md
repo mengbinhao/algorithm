@@ -59,6 +59,10 @@ var strStr = function (haystack, needle) {
 }
 ```
 
+![](./images/kmp_1.PNG)
+
+![](./images/kmp_2.PNG)
+
 ```javascript
 //better
 const kmpSearch = (haystack, needle) => {
