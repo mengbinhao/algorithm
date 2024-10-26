@@ -16,7 +16,7 @@ const bubble = (arr) => {
 	const len = arr.length
 	if (len < 2) return arr
 	for (let i = 0; i < len - 1; i++) {
-    let isSwap = false
+		let isSwap = false
 		//每轮后面换好的不需要再进行比较
 		for (let j = 0; j < len - 1 - i; j++) {
 			if (arr[j] > arr[j + 1]) {
@@ -49,7 +49,7 @@ const insert = (arr) => {
 		const cur = arr[i]
 		//依次跟前面有序区进行比较
 		let j = i - 1
-    //有序区
+		//有序区
 		while (j >= 0 && arr[j] > cur) {
 			//有序区依次往后挪,有序区是一直有序的,不断寻找无序区里的当前cur应该放在有序区的位置
 			arr[j + 1] = arr[j]
@@ -68,14 +68,14 @@ const insert = (arr) => {
 	for (let i = 1; i < len; i++) {
 		const cur = arr[i]
 		for (let j = i - 1; j >= 0; j--) {
-      if (arr[j] > cur) {
-        arr[j + 1] = arr[j]
-        if (j === 0) arr[j] = cur
-      } else {
-        arr[j + 1] = cur
-        break
-      }
-    }
+			if (arr[j] > cur) {
+				arr[j + 1] = arr[j]
+				if (j === 0) arr[j] = cur
+			} else {
+				arr[j + 1] = cur
+				break
+			}
+		}
 	}
 	return arr
 }
@@ -160,10 +160,10 @@ const quick = (arr) => {
 	if (len < 2) return arr
 	const partition = (arr, l, r) => {
 		//const pivot = r   另一种解法
-    const pivot = arr[r]
+		const pivot = arr[r]
 		let index = l
 		for (let i = index; i < r; i++) {
-      //arr[i] < arr[pivot]
+			//arr[i] < arr[pivot]
 			if (arr[i] < pivot) {
 				//大的放pivot后,小的放pivot前,不稳定
 				;[arr[i], arr[index]] = [arr[index], arr[i]]
@@ -171,7 +171,7 @@ const quick = (arr) => {
 				index++
 			}
 		}
-    //此时index是pivot应放的位置，即左右已排好序列的中间
+		//此时index是pivot应放的位置，即左右已排好序列的中间
 		;[arr[index], arr[r]] = [arr[r], arr[index]]
 		return index
 	}
@@ -192,7 +192,7 @@ const quickSort = (arr) => {
 	const partition = (arr, l, r) => {
 		const piviot = arr[l]
 		let idx = l + 1
-    //pivot坐标后面更新idx
+		//pivot坐标后面更新idx
 		for (let i = l + 1; i <= r; i++) {
 			if (arr[i] < piviot) {
 				;[arr[i], arr[idx]] = [arr[idx], arr[i]]
@@ -260,7 +260,7 @@ const merge = (arr) => {
 		helper(arr, mid + 1, r, tmp)
 		//再归两段数组
 		let k = 0,
-       //这里初始值跟上边两段数组开始坐标对应
+			//这里初始值跟上边两段数组开始坐标对应
 			i = l,
 			j = mid + 1
 		while (i <= mid && j <= r) tmp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++]
@@ -316,8 +316,8 @@ var merge = function (arr) {
 - 一般我们说 `topK` 问题，就可以用大顶堆或小顶堆来实现
   **最大的 K 个**：小顶堆
   **最小的 K 个**：大顶堆
-  
-  **topK**:  全排 -> 只排前k个(冒泡) -> 只找不排（前k个数构造小顶堆，for k+1到len-1,当val>堆顶替换堆顶并堆化小顶堆）
+
+  **topK**: 全排 -> 只排前 k 个(冒泡) -> 只找不排（前 k 个数构造小顶堆，for k+1 到 len-1,当 val>堆顶替换堆顶并堆化小顶堆）
 
 > 最好 O(nlogn)、最坏 O(nlogn)、平均时间复杂度都是 O(nlogn)
 >
@@ -385,11 +385,11 @@ var countSort = function (arr) {
 		max = Math.max(max, arr[i])
 	}
 	const counts = new Array(max - min + 1).fill(0)
-  //对应位置存放最小值出现次数
+	//对应位置存放最小值出现次数
 	for (let i = 0; i < len; i++) counts[arr[i] - min]++
 	let idx = 0
 	for (let i = 0; i < counts.length; i++) {
-    //略过计数数组的零位
+		//略过计数数组的零位
 		for (let j = 1; j <= counts[i]; j++) {
 			arr[idx++] = i + min
 		}
@@ -397,4 +397,3 @@ var countSort = function (arr) {
 	return arr
 }
 ```
-
