@@ -1,10 +1,8 @@
 ## concept
 
-- **回溯法解决的问题都可以抽象为树形结构**
-- 使用**邻接表**或**邻接矩阵**表示一个图
-- 有向图、无向图、权重、同构
-- 最短路径、环
-- BFS、DFS
+![](./images/graph-1.png)
+
+![](./images/graph-2.png)
 
 ## questions
 
@@ -380,6 +378,29 @@ var minSwapsCouples = function(row) {
     times++
   }
   return times
+}
+```
+
+#### [797. 所有可能的路径](https://leetcode.cn/problems/all-paths-from-source-to-target/solutions/956408/suo-you-ke-neng-de-lu-jing-by-leetcode-s-iyoh/)
+
+```javascript
+var allPathsSourceTarget = function (graph) {
+	const ret = []
+  const stack = []
+	const dfs = (graph, x, n) => {
+		if (x === n) {
+			ret.push([...stack])
+			return
+		}
+		for (let c of graph[x]) {
+			stack.push(c)
+			dfs(graph, c, n)
+			stack.pop()
+		}
+	}
+  stack.push(0)
+	dfs(graph, 0, graph.length - 1)
+	return ret
 }
 ```
 
