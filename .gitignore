@@ -1,3 +1,5 @@
 test*.js
 test*.html
 algorithm.code-workspace
+node_modules/
+coverage/
