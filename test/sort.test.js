@@ -1,4 +1,4 @@
-const bubbleSort = require('../sort')
+const { bubbleSort } = require('../sort')
 describe('Bubble Sort', () => {
 	// Test case 1: Empty array
 	test('should return an empty array when given an empty array', () => {

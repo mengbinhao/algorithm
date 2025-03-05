@@ -25,4 +25,4 @@ const bubbleSort = (arr) => {
 	return sortedArray
 }
 
-module.exports = bubbleSort
+module.exports.bubbleSort = bubbleSort
