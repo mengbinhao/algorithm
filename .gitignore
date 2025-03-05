@@ -3,3 +3,4 @@ test*.html
 algorithm.code-workspace
 node_modules/
 coverage/
+workspace.code-workspace
