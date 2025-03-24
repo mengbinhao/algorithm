@@ -25,7 +25,14 @@ const bubbleSort = (arr) => {
 	return sortedArray
 }
 
+const quickSort = (arr) => {
+	if (!Array.isArray(arr)) throw new TypeError('Input must be an array')
+	const sortedArray = [...arr]
+  const helper = (sortedArray, l, r) => {
+    if (l >= r) return
+    
+  }
+  return helper(sortedArray, 0, sortedArray.length - 1)
+}
+
 module.exports.bubbleSort = bubbleSort
-
-
-

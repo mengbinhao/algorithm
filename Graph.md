@@ -12,6 +12,87 @@
 
 ```javascript {.line-numbers}
 //DFS
+//use visited
+var numIslands = function (grid) {
+	let cnt = 0
+	const rows = grid.length
+	const cols = grid[0].length
+	const visited = Array.from({ length: rows }, () =>
+		new Array(cols).fill(false)
+	)
+
+	const dfs = (grid, visited, x, y) => {
+		if (visited[x][y] || grid[x][y] === '0') return
+		visited[x][y] = true
+		const directions = [
+			[0, 1],
+			[1, 0],
+			[0, -1],
+			[-1, 0],
+		]
+		for (let i = 0, len = directions.length; i < len; i++) {
+			const nextX = x + directions[i][0]
+			const nextY = y + directions[i][1]
+			if (
+				nextX < 0 ||
+				nextX >= grid.length ||
+				nextY < 0 ||
+				nextY >= grid[0].length
+			)
+				continue
+			dfs(grid, visited, nextX, nextY)
+		}
+	}
+
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (grid[i][j] === '1' && !visited[i][j]) {
+				cnt++
+				dfs(grid, visited, i, j)
+			}
+		}
+	}
+	return cnt
+}
+
+//remove visited
+var numIslands = function (grid) {
+	let cnt = 0
+	const dfs = (grid, x, y) => {
+		if (grid[x][y] === '0') return
+		grid[x][y] = '0'
+		const directions = [
+			[0, 1],
+			[1, 0],
+			[0, -1],
+			[-1, 0],
+		]
+		for (let i = 0, len = directions.length; i < len; i++) {
+			const nextX = x + directions[i][0]
+			const nextY = y + directions[i][1]
+			if (
+				nextX < 0 ||
+				nextX >= grid.length ||
+				nextY < 0 ||
+				nextY >= grid[0].length
+			)
+				continue
+			dfs(grid, nextX, nextY)
+		}
+	}
+
+	for (let i = 0, rows = grid.length; i < rows; i++) {
+		for (let j = 0, cols = grid[0].length; j < cols; j++) {
+			if (grid[i][j] === '1') {
+				cnt++
+				dfs(grid, i, j)
+			}
+		}
+	}
+	return cnt
+}
+
+//without direction version
 var numIslands = function(grid) {
   const rows = grid.length
   const cols = grid[0].length
@@ -20,6 +101,7 @@ var numIslands = function(grid) {
     if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] === '0') return
     //marked as zero, in case endless
     grid[i][j] = '0'
+    //四方向跟以下代码等价
     dfs(grid, i + 1, j)
     dfs(grid, i, j + 1)
     dfs(grid, i - 1, j)
@@ -28,8 +110,8 @@ var numIslands = function(grid) {
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       if (grid[i][j] === '1') {
-        dfs(grid, i, j)
         cnt++
+        dfs(grid, i, j)
       }
     }
   }
@@ -37,6 +119,7 @@ var numIslands = function(grid) {
 }
 
 //BFS
+//关键点加入队列即标记
 var numIslands = function (grid) {
 	let ret = 0
 	if (!grid || !Array.isArray(grid) || grid.length === 0) return ret

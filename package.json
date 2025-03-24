@@ -1,6 +1,7 @@
 {
   "name": "algorithm",
   "version": "1.0.0",
+  "type": "module",
   "description": "Some frequent leetcode questions implement by JavaScript",
   "main": "aop.js",
   "scripts": {
